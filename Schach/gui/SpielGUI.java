@@ -18,7 +18,7 @@ public class SpielGUI extends JFrame {
     public SpielGUI() {
         super("Schachspiel");
         seitenAuswahl("Eroeffnungsseite");
-        Dimension minimaleGroesse = new Dimension(500, 300);
+        Dimension minimaleGroesse = new Dimension(500, 500);
         setMinimumSize(minimaleGroesse);
         setLocationRelativeTo(null);
         pack();

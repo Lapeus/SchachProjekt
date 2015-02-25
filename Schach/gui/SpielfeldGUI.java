@@ -56,7 +56,7 @@ public class SpielfeldGUI extends JPanel {
         
         this.setLayout(new BorderLayout());
         Container cCenter = new JPanel();
-        cCenter.setLayout(new GridLayout(8, 8));
+        cCenter.setLayout(new GridLayout(0, 8));
         Color braun = new Color(181, 81, 16);
         Color weiss = new Color(255, 248, 151);
         boolean abwechslung = false;
@@ -64,8 +64,8 @@ public class SpielfeldGUI extends JPanel {
         for (int i = 0; i < 8; i++) {
             abwechslung = !abwechslung;
             for (int j = 0; j < 8; j++) {
-                JLabel temp = new JLabel();
-//                Feld temp = felderListe.get(counter);
+//                JLabel temp = felderListe.get(counter);
+                Feld temp = felderListe.get(counter);
                 temp.setOpaque(true);
                 counter++;
                 if (!abwechslung) {
@@ -77,10 +77,7 @@ public class SpielfeldGUI extends JPanel {
                     abwechslung = false;
                 }
                 cCenter.add(temp);
-            }
-            
-            
-            
+            }    
         }
         this.add(cCenter, BorderLayout.CENTER);
         
