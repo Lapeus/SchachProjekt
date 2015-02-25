@@ -4,6 +4,7 @@ import gui.Feld;
 
 import java.util.List;
 
+import daten.Spieldaten;
 import daten.Spielfeld;
 
 public abstract class Figur {
@@ -18,6 +19,10 @@ public abstract class Figur {
     public abstract void postPruefung();
     
     public void ziehe(Feld zielfeld) {
+        // Hier muss ein neuer Zug erstellt werden
+        
+        
+        
         // Figur wird von der aktuellen Position entfernt
         position.setFigur(null);
         // Wenn auf dem Zielfeld eine Figur steht
@@ -35,12 +40,16 @@ public abstract class Figur {
             }
             
         }
-        // Figur wird auf das Zielfeld gesetzt
+        // Figurs wird auf das Zielfeld gesetzt
         zielfeld.setFigur(this);
         // Die aktuelle Position wird angepasst
         position = zielfeld;
         
-        // Hier muss ein neuer Zug erstellt werden
+        // Wenn es ein Bauer, Turm oder Koenig ist, muss der erste Zug
+        // eingetragen werden.
+        
+        
+        
     }
     public Spielfeld getSpielfeld() {
         return spielfeld;

@@ -6,6 +6,12 @@ import java.util.List;
 
 public class Dame extends Figur {
 
+    public Dame(Feld position, boolean farbe) {
+        super.setPosition(position);
+        super.setFarbe(farbe);
+        super.setWert(900);
+    }
+    
     public void praePruefung() {
         // TODO Auto-generated method stub
         

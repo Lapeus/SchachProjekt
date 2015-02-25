@@ -4,8 +4,14 @@ import gui.Feld;
 
 import java.util.List;
 
-public class Läufer extends Figur {
+public class Laeufer extends Figur {
 
+    public Laeufer(Feld position, boolean farbe) {
+        super.setPosition(position);
+        super.setFarbe(farbe);
+        super.setWert(325);
+    }
+    
     public void praePruefung() {
         // TODO Auto-generated method stub
         
