@@ -6,12 +6,17 @@ import java.util.List;
 
 public class Bauer extends Figur {
 
-    private int anzahlZuege;
+    private boolean bereitsGezogen;
+    
+    public Bauer() {
+        
+    }
     
     public Bauer(Feld position, boolean farbe) {
         super.setPosition(position);
         super.setFarbe(farbe);
         super.setWert(100);
+        bereitsGezogen = false;
     }
     
     public void praePruefung() {
@@ -27,6 +32,14 @@ public class Bauer extends Figur {
     public void postPruefung() {
         // TODO Auto-generated method stub
         
+    }
+    
+    public boolean getGezogen() {
+        return bereitsGezogen;
+    }
+    
+    public void setGezogen(boolean gezogen) {
+        bereitsGezogen = gezogen;
     }
 
 }

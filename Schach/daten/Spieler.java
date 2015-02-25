@@ -12,6 +12,7 @@ public class Spieler {
         this.name = name;
         this.spielzeit = 0;
         this.anzahlZuege = 0;
+        this.anzahlSpiele = 0;
     }
     
     public String getName() {
