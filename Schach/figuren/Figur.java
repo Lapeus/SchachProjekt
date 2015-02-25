@@ -13,6 +13,7 @@ public abstract class Figur {
     private Feld position;
     private boolean farbe; //true für weiss, false für schwarz
     private int wert;
+    private boolean bereitsGezogen;
     
     public abstract void praePruefung();
     public abstract List<Feld> getMoeglicheFelder();
@@ -45,12 +46,27 @@ public abstract class Figur {
         // Die aktuelle Position wird angepasst
         position = zielfeld;
         
-        // Wenn es ein Bauer, Turm oder Koenig ist, muss der erste Zug
-        // eingetragen werden.
-        
+        // Der erste Zug von Bauer, Turm und Koenig muessen erfasst werden.
+        // Zur Vereinfachung wird dies einfach bei allen Figuren durchgefuerht.
+        if (this.getGezogen() == false) {
+            this.setGezogen(true);
+        }
         
         
     }
+    public Feld getFeld() {
+        return spielfeld.getFelder().get(getFeldIndex());
+    }
+    public Feld getFeld(int index) {
+        return spielfeld.getFelder().get(index);
+    }
+    public int getFeldIndex() {
+        return position.getX() + position.getY() * 8;
+    }
+    public Figur getFigurAt(int index) {
+        return getFeld().getFigur();
+    }
+    
     public Spielfeld getSpielfeld() {
         return spielfeld;
     }
@@ -74,6 +90,12 @@ public abstract class Figur {
     }
     public void setWert(int wert) {
         this.wert = wert;
+    }
+    public boolean getGezogen() {
+        return bereitsGezogen;
+    }
+    public void setGezogen(boolean bereitsGezogen) {
+        this.bereitsGezogen = bereitsGezogen;
     }
  
 }
