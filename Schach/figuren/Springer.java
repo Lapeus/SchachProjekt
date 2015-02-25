@@ -6,6 +6,12 @@ import java.util.List;
 
 public class Springer extends Figur {
 
+    public Springer(Feld position, boolean farbe) {
+        super.setPosition(position);
+        super.setFarbe(farbe);
+        super.setWert(275);
+    }
+    
     public void praePruefung() {
         // TODO Auto-generated method stub
         

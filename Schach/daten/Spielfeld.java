@@ -3,7 +3,9 @@ package daten;
 import java.util.ArrayList;
 import java.util.List;
 
+import figuren.Bauer;
 import figuren.Figur;
+import gui.Feld;
 
 public class Spielfeld {
 
@@ -14,6 +16,14 @@ public class Spielfeld {
     private boolean richtigAusgerichtet = true;
     
     public Spielfeld() {
+        // 8 schwarze Bauern erstellen und auf die richtige Position stellen
+        for (int i = 1; i <= 8; i++) {
+            schwarzeFiguren.add(new Bauer(new Feld(i,7), false));
+        }
+        // 8 weisse Bauern erstellen und auf die richtige Position stellen
+        for (int i = 1; i <= 8; i++) {
+           weisseFiguren.add(new Bauer(new Feld(i,2), false));
+        }
         
     }
     

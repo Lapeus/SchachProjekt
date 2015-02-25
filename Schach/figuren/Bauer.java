@@ -6,6 +6,14 @@ import java.util.List;
 
 public class Bauer extends Figur {
 
+    private int anzahlZuege;
+    
+    public Bauer(Feld position, boolean farbe) {
+        super.setPosition(position);
+        super.setFarbe(farbe);
+        super.setWert(100);
+    }
+    
     public void praePruefung() {
         // TODO Auto-generated method stub
         

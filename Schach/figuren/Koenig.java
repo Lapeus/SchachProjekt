@@ -6,6 +6,12 @@ import java.util.List;
 
 public class Koenig extends Figur {
 
+    public Koenig(Feld position, boolean farbe) {
+        super.setPosition(position);
+        super.setFarbe(farbe);
+        super.setWert(0); // Wert des Koenigs ist irrelevant
+    }
+    
     public void praePruefung() {
         // TODO Auto-generated method stub
         
