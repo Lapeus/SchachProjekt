@@ -6,13 +6,11 @@ import java.util.List;
 
 public class Turm extends Figur {
 
-    private boolean bereitsGezogen;
-    
     public Turm(Feld position, boolean farbe) {
         super.setPosition(position);
         super.setFarbe(farbe);
         super.setWert(465);
-        bereitsGezogen = false;
+        super.setGezogen(false);
     }
     
     public void praePruefung() {
@@ -30,12 +28,5 @@ public class Turm extends Figur {
         
     }
     
-    public boolean getGezogen() {
-        return bereitsGezogen;
-    }
-    
-    public void setGezogen(boolean gezogen) {
-        bereitsGezogen = gezogen;
-    }
 
 }
