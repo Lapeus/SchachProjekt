@@ -13,7 +13,7 @@ public class Spielerauswahl extends JPanel {
     private static final long serialVersionUID = -6920443370361911344L;
     SpielGUI parent;
     JLabel Spielerauswahl = new JLabel("Spielerauswahl");
-    JButton spielen = new JButton("Spielen");
+    JButton spielen = new JButton("Spiel starten");
 
     // Ende Attribute
     
@@ -26,6 +26,8 @@ public class Spielerauswahl extends JPanel {
     
     private void init() {
         this.setLayout(new BorderLayout());
+        spielen.addActionListener(new SeitenwechselListener(parent));
+        spielen.setActionCommand(spielen.getText());
         
         // North
         Container cNorth = new JPanel();

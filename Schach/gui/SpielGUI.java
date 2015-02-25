@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 
@@ -11,6 +10,7 @@ public class SpielGUI extends JFrame {
     
     // Anfang Attribute
     private static final long serialVersionUID = -8895681303810255159L;
+    private SpielfeldGUI spielfeld;
     // Ende Attribute
 
     // Konstruktor
@@ -29,51 +29,56 @@ public class SpielGUI extends JFrame {
     
     // Anfang Methoden
     public void seitenAuswahl(String auswahl) {
+        Container seite;
         switch (auswahl) {
         case "Eroeffnungsseite":
-            initEroeffnungsseite();
+            seite = new Eroeffnungsseite(this);
+            this.setContentPane(seite);
             break;
             
         case "Spielerauswahl":
-            initSpielerauswahl();
+            seite = new Spielerauswahl(this);
+            this.setContentPane(seite);
             break;
             
-        case "SpielLaden":
-            initSpielLaden();
+        case "Spiel laden":
+            seite = new SpielLaden(this);
+            this.setContentPane(seite);
             break;
             
         case "Einstellungen":
-            initEinstellungen();
+            seite = new Einstellungen(this);
+            this.setContentPane(seite);
             break;
+            
+        case "Highscore":
+            seite = new Highscore(this);
+            this.setContentPane(seite);
+            
+        case "Statistiken":
+            seite = new Statistiken(this);
+            this.setContentPane(seite);
+            break;
+            
+        case "Regelwerk":
+            seite = new Statistiken(this);
+            this.setContentPane(seite);
+            break;
+            
+        case "SpielfeldGUI":
+            spielfeld = new SpielfeldGUI(this);
+            this.setContentPane(spielfeld);
+            break;
+            
 
         default:
-            initEroeffnungsseite();
             break;
         }
         this.revalidate();
-        
-        
+        this.paint(getGraphics());
     }
     
-    private void initEroeffnungsseite() {
-        Container eroeffnungsseite = new Eroeffnungsseite(this);
-        this.setContentPane(eroeffnungsseite);
-    }
     
-    private void initSpielerauswahl() {
-        Container spielerauswahl = new Spielerauswahl(this);
-        this.setContentPane(spielerauswahl);
-    }
-    
-    private void initSpielLaden() {
-        Container spielLaden = new SpielLaden(this);
-        this.setContentPane(spielLaden);
-    }
-    
-    private void initEinstellungen() {
-        Container einstellungen = new Einstellungen(this);
-        this.setContentPane(einstellungen);
-    }
     
     // Ende Methoden
     

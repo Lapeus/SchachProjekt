@@ -11,24 +11,28 @@ public class SeitenwechselListener implements ActionListener {
     }
     
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand() == "Spielen") {
+        String command = e.getActionCommand(); 
+        if (command == "Spielen") {
             parent.seitenAuswahl("Spielerauswahl");
         }
-        if (e.getActionCommand() == "Spiel laden") {
-            parent.seitenAuswahl("SpielLaden");
+        if (command == "Spiel laden") {
+            parent.seitenAuswahl(command);
         }
-        if (e.getActionCommand() == "Einstellungen") {
-            parent.seitenAuswahl("Einstellungen");
+        if (command == "Einstellungen") {
+            parent.seitenAuswahl(command);
         }
-        if (e.getActionCommand() == "Highscore") {
-            parent.seitenAuswahl("Highscore");
+        if (command == "Highscore") {
+            parent.seitenAuswahl(command);
         }
-        if (e.getActionCommand() == "Statistiken") {
-            parent.seitenAuswahl("Statistiken");
+        if (command == "Statistiken") {
+            parent.seitenAuswahl(command);
         }
-        if (e.getActionCommand() == "Regelwerk") {
-            parent.seitenAuswahl("Regelwerk");
+        if (command == "Regelwerk") {
+            parent.seitenAuswahl(command);
         }
+        if (command == "Spiel starten") {
+            parent.seitenAuswahl("SpielfeldGUI");
+        } 
     }
 
 }

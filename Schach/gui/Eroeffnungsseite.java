@@ -51,7 +51,9 @@ public class Eroeffnungsseite extends Panel {
         einstellungen.addActionListener(wechselListener);
         einstellungen.setActionCommand(einstellungen.getText());
         highscore.addActionListener(wechselListener);
-        
+        highscore.setActionCommand(highscore.getText());
+        regelwerk.addActionListener(wechselListener);
+        regelwerk.setActionCommand(regelwerk.getText());
         
         //North
         Container cNorth = new JPanel();
