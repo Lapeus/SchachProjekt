@@ -2,6 +2,7 @@ package figuren;
 
 import gui.Feld;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,8 +38,43 @@ public class Koenig extends Figur {
      * {@inheritDoc}
      */
     public List<Feld> getMoeglicheFelder() {
-        // TODO Auto-generated method stub
-        return null;
+        List<Feld> moeglicheFelder = new ArrayList<Feld>();
+        /*<Gehe alle Felder ringsherum durch und schaue ob sie existieren und
+         *nicht von eigenen Figuren besetzt sind.>
+         */
+        // Die Abweichung der Indizes der umliegenden Felder zum aktuellen Feld
+        int[] indizes = {-9, -8, -7, -1, 1, 7, 8, 9};
+        // Fuer alle umliegenden Felder
+        for (int i : indizes) {
+            /* Wenn der Index zwischen 0 und 63 liegt und das Feld
+             * besetzt werden darf
+             */
+            if (super.getFeldIndex() + i >= 0 
+                && super.getFeldIndex() + i < 64
+                && super.istMoeglich(super.getFeldIndex() + i)) {
+                boolean zulaessig = false;
+                if (i == -8 || i == 8) {
+                    // Nach vorne und hinten klappt ohne weitere Pruefung
+                    zulaessig = true;
+                } else if (i == -9 || i == -1 || i == 7) {
+                    // Nach links muss auf Rand getestet werden
+                    if (super.getPosition().getX() > 0) {
+                        zulaessig = true;
+                    }
+                } else if (i == -7 || i == 1 || i == 9) {
+                    // Nach rechts muss auf Rand getestet werden
+                    if (super.getPosition().getX() < 7) {
+                        zulaessig = true;
+                    }
+                }
+                if (zulaessig) {
+                    moeglicheFelder.add(super.getFeld(
+                        super.getFeldIndex() + i));
+                }
+             
+            }
+        }
+        return moeglicheFelder;
     }
 
     /**

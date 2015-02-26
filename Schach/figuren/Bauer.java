@@ -39,40 +39,50 @@ public class Bauer extends Figur {
      */
     public List<Feld> getMoeglicheFelder() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
+        // Indizes fuer weiss
+        int[] indizes = {8, 16, 7, 9};
+        // Abfrage ob weiss oder schwarz
+        if (!super.getFarbe()) {
+            // Indizes fuer schwarz
+            indizes[0] = -8;
+            indizes[1] = -16;
+            indizes[2] = -9; // Getauscht, weil sie ja entgegengesetzt laufen
+            indizes[3] = -7; //   ""           ""          ""           ""
+        }
         // Wenn an der jetzigen Stelle plus 8 (vorne) keine Figur steht
-        if (super.getFigurAt(getFeldIndex() + 8) == null) {
+        if (super.getFigurAt(getFeldIndex() + indizes[0]) == null) {
             // Fuege das entsprechende Feld der Liste zu
-            moeglicheFelder.add(super.getFeld(getFeldIndex() + 8));
+            moeglicheFelder.add(super.getFeld(getFeldIndex() + indizes[0]));
         }
         
         // Wenn die Figur noch nicht bewegt wurde
         if (!super.getGezogen()) {
             // Wenn an der jetzigen Stelle plus 16 (2 vorne) keine Figur steht
-            if (super.getFigurAt(getFeldIndex() + 16) == null) {
+            if (super.getFigurAt(getFeldIndex() + indizes[1]) == null) {
                 // Fuege das entsprechende Feld der Liste zu
-                moeglicheFelder.add(super.getFeld(getFeldIndex() + 16));
+                moeglicheFelder.add(super.getFeld(getFeldIndex() + indizes[1]));
             }
         }
         
         // Wenn links noch ein Feld ist
         if (super.getPosition().getX() > 0) {
             // Wenn schraeg links vorne eine gegnerische Figur steht
-            if (super.getFigurAt(getFeldIndex() + 7) != null 
-                || super.getFigurAt(getFeldIndex() + 7).getFarbe() 
+            if (super.getFigurAt(getFeldIndex() + indizes[2]) != null 
+                && super.getFigurAt(getFeldIndex() + indizes[2]).getFarbe() 
                 != super.getFarbe()) {
                 // Fuege das entsprechende Feld der Liste zu
-                moeglicheFelder.add(super.getFeld(getFeldIndex() + 7));
+                moeglicheFelder.add(super.getFeld(getFeldIndex() + indizes[2]));
             }
         }
         
         // Wenn rechts noch ein Feld ist
         if (super.getPosition().getX() < 7) {
             // Wenn schraeg rechts vorne eine gegnerische Figur steht
-            if (super.getFigurAt(getFeldIndex() + 9) != null 
-                || super.getFigurAt(getFeldIndex() + 9).getFarbe() 
+            if (super.getFigurAt(getFeldIndex() + indizes[3]) != null 
+                && super.getFigurAt(getFeldIndex() + indizes[3]).getFarbe() 
                 != super.getFarbe()) {
                 // Fuege das entsprechende Feld der Liste zu
-                moeglicheFelder.add(super.getFeld(getFeldIndex() + 9));
+                moeglicheFelder.add(super.getFeld(getFeldIndex() + indizes[3]));
             }
         }
         

@@ -2,6 +2,7 @@ package figuren;
 
 import gui.Feld;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,8 +37,50 @@ public class Springer extends Figur {
      * {@inheritDoc}
      */
     public List<Feld> getMoeglicheFelder() {
-        // TODO Auto-generated method stub
-        return null;
+        List<Feld> moeglicheFelder = new ArrayList<Feld>();
+        /*<Gehe alle Felder durch und schaue ob sie existieren und
+         *nicht von eigenen Figuren besetzt sind.>
+         */
+        // Die Abweichung der Indizes der umliegenden Felder zum aktuellen Feld
+        int[] indizes = {-17, -15, -10, -6, 6, 10, 15, 17};
+        // Fuer alle Felder
+        for (int i : indizes) {
+            /* Wenn der Index zwischen 0 und 63 liegt und das Feld
+             * besetzt werden darf
+             */
+            if (super.getFeldIndex() + i >= 0 
+                && super.getFeldIndex() + i < 64
+                && super.istMoeglich(super.getFeldIndex() + i)) {
+                boolean zulaessig = false;
+                if (i == -10 || i == 6) {
+                    // Wenn die Figur zwei Felder nach links geht
+                    if (super.getPosition().getX() > 1) {
+                        zulaessig = true;
+                    }
+                } else if (i == -17 || i == 15) {
+                    // Wenn die Figur ein Feld nach links geht
+                    if (super.getPosition().getX() > 0) {
+                        zulaessig = true;
+                    }
+                } else if (i == -15 || i == 17) {
+                    // Wenn die Figur ein Feld nach rechts geht
+                    if (super.getPosition().getX() < 7) {
+                        zulaessig = true;
+                    }
+                } else if (i == -6 || i == 10) {
+                    // Wenn die Figur zwei Felder nach rechts geht
+                    if (super.getPosition().getX() < 6) {
+                        zulaessig = true;
+                    }
+                }
+                if (zulaessig) {
+                    moeglicheFelder.add(super.getFeld(
+                        super.getFeldIndex() + i));
+                }
+            }
+        }
+        
+        return moeglicheFelder;
     }
 
     /**

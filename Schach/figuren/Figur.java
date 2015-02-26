@@ -109,6 +109,35 @@ public abstract class Figur {
     }
     
     /**
+     * Gibt an, ob das Feld am angegebenen Index leer ist.
+     * @param index : Ganzzahliger Index (zwischen 0 und 63)
+     * @return <b>true</b> wenn frei
+     */
+    protected boolean istFrei(int index) {
+        boolean frei = false;
+        if (getFigurAt(index) == null) {
+            frei = true;
+        }
+        return frei;
+    }
+    
+    /**
+     * Gibt an, ob das Feld am angegebenen Index nicht von einer eigenen Figur
+     * besetzt ist.
+     * Wenn <b>true</b> zur&uuml;ck gegeben wird, bedeutet das, dass dieses
+     * Feld f&uuml;r einen Zug zur Verf&uuml;gung steht.
+     * @param index : Ganzzahliger Index (zwischen 0 und 63)
+     * @return <b>true</b> f&uuml;r leer oder gegnerische Figur
+     */
+    protected boolean istMoeglich(int index) {
+        boolean moeglich = false;
+        if (istFrei(index) || getFigurAt(index).getFarbe() != farbe) {
+            moeglich = true;
+        }
+        return moeglich;
+    }
+    
+    /**
      * Gibt das Feld zur&uuml;ck, auf dem die Figur steht.
      * @return Ein Objekt vom Typ Feld
      */
@@ -121,7 +150,7 @@ public abstract class Figur {
      * @param index : Der ganzzahlige Index (Zwischen 0 und 63)
      * @return Ein Objekt vom Typ Feld
      */
-    public Feld getFeld(int index) {
+    protected Feld getFeld(int index) {
         return spielfeld.getFelder().get(index);
     }
     
@@ -129,7 +158,7 @@ public abstract class Figur {
      * Gibt den Index des Felder zur&uuml;ck, auf dem die Figur steht.
      * @return Der ganzzahlige Index (Zwischen 0 und 63)
      */
-    public int getFeldIndex() {
+    protected int getFeldIndex() {
         return position.getX() + position.getY() * 8;
     }
     
@@ -138,7 +167,7 @@ public abstract class Figur {
      * @param index : Der ganzzahlige Index (Zwischen 0 und 63)
      * @return Eine Figur 
      */
-    public Figur getFigurAt(int index) {
+    protected Figur getFigurAt(int index) {
         return getFeld().getFigur();
     }
     
@@ -211,7 +240,7 @@ public abstract class Figur {
      * Gibt an, ob die Figur bereits gezogen wurde.
      * @return Wahrheitswert
      */
-    public boolean getGezogen() {
+    protected boolean getGezogen() {
         return bereitsGezogen;
     }
     
@@ -219,7 +248,7 @@ public abstract class Figur {
      * Setzt die Variable, ob die Figur schon gezogen wurde.
      * @param bereitsGezogen : Wahrheitswert
      */
-    public void setGezogen(boolean bereitsGezogen) {
+    protected void setGezogen(boolean bereitsGezogen) {
         this.bereitsGezogen = bereitsGezogen;
     }
  
