@@ -12,15 +12,55 @@ import figuren.Springer;
 import figuren.Turm;
 import gui.Feld;
 
+/**
+ * Verwaltet die Figuren und ihre Position auf dem Brett.
+ * Gibt zus&auml;tzlich an, ob das Brett aktuell aus wei&szlig;er oder aus
+ * schwarzer Sicht gezeigt wird.
+ */
 public class Spielfeld {
 
+    /**
+     * Eine Liste mit allen 64 Felder des Spielbrettes. <br>
+     * Index 0 entspricht dem Feld links unten, Index 63 dem Feld rechts oben.
+     */
     private List<Feld> felder = new ArrayList<Feld>();
+    
+    /**
+     * Eine Liste mit allen schwarzen Figuren, die sich noch im Spiel befinden,
+     * nach aufsteigendem Wert sortiert.
+     */
     private List<Figur> schwarzeFiguren = new ArrayList<Figur>();
+    
+    /**
+     * Eine Liste mit allen wei&szlig;en Figuren, die sich noch im Spiel 
+     * befinden, nach aufsteigendem Wert sortiert.
+     */
     private List<Figur> weisseFiguren = new ArrayList<Figur>();
-    private List<Figur> geschlagenWeiss = new ArrayList<Figur>();
+    
+    /**
+     * Eine Liste mit allen geschlagenen schwarzen Figuren, nach absteigendem
+     * Wert sortiert.
+     */
     private List<Figur> geschlagenSchwarz = new ArrayList<Figur>();
+    
+    /**
+     * Eine Liste mit allen geschlagenen wei&szlig;en Figuren, nach absteigendem
+     * Wert sortiert.
+     */
+    private List<Figur> geschlagenWeiss = new ArrayList<Figur>();
+    
+    /**
+     * Gibt an, von welcher Person aus das Brett aufgebaut ist. <br>
+     * <b>true</b> f&uuml;r wei&szlig;, <b>false</b> f&uuml;r schwarz
+     */
     private boolean richtigAusgerichtet = true;
     
+    /**
+     * Erzeugt ein neues Spielfeld und stellt die Figuren an die richtige
+     * Position.
+     * @param felder : Die Liste mit den Feldern, auf die die Figuren gestellt
+     * werden sollen
+     */
     public Spielfeld(List<Feld> felder) {
         // Liste mit den Feldern wurde uebergeben
         this.felder = felder;
@@ -28,20 +68,20 @@ public class Spielfeld {
         // Acht schwarze Bauern
         for (int i = 1; i <= 8; i++) {
             // Erstellen
-            Bauer bauer = new Bauer(felder.get(47+i), false);
+            Bauer bauer = new Bauer(felder.get(47 + i), false);
             // Der Liste hinzufuegen
             schwarzeFiguren.add(bauer);
             // Dem Feld die Figur hinzufuegen
-            felder.get(47+i).setFigur(bauer);
+            felder.get(47 + i).setFigur(bauer);
         }
         // Acht weisse Bauern
         for (int i = 1; i <= 8; i++) {
             // Erstellen
-            Bauer bauer = new Bauer(felder.get(7+i), true);
+            Bauer bauer = new Bauer(felder.get(7 + i), true);
             // Der Liste hinzufuegen
             weisseFiguren.add(bauer);
             // Dem Feld die Figur hinzufuegen
-            felder.get(7+i).setFigur(bauer);
+            felder.get(7 + i).setFigur(bauer);
         }
         // Zwei schwarze Springer erstellen
         Springer springer = new Springer(felder.get(57), false);
@@ -103,27 +143,55 @@ public class Spielfeld {
         felder.get(4).setFigur(koenig);
         
     }
+    
+    /**
+     * Gibt die Liste der Felder zur&uuml;ck.
+     * @return Liste von Feldern
+     */
     public List<Feld> getFelder() {
         return felder;
     }
     
+    /**
+     * Gibt die schwarzen noch im Spiel befindlichen Figuren zur&uuml;ck.
+     * @return Liste von schwarzen Figuren
+     */
     public List<Figur> getSchwarzeFiguren() {
         return schwarzeFiguren;
     }
     
+    /**
+     * Gibt die wei&szlig;en noch im Spiel befindlichen Figuren zur&uuml;ck.
+     * @return Liste von wei&szlig;en Figuren
+     */
     public List<Figur> getWeisseFiguren() {
         return weisseFiguren;
     }
     
+    /**
+     * Gibt die geschlagenen schwarzen Figuren zur&uuml;ck.
+     * @return Liste von schwarzen Figuren
+     */
     public List<Figur> getGeschlagenSchwarz() {
         return geschlagenSchwarz;
     }
     
+    /**
+     * Gibt die geschlagenen wei&szlig;en Figuren zur&uuml;ck.
+     * @return Liste von wei&szlig;en Figuren
+     */
     public List<Figur> getGeschlagenWeiss() {
         return geschlagenWeiss;
     }
     
-    
+    /**
+     * Gibt an, ob das Brett momentan von Wei&szlig; oder von Schwarz aus 
+     * gesehen wird, beziehungsweise wer am Zug ist.
+     * @return <b>true</b> f&uuml;r wei&szlig;, <b>false</b> f&uuml;r schwarz
+     */
+    public boolean getAusrichtung() {
+        return richtigAusgerichtet;
+    }
     
     
 }
