@@ -56,7 +56,7 @@ public class SpielfeldGUI extends JPanel {
         
         this.setLayout(new BorderLayout());
         Container cCenter = new JPanel();
-        cCenter.setLayout(new GridLayout(8, 8));
+        cCenter.setLayout(new GridLayout(0, 8));
         Color braun = new Color(181, 81, 16);
         Color weiss = new Color(255, 248, 151);
         boolean abwechslung = false;
@@ -77,10 +77,7 @@ public class SpielfeldGUI extends JPanel {
                     abwechslung = false;
                 }
                 cCenter.add(temp);
-            }
-            
-            
-            
+            }    
         }
         
         
