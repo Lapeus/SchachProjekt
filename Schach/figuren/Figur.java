@@ -106,6 +106,10 @@ public abstract class Figur {
             this.setGezogen(true);
         }
         
+        /* Der Zug ist nun vorbei. Daher aendert sich der aktive Spieler und
+         * das Spielfeld muss gedreht werden.
+         */
+        
     }
     
     /**
@@ -159,7 +163,7 @@ public abstract class Figur {
      * @return Der ganzzahlige Index (Zwischen 0 und 63)
      */
     protected int getFeldIndex() {
-        return position.getX() + position.getY() * 8;
+        return position.getXK() + position.getYK() * 8;
     }
     
     /**

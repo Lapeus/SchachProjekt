@@ -62,7 +62,7 @@ public class Turm extends Figur {
                     boolean zulaessig = false;
                     if (i == -1) {
                         // Auf linken Rand pruefen
-                        if (super.getPosition().getX() > 0) {
+                        if (super.getPosition().getXK() > 0) {
                             zulaessig = true;
                         } else {
                             // Ende der Zeile erreicht
@@ -70,7 +70,7 @@ public class Turm extends Figur {
                         }
                     } else if (i == 1) {
                         // Auf rechten Rand pruefen
-                        if (super.getPosition().getX() < 7) {
+                        if (super.getPosition().getXK() < 7) {
                             zulaessig = true;
                         } else {
                             // Ende der Zeile erreicht
@@ -100,12 +100,12 @@ public class Turm extends Figur {
                 boolean zulaessig = false;
                 if (i == -1) {
                     // Auf linken Rand pruefen
-                    if (super.getPosition().getX() > 0) {
+                    if (super.getPosition().getXK() > 0) {
                         zulaessig = true;
                     }
                 } else if (i == 1) {
                     // Auf rechten Rand pruefen
-                    if (super.getPosition().getX() < 7) {
+                    if (super.getPosition().getXK() < 7) {
                         zulaessig = true;
                     }
                 } else if (i == -8 || i == 8) {

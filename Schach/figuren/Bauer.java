@@ -65,7 +65,7 @@ public class Bauer extends Figur {
         }
         
         // Wenn links noch ein Feld ist
-        if (super.getPosition().getX() > 0) {
+        if (super.getPosition().getXK() > 0) {
             // Wenn schraeg links vorne eine gegnerische Figur steht
             if (super.getFigurAt(getFeldIndex() + indizes[2]) != null 
                 && super.getFigurAt(getFeldIndex() + indizes[2]).getFarbe() 
@@ -76,7 +76,7 @@ public class Bauer extends Figur {
         }
         
         // Wenn rechts noch ein Feld ist
-        if (super.getPosition().getX() < 7) {
+        if (super.getPosition().getXK() < 7) {
             // Wenn schraeg rechts vorne eine gegnerische Figur steht
             if (super.getFigurAt(getFeldIndex() + indizes[3]) != null 
                 && super.getFigurAt(getFeldIndex() + indizes[3]).getFarbe() 

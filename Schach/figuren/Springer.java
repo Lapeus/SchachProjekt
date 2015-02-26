@@ -54,22 +54,22 @@ public class Springer extends Figur {
                 boolean zulaessig = false;
                 if (i == -10 || i == 6) {
                     // Wenn die Figur zwei Felder nach links geht
-                    if (super.getPosition().getX() > 1) {
+                    if (super.getPosition().getXK() > 1) {
                         zulaessig = true;
                     }
                 } else if (i == -17 || i == 15) {
                     // Wenn die Figur ein Feld nach links geht
-                    if (super.getPosition().getX() > 0) {
+                    if (super.getPosition().getXK() > 0) {
                         zulaessig = true;
                     }
                 } else if (i == -15 || i == 17) {
                     // Wenn die Figur ein Feld nach rechts geht
-                    if (super.getPosition().getX() < 7) {
+                    if (super.getPosition().getXK() < 7) {
                         zulaessig = true;
                     }
                 } else if (i == -6 || i == 10) {
                     // Wenn die Figur zwei Felder nach rechts geht
-                    if (super.getPosition().getX() < 6) {
+                    if (super.getPosition().getXK() < 6) {
                         zulaessig = true;
                     }
                 }

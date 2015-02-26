@@ -58,12 +58,12 @@ public class Koenig extends Figur {
                     zulaessig = true;
                 } else if (i == -9 || i == -1 || i == 7) {
                     // Nach links muss auf Rand getestet werden
-                    if (super.getPosition().getX() > 0) {
+                    if (super.getPosition().getXK() > 0) {
                         zulaessig = true;
                     }
                 } else if (i == -7 || i == 1 || i == 9) {
                     // Nach rechts muss auf Rand getestet werden
-                    if (super.getPosition().getX() < 7) {
+                    if (super.getPosition().getXK() < 7) {
                         zulaessig = true;
                     }
                 }
