@@ -51,7 +51,7 @@ public abstract class Figur {
     public abstract void praePruefung();
     
     /**
-     * Abstrakte Methode, die alle Felder berechnet, auf die die Figur nach den
+     * Berechnet alle Felder, auf die die Figur nach den
      * eingestellten Regeln ziehen kann.
      * Dabei werden alle nach den Zugregeln zul&auml;ssige Felder ermittelt
      * und anschlie&szlig;end durch eine weitere Methode darauf getestet, ob
@@ -61,7 +61,7 @@ public abstract class Figur {
     public abstract List<Feld> getMoeglicheFelder();
     
     /**
-     * Abstrakte Methode, die die &uuml;bergebenen Zielfeld-M&ouml;glichkeiten
+     * Methode, die die &uuml;bergebenen Zielfeld-M&ouml;glichkeiten
      * dahin gehend pr&uuml;ft, ob der eigene K&ouml;nig danach im Schach steht.
      * @param felder : Eine Liste von vorher berechneten m&ouml;glichen 
      * Zielfeldern des Zuges

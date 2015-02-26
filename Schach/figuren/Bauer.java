@@ -5,12 +5,20 @@ import gui.Feld;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Der Bauplan für die Spielfigur Bauer. <br>
+ * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
+ * m&ouml;glichen Z&uuml;ge.
+ */
 public class Bauer extends Figur {
-
-    public Bauer() {
-        
-    }
     
+    /**
+     * Erzeugt einen neuen Bauern.
+     * Einziger Konstruktor dieser Klasse.
+     * @param position : Das Feld auf dem die Figur stehen soll
+     * @param farbe : Die Spielfarbe der Figur (<b>true</b> f&uuml;r wei&szlig;
+     * , <b>false</b> f&uuml;r schwarz)
+     */
     public Bauer(Feld position, boolean farbe) {
         super.setPosition(position);
         super.setFarbe(farbe);
@@ -18,11 +26,17 @@ public class Bauer extends Figur {
         super.setGezogen(false);
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public void praePruefung() {
         // TODO Auto-generated method stub
         
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public List<Feld> getMoeglicheFelder() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
         // Wenn an der jetzigen Stelle plus 8 (vorne) keine Figur steht
@@ -43,9 +57,9 @@ public class Bauer extends Figur {
         // Wenn links noch ein Feld ist
         if (super.getPosition().getX() > 0) {
             // Wenn schraeg links vorne eine gegnerische Figur steht
-            if (super.getFigurAt(getFeldIndex() + 7) != null || 
-                super.getFigurAt(getFeldIndex() + 7).getFarbe() != 
-                super.getFarbe()) {
+            if (super.getFigurAt(getFeldIndex() + 7) != null 
+                || super.getFigurAt(getFeldIndex() + 7).getFarbe() 
+                != super.getFarbe()) {
                 // Fuege das entsprechende Feld der Liste zu
                 moeglicheFelder.add(super.getFeld(getFeldIndex() + 7));
             }
@@ -54,9 +68,9 @@ public class Bauer extends Figur {
         // Wenn rechts noch ein Feld ist
         if (super.getPosition().getX() < 7) {
             // Wenn schraeg rechts vorne eine gegnerische Figur steht
-            if (super.getFigurAt(getFeldIndex() + 9) != null || 
-                super.getFigurAt(getFeldIndex() + 9).getFarbe() != 
-                super.getFarbe()) {
+            if (super.getFigurAt(getFeldIndex() + 9) != null 
+                || super.getFigurAt(getFeldIndex() + 9).getFarbe() 
+                != super.getFarbe()) {
                 // Fuege das entsprechende Feld der Liste zu
                 moeglicheFelder.add(super.getFeld(getFeldIndex() + 9));
             }
@@ -66,7 +80,10 @@ public class Bauer extends Figur {
         return moeglicheFelder;
     }
 
-    public void postPruefung() {
+    /**
+     * {@inheritDoc}
+     */
+    public void postPruefung(List<Feld> felder) {
         // TODO Auto-generated method stub
         
     }
