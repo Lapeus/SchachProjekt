@@ -64,7 +64,7 @@ public class SpielfeldGUI extends JPanel {
         for (int i = 0; i < 8; i++) {
             abwechslung = !abwechslung;
             for (int j = 0; j < 8; j++) {
-//                JLabel temp = felderListe.get(counter);
+                //JLabel temp = new JLabel();
                 Feld temp = felderListe.get(counter);
                 temp.setOpaque(true);
                 counter++;
@@ -79,8 +79,9 @@ public class SpielfeldGUI extends JPanel {
                 cCenter.add(temp);
             }    
         }
-        this.add(cCenter, BorderLayout.CENTER);
         
+        
+        this.add(cCenter, BorderLayout.CENTER);
         
         /*
         this.setLayout(new GridLayout(8, 8));

@@ -103,6 +103,9 @@ public class Spielfeld {
         felder.get(4).setFigur(koenig);
         
     }
+    public List<Feld> getFelder() {
+        return felder;
+    }
     
     public List<Figur> getSchwarzeFiguren() {
         return schwarzeFiguren;
