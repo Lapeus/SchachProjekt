@@ -31,6 +31,7 @@ public class Bauer extends Figur {
      * {@inheritDoc}
      */
     protected List<Feld> getMoeglicheFelder() {
+        System.out.println("getMoeglicheFelder wird aufgerufen");
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
         // Indizes fuer weiss
         int[] indizes = {8, 16, 7, 9};
@@ -81,14 +82,6 @@ public class Bauer extends Figur {
         
         // Gibt die Liste der moeglichen Felder zurueck
         return moeglicheFelder;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Feld> getKorrekteFelder() {
-        // TODO Auto-generated method stub
-        return null;
     }
    
     

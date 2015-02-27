@@ -304,8 +304,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * Fügt zudem jedem Feld einen MouseListener hinzu (this)
      */
     private void fuelleFelderListe() {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int j = 7; j >= 0; j--) {
+            for (int i = 0; i < 8; i++) {
                 Feld temp = new Feld(i, j);
                 temp.addMouseListener(this);
                 felderListe.add(temp);
@@ -330,7 +330,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         } else if (ausgewaehlteFigur != null) {
             /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
              dieser ist */
-            if (ausgewaehlteFigur.getKorrekteFelder().contains(temp)) {
+            List<Feld> test = ausgewaehlteFigur.getKorrektFelder();
+            
+            if (ausgewaehlteFigur.getKorrektFelder().contains(temp)) {
                 ausgewaehlteFigur.setPosition(temp);
                 temp.setBackground(rot);
                 ausgewaehlteFigur = null;
