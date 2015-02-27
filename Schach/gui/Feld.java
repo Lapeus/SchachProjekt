@@ -78,4 +78,8 @@ public class Feld extends JLabel {
     public void setFigur(Figur figur) {
         this.figur = figur;
     }
+    
+    public String getTextT() {
+        return "test";
+    }
 }

@@ -11,7 +11,7 @@ public class SeitenwechselListener implements ActionListener {
     }
     
     public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand(); 
+        String command = e.getActionCommand();
         if (command == "Spielen") {
             parent.seitenAuswahl("Spielerauswahl");
         }

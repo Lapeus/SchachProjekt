@@ -36,6 +36,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     private JTextField nameEAST = new JTextField("");
     private JComboBox boxWEST;
     private JComboBox boxEAST;
+    private ButtonGroup bGFarbauswahl;
 
     // Ende Attribute
     
@@ -48,7 +49,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     
     private void init() {
         this.setLayout(new BorderLayout());
-        bSpielen.addActionListener(new SeitenwechselListener(parent));
+        bSpielen.addActionListener(this);
         bSpielen.setActionCommand(bSpielen.getText());
         setBackground(cBraunRot);        
         // North
@@ -100,10 +101,11 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         
         JRadioButton weiss = new JRadioButton("weiss");
         weiss.setActionCommand("weiss");
+        weiss.setSelected(true);
         weiss.setBackground(cBraunRot);
         weiss.addActionListener(this);
         
-        ButtonGroup bGFarbauswahl = new ButtonGroup();
+        bGFarbauswahl = new ButtonGroup();
         bGFarbauswahl.add(weiss);
         bGFarbauswahl.add(schwarz);
         cCenterMenu.add(weiss);
@@ -154,6 +156,25 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     // ActionListener
 
     public void actionPerformed(ActionEvent arg0) {
+        if (arg0.getActionCommand().equals("Spiel starten")) {
+            if (!((nameWEST.getText().equals("")) 
+                || nameEAST.getText().equals(""))) {
+                spieler1 = new Spieler(nameWEST.getText());
+                spieler2 = new Spieler(nameEAST.getText());
+                if (bGFarbauswahl.getSelection().
+                    getActionCommand().equals("weiss")) {
+                    spieler1.setFarbe(true);
+                    spieler2.setFarbe(false);
+                } else {
+                    spieler1.setFarbe(false);
+                    spieler2.setFarbe(true);
+                }
+                System.out.println(spieler1.getName());
+                parent.setContentPane(new SpielfeldGUI(parent, spieler1,
+                    spieler2));
+                parent.revalidate();
+            }
+        }
         if (arg0.getActionCommand().equals("boxWEST")) {
             nameWEST.setText("TEST WEST");
         } 

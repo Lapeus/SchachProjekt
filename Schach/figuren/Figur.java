@@ -214,7 +214,7 @@ public abstract class Figur {
      * @return Eine Figur 
      */
     protected Figur getFigurAt(int index) {
-        return getFeld().getFigur();
+        return getFeld(index).getFigur();
     }
     
     /**

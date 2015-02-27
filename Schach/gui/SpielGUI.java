@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
 
+import daten.Spieler;
+
 public class SpielGUI extends JFrame {
     
     // Anfang Attribute
@@ -63,11 +65,6 @@ public class SpielGUI extends JFrame {
         case "Regelwerk":
             seite = new Statistiken(this);
             this.setContentPane(seite);
-            break;
-            
-        case "SpielfeldGUI":
-            spielfeld = new SpielfeldGUI(this);
-            this.setContentPane(spielfeld);
             break;
             
 
