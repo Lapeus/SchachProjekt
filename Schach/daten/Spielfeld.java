@@ -143,6 +143,14 @@ public class Spielfeld {
         weisseFiguren.add(koenig);
         felder.get(4).setFigur(koenig);
         
+        // Allen Feldern das Spielfeld zufuegen
+        for (Figur figur : schwarzeFiguren) {
+            figur.setSpielfeld(this);
+        }
+        for (Figur figur : weisseFiguren) {
+            figur.setSpielfeld(this);
+        }
+        
     }
     
     /**

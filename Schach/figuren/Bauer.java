@@ -31,7 +31,6 @@ public class Bauer extends Figur {
      * {@inheritDoc}
      */
     protected List<Feld> getMoeglicheFelder() {
-        System.out.println("getMoeglicheFelder wird aufgerufen");
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
         // Indizes fuer weiss
         int[] indizes = {8, 16, 7, 9};
@@ -43,12 +42,11 @@ public class Bauer extends Figur {
             indizes[2] = -9; // Getauscht, weil sie ja entgegengesetzt laufen
             indizes[3] = -7; //   ""           ""          ""           ""
         }
-        // Wenn an der jetzigen Stelle plus 8 (vorne) keine Figur steht
-        if (super.getFigurAt(getFeldIndex() + indizes[0]) == null) {
+        // Wenn an der jetzigen Stelle plus 8 (vorne) keine Figur steht  
+        if (getFigurAt(getFeldIndex() + indizes[0]) == null) {
             // Fuege das entsprechende Feld der Liste zu
             moeglicheFelder.add(super.getFeld(getFeldIndex() + indizes[0]));
         }
-        
         // Wenn die Figur noch nicht bewegt wurde
         if (!super.getGezogen()) {
             // Wenn an der jetzigen Stelle plus 16 (2 vorne) keine Figur steht
