@@ -131,8 +131,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         
         // SpielfeldGUI erstellen
         this.setLayout(new BorderLayout());
-        cCenter.setLayout(new GridLayout(0, 8));
-        spielfeldUpdate();
+        cCenter.setLayout(new GridLayout(8, 8));
+        spielfeldAufbau();
         
         
         
@@ -143,24 +143,23 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
     /**
      * Dient zum Updaten der SpielfeldGUI nach jeder Veränderung. 
      */
-    private void spielfeldUpdate() {
+    private void spielfeldAufbau() {
         // boolean für abwechselnd schwarz/weiß
         boolean abwechslung = false;
         // zähler für richtge Position in der Felderliste
         int counter = 63;
         // Für jede Zeile
-        for (int i = 7; i >= 0; i--) {
+        for (int i = 0; i < 8; i++) {
             // in der neuen Reihe kommt die gleiche Farbe wie ende letzer Reihe
             abwechslung = !abwechslung;
             // Für jede Spalte
             for (int j = 7; j >= 0; j--) {
                 /* passendes Feld aus Spielfeld lesen und Hintergrund sichtbar 
                  * machen. Dann den Zähler für die Position in der Liste 
-                 * erhöhen
+                 * vermindern
                  */ 
-                Feld temp = spielfeld.getFelder().get(counter);
+                Feld temp = spielfeld.getFelder().get(counter - j);
                 temp.setOpaque(true);
-                counter--;
                 // Wenn die Farbe "schwarz"(Braun) ist dann Feld braun machen
                 if (!abwechslung) {
                     temp.setBackground(braun);
@@ -173,8 +172,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
                 // Dem cCenter Panel das fertige Feld hinzufügen
                 cCenter.add(temp);
             }    
+            counter -= 8;
         }
-        // - schwarze Figurenbilder
+        spielfeldUIUpdate();
+    }
+    /**
+     * Updaten der Spielfeldoberfläche.
+     */
+    private void spielfeldUIUpdate() {
+     // - schwarze Figurenbilder
         for (Figur schwarz  : spielfeld.getSchwarzeFiguren()) {
             Feld momentan = schwarz.getPosition();
             if (schwarz.getWert() == 900) {
@@ -299,8 +305,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * Fügt zudem jedem Feld einen MouseListener hinzu (this)
      */
     private void fuelleFelderListe() {
-        for (int j = 7; j >= 0; j--) {
-            for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 Feld temp = new Feld(i, j);
                 temp.addMouseListener(this);
                 felderListe.add(temp);
@@ -314,21 +320,26 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      */
     public void mouseClicked(MouseEvent arg0) {
         Color rot = new Color(204, 0, 0);
-        Feld temp = (Feld) arg0.getSource();
-        spielfeldUpdate();
-        // Wenn eine Figur ausgewählt wird
-        if (temp.getFigur() != null) {
+        Feld momentanesFeld = (Feld) arg0.getSource();
+        spielfeldAufbau();
+        /* Wenn eine Figur ausgewählt wird und es noch keine ausgewaehlte Figur
+           gibt.
+        */
+        if (momentanesFeld.getFigur() != null) {
             // Wird diese als neue Ausgewählte Figur gespeichert
-            ausgewaehlteFigur = temp.getFigur();
-            temp.setBackground(rot);
-            // Wenn es eine ausgewaehlte Figur gibt
+            ausgewaehlteFigur = momentanesFeld.getFigur();
+            momentanesFeld.setBackground(rot);
+            // Wenn es bereits eine ausgewaehlte Figur gibt
         } else if (ausgewaehlteFigur != null) {
             /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
              dieser ist */
-            if (ausgewaehlteFigur.getKorrektFelder().contains(temp)) {
-                ausgewaehlteFigur.setPosition(temp);
-                temp.setBackground(rot);
+            if (ausgewaehlteFigur.getKorrektFelder().contains(momentanesFeld)) {
+                ausgewaehlteFigur.getPosition().setIcon(null);
+                ausgewaehlteFigur.ziehe(momentanesFeld);
                 ausgewaehlteFigur = null;
+                spielfeldAufbau();
+                
+                momentanesFeld.setBackground(rot);
             }
         }
             
