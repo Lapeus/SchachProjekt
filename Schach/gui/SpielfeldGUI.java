@@ -1,14 +1,26 @@
 package gui;
 
+import javax.imageio.ImageIO;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import daten.Spiel;
@@ -107,7 +119,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      *  dem spielfeld
      * 4. Erstellt das Aussehen des Spielfelds  
      */
-    private void init() {   
+    private void init() { 
+        Dimension size = new Dimension(800, 800);
+        parent.setMinimumSize(size);
+        parent.setSize(size);
         
         // FelderListe füllen
         felderListe = new ArrayList<Feld>();
@@ -168,12 +183,119 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         for (Figur schwarz  : spielfeld.getSchwarzeFiguren()) {
             Feld momentan = schwarz.getPosition();
             if (schwarz.getWert() == 900) {
-                momentan.setBackground(null);
+                try {
+                    Image test = ImageIO.read(new File("queenb.gif"));
+                    ImageIcon test2  = new ImageIcon(test);
+                    momentan.setIcon(test2);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+                
+            }
+            if (schwarz.getWert() == 100) {
+                try {
+                    Image test = ImageIO.read(new File("pawnb.gif"));
+                    ImageIcon test2  = new ImageIcon(test);
+                    momentan.setIcon(test2);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (schwarz.getWert() == 0) {
+                try {
+                    Image test = ImageIO.read(new File("kingb.gif"));
+                    ImageIcon test2  = new ImageIcon(test);
+                    momentan.setIcon(test2);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (schwarz.getWert() == 325) {
+                try {
+                    Image test = ImageIO.read(new File("bishopb.gif"));
+                    ImageIcon test2  = new ImageIcon(test);
+                    momentan.setIcon(test2);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (schwarz.getWert() == 275) {
+                try {
+                    Image test = ImageIO.read(new File("knightb.gif"));
+                    ImageIcon test2  = new ImageIcon(test);
+                    momentan.setIcon(test2);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (schwarz.getWert() == 465) {
+                try {
+                    Image test = ImageIO.read(new File("rookb.gif"));
+                    ImageIcon test2  = new ImageIcon(test);
+                    momentan.setIcon(test2);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
             }
         }
         // - weiße Figurenbilder
         for (Figur weiss  : spielfeld.getWeisseFiguren()) {
-            weiss.getPosition().setBackground(null);
+            Feld momentan = weiss.getPosition();
+            if (weiss.getWert() == 900) {
+                try {
+                    Image test = ImageIO.read(new File("queenw.gif"));
+                    ImageIcon test2  = new ImageIcon(test);
+                    momentan.setIcon(test2);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+                
+            }
+            if (weiss.getWert() == 100) {
+                try {
+                    Image test = ImageIO.read(new File("pawnw.gif"));
+                    ImageIcon test2  = new ImageIcon(test);
+                    momentan.setIcon(test2);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (weiss.getWert() == 0) {
+                try {
+                    Image test = ImageIO.read(new File("kingw.gif"));
+                    ImageIcon test2  = new ImageIcon(test);
+                    momentan.setIcon(test2);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (weiss.getWert() == 325) {
+                try {
+                    Image test = ImageIO.read(new File("bishopw.gif"));
+                    ImageIcon test2  = new ImageIcon(test);
+                    momentan.setIcon(test2);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (weiss.getWert() == 275) {
+                try {
+                    Image test = ImageIO.read(new File("knightw.gif"));
+                    ImageIcon test2  = new ImageIcon(test);
+                    momentan.setIcon(test2);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (weiss.getWert() == 465) {
+                try {
+                    Image test = ImageIO.read(new File("rookw.gif"));
+                    ImageIcon test2  = new ImageIcon(test);
+                    momentan.setIcon(test2);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
         }
     }
     
