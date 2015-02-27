@@ -147,18 +147,18 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         // boolean für abwechselnd schwarz/weiß
         boolean abwechslung = false;
         // zähler für richtge Position in der Felderliste
-        int counter = 63;
+        int counter = 56;
         // Für jede Zeile
         for (int i = 0; i < 8; i++) {
             // in der neuen Reihe kommt die gleiche Farbe wie ende letzer Reihe
             abwechslung = !abwechslung;
             // Für jede Spalte
-            for (int j = 7; j >= 0; j--) {
+            for (int j = 0; j < 8; j++) {
                 /* passendes Feld aus Spielfeld lesen und Hintergrund sichtbar 
                  * machen. Dann den Zähler für die Position in der Liste 
                  * vermindern
                  */ 
-                Feld temp = spielfeld.getFelder().get(counter - j);
+                Feld temp = spielfeld.getFelder().get(counter + j);
                 temp.setOpaque(true);
                 // Wenn die Farbe "schwarz"(Braun) ist dann Feld braun machen
                 if (!abwechslung) {
@@ -307,7 +307,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
     private void fuelleFelderListe() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                Feld temp = new Feld(i, j);
+                Feld temp = new Feld(j, i);
                 temp.addMouseListener(this);
                 felderListe.add(temp);
             }    

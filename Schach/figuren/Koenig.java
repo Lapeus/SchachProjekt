@@ -70,13 +70,6 @@ public class Koenig extends Figur {
         return moeglicheFelder;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Feld> getKorrekteFelder() {
-        // TODO Auto-generated method stub
-        return null;
-    }
     
 
 }

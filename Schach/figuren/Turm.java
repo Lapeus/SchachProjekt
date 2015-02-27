@@ -43,10 +43,15 @@ public class Turm extends Figur {
             int zaehl = 1;
             int newIndex = i;
             boolean keinZeilenumbruch = true;
-            // Solange das naechste Feld frei ist und wir nicht den Rand
-            // erreicht haben
-            while (super.istFrei(super.getFeldIndex() + (i * zaehl)) 
-                && keinZeilenumbruch) {
+            // Berechnung des Index' des neuen Feldes
+            int index = super.getFeldIndex() + (i * zaehl);
+            // Pruefung auf Rand sowie die restlichen Bedingungen (s.While)
+            boolean bedingung = (index >= 0 && index < 64) 
+                && super.istFrei(index) && keinZeilenumbruch;
+            /* Solange das naechste Feld frei ist und der Rand nicht erreicht
+             * ist
+             */ 
+            while (bedingung) {
                 /* Wenn der Index zwischen 0 und 63 liegt und das Feld
                  * besetzt werden darf
                  */
@@ -81,6 +86,10 @@ public class Turm extends Figur {
                 }
                 zaehl++;
                 newIndex = i * zaehl;
+                // Aktualisierung der Index- und While-Bedingung
+                index = super.getFeldIndex() + (i * zaehl);
+                bedingung = (index >= 0 && index < 64) 
+                    && super.istFrei(index) && keinZeilenumbruch;
             }
             
             // Wenn das naechste Feld nicht mehr frei ist
@@ -116,13 +125,6 @@ public class Turm extends Figur {
         return moeglicheFelder;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<Feld> getKorrekteFelder() {
-        // TODO Auto-generated method stub
-        return null;
-    }
     
 
 }
