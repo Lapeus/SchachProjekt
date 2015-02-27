@@ -6,6 +6,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,7 +14,11 @@ import java.awt.event.ActionListener;
 
 
 
+
+
+
 import javax.swing.ButtonGroup;
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -174,7 +179,6 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                     spieler1.setFarbe(false);
                     spieler2.setFarbe(true);
                 }
-                System.out.println(spieler1.getName());
                 parent.setContentPane(new SpielfeldGUI(parent, spieler1,
                     spieler2));
                 parent.revalidate();

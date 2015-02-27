@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
 
+import daten.Gesamtdatensatz;
 import daten.Spieler;
 
 public class SpielGUI extends JFrame {
@@ -13,6 +14,7 @@ public class SpielGUI extends JFrame {
     // Anfang Attribute
     private static final long serialVersionUID = -8895681303810255159L;
     private SpielfeldGUI spielfeld;
+    private Gesamtdatensatz gesamtdatensatz;
     // Ende Attribute
 
     // Konstruktor
@@ -73,6 +75,18 @@ public class SpielGUI extends JFrame {
         }
         this.revalidate();
         this.paint(getGraphics());
+    }
+    
+    public Gesamtdatensatz getGesamtdatensatz() {
+        return gesamtdatensatz;
+    }
+    
+    private void gesamtdatenLaden() {
+        
+    }
+    
+    private void gesamtdatenSpeichern() {
+        
     }
     
     

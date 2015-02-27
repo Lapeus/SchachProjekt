@@ -4,22 +4,17 @@ import javax.imageio.ImageIO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -152,20 +147,20 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         // boolean für abwechselnd schwarz/weiß
         boolean abwechslung = false;
         // zähler für richtge Position in der Felderliste
-        int counter = 0;
+        int counter = 63;
         // Für jede Zeile
-        for (int i = 0; i < 8; i++) {
+        for (int i = 7; i >= 0; i--) {
             // in der neuen Reihe kommt die gleiche Farbe wie ende letzer Reihe
             abwechslung = !abwechslung;
             // Für jede Spalte
-            for (int j = 0; j < 8; j++) {
+            for (int j = 7; j >= 0; j--) {
                 /* passendes Feld aus Spielfeld lesen und Hintergrund sichtbar 
                  * machen. Dann den Zähler für die Position in der Liste 
                  * erhöhen
                  */ 
                 Feld temp = spielfeld.getFelder().get(counter);
                 temp.setOpaque(true);
-                counter++;
+                counter--;
                 // Wenn die Farbe "schwarz"(Braun) ist dann Feld braun machen
                 if (!abwechslung) {
                     temp.setBackground(braun);
@@ -330,8 +325,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         } else if (ausgewaehlteFigur != null) {
             /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
              dieser ist */
-            List<Feld> test = ausgewaehlteFigur.getKorrektFelder();
-            
             if (ausgewaehlteFigur.getKorrektFelder().contains(temp)) {
                 ausgewaehlteFigur.setPosition(temp);
                 temp.setBackground(rot);
