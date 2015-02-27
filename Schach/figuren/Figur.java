@@ -76,7 +76,8 @@ public abstract class Figur {
      * w&uuml;rde.
      * @return Liste der tats&auml;chlich ziehbaren Felder
      */
-    public List<Feld> getKorrekteFelder() {
+    public List<Feld> getKorrektFelder() {
+        System.out.println("KorrekteFelder Aufruf");
         // Uebergabe der zu pruefenden Felder
         List<Feld> korrekt = this.getMoeglicheFelder();
         // Das Feld auf dem der eigene Koenig steht
@@ -108,6 +109,7 @@ public abstract class Figur {
         
         // Gib die korrigierte Liste zurueck
         return korrekt;
+        
     }
     
     /**
