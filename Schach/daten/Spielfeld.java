@@ -16,6 +16,7 @@ import gui.Feld;
  * Verwaltet die Figuren und ihre Position auf dem Brett.
  * Gibt zus&auml;tzlich an, ob das Brett aktuell aus wei&szlig;er oder aus
  * schwarzer Sicht gezeigt wird.
+ * @author Christian Ackermann
  */
 public class Spielfeld {
 

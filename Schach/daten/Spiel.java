@@ -5,6 +5,7 @@ package daten;
  * Ein Spiel besteht aus einem Namen, den beteiligten Spielern, dem 
  * zugehörigen Spielfeld, sowie s&auml;mtliche ben&ouml;tigte Daten und 
  * Einstellungen.
+ * @author Christian Ackermann
  */
 public class Spiel {
 
