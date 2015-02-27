@@ -10,6 +10,7 @@ import daten.Spielfeld;
  * Eine Klasse die alle Spielfiguren verwaltet.
  * Die abstrakte Klasse <i>Figur</i> stellt den Bauplan 
  * für s&auml;mtliche Figuren bereit.
+ * @author Christian Ackermann
  */
 public abstract class Figur {
 
@@ -20,7 +21,8 @@ public abstract class Figur {
     
     /**
      * Das Feld, auf dem die Figur momentan steht. <br>
-     * Wurde eine Figur geschlagen, wird als Feld <b>null</b> angegeben.
+     * Wurde eine Figur geschlagen, wird das letzte Feld auf dem sie stand,
+     * beibehalten, um diesen Zug r&uuml;ckg&auml;ngig machen zu k&ouml;nnen
      */
     private Feld position;
     
@@ -45,28 +47,68 @@ public abstract class Figur {
      */
     private boolean bereitsGezogen;
     
-    /**
-     * 
-     */
-    public abstract void praePruefung();
     
     /**
      * Berechnet alle Felder, auf die die Figur nach den
-     * eingestellten Regeln ziehen kann.
-     * Dabei werden alle nach den Zugregeln zul&auml;ssige Felder ermittelt
-     * und anschlie&szlig;end durch eine weitere Methode darauf getestet, ob
-     * der K&ouml;nig nun im Schach steht.
-     * @return Liste von zul&auml;ssigen Feldern
+     * Zugregeln ziehen kann.
+     * @return Liste von m&ouml;glichen Feldern
      */
-    public abstract List<Feld> getMoeglicheFelder();
+    protected abstract List<Feld> getMoeglicheFelder();
+    /* Diese Methode sieht fuer Dame, Turm und Laeufer ziemlich aehnlich aus.
+     * Es werden wie bei allen Figuren alle Richtungen durchgegangen und dann
+     * mittels einer while-Schleife vervielfacht. Dabei ist die Abbruchbedingung
+     * das Erreichen einer Figur oder des Spielfeldrandes.
+     * 
+     * Die Methoden fuer Springer und Koenig aehneln sich ebenfalls, da hier 
+     * nur einmal in jede moegliche Richtung gezogen wird, sofern dieses Feld
+     * existiert und frei ist.
+     * 
+     * Die Methode fuer den Bauern ist etwas anders, da hier wichtig ist, ob
+     * es ein weisser oder ein schwarzer Bauer ist. Ausserdem muss unterschieden
+     * werden, ob ein Feld frei ist, oder ob eine gegnerische Figur dort steht.
+     * Bauern duerfen schliesslich nur schraeg gezogen werden, wenn sie dabei 
+     * eine Figur schlagen koennen.
+     */
     
     /**
-     * Methode, die die &uuml;bergebenen Zielfeld-M&ouml;glichkeiten
-     * dahin gehend pr&uuml;ft, ob der eigene K&ouml;nig danach im Schach steht.
-     * @param felder : Eine Liste von vorher berechneten m&ouml;glichen 
-     * Zielfeldern des Zuges
+     * Pr&uuml;ft alle Felder die die Methode <i>getMoeglicheFelder</i> 
+     * vorschl&auml;gt, ob nach dem Zug der eigene K&ouml;nig im Schach stehen
+     * w&uuml;rde.
+     * @return Liste der tats&auml;chlich ziehbaren Felder
      */
-    public abstract void postPruefung(List<Feld> felder);
+    public List<Feld> getKorrekteFelder() {
+        // Uebergabe der zu pruefenden Felder
+        List<Feld> korrekt = this.getMoeglicheFelder();
+        // Das Feld auf dem der eigene Koenig steht
+        Feld koenigsfeld;
+        // Wenn weiss dran ist
+        if (farbe) {
+            // Der Koenig ist immer das letzte Element der Liste
+            int lastIndex = spielfeld.getWeisseFiguren().size() - 1;
+            koenigsfeld = spielfeld.getWeisseFiguren().get(lastIndex)
+                .getFeld();
+        } else {
+            // Der Koenig ist immer das letzte Element der List
+            int lastIndex = spielfeld.getSchwarzeFiguren().size() - 1;
+            koenigsfeld = spielfeld.getSchwarzeFiguren().get(lastIndex)
+                .getFeld();
+        }
+        /*<Simuliere jeden Zug und pruefe anschliessend erneut mit
+         * getMoeglicheFelder, ob diesmal jemand auf das Koenigsfeld ziehen
+         * kann.>
+         */
+        // Fuer jeden vorgeschlagenen Zug
+        for (Feld feld : korrekt) {
+            /*<Simuliere einen Zug>*/
+            
+            /*<Pruefe alle moeglichen Felder>*/
+            /*<Wenn der Koenig dabei ist, entferne dieses Feld aus der Liste>*/
+            
+        }
+        
+        // Gib die korrigierte Liste zurueck
+        return korrekt;
+    }
     
     /**
      * F&uuml;hrt einen Zug durch und passt alle n&ouml;tigen Listen und Felder
@@ -145,7 +187,7 @@ public abstract class Figur {
      * Gibt das Feld zur&uuml;ck, auf dem die Figur steht.
      * @return Ein Objekt vom Typ Feld
      */
-    public Feld getFeld() {
+    protected Feld getFeld() {
         return spielfeld.getFelder().get(getFeldIndex());
     }
     

@@ -9,6 +9,7 @@ import java.util.List;
  * Der Bauplan für die Spielfigur Springer. <br>
  * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
+ * @author Christian Ackermann
  */
 public class Springer extends Figur {
 
@@ -24,19 +25,11 @@ public class Springer extends Figur {
         super.setFarbe(farbe);
         super.setWert(275);
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void praePruefung() {
-        // TODO Auto-generated method stub
-        
-    }
 
     /**
      * {@inheritDoc}
      */
-    public List<Feld> getMoeglicheFelder() {
+    protected List<Feld> getMoeglicheFelder() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
         /*<Gehe alle Felder durch und schaue ob sie existieren und
          *nicht von eigenen Figuren besetzt sind.>
@@ -86,9 +79,9 @@ public class Springer extends Figur {
     /**
      * {@inheritDoc}
      */
-    public void postPruefung(List<Feld> felder) {
+    public List<Feld> getKorrekteFelder() {
         // TODO Auto-generated method stub
-        
+        return null;
     }
 
 }

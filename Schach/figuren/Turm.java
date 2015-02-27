@@ -9,6 +9,7 @@ import java.util.List;
  * Der Bauplan für die Spielfigur Turm. <br>
  * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
+ * @author Christian Ackermann
  */
 public class Turm extends Figur {
 
@@ -25,19 +26,11 @@ public class Turm extends Figur {
         super.setWert(465);
         super.setGezogen(false);
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void praePruefung() {
-        // TODO Auto-generated method stub
-        
-    }
 
     /**
      * {@inheritDoc}
      */
-    public List<Feld> getMoeglicheFelder() {
+    protected List<Feld> getMoeglicheFelder() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
         /*<Gehe alle horizontalen und vertikalen Felder durch und schaue ob 
          *sie existieren und nicht von eigenen Figuren besetzt sind.>
@@ -126,9 +119,9 @@ public class Turm extends Figur {
     /**
      * {@inheritDoc}
      */
-    public void postPruefung(List<Feld> felder) {
+    public List<Feld> getKorrekteFelder() {
         // TODO Auto-generated method stub
-        
+        return null;
     }
     
 

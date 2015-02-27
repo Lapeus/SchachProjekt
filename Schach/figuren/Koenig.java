@@ -9,6 +9,7 @@ import java.util.List;
  * Der Bauplan für die Spielfigur K&ouml;nig. <br>
  * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
+ * @author Christian Ackermann
  */
 public class Koenig extends Figur {
 
@@ -25,19 +26,11 @@ public class Koenig extends Figur {
         super.setWert(0); // Wert des Koenigs ist irrelevant
         super.setGezogen(false);
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void praePruefung() {
-        // TODO Auto-generated method stub
-        
-    }
 
     /**
      * {@inheritDoc}
      */
-    public List<Feld> getMoeglicheFelder() {
+    protected List<Feld> getMoeglicheFelder() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
         /*<Gehe alle Felder ringsherum durch und schaue ob sie existieren und
          *nicht von eigenen Figuren besetzt sind.>
@@ -80,9 +73,9 @@ public class Koenig extends Figur {
     /**
      * {@inheritDoc}
      */
-    public void postPruefung(List<Feld> felder) {
+    public List<Feld> getKorrekteFelder() {
         // TODO Auto-generated method stub
-        
+        return null;
     }
     
 
