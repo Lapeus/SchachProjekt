@@ -1,8 +1,10 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
@@ -19,6 +21,8 @@ public class Eroeffnungsseite extends Panel {
     
     private static final long serialVersionUID = 7611895668957599156L;
     private SpielGUI parent;
+    private static Color cBraunRot = new Color(172, 59, 32); 
+    private static Color cHellesBeige = new Color(255, 248, 151);
     private JButton spielen = new JButton("Spielen");
     private JButton spielLaden = new JButton("Spiel laden");
     private JButton einstellungen = new JButton("Einstellungen");
@@ -41,8 +45,9 @@ public class Eroeffnungsseite extends Panel {
     
     private void init() {
         this.setLayout(new BorderLayout(140, 20));
+        this.setBackground(cBraunRot);
         
-        // Button Action Listener
+        // Button ActionListener
         ActionListener wechselListener = new SeitenwechselListener(parent);
         spielen.addActionListener(wechselListener);
         spielen.setActionCommand(spielen.getText());
@@ -58,12 +63,21 @@ public class Eroeffnungsseite extends Panel {
         //North
         Container cNorth = new JPanel();
         cNorth.setLayout(new FlowLayout());
+        menue.setFont(new Font("Arial", Font.BOLD, 20));
         cNorth.add(menue);
+        cNorth.setBackground(cBraunRot);
         this.add(cNorth, BorderLayout.NORTH);
         
         // Center
         Container cCenter = new JPanel();
-        cCenter.setLayout(new GridLayout(0, 1));
+        cCenter.setBackground(cBraunRot);
+        cCenter.setLayout(new GridLayout(0, 1, 0, 30));
+        spielen.setBackground(cHellesBeige);
+        spielLaden.setBackground(cHellesBeige);
+        einstellungen.setBackground(cHellesBeige);
+        highscore.setBackground(cHellesBeige);
+        statistiken.setBackground(cHellesBeige);
+        regelwerk.setBackground(cHellesBeige);
         cCenter.add(spielen);
         cCenter.add(spielLaden);
         cCenter.add(einstellungen);

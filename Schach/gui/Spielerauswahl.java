@@ -3,10 +3,12 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 
 
 
@@ -29,7 +31,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     private SpielGUI parent;
     private JLabel lSpielname = new JLabel("Spielname: ");
     private JButton bSpielen = new JButton("Spiel starten");
-    private JTextField tSpielname = new JTextField("          ");
+    private JTextField tSpielname = new JTextField("                   ");
     private Spieler spieler1;
     private Spieler spieler2;
     private JTextField nameWEST = new JTextField("");
@@ -48,6 +50,8 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     }
     
     private void init() {
+        parent.setMinimumSize(new Dimension(500, 300));
+        parent.setSize(new Dimension(200, 200));
         this.setLayout(new BorderLayout());
         bSpielen.addActionListener(this);
         bSpielen.setActionCommand(bSpielen.getText());
@@ -56,6 +60,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         Container cNorth = new JPanel();
         cNorth.setLayout(new FlowLayout());
         cNorth.setBackground(cBraunRot);
+        lSpielname.setMinimumSize(new Dimension(150, 50));
         cNorth.add(lSpielname);
         tSpielname.setBackground(cHellesBeige);
         cNorth.add(tSpielname);
@@ -81,7 +86,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         // Label Farbauswahl
         Container cCenter = new JPanel();
         cCenter.setBackground(cBraunRot);
-        cCenter.setLayout(new GridLayout(0, 1));
+        cCenter.setLayout(new GridLayout(5, 1));
         
         Container cCenterLabel = new Container();
         cCenterLabel.setLayout(new FlowLayout());
@@ -122,7 +127,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     
     private JPanel auswahlPanel(String seite) {
         JPanel eingabePanel = new JPanel();
-        eingabePanel.setLayout(new GridLayout(0, 1, 5, 0));
+        eingabePanel.setLayout(new GridLayout(6, 1, 5, 0));
         // ComboBox
         // TODO Array mit den Spielern (spielerArray)
         String[] spielerArray = {"neuer Spieler", "Test"};
