@@ -180,7 +180,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * Updaten der Spielfeldoberfläche.
      */
     private void spielfeldUIUpdate() {
-     // - schwarze Figurenbilder
+     // - schwarze Figurenbilder werden geldaen 
         for (Figur schwarz  : spielfeld.getSchwarzeFiguren()) {
             Feld momentan = schwarz.getPosition();
             if (schwarz.getWert() == 900) {
@@ -326,11 +326,24 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
            gibt.
         */
         if (momentanesFeld.getFigur() != null) {
-            // Wird diese als neue Ausgewählte Figur gespeichert
             ausgewaehlteFigur = momentanesFeld.getFigur();
-            momentanesFeld.setBackground(rot);
-            for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
-                makieren.setBackground(rot);
+            /* Wenn der Spieler Weiß dran ist und die angeklickte Figur eine 
+             * weiße ist.
+            */
+            if (spielfeld.getAktuellerSpieler() 
+                && spielfeld.getWeisseFiguren().contains(ausgewaehlteFigur)) {
+                // Wird diese als neue Ausgewählte Figur gespeichert
+                momentanesFeld.setBackground(rot);
+                for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
+                    makieren.setBackground(rot);
+                }
+            }
+            if (!spielfeld.getAktuellerSpieler() 
+                && spielfeld.getSchwarzeFiguren().contains(ausgewaehlteFigur)) {
+                momentanesFeld.setBackground(rot);
+                for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
+                    makieren.setBackground(rot);
+                }
             }
             // Wenn es bereits eine ausgewaehlte Figur gibt
         } else if (ausgewaehlteFigur != null) {
@@ -345,7 +358,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
                 momentanesFeld.setBackground(rot);
             }
         }
-            
+          
         
     }
     
