@@ -328,7 +328,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         if (momentanesFeld.getFigur() != null && ausgewaehlteFigur == null) {
             // Wird diese als neue Ausgewählte Figur gespeichert
             ausgewaehlteFigur = momentanesFeld.getFigur();
-            
             /* Wenn der Spieler Weiß dran ist und dies angeklickte Figur eine 
              * weiße ist.
             */
@@ -361,7 +360,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
             }
         }
           
-        
     }
     
     /**

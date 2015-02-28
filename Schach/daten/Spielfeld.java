@@ -145,7 +145,7 @@ public class Spielfeld {
         schwarzeFiguren.add(koenig);
         felder.get(60).setFigur(koenig);
         // Einen weissen Koenig erstellen
-        koenig = new Koenig(felder.get(4), false);
+        koenig = new Koenig(felder.get(4), true);
         weisseFiguren.add(koenig);
         felder.get(4).setFigur(koenig);
         
