@@ -180,7 +180,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * Updaten der Spielfeldoberfläche.
      */
     private void spielfeldUIUpdate() {
-     // - schwarze Figurenbilder werden geldaen 
+     // - schwarze Figurenbilder
         for (Figur schwarz  : spielfeld.getSchwarzeFiguren()) {
             Feld momentan = schwarz.getPosition();
             if (schwarz.getWert() == 900) {
@@ -325,9 +325,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         /* Wenn eine Figur ausgewählt wird und es noch keine ausgewaehlte Figur
            gibt.
         */
-        if (momentanesFeld.getFigur() != null) {
+        if (momentanesFeld.getFigur() != null && ausgewaehlteFigur == null) {
+            // Wird diese als neue Ausgewählte Figur gespeichert
             ausgewaehlteFigur = momentanesFeld.getFigur();
-            /* Wenn der Spieler Weiß dran ist und die angeklickte Figur eine 
+            
+            /* Wenn der Spieler Weiß dran ist und dies angeklickte Figur eine 
              * weiße ist.
             */
             if (spielfeld.getAktuellerSpieler() 
@@ -355,7 +357,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
                 ausgewaehlteFigur = null;
                 spielfeldAufbau();
                 
-                momentanesFeld.setBackground(rot);
+                //momentanesFeld.setBackground(rot);
             }
         }
           
