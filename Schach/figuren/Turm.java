@@ -39,28 +39,28 @@ public class Turm extends Figur {
         int[] indizes = {-8, -1, 1, 8};
         // Fuer alle Felder
         for (int i : indizes) {
-            // Hilfsvariablen
+         // Hilfsvariablen
             int zaehl = 1;
             int newIndex = i;
             boolean keinZeilenumbruch = true;
             // Berechnung des Index' des neuen Feldes
             int index = super.getFeldIndex() + (i * zaehl);
-            // Pruefung auf Rand sowie die restlichen Bedingungen (s.While)
+            // 0 <= index <= 63 sowie die restlichen Bedingungen (s.While)
             boolean bedingung = (index >= 0 && index < 64) 
                 && super.istFrei(index) && keinZeilenumbruch;
             /* Solange das naechste Feld frei ist und der Rand nicht erreicht
              * ist
              */ 
             while (bedingung) {
-                /* Wenn der Index zwischen 0 und 63 liegt und das Feld
-                 * besetzt werden darf
-                 */
-                if (super.getFeldIndex() + newIndex >= 0 
-                    && super.getFeldIndex() + newIndex < 64) {
+                int neuerFeldIndex = super.getFeldIndex() + newIndex;
+                // Wenn der Index zwischen 0 und 63 liegt
+                if (neuerFeldIndex >= 0 
+                    && neuerFeldIndex < 64) {
                     boolean zulaessig = false;
                     if (i == -1) {
                         // Auf linken Rand pruefen
-                        if (super.getPosition().getXK() > 0) {
+                        // Wenn Zeilenumbruch war, dann waere neuer Wert 7
+                        if (super.getFeld(neuerFeldIndex).getXK() < 7) {
                             zulaessig = true;
                         } else {
                             // Ende der Zeile erreicht
@@ -68,20 +68,20 @@ public class Turm extends Figur {
                         }
                     } else if (i == 1) {
                         // Auf rechten Rand pruefen
-                        if (super.getPosition().getXK() < 7) {
+                        // Wenn Zeilenumbruch war, dann waere neuer Wert 0
+                        if (super.getFeld(neuerFeldIndex).getXK() > 0) {
                             zulaessig = true;
                         } else {
                             // Ende der Zeile erreicht
                             keinZeilenumbruch = false;
                         }
                     } else if (i == -8 || i == 8) {
-                        // Vorne und hinten muss nicht geprueft werden
+                        // Nach oben und unten muss nicht getestet werden
                         zulaessig = true;
                     }
                     
                     if (zulaessig) {
-                        moeglicheFelder.add(super.getFeld(
-                            super.getFeldIndex() + newIndex));
+                        moeglicheFelder.add(super.getFeld(neuerFeldIndex));
                     }
                 }
                 zaehl++;
@@ -91,34 +91,41 @@ public class Turm extends Figur {
                 bedingung = (index >= 0 && index < 64) 
                     && super.istFrei(index) && keinZeilenumbruch;
             }
-            
-            // Wenn das naechste Feld nicht mehr frei ist
-            /* Wenn der Index zwischen 0 und 63 liegt und das Feld
-             * besetzt werden darf
+           
+            /* Wenn es nicht am Zeilenumbruch gescheitert ist, sondern daran,
+             * dass eine gegnerische Figur im Weg stand, muss noch das naechste
+             * Feld zugefuegt werden, sofern dabei kein Zeilenumbruch auftritt
              */
-            if (super.getFeldIndex() + newIndex >= 0 
-                && super.getFeldIndex() + newIndex < 64
-                && super.istMoeglich(super.getFeldIndex() + newIndex)) {
-                boolean zulaessig = false;
-                if (i == -1) {
-                    // Auf linken Rand pruefen
-                    if (super.getPosition().getXK() > 0) {
+            
+            // Wenn es nicht am Zeilenumbruch gescheitert ist
+            if (keinZeilenumbruch) {
+                int neuerFeldIndex = super.getFeldIndex() + newIndex;
+                // Wenn der Index zwischen 0 und 63 liegt
+                if (neuerFeldIndex >= 0 
+                    && neuerFeldIndex < 64
+                    && super.istMoeglich(neuerFeldIndex)) {
+                    boolean zulaessig = false;
+                    if (i == -1) {
+                        // Auf linken Rand pruefen
+                        // Wenn Zeilenumbruch war, dann waere neuer Wert 7
+                        if (super.getFeld(neuerFeldIndex).getXK() < 7) {
+                            zulaessig = true;
+                        }
+                    } else if (i == 1) {
+                        // Auf rechten Rand pruefen
+                        // Wenn Zeilenumbruch war, dann waere neuer Wert 0
+                        if (super.getFeld(neuerFeldIndex).getXK() > 0) {
+                            zulaessig = true;
+                        }
+                    } else if (i == -8 || i == 8) {
+                        // Nach oben und unten muss nicht getestet werden
                         zulaessig = true;
+                    }     
+                    if (zulaessig) {
+                        moeglicheFelder.add(super.getFeld(neuerFeldIndex));
                     }
-                } else if (i == 1) {
-                    // Auf rechten Rand pruefen
-                    if (super.getPosition().getXK() < 7) {
-                        zulaessig = true;
-                    }
-                } else if (i == -8 || i == 8) {
-                    // Vorne und hinten muss nicht geprueft werden
-                    zulaessig = true;
                 }
-                
-                if (zulaessig) {
-                    moeglicheFelder.add(super.getFeld(
-                        super.getFeldIndex() + newIndex));
-                }
+            
             }
         }
         

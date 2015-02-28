@@ -52,15 +52,15 @@ public class Laeufer extends Figur {
              * ist
              */ 
             while (bedingung) {
-                /* Wenn der Index zwischen 0 und 63 liegt und das Feld
-                 * besetzt werden darf
-                 */
-                if (super.getFeldIndex() + newIndex >= 0 
-                    && super.getFeldIndex() + newIndex < 64) {
+                int neuerFeldIndex = super.getFeldIndex() + newIndex;
+                // Wenn der Index zwischen 0 und 63 liegt
+                if (neuerFeldIndex >= 0 
+                    && neuerFeldIndex < 64) {
                     boolean zulaessig = false;
                     if (i == -9 || i == 7) {
                         // Auf linken Rand pruefen
-                        if (super.getPosition().getXK() > 0) {
+                        // Wenn Zeilenumbruch war, dann waere neuer Wert 7
+                        if (super.getFeld(neuerFeldIndex).getXK() < 7) {
                             zulaessig = true;
                         } else {
                             // Ende der Zeile erreicht
@@ -68,7 +68,8 @@ public class Laeufer extends Figur {
                         }
                     } else if (i == -7 || i == 9) {
                         // Auf rechten Rand pruefen
-                        if (super.getPosition().getXK() < 7) {
+                        // Wenn Zeilenumbruch war, dann waere neuer Wert 0
+                        if (super.getFeld(neuerFeldIndex).getXK() > 0) {
                             zulaessig = true;
                         } else {
                             // Ende der Zeile erreicht
@@ -77,8 +78,7 @@ public class Laeufer extends Figur {
                     }
                     
                     if (zulaessig) {
-                        moeglicheFelder.add(super.getFeld(
-                            super.getFeldIndex() + newIndex));
+                        moeglicheFelder.add(super.getFeld(neuerFeldIndex));
                     }
                 }
                 zaehl++;
@@ -88,36 +88,38 @@ public class Laeufer extends Figur {
                 bedingung = (index >= 0 && index < 64) 
                     && super.istFrei(index) && keinZeilenumbruch;
             }
-            
-            // Wenn das naechste Feld nicht mehr frei ist
-            /* Wenn der Index zwischen 0 und 63 liegt und das Feld
-             * besetzt werden darf
+           
+            /* Wenn es nicht am Zeilenumbruch gescheitert ist, sondern daran,
+             * dass eine gegnerische Figur im Weg stand, muss noch das naechste
+             * Feld zugefuegt werden, sofern dabei kein Zeilenumbruch auftritt
              */
-            if (super.getFeldIndex() + newIndex >= 0 
-                && super.getFeldIndex() + newIndex < 64
-                && super.istMoeglich(super.getFeldIndex() + newIndex)) {
-                boolean zulaessig = false;
-                if (i == -9 || i == 7) {
-                    // Auf linken Rand pruefen
-                    if (super.getPosition().getXK() > 0) {
-                        zulaessig = true;
-                    } else {
-                        // Ende der Zeile erreicht
-                        keinZeilenumbruch = false;
-                    }
-                } else if (i == -7 || i == 9) {
-                    // Auf rechten Rand pruefen
-                    if (super.getPosition().getXK() < 7) {
-                        zulaessig = true;
-                    } else {
-                        // Ende der Zeile erreicht
-                        keinZeilenumbruch = false;
+            
+            // Wenn es nicht am Zeilenumbruch gescheitert ist
+            if (keinZeilenumbruch) {
+                int neuerFeldIndex = super.getFeldIndex() + newIndex;
+                // Wenn der Index zwischen 0 und 63 liegt
+                if (neuerFeldIndex >= 0 
+                    && neuerFeldIndex < 64
+                    && super.istMoeglich(neuerFeldIndex)) {
+                    boolean zulaessig = false;
+                    if (i == -9 || i == 7) {
+                        // Auf linken Rand pruefen
+                        // Wenn Zeilenumbruch war, dann waere neuer Wert 7
+                        if (super.getFeld(neuerFeldIndex).getXK() < 7) {
+                            zulaessig = true;
+                        }
+                    } else if (i == -7 || i == 9) {
+                        // Auf rechten Rand pruefen
+                        // Wenn Zeilenumbruch war, dann waere neuer Wert 0
+                        if (super.getFeld(neuerFeldIndex).getXK() > 0) {
+                            zulaessig = true;
+                        }
+                    }      
+                    if (zulaessig) {
+                        moeglicheFelder.add(super.getFeld(neuerFeldIndex));
                     }
                 }
-                if (zulaessig) {
-                    moeglicheFelder.add(super.getFeld(
-                        super.getFeldIndex() + newIndex));
-                }
+            
             }
         }
         
