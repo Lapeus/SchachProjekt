@@ -157,7 +157,7 @@ public abstract class Figur {
             }
             
         }
-        // Figurs wird auf das Zielfeld gesetzt
+        // Figur wird auf das Zielfeld gesetzt
         zielfeld.setFigur(this);
         // Die aktuelle Position wird angepasst
         position = zielfeld;
