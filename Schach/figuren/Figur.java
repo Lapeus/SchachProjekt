@@ -4,7 +4,9 @@ import gui.Feld;
 
 import java.util.List;
 
+import daten.Spieldaten;
 import daten.Spielfeld;
+import daten.Zug;
 
 /**
  * Eine Klasse die alle Spielfiguren verwaltet.
@@ -80,17 +82,25 @@ public abstract class Figur {
         // Uebergabe der zu pruefenden Felder
         List<Feld> korrekt = this.getMoeglicheFelder();
         // Das Feld auf dem der eigene Koenig steht
-        Feld koenigsfeld;
+        Feld koenigsfeldEigen;
+        // Das Feld auf dem der gegnerische Koenig steht
+        Feld koenigsfeldGegner;
         // Wenn weiss dran ist
         if (farbe) {
             // Der Koenig ist immer das letzte Element der Liste
             int lastIndex = spielfeld.getWeisseFiguren().size() - 1;
-            koenigsfeld = spielfeld.getWeisseFiguren().get(lastIndex)
+            koenigsfeldEigen = spielfeld.getWeisseFiguren().get(lastIndex)
+                .getFeld();
+            lastIndex = spielfeld.getSchwarzeFiguren().size() - 1;
+            koenigsfeldGegner = spielfeld.getSchwarzeFiguren().get(lastIndex)
                 .getFeld();
         } else {
             // Der Koenig ist immer das letzte Element der List
             int lastIndex = spielfeld.getSchwarzeFiguren().size() - 1;
-            koenigsfeld = spielfeld.getSchwarzeFiguren().get(lastIndex)
+            koenigsfeldEigen = spielfeld.getSchwarzeFiguren().get(lastIndex)
+                .getFeld();
+            lastIndex = spielfeld.getWeisseFiguren().size() - 1;
+            koenigsfeldGegner = spielfeld.getWeisseFiguren().get(lastIndex)
                 .getFeld();
         }
         /*<Simuliere jeden Zug und pruefe anschliessend erneut mit
@@ -106,6 +116,15 @@ public abstract class Figur {
             
         }
         
+        // Liste mit den im diesen Zug bedrohten Feldern.
+        spielfeld.getBedrohteFelder().clear();
+        for (Feld feld : korrekt) {
+            if (feld.getFigur() != null) {
+                // Hier kann man pruefen, ob es der Koenig ist
+                
+                spielfeld.getBedrohteFelder().add(feld);
+            }
+        }
         // Gib die korrigierte Liste zurueck
         return korrekt;
         
@@ -118,7 +137,7 @@ public abstract class Figur {
      */
     public void ziehe(Feld zielfeld) {
         // Hier muss ein neuer Zug erstellt werden
-        
+        Zug zug = new Zug(position, zielfeld, this, 0);
         
         
         // Figur wird von der aktuellen Position entfernt
@@ -152,6 +171,14 @@ public abstract class Figur {
         /* Der Zug ist nun vorbei. Daher aendert sich der aktive Spieler und
          * das Spielfeld muss gedreht werden.
          */
+        spielfeld.setAktuellerSpieler(!spielfeld.getAktuellerSpieler());
+        
+    }
+    
+    public void zugRueckgaengig() {
+        // Rufe den letzten durchgefuehrten Zug auf
+        
+        // Mache ihn rueckgaengig
         
     }
     

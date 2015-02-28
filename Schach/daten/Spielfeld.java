@@ -51,10 +51,16 @@ public class Spielfeld {
     private List<Figur> geschlagenWeiss = new ArrayList<Figur>();
     
     /**
-     * Gibt an, von welcher Person aus das Brett aufgebaut ist. <br>
+     * Eine Liste mit den Feldern der bedrohten Figuren.
+     */
+    private List<Feld> bedrohteFelder = new ArrayList<Feld>();
+    
+    /**
+     * Gibt an, welcher Spieler am Zug ist und von welcher Person aus das Brett
+     * aufgebaut ist. <br>
      * <b>true</b> f&uuml;r wei&szlig;, <b>false</b> f&uuml;r schwarz
      */
-    private boolean richtigAusgerichtet = true;
+    private boolean aktuellerSpieler = true;
     
     /**
      * Erzeugt ein neues Spielfeld und stellt die Figuren an die richtige
@@ -154,6 +160,13 @@ public class Spielfeld {
     }
     
     /**
+     * Dreht das Spielfeld, sodass es nun vom aktiven Spieler aus gesehen wird.
+     */
+    private void dreheSpielfeld() {
+        
+    }
+    
+    /**
      * Gibt die Liste der Felder zur&uuml;ck.
      * @return Liste von Feldern
      */
@@ -193,14 +206,29 @@ public class Spielfeld {
         return geschlagenWeiss;
     }
     
-    /**
-     * Gibt an, ob das Brett momentan von Wei&szlig; oder von Schwarz aus 
-     * gesehen wird, beziehungsweise wer am Zug ist.
-     * @return <b>true</b> f&uuml;r wei&szlig;, <b>false</b> f&uuml;r schwarz
-     */
-    public boolean getAusrichtung() {
-        return richtigAusgerichtet;
+    
+    public List<Feld> getBedrohteFelder() {
+        return bedrohteFelder;
     }
     
+    /**
+     * Gibt an, welcher Spieler am Zug ist und ob das Brett momentan von 
+     * Wei&szlig; oder von Schwarz aus gesehen wird.
+     * @return <b>true</b> f&uuml;r wei&szlig;, <b>false</b> f&uuml;r schwarz
+     */
+    public boolean getAktuellerSpieler() {
+        return aktuellerSpieler;
+    }
+    
+    /**
+     * Setzt den aktiven Spieler und dreht das Spielfeld.
+     * @param aktuellerSpieler : <b>true</b> f&uuml;r wei&szlig;, <b>false</b> 
+     * f&uuml;r schwarz
+     */
+    public void setAktuellerSpieler(boolean aktuellerSpieler) {
+        this.aktuellerSpieler = aktuellerSpieler;
+        dreheSpielfeld();
+    }
+
     
 }
