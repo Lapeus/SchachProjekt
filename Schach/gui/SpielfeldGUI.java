@@ -322,10 +322,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         Color rot = new Color(204, 0, 0);
         Feld momentanesFeld = (Feld) arg0.getSource();
         spielfeldAufbau();
-        /* Wenn eine Figur ausgewählt wird und es noch keine ausgewaehlte Figur
-           gibt.
+        /* Wenn eine korekte Figur ausgewählt wird und es noch keine 
+         * ausgewaehlte Figur gibt.
         */
-        if (momentanesFeld.getFigur() != null && ausgewaehlteFigur == null) {
+        if (momentanesFeld.getFigur() != null 
+            && (momentanesFeld.getFigur().getFarbe() 
+            == spielfeld.getAktuellerSpieler())
+            && ausgewaehlteFigur == null) {
             // Wird diese als neue Ausgewählte Figur gespeichert
             ausgewaehlteFigur = momentanesFeld.getFigur();
             /* Wenn der Spieler Weiß dran ist und dies angeklickte Figur eine 
@@ -357,6 +360,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
                 spielfeldAufbau();
                 
                 //momentanesFeld.setBackground(rot);
+            /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
+             * Auswahl aufgehoben.
+             */
+            } else if (ausgewaehlteFigur.getPosition().equals(momentanesFeld)) {
+                ausgewaehlteFigur = null;
             }
         }
           
