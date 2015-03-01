@@ -131,58 +131,6 @@ public abstract class Figur {
     }
     
     /**
-     * F&uuml;hrt einen Zug durch und passt alle n&ouml;tigen Listen und Felder
-     * an.
-     * @param zielfeld : Das Feld, auf das die Figur gezogen werden soll
-     */
-    public void ziehe(Feld zielfeld) {
-        // Hier muss ein neuer Zug erstellt werden
-        Zug zug = new Zug(position, zielfeld, this, 0);
-        
-        
-        // Figur wird von der aktuellen Position entfernt
-        position.setFigur(null);
-        // Wenn auf dem Zielfeld eine Figur steht
-        if (zielfeld.getFigur() != null) {
-            // Wenn wir selbst eine weiße Figur sind
-            if (farbe) {
-                // schlagen wir eine schwarze Figur
-                spielfeld.getSchwarzeFiguren().remove(zielfeld.getFigur());
-                spielfeld.getGeschlagenSchwarz().add(zielfeld.getFigur());
-            // Wenn wir selbst eine schwarze Figur sind
-            } else {
-                // schlagen wir eine weiße Figur
-                spielfeld.getWeisseFiguren().remove(zielfeld.getFigur());
-                spielfeld.getGeschlagenWeiss().add(zielfeld.getFigur());
-            }
-            
-        }
-        // Figur wird auf das Zielfeld gesetzt
-        zielfeld.setFigur(this);
-        // Die aktuelle Position wird angepasst
-        position = zielfeld;
-        
-        // Der erste Zug von Bauer, Turm und Koenig muessen erfasst werden.
-        // Zur Vereinfachung wird dies einfach bei allen Figuren durchgefuerht.
-        if (!this.getGezogen()) {
-            this.setGezogen(true);
-        }
-        
-        /* Der Zug ist nun vorbei. Daher aendert sich der aktive Spieler und
-         * das Spielfeld muss gedreht werden.
-         */
-        spielfeld.setAktuellerSpieler(!spielfeld.getAktuellerSpieler());
-        
-    }
-    
-    public void zugRueckgaengig() {
-        // Rufe den letzten durchgefuehrten Zug auf
-        
-        // Mache ihn rueckgaengig
-        
-    }
-    
-    /**
      * Gibt an, ob das Feld am angegebenen Index leer ist.
      * @param index : Ganzzahliger Index (zwischen 0 und 63)
      * @return <b>true</b> wenn frei
@@ -314,7 +262,7 @@ public abstract class Figur {
      * Gibt an, ob die Figur bereits gezogen wurde.
      * @return Wahrheitswert
      */
-    protected boolean getGezogen() {
+    public boolean getGezogen() {
         return bereitsGezogen;
     }
     
@@ -322,7 +270,7 @@ public abstract class Figur {
      * Setzt die Variable, ob die Figur schon gezogen wurde.
      * @param bereitsGezogen : Wahrheitswert
      */
-    protected void setGezogen(boolean bereitsGezogen) {
+    public void setGezogen(boolean bereitsGezogen) {
         this.bereitsGezogen = bereitsGezogen;
     }
  

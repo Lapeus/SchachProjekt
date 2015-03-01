@@ -1,5 +1,8 @@
 package daten;
 
+import figuren.Figur;
+import gui.Feld;
+
 /**
  * Verwaltet alle wichtigen Daten f&uuml;r ein Spiel. <br>
  * Ein Spiel besteht aus einem Namen, den beteiligten Spielern, dem 
@@ -30,8 +33,11 @@ public class Spiel {
      */
     private Spielfeld spielfeld;
     
-    //private Einstellungen einstellungen;
-    //private Spieldaten spieldaten;
+    /**
+     * Alle spielbezogenen Einstellungen, die beim Laden &uuml;bernommen werden
+     * m&uuml;ssten.
+     */
+    private Einstellungen einstellungen;
     
     /**
      * Legt ein neues Spiel an, welches gespielt und sp&auml;ter gespeichert
