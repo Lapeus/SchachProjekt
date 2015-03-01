@@ -61,6 +61,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      */
     private Spielfeld spielfeld;
     
+    
     /**
      * Objekt der Klasse <b>Spiel</b>, welche das Spiel speichert zu dem dieses 
      * Spielfeld gehört.
@@ -84,10 +85,16 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * Konstante für den Farbton der "schwarzen" Felder (braun).
      */
     private final Color braun = new Color(181, 81, 16);
+    
     /**
      * Konstante für den Farbton der "weißen" Felder (helles Beige).
      */
     private final Color weiss = new Color(255, 248, 151);
+    
+    /**
+     * 
+     */
+    private Container cEast;
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -95,12 +102,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * @param parent Das Objekt der dazugehörigen <b>SpielGUI</b>
      * @param spieler1 Ein Objekt der Klasse <b>Spieler</b>
      * @param spieler2 Ein weiteres Objekt der Klasse <b>Spieler</b>
+     * @param spielname Name des Spiels muss übergeben werden
      */
-    public SpielfeldGUI(SpielGUI parent, Spieler spieler1, Spieler spieler2) {
+    public SpielfeldGUI(SpielGUI parent, String spielname,
+        Spieler spieler1, Spieler spieler2) {
         super();
         this.spieler1 = spieler1;
         this.spieler2 = spieler2;
         this.parent = parent;
+        
         init();
     }
     
@@ -118,6 +128,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         Dimension size = new Dimension(800, 800);
         parent.setMinimumSize(size);
         parent.setSize(size);
+        parent.setLocationRelativeTo(null);
         
         // FelderListe füllen
         felderListe = new ArrayList<Feld>();
@@ -129,12 +140,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         // Spiel 
         spiel = new Spiel("Test", spieler1, spieler2, spielfeld);
         
+        // CENTER
+        
         // SpielfeldGUI erstellen
         this.setLayout(new BorderLayout());
         cCenter.setLayout(new GridLayout(8, 8));
         spielfeldAufbau();
         
-        
+        // EAST
         
         
         this.add(cCenter, BorderLayout.CENTER);
@@ -355,7 +368,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
              dieser ist */
             if (ausgewaehlteFigur.getKorrektFelder().contains(momentanesFeld)) {
                 ausgewaehlteFigur.getPosition().setIcon(null);
-                ausgewaehlteFigur.ziehe(momentanesFeld);
+                spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld);
                 ausgewaehlteFigur = null;
                 spielfeldAufbau();
                 
