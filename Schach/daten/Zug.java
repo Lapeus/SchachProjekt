@@ -8,16 +8,16 @@ public class Zug {
     private Feld startfeld;
     private Feld zielfeld;
     private Figur figur;
-    //private Spieler spieler;
+    private boolean schlagzug;
     private int zugzeit;
     private static int zugZaehler;
     
-    public Zug(Feld startfeld, Feld zielfeld, Figur figur/*, Spieler spieler*/,
-        int zugzeit) {
+    public Zug(Feld startfeld, Feld zielfeld, Figur figur, boolean schlagzug
+        , int zugzeit) {
         this.startfeld = startfeld;
         this.zielfeld = zielfeld;
         this.figur = figur;
-        //this.spieler = spieler;
+        this.schlagzug = schlagzug;
         this.zugzeit = zugzeit;
         zugZaehler++;
     }
@@ -33,15 +33,17 @@ public class Zug {
         return figur;
     }
     
-    /*public Spieler getSpieler() {
-        return spieler;
-    }*/
-    
     public int getZugzeit() {
         return zugzeit;
     }
     
     public int getZugZaehler() {
         return zugZaehler;
+    }
+    public boolean isSchlagzug() {
+        return schlagzug;
+    }
+    public void setSchlagzug(boolean schlagzug) {
+        this.schlagzug = schlagzug;
     }
 }

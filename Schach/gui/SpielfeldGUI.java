@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import daten.Spiel;
+import daten.Spieldaten;
 import daten.Spieler;
 import daten.Spielfeld;
 import figuren.Figur;
@@ -125,6 +126,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         
         // Spielfeld
         spielfeld = new Spielfeld(felderListe);
+        spielfeld.setSpieldaten(new Spieldaten());
         
         // Spiel 
         spiel = new Spiel("Test", spieler1, spieler2, spielfeld);
@@ -355,7 +357,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
              dieser ist */
             if (ausgewaehlteFigur.getKorrektFelder().contains(momentanesFeld)) {
                 ausgewaehlteFigur.getPosition().setIcon(null);
-                ausgewaehlteFigur.ziehe(momentanesFeld);
+                spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld);
                 ausgewaehlteFigur = null;
                 spielfeldAufbau();
                 

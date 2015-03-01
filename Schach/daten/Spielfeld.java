@@ -21,6 +21,11 @@ import gui.Feld;
 public class Spielfeld {
 
     /**
+     * Alle spielbezogenen Daten wie die Auflistung der Z&uuml;ge.
+     */
+    private Spieldaten spieldaten;
+    
+    /**
      * Eine Liste mit allen 64 Felder des Spielbrettes. <br>
      * Index 0 entspricht dem Feld links unten, Index 63 dem Feld rechts oben.
      */
@@ -160,10 +165,110 @@ public class Spielfeld {
     }
     
     /**
+     * F&uuml;hrt einen Zug durch und passt alle n&ouml;tigen Listen und Felder
+     * an.
+     * @param figur : Die Figur, die gezogen werden soll
+     * @param zielfeld : Das Feld, auf das die Figur gezogen werden soll
+     */
+    public void ziehe(Figur figur, Feld zielfeld) {
+        // Hier muss ein neuer Zug erstellt werden
+        Zug zug = new Zug(figur.getPosition(), zielfeld, figur, false,  0);
+        spieldaten.getZugListe().add(zug);
+        // Figur wird von der aktuellen Position entfernt
+        figur.getPosition().setFigur(null);
+        // Wenn auf dem Zielfeld eine Figur steht
+        if (zielfeld.getFigur() != null) {
+            // Wenn wir selbst eine weiße Figur sind
+            if (figur.getFarbe()) {
+                // schlagen wir eine schwarze Figur
+                schwarzeFiguren.remove(zielfeld.getFigur());
+                geschlagenSchwarz.add(zielfeld.getFigur());
+            // Wenn wir selbst eine schwarze Figur sind
+            } else {
+                // schlagen wir eine weiße Figur
+                weisseFiguren.remove(zielfeld.getFigur());
+                geschlagenWeiss.add(zielfeld.getFigur());
+            }
+            
+        }
+        // Figur wird auf das Zielfeld gesetzt
+        zielfeld.setFigur(figur);
+        // Die aktuelle Position wird angepasst
+        figur.setPosition(zielfeld);
+        
+        // Der erste Zug von Bauer, Turm und Koenig muessen erfasst werden.
+        // Zur Vereinfachung wird dies einfach bei allen Figuren durchgefuerht.
+        if (!figur.getGezogen()) {
+            figur.setGezogen(true);
+        }
+        
+        /* Der Zug ist nun vorbei. Daher aendert sich der aktive Spieler und
+         * das Spielfeld muss gedreht werden.
+         */
+        aktuellerSpieler = !aktuellerSpieler;
+        
+    }
+    
+    /**
+     * Macht den jeweils letzten Zug r&uuml;ckg&auml;ngig.
+     */
+    public void zugRueckgaengig() {
+        // Rufe den letzten durchgefuehrten Zug auf
+        Zug zug = spieldaten.getZugListe()
+            .get(spieldaten.getZugListe().size() - 1);
+        // Loesche ihn aus der Liste
+        spieldaten.getZugListe().remove(zug);
+        // Mache ihn rueckgaengig (ziehe Methode von hinten)
+        
+        // Aktiver Spieler muss geaendert werden.
+        aktuellerSpieler = !aktuellerSpieler;
+        // Wenn das der erste Zug war, sind wir jetzt am Arsch
+        // Figur an die vorherige Stelle setzen
+        zug.getFigur().setPosition(zug.getStartfeld());
+        // Falls im letzten Zug eine Figur geschlagen wurde
+        if (zug.isSchlagzug()) {
+            // Muss die wieder hergestellt werden
+            Figur geschlageneFigur = null;
+            // Wenn wir selbst weiss sind
+            if (zug.getFigur().getFarbe()) {
+                // Muss eine schwarze Figur wieder hergestellt werden
+                // Letzte geschlagene Figur wieder herstellen
+                geschlageneFigur = geschlagenSchwarz
+                    .get(geschlagenSchwarz.size() - 1);
+                /* Sie aus der Liste entfernen und dem Spielfeld wieder 
+                 * zufuegen.
+                 */
+                geschlagenSchwarz.remove(geschlageneFigur);
+                schwarzeFiguren.add(geschlageneFigur);
+            } else if (!zug.getFigur().getFarbe()) {
+             // Muss eine weisse Figur wieder hergestellt werden
+                // Letzte geschlagene Figur wieder herstellen
+                geschlageneFigur = geschlagenWeiss
+                    .get(geschlagenWeiss.size() - 1);
+                /* Sie aus der Liste entfernen und dem Spielfeld wieder 
+                 * zufuegen.
+                 */
+                geschlagenWeiss.remove(geschlageneFigur);
+                weisseFiguren.add(geschlageneFigur);
+            }
+            // Sie auf das Zielfeld des letzten Zugs setzen
+            zug.getZielfeld().setFigur(geschlageneFigur);
+        }
+    }
+    
+    /**
      * Dreht das Spielfeld, sodass es nun vom aktiven Spieler aus gesehen wird.
      */
     private void dreheSpielfeld() {
         
+    }
+    
+    public Spieldaten getSpieldaten() {
+        return spieldaten;
+    }
+
+    public void setSpieldaten(Spieldaten spieldaten) {
+        this.spieldaten = spieldaten;
     }
     
     /**
