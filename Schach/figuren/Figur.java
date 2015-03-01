@@ -107,22 +107,51 @@ public abstract class Figur {
          * getMoeglicheFelder, ob diesmal jemand auf das Koenigsfeld ziehen
          * kann.>
          */
-        // Fuer jeden vorgeschlagenen Zug
-        for (Feld feld : korrekt) {
-            /*<Simuliere einen Zug>*/
-            
-            /*<Pruefe alle moeglichen Felder>*/
-            /*<Wenn der Koenig dabei ist, entferne dieses Feld aus der Liste>*/
-            
+        // Wenn es moegliche Zuege gibt
+        if (!korrekt.isEmpty()) {
+            // Fuer jeden vorgeschlagenen Zug
+            for (Feld feld : korrekt) {
+                // Simuliere einen Zug
+                spielfeld.ziehe(this, feld);
+                //Pruefe alle moeglichen Felder
+                // Fuer alle gegnerischen Figuren
+                // Liste mit allen gegnerischen Figuren
+                List<Figur> gegner;
+                if (farbe) {
+                    gegner = spielfeld.getSchwarzeFiguren();
+                } else {
+                    gegner = spielfeld.getWeisseFiguren();
+                }
+                // Fuer alle gegnerischen Figuren
+                for (Figur figur : gegner) {
+                    // Liste mit allen moeglichen Feldern der aktuellen Figur
+                    List<Feld> felder = figur.getMoeglicheFelder();
+                    // Wenn die Figur auf das Koenigsfeld ziehen koennte
+                    if (felder.contains(koenigsfeldEigen)) {
+                        /* Ist dieser Zug nicht zulaessig und er muss aus der 
+                         * Liste geloescht werden.
+                         */
+                        korrekt.remove(feld);
+                    }
+                }
+                // Mache den Zug wieder rueckgaengig
+                spielfeld.zugRueckgaengig();
+            }
         }
-        
         // Liste mit den im diesen Zug bedrohten Feldern.
         spielfeld.getBedrohteFelder().clear();
-        for (Feld feld : korrekt) {
-            if (feld.getFigur() != null) {
-                // Hier kann man pruefen, ob es der Koenig ist
-                
-                spielfeld.getBedrohteFelder().add(feld);
+        // Wenn es moegliche Zuege gibt
+        if (!korrekt.isEmpty()) {
+            for (Feld feld : korrekt) {
+                if (feld.getFigur() != null) {
+                    // Ist der Koenig bedroht
+                    if (feld.getFigur().getWert() == 0) {
+                        // Steht er im Schach
+                        //spielfeld.setSchach(true);
+                    }
+                    
+                    spielfeld.getBedrohteFelder().add(feld);
+                }
             }
         }
         // Gib die korrigierte Liste zurueck

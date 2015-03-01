@@ -68,6 +68,11 @@ public class Spielfeld {
     private boolean aktuellerSpieler = true;
     
     /**
+     * Gibt an, ob der aktuelle Spieler im Schach steht.
+     */
+    private boolean schach;
+    
+    /**
      * Erzeugt ein neues Spielfeld und stellt die Figuren an die richtige
      * Position.
      * @param felder : Die Liste mit den Feldern, auf die die Figuren gestellt
@@ -172,7 +177,23 @@ public class Spielfeld {
      */
     public void ziehe(Figur figur, Feld zielfeld) {
         // Hier muss ein neuer Zug erstellt werden
-        Zug zug = new Zug(figur.getPosition(), zielfeld, figur, false,  0);
+        Zug zug;
+        // Wird das ein Schlagzug
+        boolean schlagzug = false;
+        // Wenn auf dem Zielfeld eine Figur steht
+        if (zielfeld.getFigur() != null) {
+            // Ist es ein Schlagzug
+            schlagzug = true;
+        }
+        // Wenn die Figur noch nicht gezogen wurde
+        if (!figur.getGezogen()) {
+            // Zug bekommt uebergeben, dass es der erste Zug dieser Figur ist
+            zug = new Zug(figur.getPosition(), zielfeld, figur, schlagzug,  0,
+                true);
+        } else {
+            // Normale Zugerstellung
+            zug = new Zug(figur.getPosition(), zielfeld, figur, schlagzug,  0);
+        }
         spieldaten.getZugListe().add(zug);
         // Figur wird von der aktuellen Position entfernt
         figur.getPosition().setFigur(null);
@@ -222,9 +243,16 @@ public class Spielfeld {
         
         // Aktiver Spieler muss geaendert werden.
         aktuellerSpieler = !aktuellerSpieler;
-        // Wenn das der erste Zug war, sind wir jetzt am Arsch
         // Figur an die vorherige Stelle setzen
         zug.getFigur().setPosition(zug.getStartfeld());
+        // Die Felder aktualisieren
+        zug.getStartfeld().setFigur(zug.getFigur());
+        zug.getZielfeld().setFigur(null);
+        // Falls das der erste Zug dieser Figur war
+        if (zug.isErsterZug()) {
+            // Muss das rueckgaengig gemacht werden
+            zug.getFigur().setGezogen(false);
+        }
         // Falls im letzten Zug eine Figur geschlagen wurde
         if (zug.isSchlagzug()) {
             // Muss die wieder hergestellt werden
@@ -254,6 +282,7 @@ public class Spielfeld {
             // Sie auf das Zielfeld des letzten Zugs setzen
             zug.getZielfeld().setFigur(geschlageneFigur);
         }
+        
     }
     
     /**
@@ -263,6 +292,21 @@ public class Spielfeld {
         
     }
     
+    public Feld getAktuellenKoenig() {
+        Feld feld;
+        // Wenn weiß dran ist
+        if (aktuellerSpieler) {
+            // Das Feld der letzten Figur (Koenig immer ganz hinten)
+            feld = weisseFiguren.get(weisseFiguren.size() - 1)
+                .getPosition();
+        // Wenn schwarz dran ist
+        } else {
+            // Das Feld der letzten Figur (Koenig immer ganz hinten)
+            feld = schwarzeFiguren.get(schwarzeFiguren.size() - 1)
+                .getPosition();
+        }
+        return feld;
+    }
     public Spieldaten getSpieldaten() {
         return spieldaten;
     }
@@ -333,6 +377,14 @@ public class Spielfeld {
     public void setAktuellerSpieler(boolean aktuellerSpieler) {
         this.aktuellerSpieler = aktuellerSpieler;
         dreheSpielfeld();
+    }
+
+    public boolean isSchach() {
+        return schach;
+    }
+
+    public void setSchach(boolean schach) {
+        this.schach = schach;
     }
 
     
