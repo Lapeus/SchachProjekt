@@ -4,10 +4,13 @@ import javax.imageio.ImageIO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.LayoutManager;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -16,7 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import daten.Spiel;
 import daten.Spieldaten;
@@ -40,6 +46,21 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * Das ElterGUI-Objekt von dem aus das jeweilige Spielfeld aufgerufen wurde.
      */
     private SpielGUI parent;
+    
+    /**
+     * Button um das Spiel zu speichern.
+     */
+    private JButton speichern = new JButton("speichern");
+    
+    /**
+     * JPanel für die Geschlagenen schwarzen Figuren.
+     */
+    private JPanel geschlageneSchwarze = new JPanel(); 
+    
+    /**
+     * JPanel für die Geschlagenen schwarzen Figuren.
+     */
+    private JPanel geschlageneWeisse = new JPanel();
     
     /**
      * Spieler1, welcher von der <b>Spielerauswahl</b> Seite übergeben wird.
@@ -100,7 +121,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
     /**
      * Kontainer für die Anzeigen und Button neben dem Spielfeld.
      */
-    private Container cEast;
+    private JPanel cEast = new JPanel();
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -147,15 +168,23 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         spiel = new Spiel("Test", spieler1, spieler2, spielfeld);
         
         // CENTER
-        
-        // SpielfeldGUI erstellen
         this.setLayout(new BorderLayout());
         cCenter.setBackground(new Color(0, 0, 0));
         cCenter.setLayout(new GridLayout(8, 8, 1, 1));
+        
+        // SpielfeldGUI erstellen
         spielfeldAufbau();
         
         // EAST
+        cEast.setLayout(new BorderLayout());
+        cEast.setMinimumSize(new Dimension(200, 200));
+        cEast.setSize(new Dimension(200, 200));
+        // Button um Spiel zu speichern
+        cEast.add(speichern, BorderLayout.CENTER);
+        
+        
         this.add(cCenter, BorderLayout.CENTER);
+        this.add(cEast, BorderLayout.EAST);
         
     }
     /**
@@ -198,7 +227,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * Updaten der Spielfeldoberfläche.
      */
     private void spielfeldUIUpdate() {
-     // - schwarze Figurenbilder
+        geschlageneFigureUpdate();
+        // - schwarze Figurenbilder
         for (Figur schwarz  : spielfeld.getSchwarzeFiguren()) {
             Feld momentan = schwarz.getPosition();
             if (schwarz.getWert() == 900) {
@@ -333,6 +363,85 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
     }
     
     /**
+     * Updated die Anzeigen der geschlagenen Figuren.
+     */
+    private void geschlageneFigureUpdate() {
+        geschlageneSchwarze = new JPanel();
+        geschlageneSchwarze.setLayout(new FlowLayout());
+        for (Figur schwarz : spielfeld.getGeschlagenSchwarz()) {
+            JLabel momentan = new JLabel();
+            if (schwarz.getWert() == 900) {
+                try {
+                    Image test = ImageIO.read(new File("queenb.gif"));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneSchwarze.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+               
+            }
+            if (schwarz.getWert() == 100) {
+                try {
+                    Image test = ImageIO.read(new File("pawnb.gif"));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneSchwarze.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (schwarz.getWert() == 0) {
+                try {
+                    Image test = ImageIO.read(new File("kingb.gif"));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneSchwarze.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (schwarz.getWert() == 325) {
+                try {
+                    Image test = ImageIO.read(new File("bishopb.gif"));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneSchwarze.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (schwarz.getWert() == 275) {
+                try {
+                    Image test = ImageIO.read(new File("knightb.gif"));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneSchwarze.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (schwarz.getWert() == 465) {
+                try {
+                    Image test = ImageIO.read(new File("rookb.gif"));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneSchwarze.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+        }
+        cEast.add(geschlageneSchwarze, BorderLayout.SOUTH);
+    }
+     
+    /**
      * MouseEvent-Methode mouseClicked.
      * @param arg0 MouseEvent erzeugt von den Feldern des Spielfelds
      */
@@ -403,6 +512,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         }
           
     }
+   
     
     /**
      * Unbenutzte MouseEventMethode.
