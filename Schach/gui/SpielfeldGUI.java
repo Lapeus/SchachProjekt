@@ -347,10 +347,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
          */
         if ((momentanesFeld.getFigur() != null 
             && (momentanesFeld.getFigur().getFarbe() 
-            == spielfeld.getAktuellerSpieler())
-            && ausgewaehlteFigur == null) 
-            || (ausgewaehlteFigur != null
-            && momentanesFeld.getFigur() != null 
+            == spielfeld.getAktuellerSpieler()) && ausgewaehlteFigur == null) 
+            || 
+            (ausgewaehlteFigur != null && momentanesFeld.getFigur() != null 
             && momentanesFeld.getFigur().getFarbe() 
             == ausgewaehlteFigur.getFarbe())) {
             // Wird diese als neue Ausgewählte Figur gespeichert
@@ -397,6 +396,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
             } else if (ausgewaehlteFigur.getPosition().equals(momentanesFeld)) {
                 ausgewaehlteFigur = null;
             }
+        }
+        // Wenn man ein leeres Feld anklickt
+        if (momentanesFeld.getFigur() == null) {
+            ausgewaehlteFigur = null;
         }
           
     }
