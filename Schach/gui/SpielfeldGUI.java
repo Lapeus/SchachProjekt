@@ -93,7 +93,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
     private final Color weiss = new Color(255, 248, 151);
     
     /**
-     * 
+     * Konstante für den Farbton der makierten Felder (rot).
+     */
+    private final Color rot = new Color(204, 0, 0);
+    
+    /**
+     * Kontainer für die Anzeigen und Button neben dem Spielfeld.
      */
     private Container cEast;
     
@@ -111,7 +116,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         this.spieler1 = spieler1;
         this.spieler2 = spieler2;
         this.parent = parent;
-        
         init();
     }
     
@@ -146,12 +150,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         
         // SpielfeldGUI erstellen
         this.setLayout(new BorderLayout());
-        cCenter.setLayout(new GridLayout(8, 8));
+        cCenter.setBackground(new Color(0, 0, 0));
+        cCenter.setLayout(new GridLayout(8, 8, 1, 1));
         spielfeldAufbau();
         
         // EAST
-        
-        
         this.add(cCenter, BorderLayout.CENTER);
         
     }
@@ -334,21 +337,27 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * @param arg0 MouseEvent erzeugt von den Feldern des Spielfelds
      */
     public void mouseClicked(MouseEvent arg0) {
-        Color rot = new Color(204, 0, 0);
         Feld momentanesFeld = (Feld) arg0.getSource();
         spielfeldAufbau();
-        /* Wenn eine korekte Figur ausgewählt wird und es noch keine 
-         * ausgewaehlte Figur gibt.
-        */
-        if (momentanesFeld.getFigur() != null 
+        /* (Wenn eine korrekte Figur ausgewählt wird und es noch keine 
+         * ausgewaehlte Figur gibt.)
+         * ODER
+         * (Wenn man dann auf eine seiner eigenen Figuren Klickt, wechselt 
+         * die GUI  auf die möglichen Felder dieser Figur.)
+         */
+        if ((momentanesFeld.getFigur() != null 
             && (momentanesFeld.getFigur().getFarbe() 
             == spielfeld.getAktuellerSpieler())
-            && ausgewaehlteFigur == null) {
+            && ausgewaehlteFigur == null) 
+            || (ausgewaehlteFigur != null
+            && momentanesFeld.getFigur() != null 
+            && momentanesFeld.getFigur().getFarbe() 
+            == ausgewaehlteFigur.getFarbe())) {
             // Wird diese als neue Ausgewählte Figur gespeichert
             ausgewaehlteFigur = momentanesFeld.getFigur();
             /* Wenn der Spieler Weiß dran ist und dies angeklickte Figur eine 
              * weiße ist.
-            */
+             */
             if (spielfeld.getAktuellerSpieler() 
                 && spielfeld.getWeisseFiguren().contains(ausgewaehlteFigur)) {
                 // Wird diese als neue Ausgewählte Figur gespeichert
@@ -357,6 +366,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
                     makieren.setBackground(rot);
                 }
             }
+            /* Wenn der Spieler Schwarz dran ist und dies angeklickte Figur 
+             * eine schwarze ist.
+             */
             if (!spielfeld.getAktuellerSpieler() 
                 && spielfeld.getSchwarzeFiguren().contains(ausgewaehlteFigur)) {
                 momentanesFeld.setBackground(rot);
@@ -364,7 +376,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
                     makieren.setBackground(rot);
                 }
             }
-            // Wenn es bereits eine ausgewaehlte Figur gibt
+        // Wenn es bereits eine ausgewaehlte Figur gibt
         } else if (ausgewaehlteFigur != null) {
             /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
              dieser ist */
@@ -372,9 +384,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
                 ausgewaehlteFigur.getPosition().setIcon(null);
                 spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld);
                 ausgewaehlteFigur = null;
-                spielfeldAufbau();
                 
-                //momentanesFeld.setBackground(rot);
+                // Wenn das Spiel vorbei ist
+                if (spielfeld.schachMatt()) {
+                    // TODO Popup Fenster mit SIEG
+                    System.out.println("gewonnen");
+                }
+                spielfeldAufbau();
             /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
              * Auswahl aufgehoben.
              */
