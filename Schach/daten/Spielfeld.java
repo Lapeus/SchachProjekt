@@ -1,6 +1,8 @@
 package daten;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import figuren.Bauer;
@@ -307,6 +309,23 @@ public class Spielfeld {
         }
         return feld;
     }
+    
+    public static class FigurenComparator implements Comparator<Figur> {
+        @Override
+        public int compare(Figur fig1, Figur fig2) {
+           // Wenn der Wert der ersten Figur nicht kleiner ist
+           if (fig1.getWert() >= fig2.getWert()) {
+               return 1;
+           } else {
+               return -1;
+           }
+        }
+    }
+    
+    private List<Figur> sortiereListe(List<Figur> figuren) {
+        Collections.sort(figuren, new FigurenComparator());
+        return figuren;
+    }
     public Spieldaten getSpieldaten() {
         return spieldaten;
     }
@@ -328,7 +347,7 @@ public class Spielfeld {
      * @return Liste von schwarzen Figuren
      */
     public List<Figur> getSchwarzeFiguren() {
-        return schwarzeFiguren;
+        return sortiereListe(schwarzeFiguren);
     }
     
     /**
@@ -336,7 +355,7 @@ public class Spielfeld {
      * @return Liste von wei&szlig;en Figuren
      */
     public List<Figur> getWeisseFiguren() {
-        return weisseFiguren;
+        return sortiereListe(weisseFiguren);
     }
     
     /**
@@ -344,7 +363,7 @@ public class Spielfeld {
      * @return Liste von schwarzen Figuren
      */
     public List<Figur> getGeschlagenSchwarz() {
-        return geschlagenSchwarz;
+        return sortiereListe(geschlagenSchwarz);
     }
     
     /**
@@ -352,7 +371,7 @@ public class Spielfeld {
      * @return Liste von wei&szlig;en Figuren
      */
     public List<Figur> getGeschlagenWeiss() {
-        return geschlagenWeiss;
+        return sortiereListe(geschlagenWeiss);
     }
     
     

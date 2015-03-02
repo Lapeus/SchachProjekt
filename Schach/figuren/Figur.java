@@ -2,6 +2,7 @@ package figuren;
 
 import gui.Feld;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import daten.Spieldaten;
@@ -87,32 +88,36 @@ public abstract class Figur {
         Feld koenigsfeldGegner;
         // Wenn weiss dran ist
         if (farbe) {
-            // Der Koenig ist immer das letzte Element der Liste
-            int lastIndex = spielfeld.getWeisseFiguren().size() - 1;
-            koenigsfeldEigen = spielfeld.getWeisseFiguren().get(lastIndex)
-                .getFeld();
-            lastIndex = spielfeld.getSchwarzeFiguren().size() - 1;
-            koenigsfeldGegner = spielfeld.getSchwarzeFiguren().get(lastIndex)
-                .getFeld();
+            // Der Koenig ist immer das erste Element der Liste
+            koenigsfeldEigen = spielfeld.getWeisseFiguren().get(0).getFeld();
+            koenigsfeldGegner = spielfeld.getSchwarzeFiguren().get(0).getFeld();
+        // Wenn schwarz dran ist
         } else {
-            // Der Koenig ist immer das letzte Element der List
-            int lastIndex = spielfeld.getSchwarzeFiguren().size() - 1;
-            koenigsfeldEigen = spielfeld.getSchwarzeFiguren().get(lastIndex)
-                .getFeld();
-            lastIndex = spielfeld.getWeisseFiguren().size() - 1;
-            koenigsfeldGegner = spielfeld.getWeisseFiguren().get(lastIndex)
-                .getFeld();
+            // Der Koenig ist immer das erste Element der Liste
+            koenigsfeldEigen = spielfeld.getSchwarzeFiguren().get(0).getFeld();
+            koenigsfeldGegner = spielfeld.getWeisseFiguren().get(0).getFeld();
         }
         /*<Simuliere jeden Zug und pruefe anschliessend erneut mit
          * getMoeglicheFelder, ob diesmal jemand auf das Koenigsfeld ziehen
          * kann.>
          */
+        /* Man darf waehrend einer Listen-Iteration nicht die Liste veraendern.
+         * Daher muss eine neue Liste erzeugt werden, mit den Feldern die 
+         * spaeter entfernt werden sollen.
+         */
+        List<Feld> nichtKorrekt = new ArrayList<Feld>();
         // Wenn es moegliche Zuege gibt
         if (!korrekt.isEmpty()) {
             // Fuer jeden vorgeschlagenen Zug
             for (Feld feld : korrekt) {
                 // Simuliere einen Zug
                 spielfeld.ziehe(this, feld);
+                /* Wenn der Koenig gezogen hat, muss das Feld aktualisiert 
+                 * werden.
+                 */
+                if (this.getWert() == 0) {
+                    koenigsfeldEigen = feld;
+                }
                 //Pruefe alle moeglichen Felder
                 // Fuer alle gegnerischen Figuren
                 // Liste mit allen gegnerischen Figuren
@@ -131,13 +136,16 @@ public abstract class Figur {
                         /* Ist dieser Zug nicht zulaessig und er muss aus der 
                          * Liste geloescht werden.
                          */
-                        korrekt.remove(feld);
+                        nichtKorrekt.add(feld);
                     }
                 }
                 // Mache den Zug wieder rueckgaengig
                 spielfeld.zugRueckgaengig();
             }
         }
+        // Jetzt koennen die nicht zulaessigen Felder entfernt werden
+        korrekt.removeAll(nichtKorrekt);
+        
         // Liste mit den im diesen Zug bedrohten Feldern.
         spielfeld.getBedrohteFelder().clear();
         // Wenn es moegliche Zuege gibt
