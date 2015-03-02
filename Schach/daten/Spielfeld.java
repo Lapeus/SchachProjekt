@@ -326,6 +326,31 @@ public class Spielfeld {
         Collections.sort(figuren, new FigurenComparator());
         return figuren;
     }
+    
+    public boolean schachMatt() {
+        boolean matt = false;
+        List<Figur> eigeneFiguren;
+        List<Feld> alleFelder = new ArrayList<Feld>();
+        // Wenn weiss dran ist
+        if (aktuellerSpieler) {
+            eigeneFiguren = weisseFiguren;
+        // Wenn schwarz dran ist
+        } else {
+            eigeneFiguren = schwarzeFiguren;
+        }
+        // Fuer jede eigene Figur
+        for (Figur figur : eigeneFiguren) {
+            // Fuege der Liste alle moeglichen Felder zu
+            alleFelder.addAll(figur.getKorrektFelder());
+        }
+        // Wenn es fuer keine Figur ein moegliches Feld gibt
+        if (alleFelder.isEmpty()) {
+            // Ist er matt gesetzt
+            matt = true;
+            // PRUEFUNG AUF PATT
+        }
+        return matt;
+    }
     public Spieldaten getSpieldaten() {
         return spieldaten;
     }
