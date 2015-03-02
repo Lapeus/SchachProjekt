@@ -1,6 +1,8 @@
 package daten;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import figuren.Bauer;
@@ -66,6 +68,11 @@ public class Spielfeld {
      * <b>true</b> f&uuml;r wei&szlig;, <b>false</b> f&uuml;r schwarz
      */
     private boolean aktuellerSpieler = true;
+    
+    /**
+     * Gibt an, ob der aktuelle Spieler im Schach steht.
+     */
+    private boolean schach;
     
     /**
      * Erzeugt ein neues Spielfeld und stellt die Figuren an die richtige
@@ -172,7 +179,23 @@ public class Spielfeld {
      */
     public void ziehe(Figur figur, Feld zielfeld) {
         // Hier muss ein neuer Zug erstellt werden
-        Zug zug = new Zug(figur.getPosition(), zielfeld, figur, false,  0);
+        Zug zug;
+        // Wird das ein Schlagzug
+        boolean schlagzug = false;
+        // Wenn auf dem Zielfeld eine Figur steht
+        if (zielfeld.getFigur() != null) {
+            // Ist es ein Schlagzug
+            schlagzug = true;
+        }
+        // Wenn die Figur noch nicht gezogen wurde
+        if (!figur.getGezogen()) {
+            // Zug bekommt uebergeben, dass es der erste Zug dieser Figur ist
+            zug = new Zug(figur.getPosition(), zielfeld, figur, schlagzug,  0,
+                true);
+        } else {
+            // Normale Zugerstellung
+            zug = new Zug(figur.getPosition(), zielfeld, figur, schlagzug,  0);
+        }
         spieldaten.getZugListe().add(zug);
         // Figur wird von der aktuellen Position entfernt
         figur.getPosition().setFigur(null);
@@ -222,9 +245,16 @@ public class Spielfeld {
         
         // Aktiver Spieler muss geaendert werden.
         aktuellerSpieler = !aktuellerSpieler;
-        // Wenn das der erste Zug war, sind wir jetzt am Arsch
         // Figur an die vorherige Stelle setzen
         zug.getFigur().setPosition(zug.getStartfeld());
+        // Die Felder aktualisieren
+        zug.getStartfeld().setFigur(zug.getFigur());
+        zug.getZielfeld().setFigur(null);
+        // Falls das der erste Zug dieser Figur war
+        if (zug.isErsterZug()) {
+            // Muss das rueckgaengig gemacht werden
+            zug.getFigur().setGezogen(false);
+        }
         // Falls im letzten Zug eine Figur geschlagen wurde
         if (zug.isSchlagzug()) {
             // Muss die wieder hergestellt werden
@@ -254,6 +284,7 @@ public class Spielfeld {
             // Sie auf das Zielfeld des letzten Zugs setzen
             zug.getZielfeld().setFigur(geschlageneFigur);
         }
+        
     }
     
     /**
@@ -263,6 +294,63 @@ public class Spielfeld {
         
     }
     
+    public Feld getAktuellenKoenig() {
+        Feld feld;
+        // Wenn weiß dran ist
+        if (aktuellerSpieler) {
+            // Das Feld der letzten Figur (Koenig immer ganz hinten)
+            feld = weisseFiguren.get(weisseFiguren.size() - 1)
+                .getPosition();
+        // Wenn schwarz dran ist
+        } else {
+            // Das Feld der letzten Figur (Koenig immer ganz hinten)
+            feld = schwarzeFiguren.get(schwarzeFiguren.size() - 1)
+                .getPosition();
+        }
+        return feld;
+    }
+    
+    public static class FigurenComparator implements Comparator<Figur> {
+        @Override
+        public int compare(Figur fig1, Figur fig2) {
+           // Wenn der Wert der ersten Figur nicht kleiner ist
+           if (fig1.getWert() >= fig2.getWert()) {
+               return 1;
+           } else {
+               return -1;
+           }
+        }
+    }
+    
+    private List<Figur> sortiereListe(List<Figur> figuren) {
+        Collections.sort(figuren, new FigurenComparator());
+        return figuren;
+    }
+    
+    public boolean schachMatt() {
+        boolean matt = false;
+        List<Figur> eigeneFiguren;
+        List<Feld> alleFelder = new ArrayList<Feld>();
+        // Wenn weiss dran ist
+        if (aktuellerSpieler) {
+            eigeneFiguren = weisseFiguren;
+        // Wenn schwarz dran ist
+        } else {
+            eigeneFiguren = schwarzeFiguren;
+        }
+        // Fuer jede eigene Figur
+        for (Figur figur : eigeneFiguren) {
+            // Fuege der Liste alle moeglichen Felder zu
+            alleFelder.addAll(figur.getKorrektFelder());
+        }
+        // Wenn es fuer keine Figur ein moegliches Feld gibt
+        if (alleFelder.isEmpty()) {
+            // Ist er matt gesetzt
+            matt = true;
+            // PRUEFUNG AUF PATT
+        }
+        return matt;
+    }
     public Spieldaten getSpieldaten() {
         return spieldaten;
     }
@@ -284,7 +372,7 @@ public class Spielfeld {
      * @return Liste von schwarzen Figuren
      */
     public List<Figur> getSchwarzeFiguren() {
-        return schwarzeFiguren;
+        return sortiereListe(schwarzeFiguren);
     }
     
     /**
@@ -292,7 +380,7 @@ public class Spielfeld {
      * @return Liste von wei&szlig;en Figuren
      */
     public List<Figur> getWeisseFiguren() {
-        return weisseFiguren;
+        return sortiereListe(weisseFiguren);
     }
     
     /**
@@ -300,7 +388,7 @@ public class Spielfeld {
      * @return Liste von schwarzen Figuren
      */
     public List<Figur> getGeschlagenSchwarz() {
-        return geschlagenSchwarz;
+        return sortiereListe(geschlagenSchwarz);
     }
     
     /**
@@ -308,7 +396,7 @@ public class Spielfeld {
      * @return Liste von wei&szlig;en Figuren
      */
     public List<Figur> getGeschlagenWeiss() {
-        return geschlagenWeiss;
+        return sortiereListe(geschlagenWeiss);
     }
     
     
@@ -333,6 +421,14 @@ public class Spielfeld {
     public void setAktuellerSpieler(boolean aktuellerSpieler) {
         this.aktuellerSpieler = aktuellerSpieler;
         dreheSpielfeld();
+    }
+
+    public boolean isSchach() {
+        return schach;
+    }
+
+    public void setSchach(boolean schach) {
+        this.schach = schach;
     }
 
     
