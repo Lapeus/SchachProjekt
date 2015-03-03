@@ -25,7 +25,7 @@ public class SpielGUI extends JFrame {
         Dimension minimaleGroesse = new Dimension(500, 500);
         setMinimumSize(minimaleGroesse);
         setLocationRelativeTo(null);
-        pack();
+        //pack();
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
