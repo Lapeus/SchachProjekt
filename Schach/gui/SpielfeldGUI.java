@@ -8,6 +8,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -31,7 +33,8 @@ import figuren.Figur;
  * implementiert und für die Darstellung des Spielfeldfenster zustädnig ist.
  * @author Marvin Wolf 
  */
-public class SpielfeldGUI extends JPanel implements MouseListener {
+public class SpielfeldGUI extends JPanel implements MouseListener, 
+    ActionListener {
     
     /**
      * Serial Key zur Identifizierung.
@@ -47,6 +50,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * Button um das Spiel zu speichern.
      */
     private JButton speichern = new JButton("speichern");
+    
+    /**
+     * Button um einen Zug Rueckgaenig zu machen.
+     */
+    private JButton rueckgaengig = new JButton("Zug Rückgängig");
     
     /**
      * JPanel für die Geschlagenen schwarzen Figuren.
@@ -100,6 +108,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
     private Container cCenter = new JPanel();
     
     /**
+     * Kontainer für die Anzeigen und Button neben dem Spielfeld.
+     */
+    private JPanel cEast = new JPanel();
+    
+    /**
      * Konstante für den Farbton der "schwarzen" Felder (braun).
      */
     private final Color braun = new Color(181, 81, 16);
@@ -115,9 +128,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
     private final Color rot = new Color(204, 0, 0);
     
     /**
-     * Kontainer für die Anzeigen und Button neben dem Spielfeld.
+     * Action Command für den Rueckgaening-Button.
      */
-    private JPanel cEast = new JPanel();
+    private final String commandRueck = "rueck"; 
+    
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -169,28 +183,34 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         cCenter.setLayout(new GridLayout(8, 8, 1, 1));
         
         // EAST
-        
         cEast.setLayout(new BorderLayout());
+        
         JLabel groesse = new JLabel("                                      "
             + "                                                            ");
+        
+        Container eastCenter = new JPanel();
+        eastCenter.setLayout(new GridLayout(8, 1));
+        rueckgaengig.addActionListener(this);
+        rueckgaengig.setActionCommand(commandRueck);
+        eastCenter.add(rueckgaengig);
+        
         geschlageneSchwarze.setLayout(new GridLayout(2, 8));
         geschlageneWeisse.setLayout(new GridLayout(2, 8));
         
         cEast.add(groesse, BorderLayout.EAST);
         cEast.add(geschlageneWeisse, BorderLayout.NORTH);
+        cEast.add(eastCenter, BorderLayout.CENTER);
         cEast.add(geschlageneSchwarze, BorderLayout.SOUTH);
+//        cEast.add(speichern, BorderLayout.CENTER);
+        
+        // Zu Panel hinzufügen
+        this.add(cCenter, BorderLayout.CENTER);
+        this.add(cEast, BorderLayout.EAST);
         
         // SpielfeldGUI erstellen
         spielfeldAufbau();
         
-        
-        
-        //cEast.add(speichern, BorderLayout.CENTER);
-        
-        
-        this.add(cCenter, BorderLayout.CENTER);
-        this.add(cEast, BorderLayout.EAST);
-        
+
     }
     /**
      * Dient zum Updaten der SpielfeldGUI nach jeder Veränderung. 
@@ -232,6 +252,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * Updaten der Spielfeldoberfläche.
      */
     private void spielfeldUIUpdate() {
+        if (spielfeld.getSpieldaten().getZugListe().isEmpty()) {
+            rueckgaengig.setEnabled(false);
+        } else {
+            rueckgaengig.setEnabled(true);
+        }
         geschlageneFigureUpdate();
         // - schwarze Figurenbilder
         for (Figur schwarz  : spielfeld.getSchwarzeFiguren()) {
@@ -351,6 +376,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
                 }
             }
         }
+        this.revalidate();
     }
     
     /**
@@ -523,6 +549,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * @param arg0 MouseEvent erzeugt von den Feldern des Spielfelds
      */
     public void mouseClicked(MouseEvent arg0) {
+        // Felder Bewegen
         Feld momentanesFeld = (Feld) arg0.getSource();
         spielfeldAufbau();
         /* (Wenn eine korrekte Figur ausgewählt wird und es noch keine 
@@ -627,6 +654,18 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
     public void mouseReleased(MouseEvent arg0) {
         // TODO Auto-generated method stub
         
+    }
+    
+    /**
+     * Action Performed fuer alle Buttons.
+     * 
+     * @param e Ausgeloestes ActionEvent
+     */
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals(commandRueck)) {
+            spielfeld.zugRueckgaengig();
+            spielfeldAufbau();
+        }
     }
     
 }
