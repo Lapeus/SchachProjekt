@@ -16,8 +16,8 @@ import gui.Feld;
 
 /**
  * Verwaltet die Figuren und ihre Position auf dem Brett.
- * Gibt zus&auml;tzlich an, ob das Brett aktuell aus wei&szlig;er oder aus
- * schwarzer Sicht gezeigt wird.
+ * Sie stellt die Methoden zum Ziehen bereit und gibt zus&auml;tzlich an, ob 
+ * das Brett aktuell aus wei&szlig;er oder aus schwarzer Sicht gezeigt wird.
  * @author Christian Ackermann
  */
 public class Spielfeld {
@@ -61,6 +61,11 @@ public class Spielfeld {
      * Eine Liste mit den Feldern der bedrohten Figuren.
      */
     private List<Feld> bedrohteFelder = new ArrayList<Feld>();
+    
+    /**
+     * Eine Liste mit den Feldern der zu schlagenden Figuren.
+     */
+    private List<Feld> schlagendeFelder = new ArrayList<Feld>();
     
     /**
      * Gibt an, welcher Spieler am Zug ist und von welcher Person aus das Brett
@@ -188,14 +193,22 @@ public class Spielfeld {
             schlagzug = true;
         }
         // Wenn die Figur noch nicht gezogen wurde
+        boolean ersterZug = false;
         if (!figur.getGezogen()) {
-            // Zug bekommt uebergeben, dass es der erste Zug dieser Figur ist
-            zug = new Zug(figur.getPosition(), zielfeld, figur, schlagzug,  0,
-                true);
-        } else {
-            // Normale Zugerstellung
-            zug = new Zug(figur.getPosition(), zielfeld, figur, schlagzug,  0);
+            // Ist es der erste Zug
+            ersterZug = true;
         }
+        // Wenn ein Bauer auf die gegnerische Grundlinie zieht
+        boolean umwandlung = false;
+        if (figur.getWert() == 100 
+            && (zielfeld.getYK() == 0 || zielfeld.getYK() == 7)) {
+            // Dann ist es ein Umwandlungszug
+            umwandlung = true;
+        }
+        
+        // Neuer Zug wird erstellt
+        zug = new Zug(figur.getPosition(), zielfeld, figur, schlagzug,  0,
+            ersterZug, umwandlung);
         spieldaten.getZugListe().add(zug);
         // Figur wird von der aktuellen Position entfernt
         figur.getPosition().setFigur(null);
@@ -211,9 +224,19 @@ public class Spielfeld {
                 // schlagen wir eine weiße Figur
                 weisseFiguren.remove(zielfeld.getFigur());
                 geschlagenWeiss.add(zielfeld.getFigur());
-            }
-            
+            }   
         }
+        
+        /* Ueberpruefung auf Rochade aus praktischen und platztechnische
+         * Gruenden ausgelagert.
+         */
+        rochadeZiehen(zug);
+        
+        /* Ueberpruefung auf enPassantZug aus praktischen und platztechnischen
+         * Gruenden ausgelagert.
+         */
+        enPassantZiehen(zug);
+        
         // Figur wird auf das Zielfeld gesetzt
         zielfeld.setFigur(figur);
         // Die aktuelle Position wird angepasst
@@ -228,8 +251,103 @@ public class Spielfeld {
         /* Der Zug ist nun vorbei. Daher aendert sich der aktive Spieler und
          * das Spielfeld muss gedreht werden.
          */
-        aktuellerSpieler = !aktuellerSpieler;
-        
+        aktuellerSpieler = !aktuellerSpieler;  
+    }
+    
+    private void rochadeZiehen(Zug zug) {
+        // Wenn es eine Rochade ist
+        /* Wenn es eine Rochade ist, wurde der Koenig zwei Felder zur Seite
+         * bewegt.
+         */
+        if (zug.getFigur().getWert() == 0 && zug.isErsterZug() 
+            && (zug.getZielfeld().getXK() == 2 
+            || zug.getZielfeld().getXK() == 6)) {
+            // Index des Startfeldes
+            int indexStart;
+            // Index des Zielfeldes
+            int indexZiel;
+            // Grosse Rochade
+            if (zug.getZielfeld().getXK() == 2) {
+                // Weiss
+                if (zug.getFigur().getFarbe()) {
+                    // Der Turm links unten
+                    indexStart = 0;
+                // Schwarz
+                } else {
+                    // Der Turm links oben
+                    indexStart = 56;
+                }
+                indexZiel = indexStart + 3;
+            // Kleine Rochade
+            } else {
+                // Weiss
+                if (zug.getFigur().getFarbe()) {
+                    // Der Turm rechts unten
+                    indexStart = 7;
+                // Schwarz
+                } else {
+                    // Der Turm rechts oben
+                    indexStart = 63;
+                }
+                indexZiel = indexStart - 2;
+            }
+            // Der beteiligte Turm
+            Figur turm = felder.get(indexStart).getFigur();
+            // Wird umgesetzt
+            turm.setPosition(felder.get(indexZiel));
+            // Die Felder werden aktualisiert
+            felder.get(indexZiel).setFigur(turm);
+            felder.get(indexStart).setFigur(null);
+            // Der Turm wurde gezogen
+            turm.setGezogen(true);
+            /* Der Zug wird geandert um ihn einfacher rueckgaengig machen
+             * zu koennen.
+             */
+            spieldaten.getZugListe().remove(zug);
+            RochadenZug rochzug = new RochadenZug(zug.getFigur(), 
+                zug.getStartfeld(), turm, felder.get(indexStart), 0);
+            spieldaten.getZugListe().add(rochzug);   
+        }
+    }
+    
+    private void enPassantZiehen(Zug zug) {
+        // Wenn es ein en-passant-Schlag ist
+        /* Wenn es ein Bauer ist und er die Spalte wechselt ohne dabei 
+         * eine Figur zu schlagen
+         */
+        if (zug.getFigur().getWert() == 100 
+            && zug.getStartfeld().getXK() != zug.getZielfeld().getXK() 
+            && zug.getZielfeld().getFigur() == null) {
+            // Der andere beteiligte Bauer
+            Figur andererBauer;
+            // Wenn weiss gezogen hat
+            if (zug.getFigur().getFarbe()) {
+                // Der Bauer steht auf dem Feld darunter
+                andererBauer = felder.get(felder.indexOf(zug.getZielfeld()) - 8)
+                    .getFigur();
+                // Listen werden aktualisiert
+                geschlagenSchwarz.add(andererBauer);
+                schwarzeFiguren.remove(andererBauer);
+            // Wenn schwarz gezogen hat
+            } else {
+                // Der Bauer steht auf dem Feld darueber
+                andererBauer = felder.get(felder.indexOf(zug.getZielfeld()) + 8)
+                    .getFigur();
+                // Listen werden aktualisiert
+                geschlagenWeiss.add(andererBauer);
+                weisseFiguren.remove(andererBauer);
+            }
+            // Das Feld wird aktualisiert
+            andererBauer.getPosition().setFigur(null);
+            
+            /* Der Zug wird geandert um ihn einfacher rueckgaengig machen
+             * zu koennen.
+             */
+            spieldaten.getZugListe().remove(zug);
+            EnPassantZug enpasszug = new EnPassantZug(zug.getFigur(), 
+                zug.getStartfeld(), andererBauer, 0);
+            spieldaten.getZugListe().add(enpasszug);
+        }
     }
     
     /**
@@ -242,49 +360,143 @@ public class Spielfeld {
         // Loesche ihn aus der Liste
         spieldaten.getZugListe().remove(zug);
         // Mache ihn rueckgaengig (ziehe Methode von hinten)
+        // Die bedrohten Felder koennen ignoriert werden
         
         // Aktiver Spieler muss geaendert werden.
         aktuellerSpieler = !aktuellerSpieler;
-        // Figur an die vorherige Stelle setzen
-        zug.getFigur().setPosition(zug.getStartfeld());
-        // Die Felder aktualisieren
-        zug.getStartfeld().setFigur(zug.getFigur());
-        zug.getZielfeld().setFigur(null);
-        // Falls das der erste Zug dieser Figur war
-        if (zug.isErsterZug()) {
-            // Muss das rueckgaengig gemacht werden
-            zug.getFigur().setGezogen(false);
-        }
-        // Falls im letzten Zug eine Figur geschlagen wurde
-        if (zug.isSchlagzug()) {
-            // Muss die wieder hergestellt werden
-            Figur geschlageneFigur = null;
-            // Wenn wir selbst weiss sind
-            if (zug.getFigur().getFarbe()) {
-                // Muss eine schwarze Figur wieder hergestellt werden
-                // Letzte geschlagene Figur wieder herstellen
-                geschlageneFigur = geschlagenSchwarz
-                    .get(geschlagenSchwarz.size() - 1);
-                /* Sie aus der Liste entfernen und dem Spielfeld wieder 
-                 * zufuegen.
-                 */
-                geschlagenSchwarz.remove(geschlageneFigur);
-                schwarzeFiguren.add(geschlageneFigur);
-            } else if (!zug.getFigur().getFarbe()) {
-             // Muss eine weisse Figur wieder hergestellt werden
-                // Letzte geschlagene Figur wieder herstellen
-                geschlageneFigur = geschlagenWeiss
-                    .get(geschlagenWeiss.size() - 1);
-                /* Sie aus der Liste entfernen und dem Spielfeld wieder 
-                 * zufuegen.
-                 */
-                geschlagenWeiss.remove(geschlageneFigur);
-                weisseFiguren.add(geschlageneFigur);
-            }
-            // Sie auf das Zielfeld des letzten Zugs setzen
-            zug.getZielfeld().setFigur(geschlageneFigur);
-        }
         
+        // Wenn es ein Rochadenzug war
+        if (zug instanceof RochadenZug) {
+            // Umwandlung des Zugs
+            RochadenZug rochzug = (RochadenZug) zug;
+            // Das Zielfeld des Koenigs leeren
+            rochzug.getKoenig().getPosition().setFigur(null);
+            // Die Position des Koenigs auf das Startfeld setzen
+            rochzug.getKoenig().setPosition(rochzug.getStartfeldK());
+            // Dem Startfeld den Koenig zuweisen
+            rochzug.getStartfeldK().setFigur(rochzug.getKoenig());
+            // Der Koenig wurde noch nicht gezogen
+            rochzug.getKoenig().setGezogen(false);
+            
+            // Das Zielfeld des Turms leeren
+            rochzug.getTurm().getPosition().setFigur(null);
+            // Die Position des Turms auf das Startfeld setzen
+            rochzug.getTurm().setPosition(rochzug.getStartfeldT());
+            // Dem Startfeld den Turm zuweisen
+            rochzug.getStartfeldT().setFigur(rochzug.getTurm());
+            // Der Turm wurde noch nicht gezogen
+            rochzug.getTurm().setGezogen(false);
+            
+        // Wenn es ein En-Passant-Schlag war   
+        } else if (zug instanceof EnPassantZug) {
+            // Umwandlung des Zugs
+            EnPassantZug enpasszug = (EnPassantZug) zug;
+            // Ausfuerender Bauer
+            Figur bauer = enpasszug.getAusfuehrer();
+            // Geschlagenener Bauer
+            Figur geschlagBauer = enpasszug.getGeschlagenen();
+            
+            // Ausfuehrender Bauer zuruecksetzen
+            bauer.getPosition().setFigur(null);
+            // Die Position des ausfuehrenden Bauerns auf das Startfeld setzen
+            bauer.setPosition(enpasszug.getStartfeld());
+            // Dem Startfeld den Bauern wieder zuweisen
+            enpasszug.getStartfeld().setFigur(bauer);
+            
+            // Den geschlagenen Bauern wieder herstellen
+            // Wenn der schlagende Bauer weiss ist
+            if (bauer.getFarbe()) {
+                // Schwarze Listen aktualisieren
+                geschlagenSchwarz.remove(geschlagBauer);
+                schwarzeFiguren.add(geschlagBauer);
+            // Wenn der schlagende Bauer schwarz ist
+            } else {
+                // Weisse Liste aktualisieren
+                geschlagenWeiss.remove(geschlagBauer);
+                weisseFiguren.add(geschlagBauer);
+            }
+            // Dem Feld die Figur zuweisen
+            geschlagBauer.getPosition().setFigur(geschlagBauer);
+            
+        // Sonst war es ein normaler Zug
+        } else {
+            // Figur an die vorherige Stelle setzen
+            zug.getFigur().setPosition(zug.getStartfeld());
+            // Die Felder aktualisieren
+            zug.getStartfeld().setFigur(zug.getFigur());
+            zug.getZielfeld().setFigur(null);
+            // Falls das der erste Zug dieser Figur war
+            if (zug.isErsterZug()) {
+                // Muss das rueckgaengig gemacht werden
+                zug.getFigur().setGezogen(false);
+            }
+            // Falls im letzten Zug eine Figur geschlagen wurde
+            if (zug.isSchlagzug()) {
+                // Muss die wieder hergestellt werden
+                Figur geschlageneFigur = null;
+                // Wenn wir selbst weiss sind
+                if (zug.getFigur().getFarbe()) {
+                    // Muss eine schwarze Figur wieder hergestellt werden
+                    // Letzte geschlagene Figur wieder herstellen
+                    geschlageneFigur = geschlagenSchwarz
+                        .get(geschlagenSchwarz.size() - 1);
+                    /* Sie aus der Liste entfernen und dem Spielfeld wieder 
+                     * zufuegen.
+                     */
+                    geschlagenSchwarz.remove(geschlageneFigur);
+                    schwarzeFiguren.add(geschlageneFigur);
+                } else if (!zug.getFigur().getFarbe()) {
+                    // Muss eine weisse Figur wieder hergestellt werden
+                    // Letzte geschlagene Figur wieder herstellen
+                    geschlageneFigur = geschlagenWeiss
+                        .get(geschlagenWeiss.size() - 1);
+                    /* Sie aus der Liste entfernen und dem Spielfeld wieder 
+                     * zufuegen.
+                     */
+                    geschlagenWeiss.remove(geschlageneFigur);
+                    weisseFiguren.add(geschlageneFigur);
+                }
+                // Sie auf ihr vorheriges Feld setzen
+                geschlageneFigur.getPosition().setFigur(geschlageneFigur);
+            }
+            
+        } // Ende von Rochaden-if
+        
+    }
+    
+    public void umwandeln(Figur figur, int wert) {
+        // Erzeugen der neuen Figur
+        /* Cast wird benoetigt, damit die Variable auch ausserhalb des ifs 
+         * gueltig ist.
+         */
+        Figur neueFigur;
+        if (wert == 275) {
+            neueFigur = new Springer(
+                figur.getPosition(), figur.getFarbe());
+        } else if (wert == 325) {    
+            neueFigur = new Laeufer(
+                figur.getPosition(), figur.getFarbe());
+        } else if (wert == 465) {    
+            neueFigur = new Turm(
+                figur.getPosition(), figur.getFarbe());
+        } else {    
+            neueFigur = new Dame(
+                figur.getPosition(), figur.getFarbe());
+        }     
+        // Sie auf das neue Feld stellen
+        figur.getPosition().setFigur(figur);
+        // WICHTIG um Pam-Krabbé-Rochade zu verhindern
+        neueFigur.setGezogen(figur.getGezogen());
+        // Die entsprechende Liste aktualisieren
+        // Wenn es eine weisse Figur ist
+        if (figur.getFarbe()) {
+            weisseFiguren.remove(figur);
+            weisseFiguren.add(neueFigur);
+        // Wenn es eine schwarze Figur ist
+        } else {
+            schwarzeFiguren.remove(figur);
+            schwarzeFiguren.add(neueFigur);
+        }
     }
     
     /**
@@ -313,12 +525,12 @@ public class Spielfeld {
     public static class FigurenComparator implements Comparator<Figur> {
         @Override
         public int compare(Figur fig1, Figur fig2) {
-           // Wenn der Wert der ersten Figur nicht kleiner ist
-           if (fig1.getWert() >= fig2.getWert()) {
-               return 1;
-           } else {
-               return -1;
-           }
+            // Wenn der Wert der ersten Figur nicht kleiner ist
+            if (fig1.getWert() >= fig2.getWert()) {
+                return 1;
+            } else {
+                return -1;
+            }
         }
     }
     
@@ -351,6 +563,7 @@ public class Spielfeld {
         }
         return matt;
     }
+    
     public Spieldaten getSpieldaten() {
         return spieldaten;
     }
@@ -401,6 +614,39 @@ public class Spielfeld {
     
     
     public List<Feld> getBedrohteFelder() {
+        /* Zusatz: Vorbereitung fuer die grafische Hilfestellung "Es werden
+         * alle in diesem Zug bedrohten Figuren angezeigt."
+         */
+        // Liste mit den bedrohten Figuren leeren
+        bedrohteFelder.clear();
+        // Liste mit den gegnerischen Figuren
+        List<Figur> gegnerFiguren;
+        // Wenn weiss als naechstes dran ist
+        if (aktuellerSpieler) {
+            gegnerFiguren = schwarzeFiguren;
+        // Wenn schwarz als naechstes dran ist
+        } else {
+            gegnerFiguren = weisseFiguren;
+        }
+        // Fuer alle gegnerischen Figuren
+        for (Figur gegner : gegnerFiguren) {
+            // Liste mit den korrekten Feldern dieser Figur
+            List<Feld> felder = gegner.getKorrektFelder();
+            // Fuer jedes dieser Felder
+            for (Feld feld : felder) {
+                // Wenn auf dem Feld eine Figur steht
+                if (feld.getFigur() != null) {
+                    // Ist das meine und somit bedroht
+                    bedrohteFelder.add(feld);
+                    
+                    // Wenn es der Koenig ist, steht er nun im Schach
+                    if (feld.getFigur().getWert() == 0) {
+                        schach = true;
+                    }
+                }
+            }
+        }
+      
         return bedrohteFelder;
     }
     
@@ -431,5 +677,8 @@ public class Spielfeld {
         this.schach = schach;
     }
 
+    public List<Feld> getSchlagendeFelder() {
+        return schlagendeFelder;
+    }
     
 }

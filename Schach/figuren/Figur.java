@@ -84,18 +84,14 @@ public abstract class Figur {
         List<Feld> korrekt = this.getMoeglicheFelder();
         // Das Feld auf dem der eigene Koenig steht
         Feld koenigsfeldEigen;
-        // Das Feld auf dem der gegnerische Koenig steht
-        Feld koenigsfeldGegner;
         // Wenn weiss dran ist
         if (farbe) {
             // Der Koenig ist immer das erste Element der Liste
-            koenigsfeldEigen = spielfeld.getWeisseFiguren().get(0).getFeld();
-            koenigsfeldGegner = spielfeld.getSchwarzeFiguren().get(0).getFeld();
+            koenigsfeldEigen = spielfeld.getWeisseFiguren().get(0).position;
         // Wenn schwarz dran ist
         } else {
             // Der Koenig ist immer das erste Element der Liste
-            koenigsfeldEigen = spielfeld.getSchwarzeFiguren().get(0).getFeld();
-            koenigsfeldGegner = spielfeld.getWeisseFiguren().get(0).getFeld();
+            koenigsfeldEigen = spielfeld.getSchwarzeFiguren().get(0).position;
         }
         /*<Simuliere jeden Zug und pruefe anschliessend erneut mit
          * getMoeglicheFelder, ob diesmal jemand auf das Koenigsfeld ziehen
@@ -146,19 +142,18 @@ public abstract class Figur {
         // Jetzt koennen die nicht zulaessigen Felder entfernt werden
         korrekt.removeAll(nichtKorrekt);
         
-        // Liste mit den im diesen Zug bedrohten Feldern.
-        spielfeld.getBedrohteFelder().clear();
+        /* Zusatz: Vorbereitung fuer die grafische Hilfestellung "Es werden
+         * die Figuren gezeigt, die von dieser Figur geschlagen werden koennen."
+         */
+        // Liste mit den in diesem Zug zu schlagenden Feldern leeren
+        spielfeld.getSchlagendeFelder().clear();
         // Wenn es moegliche Zuege gibt
         if (!korrekt.isEmpty()) {
             for (Feld feld : korrekt) {
+                // Wenn das Feld nicht leer ist
                 if (feld.getFigur() != null) {
-                    // Ist der Koenig bedroht
-                    if (feld.getFigur().getWert() == 0) {
-                        // Steht er im Schach
-                        //spielfeld.setSchach(true);
-                    }
-                    
-                    spielfeld.getBedrohteFelder().add(feld);
+                    // Fuege das Feld den zu schlagenden Feldern zu
+                    spielfeld.getSchlagendeFelder().add(feld);
                 }
             }
         }
@@ -194,14 +189,6 @@ public abstract class Figur {
             moeglich = true;
         }
         return moeglich;
-    }
-    
-    /**
-     * Gibt das Feld zur&uuml;ck, auf dem die Figur steht.
-     * @return Ein Objekt vom Typ Feld
-     */
-    protected Feld getFeld() {
-        return spielfeld.getFelder().get(getFeldIndex());
     }
     
     /**

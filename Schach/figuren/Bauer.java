@@ -5,8 +5,12 @@ import gui.Feld;
 import java.util.ArrayList;
 import java.util.List;
 
+import daten.EnPassantZug;
+import daten.RochadenZug;
+import daten.Zug;
+
 /**
- * Der Bauplan für die Spielfigur Bauer. <br>
+ * Der Bauplan f&uuml;r die Spielfigur Bauer. <br>
  * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
  * @author Christian Ackermann
@@ -79,6 +83,57 @@ public class Bauer extends Figur {
             }
         }
         
+        // En-passant-Schlagen
+        
+        /* Das Schlagen en-passant ist erlaubt, wenn der Gegner im vorherigen
+         * Zug mit seinem Bauern zwei Felder gezogen ist und nun neben einem
+         * von unseren Bauern steht.
+         * Dieser darf jetzt so tun, als waere der Gegner nur ein Feld nach 
+         * vorne gezogen und schlaegt den Bauern neben sich.
+         */
+        
+        /* Bedingungen:
+         * 1. Im vorherigen Zug muss ein Bauer zwei Felder gezogen worden sein
+         * (steht jetzt auf Reihe 3 bzw 4)
+         * 2. Der eigene Bauer steht direkt daneben
+         */
+       
+        int lastIndex = getSpielfeld().getSpieldaten().getZugListe().size() - 1;
+        // Wenn das nicht der erste Zug ist
+        if (!getSpielfeld().getSpieldaten().getZugListe().isEmpty()) {
+            // Letzter durchgefuehrter Zug
+            Zug letzterZug = getSpielfeld().getSpieldaten()
+                .getZugListe().get(lastIndex);
+            // Wenn der letzte Zug ein Sonderzug war, ist en-passant nicht mogl.
+            if (!(letzterZug instanceof RochadenZug 
+                || letzterZug instanceof EnPassantZug)) {
+                // Wenn im letzten Zug ein Bauer ein Doppelzug gemacht hat
+                if (letzterZug.getFigur().getWert() == 100 
+                    && letzterZug.isErsterZug()
+                    && letzterZug.getZielfeld().getYK() == 4 
+                    || letzterZug.getZielfeld().getYK() == 3) {
+                    Figur gegner = letzterZug.getFigur();
+                    // Der eigene Bauer steht in der gleichen Reihe
+                    if (gegner.getPosition().getYK() 
+                        == getPosition().getYK()) {
+                        // Der eigene Bauer steht direkt daneben
+                        if (Math.abs(gegner.getPosition().getXK() 
+                            - getPosition().getXK()) == 1) {
+                            // Dann ist das Schlagen moeglich
+                            if (getFarbe()) {
+                                // Das Feld ueber dem Gegner
+                                moeglicheFelder.add(getFeld(
+                                    gegner.getFeldIndex() + 8));
+                            } else {
+                                // Das Feld unter dem Gegner
+                                moeglicheFelder.add(getFeld(
+                                    gegner.getFeldIndex() - 8));
+                            }
+                        }
+                    }
+                }
+            }
+        }
         // Gibt die Liste der moeglichen Felder zurueck
         return moeglicheFelder;
     }

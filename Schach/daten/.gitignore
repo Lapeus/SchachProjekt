@@ -7,3 +7,6 @@
 /package-info.class
 /Spieldaten.class
 /Spielfeld$FigurenComparator.class
+/RochadenZug.class
+/enPassantZug.class
+/EnPassantZug.class
