@@ -4,13 +4,10 @@ import javax.imageio.ImageIO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.LayoutManager;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -22,7 +19,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
 import daten.Spiel;
 import daten.Spieldaten;
@@ -151,7 +147,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * 4. Erstellt das Aussehen des Spielfelds  
      */
     private void init() { 
-        Dimension size = new Dimension(800, 800);
+        Dimension size = new Dimension(1200, 800);
         parent.setMinimumSize(size);
         parent.setSize(size);
         parent.setLocationRelativeTo(null);
@@ -172,15 +168,24 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
         cCenter.setBackground(new Color(0, 0, 0));
         cCenter.setLayout(new GridLayout(8, 8, 1, 1));
         
+        // EAST
+        
+        cEast.setLayout(new BorderLayout());
+        JLabel groesse = new JLabel("                                      "
+            + "                                                            ");
+        geschlageneSchwarze.setLayout(new GridLayout(2, 8));
+        geschlageneWeisse.setLayout(new GridLayout(2, 8));
+        
+        cEast.add(groesse, BorderLayout.EAST);
+        cEast.add(geschlageneWeisse, BorderLayout.NORTH);
+        cEast.add(geschlageneSchwarze, BorderLayout.SOUTH);
+        
         // SpielfeldGUI erstellen
         spielfeldAufbau();
         
-        // EAST
-        cEast.setLayout(new BorderLayout());
-        cEast.setMinimumSize(new Dimension(200, 200));
-        cEast.setSize(new Dimension(200, 200));
-        // Button um Spiel zu speichern
-        cEast.add(speichern, BorderLayout.CENTER);
+        
+        
+        //cEast.add(speichern, BorderLayout.CENTER);
         
         
         this.add(cCenter, BorderLayout.CENTER);
@@ -366,8 +371,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
      * Updated die Anzeigen der geschlagenen Figuren.
      */
     private void geschlageneFigureUpdate() {
-        geschlageneSchwarze = new JPanel();
-        geschlageneSchwarze.setLayout(new FlowLayout());
+        geschlageneSchwarze.removeAll();
+        geschlageneWeisse.removeAll();
         for (Figur schwarz : spielfeld.getGeschlagenSchwarz()) {
             JLabel momentan = new JLabel();
             if (schwarz.getWert() == 900) {
@@ -437,8 +442,80 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
                     exc.printStackTrace();
                 }
             }
+            
         }
-        cEast.add(geschlageneSchwarze, BorderLayout.SOUTH);
+        for (Figur weiss : spielfeld.getGeschlagenWeiss()) {
+            JLabel momentan = new JLabel();
+            if (weiss.getWert() == 900) {
+                try {
+                    Image test = ImageIO.read(new File("queenw.gif"));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneWeisse.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+               
+            }
+            if (weiss.getWert() == 100) {
+                try {
+                    Image test = ImageIO.read(new File("pawnw.gif"));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneWeisse.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (weiss.getWert() == 0) {
+                try {
+                    Image test = ImageIO.read(new File("kingw.gif"));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneWeisse.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (weiss.getWert() == 325) {
+                try {
+                    Image test = ImageIO.read(new File("bishopw.gif"));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneWeisse.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (weiss.getWert() == 275) {
+                try {
+                    Image test = ImageIO.read(new File("knightw.gif"));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneWeisse.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            if (weiss.getWert() == 465) {
+                try {
+                    Image test = ImageIO.read(new File("rookw.gif"));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneWeisse.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+            
+        }
+        
     }
      
     /**
@@ -492,7 +569,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener {
                 ausgewaehlteFigur.getPosition().setIcon(null);
                 spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld);
                 ausgewaehlteFigur = null;
-                
+                if (spielfeld.isSchach()) {
+                    System.out.println("Schach");
+                }
                 // Wenn das Spiel vorbei ist
                 if (spielfeld.schachMatt()) {
                     // TODO Popup Fenster mit SIEG

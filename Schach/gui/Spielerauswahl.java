@@ -197,6 +197,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         this.add(cCenter, BorderLayout.CENTER);
         
     }
+    // spielfeld.spieldaten.getZugliste --> letztes element.(boolean) Umwandlung
     
     /**
      * Gibt ein Panel mit den Feldern für die Eingabe eines Spielers aus.
