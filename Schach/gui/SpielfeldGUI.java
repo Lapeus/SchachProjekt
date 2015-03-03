@@ -6,6 +6,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridBagLayoutInfo;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -21,6 +24,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import daten.Spiel;
 import daten.Spieldaten;
@@ -49,7 +53,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Button um das Spiel zu speichern.
      */
-    private JButton speichern = new JButton("speichern");
+    private JButton speichern = new JButton("Spiel speichern");
     
     /**
      * Button um einen Zug Rueckgaenig zu machen.
@@ -130,7 +134,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Action Command für den Rueckgaening-Button.
      */
-    private final String commandRueck = "rueck"; 
+    private final String commandRueck = "rueck";
+    
+    /**
+     * Action Commmand fuer den Speichern-Button.
+     */
+    private final String commandSpeichern = "speichern";
     
     
     /**
@@ -183,8 +192,55 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cCenter.setLayout(new GridLayout(8, 8, 1, 1));
         
         // EAST
-        cEast.setLayout(new BorderLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        cEast.setLayout(new GridBagLayout());
         
+        
+        // geschlageneLabelW
+        JLabel lGeschlageneW = new JLabel("Geschlagene Weiße Figuren:");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 4;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.fill = GridBagConstraints.VERTICAL;
+        cEast.add(lGeschlageneW, gbc);
+        
+        //geschlageneLabelB
+        JLabel lGeschlageneB = new JLabel("Geschlagene Schwarze Figuren:");
+        gbc.gridy = 4;
+        cEast.add(lGeschlageneB, gbc);
+        
+        // geschlagene Weiss
+        geschlageneWeisse.setLayout(new GridLayout(2, 8));
+        gbc.gridy = 1;
+        gbc.gridheight = 2;
+        cEast.add(geschlageneWeisse, gbc);
+        
+        // geschlagene Schwarz
+        geschlageneSchwarze.setLayout(new GridLayout(2, 8));
+        gbc.gridy = 5;
+        cEast.add(geschlageneSchwarze, gbc);
+        
+        // Button rueck
+        rueckgaengig.addActionListener(this);
+        rueckgaengig.setActionCommand(commandRueck);
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.gridheight = 1;
+        cEast.add(rueckgaengig, gbc);
+        
+        // Button speichern
+        speichern.addActionListener(this);
+        speichern.setActionCommand(commandSpeichern);
+        gbc.gridx = 2;
+        gbc.gridy = 3;
+        cEast.add(speichern, gbc);
+        
+        
+        
+        
+        /*
+        cEast.setLayout(new BorderLayout());
         JLabel groesse = new JLabel("                                      "
             + "                                                            ");
         
@@ -202,7 +258,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(eastCenter, BorderLayout.CENTER);
         cEast.add(geschlageneSchwarze, BorderLayout.SOUTH);
 //        cEast.add(speichern, BorderLayout.CENTER);
-        
+*/        
         // Zu Panel hinzufügen
         this.add(cCenter, BorderLayout.CENTER);
         this.add(cEast, BorderLayout.EAST);
@@ -258,9 +314,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             rueckgaengig.setEnabled(true);
         }
         geschlageneFigureUpdate();
+        // Alle Bilder löschen damit keine Bilder doppelt bleiben
+        for (Feld feld : felderListe) {
+            feld.setIcon(null);
+        }
         // - schwarze Figurenbilder
         for (Figur schwarz  : spielfeld.getSchwarzeFiguren()) {
             Feld momentan = schwarz.getPosition();
+            momentan.setVerticalAlignment(SwingConstants.CENTER);
+            momentan.setHorizontalAlignment(SwingConstants.CENTER);
             if (schwarz.getWert() == 900) {
                 try {
                     Image test = ImageIO.read(new File("queenb.gif"));
@@ -320,6 +382,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // - weiße Figurenbilder
         for (Figur weiss  : spielfeld.getWeisseFiguren()) {
             Feld momentan = weiss.getPosition();
+            momentan.setVerticalAlignment(SwingConstants.CENTER);
+            momentan.setHorizontalAlignment(SwingConstants.CENTER);
             if (weiss.getWert() == 900) {
                 try {
                     Image test = ImageIO.read(new File("queenw.gif"));
@@ -401,6 +465,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         geschlageneWeisse.removeAll();
         for (Figur schwarz : spielfeld.getGeschlagenSchwarz()) {
             JLabel momentan = new JLabel();
+            momentan.setVerticalAlignment(SwingConstants.CENTER);
+            momentan.setHorizontalAlignment(SwingConstants.CENTER);
             if (schwarz.getWert() == 900) {
                 try {
                     Image test = ImageIO.read(new File("queenb.gif"));
@@ -467,11 +533,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 } catch (IOException exc) {
                     exc.printStackTrace();
                 }
-            }
-            
+            } 
         }
         for (Figur weiss : spielfeld.getGeschlagenWeiss()) {
             JLabel momentan = new JLabel();
+            momentan.setVerticalAlignment(SwingConstants.CENTER);
+            momentan.setHorizontalAlignment(SwingConstants.CENTER);
             if (weiss.getWert() == 900) {
                 try {
                     Image test = ImageIO.read(new File("queenw.gif"));
@@ -593,7 +660,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
              dieser ist */
             if (ausgewaehlteFigur.getKorrektFelder().contains(momentanesFeld)) {
-                ausgewaehlteFigur.getPosition().setIcon(null);
                 spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld);
                 ausgewaehlteFigur = null;
                 if (spielfeld.isSchach()) {
