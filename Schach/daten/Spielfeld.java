@@ -515,18 +515,6 @@ public class Spielfeld {
             schwarzeFiguren.add(neueFigur);
         }
     }
-    
-    /**
-     * Dreht das Spielfeld, sodass es nun vom aktiven Spieler aus gesehen wird.
-     */
-    private void dreheSpielfeld() {
-        List<Feld> sicherungskopie = new ArrayList<Feld>();
-        for (int i = 0; i <= 63; i++) {
-            sicherungskopie.add(felder.get(63 - i));
-        }
-        felder = sicherungskopie;
-        
-    }
    
     /**
      * Eine statische Klasse, die zwei Figuren aufgrund ihres Wertes vergleicht.
@@ -648,7 +636,7 @@ public class Spielfeld {
      * @return Liste von schwarzen Figuren
      */
     public List<Figur> getGeschlagenSchwarz() {
-        return sortiereListe(geschlagenSchwarz);
+        return geschlagenSchwarz;
     }
     
     /**
@@ -656,6 +644,24 @@ public class Spielfeld {
      * @return Liste von wei&szlig;en Figuren
      */
     public List<Figur> getGeschlagenWeiss() {
+        return geschlagenWeiss;
+    }
+    
+    /**
+     * Gibt die geschlagenen schwarzen Figuren nach aufsteigendem Wert 
+     * zur&uuml;ck.
+     * @return Liste von schwarzen Figuren
+     */
+    public List<Figur> getGeschlagenSchwarzSort() {
+        return sortiereListe(geschlagenSchwarz);
+    }
+    
+    /**
+     * Gibt die geschlagenen wei&szlig;en Figuren nach aufsteigendem Wert
+     * zur&uuml;ck.
+     * @return Liste von wei&szlig;en Figuren
+     */
+    public List<Figur> getGeschlagenWeissSort() {
         return sortiereListe(geschlagenWeiss);
     }
     
@@ -719,7 +725,6 @@ public class Spielfeld {
      */
     public void setAktuellerSpieler(boolean aktuellerSpieler) {
         this.aktuellerSpieler = aktuellerSpieler;
-        dreheSpielfeld();
     }
 
     /**
