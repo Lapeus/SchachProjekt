@@ -11,6 +11,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagLayoutInfo;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -18,6 +19,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -25,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 
 import daten.Spiel;
 import daten.Spieldaten;
@@ -38,7 +41,7 @@ import figuren.Figur;
  * @author Marvin Wolf 
  */
 public class SpielfeldGUI extends JPanel implements MouseListener, 
-    ActionListener {
+    ActionListener, Runnable {
     
     /**
      * Serial Key zur Identifizierung.
@@ -59,6 +62,21 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Button um einen Zug Rueckgaenig zu machen.
      */
     private JButton rueckgaengig = new JButton("Zug Rückgängig");
+    
+    /**
+     * Button um aufzugeben.
+     */
+    private JButton aufgeben = new JButton("Spiel Aufgeben");
+    
+    /**
+     * JLabel zum Anzeigen des momentanen Spielers.
+     */
+    private JLabel momentanerSpieler = new JLabel("Weiß");
+    
+    /**
+     * JLabel zum Anzeigen der Zugzeit des momentanen Spielers.
+     */
+    private JLabel zugzeit = new JLabel("  ");
     
     /**
      * JPanel für die Geschlagenen schwarzen Figuren.
@@ -141,6 +159,16 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private final String commandSpeichern = "speichern";
     
+    /**
+     * Action Command fuer den Aufgeben-Button.
+     */
+    private final String commandAufgeben = "aufgeben";
+    
+    //testen
+    private long sekundenStart, sekundenStopp;
+    private boolean uhrAktiv = false;
+    private Calendar dauer; 
+    private int min, sek, ms;
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -203,11 +231,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         gbc.gridwidth = 4;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.fill = GridBagConstraints.VERTICAL;
-        cEast.add(lGeschlageneW, gbc);
+        gbc.insets = new Insets(20, 10, 10, 20);
+        cEast.add(lGeschlageneW, gbc); 
         
         //geschlageneLabelB
         JLabel lGeschlageneB = new JLabel("Geschlagene Schwarze Figuren:");
-        gbc.gridy = 4;
+        gbc.gridy = 8;
         cEast.add(lGeschlageneB, gbc);
         
         // geschlagene Weiss
@@ -218,25 +247,38 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         // geschlagene Schwarz
         geschlageneSchwarze.setLayout(new GridLayout(2, 8));
-        gbc.gridy = 5;
+        gbc.gridy = 9;
+        gbc.gridheight = 1;
         cEast.add(geschlageneSchwarze, gbc);
+        
+        // Label momentanerSpieler
+        gbc.gridy = 3;
+        cEast.add(momentanerSpieler, gbc);
+        
+        // Label Stoppuhr
+        gbc.gridy = 7;
+        cEast.add(zugzeit, gbc);
         
         // Button rueck
         rueckgaengig.addActionListener(this);
         rueckgaengig.setActionCommand(commandRueck);
-        gbc.gridy = 3;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
-        gbc.gridheight = 1;
         cEast.add(rueckgaengig, gbc);
         
         // Button speichern
         speichern.addActionListener(this);
         speichern.setActionCommand(commandSpeichern);
         gbc.gridx = 2;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         cEast.add(speichern, gbc);
         
-        
+        // Button aufgeben
+        aufgeben.addActionListener(this);
+        aufgeben.setActionCommand(commandAufgeben);
+        gbc.gridx = 2;
+        gbc.gridy = 6;
+        cEast.add(aufgeben, gbc);
         
         
         /*
@@ -661,6 +703,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
              dieser ist */
             if (ausgewaehlteFigur.getKorrektFelder().contains(momentanesFeld)) {
                 spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld);
+                start();
                 ausgewaehlteFigur = null;
                 if (spielfeld.isSchach()) {
                     System.out.println("Schach");
@@ -668,8 +711,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // Wenn das Spiel vorbei ist
                 if (spielfeld.schachMatt()) {
                     // TODO Popup Fenster mit SIEG
-                    System.out.println("gewonnen");
+                    // spiel.auswertung();   
+                    // if letzter zug = Umwandlungszug übergebe umwandlung(Wert)
                 }
+                if (spielfeld.getAktuellerSpieler()) {
+                    momentanerSpieler.setText("Weiß");
+                } else {
+                    momentanerSpieler.setText("Schwarz");
+                }
+                
                 spielfeldAufbau();
             /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
              * Auswahl aufgehoben.
@@ -730,7 +780,75 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(commandRueck)) {
             spielfeld.zugRueckgaengig();
+            start();
             spielfeldAufbau();
+        }
+        if (e.getActionCommand().equals(commandAufgeben)) {
+            
+        }
+    }
+    
+    /**
+     * Startet eine neue Zeitnahmesession für die Zugzeit der Spieler.
+     */
+    private void start() {
+        // Alte Zeit beenden
+        uhrAktiv = false;
+        // Neue Zeit anfangen
+        uhrAktiv = true;
+        // Thread anlegen
+        Thread th = new Thread(this); 
+        sekundenStart = System.currentTimeMillis();
+        // Thread starten
+        th.start(); 
+    }
+    
+    /**
+     * Runnable Methode zum erstellen der Zugzeit des momentanen Spielers.
+     */
+    public void run() {
+        StringBuffer ausgabe;
+        while (uhrAktiv) {
+            zugzeit.setForeground(Color.BLACK);
+            ausgabe = new StringBuffer();
+            // Alle 10 millisekunden wird geupdated
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            // Vergangene Ziet in Millisekuden
+            sekundenStopp = System.currentTimeMillis()
+                    - sekundenStart;
+            // Formatierungshilfe für Zeiten
+            dauer = Calendar.getInstance();
+            // Zeit in Millisekunden übergeben
+            dauer.setTimeInMillis(sekundenStopp);
+            // und in Minuten/Sekunden/Millisekunden (0-9/0-9/0-99)
+            min = dauer.get(Calendar.MINUTE);
+            sek = dauer.get(Calendar.SECOND);
+            ms = dauer.get(Calendar.MILLISECOND);
+            
+            // An den AusgabeString anhängen
+            if (min <= 9) {
+                ausgabe.append("0" + min + ":");
+            } else {
+                ausgabe.append(min + ":");
+            }
+            if (sek <= 9) {
+                ausgabe.append("0" + sek + ":");
+            } else {
+                ausgabe.append(sek + ":");
+            }
+            if (ms <= 9) {
+                ausgabe.append("00" + ms);
+            } else if (ms <= 99) {
+                ausgabe.append("0" + ms);
+            } else {
+                ausgabe.append(ms);
+            }
+            // Auf das Zugzeit-Label schreiben
+            zugzeit.setText(ausgabe.toString());
         }
     }
     
