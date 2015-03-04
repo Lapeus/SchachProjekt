@@ -82,7 +82,7 @@ public class Spielfeld {
     /**
      * Erzeugt ein neues Spielfeld und stellt die Figuren an die richtige
      * Position.
-     * @param felder : Die Liste mit den Feldern, auf die die Figuren gestellt
+     * @param felder Die Liste mit den Feldern, auf die die Figuren gestellt
      * werden sollen
      */
     public Spielfeld(List<Feld> felder) {
@@ -179,10 +179,11 @@ public class Spielfeld {
     /**
      * F&uuml;hrt einen Zug durch und passt alle n&ouml;tigen Listen und Felder
      * an.
-     * @param figur : Die Figur, die gezogen werden soll
-     * @param zielfeld : Das Feld, auf das die Figur gezogen werden soll
+     * @param figur Die Figur, die gezogen werden soll
+     * @param zielfeld Das Feld, auf das die Figur gezogen werden soll
+     * @param zugzeit Die Dauer des Zuges in ganzen Sekunden
      */
-    public void ziehe(Figur figur, Feld zielfeld) {
+    public void ziehe(Figur figur, Feld zielfeld, int zugzeit) {
         // Hier muss ein neuer Zug erstellt werden
         Zug zug;
         // Wird das ein Schlagzug
@@ -207,7 +208,7 @@ public class Spielfeld {
         }
         
         // Neuer Zug wird erstellt
-        zug = new Zug(figur.getPosition(), zielfeld, figur, schlagzug,  0,
+        zug = new Zug(figur.getPosition(), zielfeld, figur, schlagzug,  zugzeit,
             ersterZug, umwandlung);
         spieldaten.getZugListe().add(zug);
         // Figur wird von der aktuellen Position entfernt
@@ -251,9 +252,14 @@ public class Spielfeld {
         /* Der Zug ist nun vorbei. Daher aendert sich der aktive Spieler und
          * das Spielfeld muss gedreht werden.
          */
-        aktuellerSpieler = !aktuellerSpieler;  
+        setAktuellerSpieler(!aktuellerSpieler);  
     }
     
+    /**
+     * Pr&uuml;ft, ob der Zug eine Rochade war und f&uuml;hrt ihn entsprechend
+     * zu Ende.
+     * @param zug Der letzte durchgef&uuml;hrte Zug
+     */
     private void rochadeZiehen(Zug zug) {
         // Wenn es eine Rochade ist
         /* Wenn es eine Rochade ist, wurde der Koenig zwei Felder zur Seite
@@ -305,11 +311,17 @@ public class Spielfeld {
              */
             spieldaten.getZugListe().remove(zug);
             RochadenZug rochzug = new RochadenZug(zug.getFigur(), 
-                zug.getStartfeld(), turm, felder.get(indexStart), 0);
+                zug.getStartfeld(), turm, felder.get(indexStart)
+                , zug.getZugzeit());
             spieldaten.getZugListe().add(rochzug);   
         }
     }
     
+    /**
+     * Pr&uuml;ft, ob der Zug ein En-Passant-Schlag war und f&uuml;hrt ihn
+     * entsprechend zu Ende.
+     * @param zug Der letzte durchgef&uuml;hrte Zug
+     */
     private void enPassantZiehen(Zug zug) {
         // Wenn es ein en-passant-Schlag ist
         /* Wenn es ein Bauer ist und er die Spalte wechselt ohne dabei 
@@ -345,7 +357,7 @@ public class Spielfeld {
              */
             spieldaten.getZugListe().remove(zug);
             EnPassantZug enpasszug = new EnPassantZug(zug.getFigur(), 
-                zug.getStartfeld(), andererBauer, 0);
+                zug.getStartfeld(), andererBauer, zug.getZugzeit());
             spieldaten.getZugListe().add(enpasszug);
         }
     }
@@ -363,7 +375,7 @@ public class Spielfeld {
         // Die bedrohten Felder koennen ignoriert werden
         
         // Aktiver Spieler muss geaendert werden.
-        aktuellerSpieler = !aktuellerSpieler;
+        setAktuellerSpieler(!aktuellerSpieler);
         
         // Wenn es ein Rochadenzug war
         if (zug instanceof RochadenZug) {
@@ -464,6 +476,11 @@ public class Spielfeld {
         
     }
     
+    /**
+     * Wandelt den angegebenen Bauern in eine andere Figur um.
+     * @param figur Der Bauer, der umgewandelt werden darf
+     * @param wert Der Wert der Figur, in die er umgewandelt werden soll
+     */
     public void umwandeln(Figur figur, int wert) {
         // Erzeugen der neuen Figur
         /* Cast wird benoetigt, damit die Variable auch ausserhalb des ifs 
@@ -503,25 +520,18 @@ public class Spielfeld {
      * Dreht das Spielfeld, sodass es nun vom aktiven Spieler aus gesehen wird.
      */
     private void dreheSpielfeld() {
+        List<Feld> sicherungskopie = new ArrayList<Feld>();
+        for (int i = 0; i <= 63; i++) {
+            sicherungskopie.add(felder.get(63 - i));
+        }
+        felder = sicherungskopie;
         
     }
-    
-    public Feld getAktuellenKoenig() {
-        Feld feld;
-        // Wenn weiß dran ist
-        if (aktuellerSpieler) {
-            // Das Feld der letzten Figur (Koenig immer ganz hinten)
-            feld = weisseFiguren.get(weisseFiguren.size() - 1)
-                .getPosition();
-        // Wenn schwarz dran ist
-        } else {
-            // Das Feld der letzten Figur (Koenig immer ganz hinten)
-            feld = schwarzeFiguren.get(schwarzeFiguren.size() - 1)
-                .getPosition();
-        }
-        return feld;
-    }
-    
+   
+    /**
+     * Eine statische Klasse, die zwei Figuren aufgrund ihres Wertes vergleicht.
+     * @author Christian Ackermann
+     */
     public static class FigurenComparator implements Comparator<Figur> {
         @Override
         public int compare(Figur fig1, Figur fig2) {
@@ -534,11 +544,22 @@ public class Spielfeld {
         }
     }
     
+    /**
+     * Sortiert eine Liste von Figuren aufsteigend nach Wert.
+     * @param figuren Eine Liste von Figuren die sortiert werden soll
+     * @return Die sortierte Liste
+     */
     private List<Figur> sortiereListe(List<Figur> figuren) {
         Collections.sort(figuren, new FigurenComparator());
         return figuren;
     }
     
+    /**
+     * Pr&uuml;ft ob der aktuelle Spieler noch ziehen kann. <br>
+     * Die Pr&uuml;fung auf Matt oder Patt erfolgt an anderer Stelle.
+     * @return <b>true</b> wenn er nicht mehr ziehen kann, <b>false</b> wenn er
+     * noch ziehen kann.
+     */
     public boolean schachMatt() {
         boolean matt = false;
         List<Figur> eigeneFiguren;
@@ -557,17 +578,43 @@ public class Spielfeld {
         }
         // Wenn es fuer keine Figur ein moegliches Feld gibt
         if (alleFelder.isEmpty()) {
-            // Ist er matt gesetzt
+            // Ist er matt oder patt
             matt = true;
-            // PRUEFUNG AUF PATT
         }
         return matt;
     }
     
+    /**
+     * Gibt den gesamten Materialwert des angegebenen Spielers zur&uuml;ck.
+     * @param spieler Die Spielfarbe des Spielers
+     * @return Der Materialwert als ganze Zahl zwischen 0 und 3830
+     */
+    public int getMaterialwert(boolean spieler) {
+        int matWert = 0;
+        List<Figur> eigeneFiguren;
+        if (spieler) {
+            eigeneFiguren = weisseFiguren;
+        } else {
+            eigeneFiguren = schwarzeFiguren;
+        }
+        for (Figur figur : eigeneFiguren) {
+            matWert += figur.getWert();
+        }
+        return matWert;
+    }
+    
+    /**
+     * Gibt die Spieldaten zur&uuml;ck.
+     * @return Die Spieldaten
+     */
     public Spieldaten getSpieldaten() {
         return spieldaten;
     }
 
+    /**
+     * Setzt die Spieldaten.
+     * @param spieldaten Die Spieldaten
+     */
     public void setSpieldaten(Spieldaten spieldaten) {
         this.spieldaten = spieldaten;
     }
@@ -612,7 +659,13 @@ public class Spielfeld {
         return sortiereListe(geschlagenWeiss);
     }
     
-    
+    /**
+     * Gibt eine Liste von den aktuell bedrohten Feldern auf denen eine Figur
+     * steht zur&uuml;ck. <br>
+     * Wenn die entsprechende Option aktiviert ist, werden diese dem Spieler als
+     * Hilfestellung angezeigt.
+     * @return Liste der besetzten, bedrohten Felder
+     */
     public List<Feld> getBedrohteFelder() {
         /* Zusatz: Vorbereitung fuer die grafische Hilfestellung "Es werden
          * alle in diesem Zug bedrohten Figuren angezeigt."
@@ -661,7 +714,7 @@ public class Spielfeld {
     
     /**
      * Setzt den aktiven Spieler und dreht das Spielfeld.
-     * @param aktuellerSpieler : <b>true</b> f&uuml;r wei&szlig;, <b>false</b> 
+     * @param aktuellerSpieler <b>true</b> f&uuml;r wei&szlig;, <b>false</b> 
      * f&uuml;r schwarz
      */
     public void setAktuellerSpieler(boolean aktuellerSpieler) {
@@ -669,14 +722,31 @@ public class Spielfeld {
         dreheSpielfeld();
     }
 
+    /**
+     * Gibt an, ob der aktuelle Spieler im Schach steht.<br>
+     * Wird nur f&uuml;r die Konversation zwischen Logik und GUI verwendet.
+     * @return Wahrheitswert
+     */
     public boolean isSchach() {
         return schach;
     }
 
+    /**
+     * Setzt, ob der aktuelle Spieler im Schach steht.
+     * @param schach Wahrheitswert
+     */
     public void setSchach(boolean schach) {
         this.schach = schach;
     }
 
+    /**
+     * Gibt eine Liste mit den Feldern zur&uuml;ck, auf denen gegnerische 
+     * Figuren stehen und welche in diesem Zug vom aktiven Spieler geschlagen
+     * werden k&ouml;nnen.<br>
+     * Wenn die entsprechende Option aktiviert ist, werden diese Felder dem
+     * Spieler als grafische Hilfestellung angezeigt.
+     * @return Eine Liste mit den Feldern auf denen zu schlagende Figuren stehen
+     */
     public List<Feld> getSchlagendeFelder() {
         return schlagendeFelder;
     }

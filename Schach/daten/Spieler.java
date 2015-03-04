@@ -1,46 +1,79 @@
 package daten;
 
+/**
+ * Verwaltet alle wichtigen Informationen eines Spielers.
+ * Neben dem Namen und der aktuellen Spielfarbe wird auch eine Statistik
+ * f&uuml;r jeden Spieler gespeichert.
+ * @author Christian Ackermann
+ */
 public class Spieler {
 
+    /**
+     * Der Name des Spielers.
+     */
     private String name;
-    private boolean farbe; //true für weiss, false für schwarz
-    private int spielzeit;
-    private int anzahlZuege;
-    private int anzahlSpiele;
     
+    /**
+     * Die aktuelle Spielfarbe des Spielers.
+     * <b>True</b> f&uuml;r wei&szlig;, <b>false</b> f&uuml;r schwarz
+     */
+    private boolean farbe;
+    
+    /**
+     * Die Statistik des Spielers.
+     */
+    private Statistik statistik;
+    
+    /**
+     * Erstellt einen neuen Spieler.<br>
+     * Einziger Konstruktor dieser Klasse. 
+     * @param name Der Name des Spielers
+     */
     public Spieler(String name) {
         this.name = name;
-        this.spielzeit = 0;
-        this.anzahlZuege = 0;
-        this.anzahlSpiele = 0;
+        this.statistik = new Statistik();
     }
     
+    /**
+     * Gibt den Namen des Spielers zur&uuml;ck.
+     * @return Name des Spielers
+     */
     public String getName() {
         return name;
     }
     
+    /**
+     * Setzt den Namen des Spielers.
+     * @param name Name des Spielers
+     */
     public void setName(String name) {
         this.name = name;
     }
     
+    /**
+     * Gibt die aktuelle Spielfarbe des Spielers zur&uuml;ck.
+     * @return Die Farbe des Spielers. <b>True</b> f&uuml;r wei&szlig;,
+     * <b>false</b> f&uuml;r schwarz
+     */
     public boolean getFarbe() {
         return farbe;
     }
     
+    /**
+     * Setzt die aktuelle Spielfarbe des Spielers.
+     * @param farbe Die Farbe des Spielers. <b>True</b> f&uuml;r wei&szlig;,
+     * <b>false</b> f&uuml;r schwarz
+     */
     public void setFarbe(boolean farbe) {
         this.farbe = farbe;
     }
     
-    public int getSpielzeit() {
-        return spielzeit;
-    }
-    
-    public int getAnzahlZuege() {
-        return anzahlZuege;
-    }
-    
-    public int getAnzahlSpiele() {
-        return anzahlSpiele;
+    /**
+     * Gibt die Statistik des Spielers zur&uuml;ck.
+     * @return Die Statistik
+     */
+    public Statistik getStatistik() {
+        return statistik;
     }
     
 }

@@ -1,19 +1,20 @@
 package daten;
 
-import figuren.Figur;
-import gui.Feld;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Verwaltet alle wichtigen Daten f&uuml;r ein Spiel. <br>
  * Ein Spiel besteht aus einem Namen, den beteiligten Spielern, dem 
- * zugehörigen Spielfeld, sowie s&auml;mtliche ben&ouml;tigte Daten und 
+ * zugehörigen Spielfeld, sowie s&auml;mtlichen ben&ouml;tigten Daten und 
  * Einstellungen.
  * @author Christian Ackermann
  */
 public class Spiel {
 
     /**
-     * Der Name des Spiels. Wird beim Laden eines Spiels ben&ouml;tigt.
+     * Der Name des Spiels. <br>
+     * Wird beim Laden eines Spiels ben&ouml;tigt.
      */
     private String spielname;
     
@@ -28,7 +29,8 @@ public class Spiel {
     private Spieler spieler2;
     
     /**
-     * Das zugeh&uml;rige Spielfeld. Stellt die Figurenanordnung auf dem Brett
+     * Das zugeh&ouml;rige Spielfeld. <br>
+     * Stellt die Figurenanordnung auf dem Brett
      * zur Verf&uuml;gung.
      */
     private Spielfeld spielfeld;
@@ -37,7 +39,7 @@ public class Spiel {
      * Alle spielbezogenen Einstellungen, die beim Laden &uuml;bernommen werden
      * m&uuml;ssten.
      */
-    private Einstellungen einstellungen;
+    //private Einstellungen einstellungen;
     
     /**
      * Legt ein neues Spiel an, welches gespielt und sp&auml;ter gespeichert
@@ -50,14 +52,46 @@ public class Spiel {
      * @param spielfeld : Das zugeh&ouml;rige Spielfeld
      */
     public Spiel(String spielname, Spieler spieler1, Spieler spieler2,
-        Spielfeld spielfeld/*, Einstellungen einstellungen,
-        Spieldaten spieldaten*/) {
+        Spielfeld spielfeld/*, Einstellungen einstellungen*/) {
         this.spielname = spielname;
         this.spieler1 = spieler1;
         this.spieler2 = spieler2;
         this.spielfeld = spielfeld;
         //this.einstellungen = einstellungen;
-        //this.spieldaten = spieldaten;
+    }
+    
+    /**
+     * Wertet das Spiel aus und ermittelt das Ergebnis und den Sieger.<br>
+     * Wird aus der GUI aufgerufen und &uuml;bergibt dieser eine Liste mit den
+     * ermittelten Daten.
+     * @return Eine Liste vom Typ Object mit den wichtigen Informationen zum 
+     * Spielausgang
+     */
+    public List<Object> auswertung() {
+        List<Object> ergebnis = new ArrayList<Object>();
+        // Der Gewinner
+        // Der aktuelle Spieler hat verloren
+        if (spieler1.getFarbe() != spielfeld.getAktuellerSpieler()) {
+            ergebnis.add(spieler1);
+        } else {
+            ergebnis.add(spieler2);
+        }
+        
+        // Matt oder Patt
+        if (spielfeld.isSchach()) {
+            // True fuer Matt
+            ergebnis.add(true);
+        } else {
+            // False fuer Patt
+            ergebnis.add(false);
+        }
+        
+        // Anzahl Zuege
+        // AnzahlZuege von dem nicht aktiven Spieler, da dieser gewonnen hat
+        ergebnis.add(spielfeld.getSpieldaten()
+            .getAnzahlZuege(!spielfeld.getAktuellerSpieler()));
+        
+        return ergebnis;
     }
     
     /**

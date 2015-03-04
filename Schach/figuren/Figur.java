@@ -5,9 +5,7 @@ import gui.Feld;
 import java.util.ArrayList;
 import java.util.List;
 
-import daten.Spieldaten;
 import daten.Spielfeld;
-import daten.Zug;
 
 /**
  * Eine Klasse die alle Spielfiguren verwaltet.
@@ -37,14 +35,16 @@ public abstract class Figur {
     
     /**
      * Der materielle Wert der Figur. <br>
-     * Wird ausschlie&szlig;lich für die Bewertungsfunktion des Computergegners
-     * ben&ouml;tigt und basiert auf stochastischen Erhebungen. Die Werte sind
-     * von den gegebenen Internetquellen &uuml;bernommen.
+     * Wird haupts&auml;chlich für die Bewertungsfunktion des Computergegners
+     * ben&ouml;tigt und basiert auf stochastischen Erhebungen. 
+     * Dient zum anderen der einfachen Identifikation der Figur ohne Verwendung
+     * des <b>instanceof</b> Operators.
+     * Die Werte sind aus den gegebenen Internetquellen &uuml;bernommen.
      */
     private int wert;
     
     /**
-     * Gibt an, ob die Figur in diesem Spiel schon einmal gezogen wurde.
+     * Gibt an, ob die Figur in diesem Spiel schon einmal gezogen wurde. <br>
      * Dies ist vorallem f&uuml;r die Rochade und f&uuml;r die jeweils ersten
      * Z&uuml;ge der Bauern wichtig.
      */
@@ -106,8 +106,8 @@ public abstract class Figur {
         if (!korrekt.isEmpty()) {
             // Fuer jeden vorgeschlagenen Zug
             for (Feld feld : korrekt) {
-                // Simuliere einen Zug
-                spielfeld.ziehe(this, feld);
+                // Simuliere einen Zug (Zugzeit 0)
+                spielfeld.ziehe(this, feld, 0);
                 /* Wenn der Koenig gezogen hat, muss das Feld aktualisiert 
                  * werden.
                  */

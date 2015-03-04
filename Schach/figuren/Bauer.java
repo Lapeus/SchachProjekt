@@ -14,6 +14,7 @@ import daten.Zug;
  * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
  * @author Christian Ackermann
+ * @see Figur
  */
 public class Bauer extends Figur {
     

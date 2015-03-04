@@ -3,23 +3,76 @@ package daten;
 import figuren.Figur;
 import gui.Feld;
 
+/**
+ * Verwaltet alle Informationen die f&uuml;r einen Zug wichtig sind. <br>
+ * Neben den beteiligten Feldern und der Figur wird unter anderem auch die Dauer
+ * des Zuges gespeichert.
+ * @author Christian Ackermann
+ */
 public class Zug {
 
+    /**
+     * Das Feld auf dem die gezogene Figur vor dem Zug stand.
+     */
     private Feld startfeld;
+    
+    /**
+     * Das Feld auf dem die gezogene Figur nach dem Zug steht.
+     */
     private Feld zielfeld;
+    
+    /**
+     * Die gezogene Figur.
+     */
     private Figur figur;
+    
+    /**
+     * Gibt an, ob bei diesem Zug eine Figur geschlagen wurde. <br>
+     * Ist wichig, wenn der Zug r&uuml;ckg&auml;ngig gemacht werden soll.
+     */
     private boolean schlagzug;
+    
+    /**
+     * Die Dauer des Zuges in Sekunden.
+     */
     private int zugzeit;
+    
+    /**
+     * Gibt an, ob es der erste Zug der gezogenen Figur war. <br>
+     * Ist wichtig, wenn der Zug r&uuml;ckg&auml;ngig gemacht werden soll, oder
+     * wenn es ein Bauer war, der nun en-passant geschlagen werden kann.
+     */
     private boolean ersterZug;
+    
+    /**
+     * Gibt an, ob dieser Zug zu einer Umwandlung eines Bauers f&uuml;hrt. <br>
+     * Ist wichtig, damit auf der Benutzeroberfl&auml;che die Auswahl, in welche
+     * Figur umgewandelt werden soll, aufgerufen werden kann.
+     */
     private boolean umwandlung;
     
     /**
-     * Leerer Konstrukor um Sonderz&uuml;ge anlegen zu k&ouml;nnen.
+     * Leerer Konstrukor um Sonderz&uuml;ge mit anderen Attributen anlegen zu
+     * k&ouml;nnen. <br>
+     * @see RochadenZug
+     * @see EnPassantZug
      */
     public Zug() {
 
     }
     
+    /**
+     * Erstellt einen neuen Zug.<br>
+     * Hauptkonstruktor dieser Klasse.
+     * @param startfeld Das Feld auf dem die Figur vor dem Zug stand
+     * @param zielfeld Das Feld auf dem die Figur nach dem Zug steht
+     * @param figur Die Figur die gezogen wird
+     * @param schlagzug Ob bei diesem Zug eine andere Figur geschlagen wird
+     * @param zugzeit Die Dauer des Zuges in Sekunden
+     * @param ersterZug Ob es der erste Zug dieser Figur ist
+     * @param umwandlung Ob die Figur ein Bauer ist und mit diesem Zug die 
+     * gegnerische Grundlinie erreicht
+     */
     public Zug(Feld startfeld, Feld zielfeld, Figur figur, boolean schlagzug
         , int zugzeit, boolean ersterZug, boolean umwandlung) {
         this.startfeld = startfeld;
@@ -31,45 +84,90 @@ public class Zug {
         this.umwandlung = umwandlung;
     }
     
+    /**
+     * Gibt das Startfeld zur&uuml;ck.
+     * @return Das Startfeld
+     */
     public Feld getStartfeld() {
         return startfeld;
     }
     
+    /**
+     * Gibt das Zielfeld zur&uuml;ck.
+     * @return Das Zielfeld
+     */
     public Feld getZielfeld() {
         return zielfeld;
     }
     
+    /**
+     * Gibt die gezogene Figur zur&uuml;ck.
+     * @return Die Figur
+     */
     public Figur getFigur() {
         return figur;
     }
     
+    /**
+     * Gibt die Dauer des Zuges zur&uuml;ck.
+     * @return Dauer des Zuges als ganze Zahl in Sekunden
+     */
     public int getZugzeit() {
         return zugzeit;
     }
     
+    /**
+     * Setzt die Dauer des Zuges.
+     * @param zugzeit Die Dauer des Zuges in ganzen Sekunden
+     */
     public void setZugzeit(int zugzeit) {
         this.zugzeit = zugzeit;
     }
     
+    /**
+     * Gibt an, ob bei dem Zug eine Figur geschlagen wurde.
+     * @return Wahrheitswert, ob eine Figur geschlagen wurde
+     */
     public boolean isSchlagzug() {
         return schlagzug;
     }
+    
+    /**
+     * Setzt, ob bei dem Zug eine Figur geschlagen wurde.
+     * @param schlagzug Wahrheitswert, ob eine Figur geschlagen wird
+     */
     public void setSchlagzug(boolean schlagzug) {
         this.schlagzug = schlagzug;
     }
-
+    
+    /**
+     * Gibt an, ob es der erste Zug dieser Figur ist.
+     * @return Wahrheitswert, ob es der erste Zug ist
+     */
     public boolean isErsterZug() {
         return ersterZug;
     }
 
+    /**
+     * Setzt, ob es der erste Zug dieser Figur ist.
+     * @param ersterZug Wahrheitswert, ob es der erste Zug ist
+     */
     public void setErsterZug(boolean ersterZug) {
         this.ersterZug = ersterZug;
     }
 
+    /**
+     * Gibt an, ob dieser Zug zu einer Umwandlung des Bauers f&uuml;hrt.
+     * @return Wahrheitswert, ob er zu einer Umwandlung f&uuml;hrt
+     */
     public boolean isUmwandlung() {
         return umwandlung;
     }
 
+    /**
+     * Setzt, ob dieser Zug zu einer Umwandlung des Bauers f&uuml;hrt.
+     * @param umwandlung Wahrheitswert, ob er zu einer Umwandlung f&uuml;hrt
+     */
     public void setUmwandlung(boolean umwandlung) {
         this.umwandlung = umwandlung;
     }

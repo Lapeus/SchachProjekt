@@ -10,3 +10,6 @@
 /RochadenZug.class
 /enPassantZug.class
 /EnPassantZug.class
+/Statistik.class
+/Highscore.class
+/Highscore$SpielerComparator.class

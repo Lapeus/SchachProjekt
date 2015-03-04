@@ -10,6 +10,7 @@ import java.util.List;
  * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
  * @author Christian Ackermann
+ * @see Figur
  */
 public class Koenig extends Figur {
 
@@ -57,6 +58,12 @@ public class Koenig extends Figur {
         return moeglicheFelder;
     }
     
+    /**
+     * Ermittelt die normalen Z&uuml;ge des K&ouml;nigs mit Ausnahme der
+     * Rochade.
+     * @return Liste der m&ouml;glichen Felder, auf die der K&ouml;nig ziehen
+     * kann
+     */
     private List<Feld> normaleZuege() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
         /*<Gehe alle Felder ringsherum durch und schaue ob sie existieren und
@@ -97,6 +104,12 @@ public class Koenig extends Figur {
         return moeglicheFelder;
     }
     
+    /**
+     * Ermittelt die m&ouml;glichen Felder des K&ouml;nigs, wenn er auch 
+     * rochieren darf.
+     * @return Liste mit den m&ouml;glichen Rochade-Feldern auf die der 
+     * K&ouml;nig ziehen darf
+     */
     private List<Feld> rochade() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
         // Rochade
@@ -116,6 +129,12 @@ public class Koenig extends Figur {
         return moeglicheFelder;
     }
 
+    /**
+     * Pr&uuml;ft, ob alle Bedinungen f&uuml;r eine Rochade erf&uuml;llt sind.
+     * @param kleineRochade Ob es eine kleine oder gro&szlig;e Rochade ist.
+     * <b>True</b> f&uuml;r kleine, <b>false</b> f&uuml;r gro&szlig;e Rochade
+     * @return Wahrheitswert, ob Rochade durchgef&uuml;hrt werden darf
+     */
     private boolean rochadeMoeglich(boolean kleineRochade) {
         boolean moeglich = true;
         // Der beteiligte Turm
@@ -182,6 +201,12 @@ public class Koenig extends Figur {
         return moeglich;
     }
     
+    /**
+     * Ermittelt alle vom Gegner bedrohten Felder.
+     * Wird verwendet, um bei der Rochade pr&uuml;fen zu k&ouml;nnen, ob eines
+     * der Felder, &uuml;ber die der K&ouml;nig ziehen muss, bedroht ist.
+     * @return Liste mit allen bedrohten Feldern
+     */
     private List<Feld> alleBedrohtenFelder() {
         // Berechnung der bedrohten Felder
         List<Feld> bedrohteFelder = new ArrayList<Feld>();

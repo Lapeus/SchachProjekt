@@ -10,6 +10,7 @@ import java.util.List;
  * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
  * @author Christian Ackermann
+ * @see Figur
  */
 public class Springer extends Figur {
 
