@@ -31,6 +31,33 @@ public class Koenig extends Figur {
      * {@inheritDoc}
      */
     protected List<Feld> getMoeglicheFelder() {
+        /* Hier muss eine Auslagerung vorgenommen werden. Die normalen
+         * Koenigszuege werden durch die Methode normaleZuege() ermittelt.
+         * Die Rochade wird durch die Methode rochade() implementiert.
+         * Wuerde man das nicht trennen, entstaende in der Methode
+         * rochadeMoeglich(boolean kleineRochade) eine endlose Rekursion, weil
+         * abgeprueft werden muss, ob eines der ueberzogenen Felder bedroht ist.
+         * Das wird umgesetzt, indem man jede gegnerische Figur auf jedes Feld
+         * ziehen laesst und schaut, ob das zu pruefende dabei ist. Dabei wird
+         * jedoch unter anderem die Methode getMoeglicheFelder() des
+         * gegnerischen Koenigs aufgerufen. Der wuerde dann ebenfalls pruefen,
+         * ob er eine Rochade durchfuehren kann und dabei entstaende eine 
+         * endlose Rekursion aus der man nicht wieder raus kommt.
+         * Fuer diesen Fall wird die Methode getMoeglicheFelder() des Koenigs
+         * eingeteilt in normaleZuege() und rochade().
+         */
+        
+        List<Feld> moeglicheFelder = new ArrayList<Feld>();
+        // Normale Zuege
+        moeglicheFelder.addAll(normaleZuege());
+        
+        // Rochade
+        moeglicheFelder.addAll(rochade());
+        
+        return moeglicheFelder;
+    }
+    
+    private List<Feld> normaleZuege() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
         /*<Gehe alle Felder ringsherum durch und schaue ob sie existieren und
          *nicht von eigenen Figuren besetzt sind.>
@@ -69,7 +96,128 @@ public class Koenig extends Figur {
         }
         return moeglicheFelder;
     }
-
     
+    private List<Feld> rochade() {
+        List<Feld> moeglicheFelder = new ArrayList<Feld>();
+        // Rochade
+        
+        // kleine Rochade
+        if (!getGezogen() && rochadeMoeglich(true)) {
+            // Fuege das Feld zwei rechts vom Koenig hinzu
+            moeglicheFelder.add(getFeld(getFeldIndex() + 2));
+        }
+        
+        // große Rochade
+        if (!getGezogen() && rochadeMoeglich(false)) {
+            // Fuege das Feld zwei links vom Koenig hinzu
+            moeglicheFelder.add(getFeld(getFeldIndex() - 2));
+        }
+        
+        return moeglicheFelder;
+    }
+
+    private boolean rochadeMoeglich(boolean kleineRochade) {
+        boolean moeglich = true;
+        // Der beteiligte Turm
+        Figur turm = null;
+        // Wenn: Es die kleine Rochade ist und es eine Figur 3 Felder rechts 
+        // vom Koenig gibt und diese Figur ein Turm ist
+        // und dieser Turm die gleiche Farbe hat wie dieser Koenig
+        if (kleineRochade && getFigurAt(getFeldIndex() + 3) != null 
+            && getFigurAt(getFeldIndex() + 3).getWert() == 465
+            && getFigurAt(getFeldIndex() + 3).getFarbe() == getFarbe()) {
+            // Dann ist das der beteiligte Turm
+            turm = getFigurAt(getFeldIndex() + 3);
+         // Wenn: Es die grosse Rochade ist und es eine Figur 4 Felder links 
+         // vom Koenig gibt und diese Figur ein Turm ist
+         // und dieser Turm die gleiche Farbe hat wie dieser Koenig
+        } else if (!kleineRochade && getFigurAt(getFeldIndex() - 4) != null 
+            && getFigurAt(getFeldIndex() - 4).getWert() == 465
+            && getFigurAt(getFeldIndex() - 4).getFarbe() == getFarbe()) {
+            // Dann ist das der beteiligte Turm
+            turm = getFigurAt(getFeldIndex() - 4);
+        }
+        
+        // Felder, auf denen der Koenig steht oder die er ueberzieht
+        List<Feld> pruefFelder = new ArrayList<Feld>();
+        // Das aktuelle Feld
+        pruefFelder.add(getPosition());
+        if (kleineRochade) {
+            // Bei der kleinen Rochade die beiden rechts davon
+            pruefFelder.add(getFeld(getFeldIndex() + 1));
+            pruefFelder.add(getFeld(getFeldIndex() + 2));
+        } else {
+            // Bei der großen Rochade die beiden links davon
+            pruefFelder.add(getFeld(getFeldIndex() - 1));
+            pruefFelder.add(getFeld(getFeldIndex() - 2));
+        }
+        
+        // Wenn es einen beteiligten Turm gibt
+        if (turm != null) {
+            // Wenn der Turm bereits gezogen wurde
+            if (turm.getGezogen()) {
+                // Unzulaessig
+                moeglich = false;
+            // Wenn zwischen dem Turm und dem Koenig eine andere Figur steht
+            // -> Wenn der Turm nicht auf das Zielfeld des Turms ziehen kann
+            } else if (!turm.getMoeglicheFelder()
+                .contains(pruefFelder.get(1))) {
+                moeglich = false;
+            } else {
+                // Berechnung der bedrohten Felder
+                List<Feld> bedrohteFelder = alleBedrohtenFelder();
+                    
+                // Wenn der Koenig momentan bedroht ist
+                if (bedrohteFelder.contains(pruefFelder.get(0))) {
+                    moeglich = false;
+                // Wenn das Zielfeld des Turms bedroht ist
+                } else if (bedrohteFelder.contains(pruefFelder.get(1))) {
+                    moeglich = false;
+                // Wenn das Zielfeld des Koenigs bedroht ist
+                } else if (bedrohteFelder.contains(pruefFelder.get(2))) {
+                    moeglich = false;
+                }
+            }
+        }
+        return moeglich;
+    }
+    
+    private List<Feld> alleBedrohtenFelder() {
+        // Berechnung der bedrohten Felder
+        List<Feld> bedrohteFelder = new ArrayList<Feld>();
+        // Liste mit den gegnerischen Figuren
+        List<Figur> gegnerFiguren;
+        // Wenn der Koenig weiss ist
+        if (getFarbe()) {
+            gegnerFiguren = getSpielfeld().getSchwarzeFiguren();
+        // Wenn der Koenig schwarz ist
+        } else {
+            gegnerFiguren = getSpielfeld().getWeisseFiguren();
+        }
+        // Fuer alle gegnerischen Figuren
+        for (Figur gegner : gegnerFiguren) {
+            List<Feld> felder;
+            // Wenn es nicht der Koenig ist
+            if (gegner.getWert() != 0) {
+                // Liste mit den moeglichen Feldern dieser Figur
+                felder = gegner.getMoeglicheFelder();
+            } else {
+                /* Wenn es der Koenig ist, darf nicht getMoeglicheFelder()
+                 * aufgerufen werden, sondern normaleFelder()
+                 * Erklaerung: Siehe Kommentar getMoeglicheFelder()
+                 */
+                // Es ist definitiv ein Koenig
+                Koenig koenig = (Koenig) gegner;
+                // Rufe die normalen Zuege des Koenigs ab
+                felder = koenig.normaleZuege();
+            }
+            // Fuer jedes dieser Felder
+            for (Feld feld : felder) {
+                // Fuege es der Liste zu
+                bedrohteFelder.add(feld);
+            }
+        }
+        return bedrohteFelder;
+    }
 
 }
