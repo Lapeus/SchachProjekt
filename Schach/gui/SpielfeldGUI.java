@@ -559,6 +559,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
                     makieren.setBackground(rot);
                 }
+                
             }
         // Wenn es bereits eine ausgewaehlte Figur gibt
         } else if (ausgewaehlteFigur != null) {

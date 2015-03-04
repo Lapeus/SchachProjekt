@@ -95,6 +95,100 @@ public class Spiel {
     }
     
     /**
+     * Aktualisiert die Statistiken der beiden Spieler.
+     * @param matt Ob es einen Sieger gibt
+     * @param gewinner Der Spieler der den letzten Zug gemacht hat
+     * @param verlierer Der Spieler der nicht mehr ziehen konnte
+     */
+    private void statistik(boolean matt, Spieler gewinner, Spieler verlierer) {
+        // Wenn es einen Sieger gibt
+        if (matt) {
+            // Die Statistik des Gewinners
+            Statistik stat = gewinner.getStatistik();
+            int zuege = spielfeld.getSpieldaten().getAnzahlZuege(
+                gewinner.getFarbe());
+            // Erhoehe die Anzahl der Siege um 1
+            stat.setAnzahlSiege(stat.getAnzahlSiege() + 1);
+            
+            // Wenn es weniger Zuege waren als beim Rekord
+            if (zuege < stat.getKuerzesterSieg()) {
+                // Muss das geaendert werden
+                stat.setKuerzesterSieg(zuege);
+            }
+            
+            // Durchschnittliche Anzahl Zuege bis zum Sieg aktualisieren
+            // durchschnittliche Anzahl bisher
+            int zuegeDurchschnitt = stat.getZuegeSiegDurchschnitt();
+            // Absoluter Wert (multipliziert mit Anzahl bisheriger Siege)
+            zuegeDurchschnitt *= stat.getAnzahlSiege() - 1;
+            // Neuer absoluter Wert
+            zuegeDurchschnitt += zuege;
+            // Neuer Durchschnittswert
+            zuegeDurchschnitt /= stat.getAnzahlSiege();
+            // In der Statistik aendern
+            stat.setZuegeSiegDurchschnitt(zuegeDurchschnitt);
+            
+            // Durchschnittlichen Materialwert aktualisieren
+            // durchschnittlicher Wert bisher
+            int matWertDurchschnitt = stat.getMatWertSiegDurchschnitt();
+            // Absoluter Wert (multipliziert mit Anzahl bisheriger Siege)
+            matWertDurchschnitt *= stat.getAnzahlSiege() - 1;
+            // Neuer absoluter Wert
+            matWertDurchschnitt += spielfeld.getMaterialwert(
+                gewinner.getFarbe());
+            // Neuer Durchschnittswert
+            matWertDurchschnitt /= stat.getAnzahlSiege();
+            // In der Statistik aendern
+            stat.setMatWertSiegDurchschnitt(matWertDurchschnitt);
+            
+            
+            
+            // Die Statistik des Verlierers
+            stat = gewinner.getStatistik();
+            zuege = spielfeld.getSpieldaten().getAnzahlZuege(
+                verlierer.getFarbe());
+            // Erhoehe die Anzahl der Matts um 1
+            stat.setAnzahlMatt(stat.getAnzahlMatt() + 1);
+            
+            // Wenn es weniger Zuege waren als beim Rekord
+            if (zuege < stat.getKuerzestesMatt()) {
+                // Muss das geaendert werden
+                stat.setKuerzestesMatt(zuege);
+            }
+            
+            // Durchschnittliche Anzahl Zuege bis zum Matt aktualisieren
+            // durchschnittliche Anzahl bisher
+            zuegeDurchschnitt = stat.getZuegeMattDurchschnitt();
+            // Absoluter Wert (multipliziert mit Anzahl bisheriger Matts)
+            zuegeDurchschnitt *= stat.getAnzahlMatt() - 1;
+            // Neuer absoluter Wert
+            zuegeDurchschnitt += zuege;
+            // Neuer Durchschnittswert
+            zuegeDurchschnitt /= stat.getAnzahlMatt();
+            // In der Statistik aendern
+            stat.setZuegeMattDurchschnitt(zuegeDurchschnitt);
+            
+            // Durchschnittlichen Materialwert aktualisieren
+            // durchschnittlicher Wert bisher
+            matWertDurchschnitt = stat.getMatWertMattDurchschnitt();
+            // Absoluter Wert (multipliziert mit Anzahl bisheriger Matts)
+            matWertDurchschnitt *= stat.getAnzahlMatt() - 1;
+            // Neuer absoluter Wert
+            matWertDurchschnitt += spielfeld.getMaterialwert(
+                verlierer.getFarbe());
+            // Neuer Durchschnittswert
+            matWertDurchschnitt /= stat.getAnzahlMatt();
+            // In der Statistik aendern
+            stat.setMatWertMattDurchschnitt(matWertDurchschnitt);
+        // Wenn es ein Patt ist
+        } else {
+            // Die Statistik des Gewinners
+            Statistik stat = gewinner.getStatistik();
+            stat.setAnzahlPatt(stat.getAnzahlPatt() + 1);
+            
+        }
+    }
+    /**
      * Gibt den Namen des Spiels zur&uuml;ck.
      * @return Der Name als String
      */
