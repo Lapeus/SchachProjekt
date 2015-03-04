@@ -165,7 +165,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private final String commandAufgeben = "aufgeben";
     
     //testen
-    private long sekundenStart, sekundenStopp;
+    private int sekundenStart, sekundenStopp;
     private boolean uhrAktiv = false;
     private Calendar dauer; 
     private int min, sek, ms;
@@ -365,60 +365,31 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             Feld momentan = schwarz.getPosition();
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
+            String name = "";
             if (schwarz.getWert() == 900) {
-                try {
-                    Image test = ImageIO.read(new File("queenb.gif"));
-                    ImageIcon test2  = new ImageIcon(test);
-                    momentan.setIcon(test2);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
-                
+                name = "queenb.gif";
             }
             if (schwarz.getWert() == 100) {
-                try {
-                    Image test = ImageIO.read(new File("pawnb.gif"));
-                    ImageIcon test2  = new ImageIcon(test);
-                    momentan.setIcon(test2);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "pawnb.gif";
             }
             if (schwarz.getWert() == 0) {
-                try {
-                    Image test = ImageIO.read(new File("kingb.gif"));
-                    ImageIcon test2  = new ImageIcon(test);
-                    momentan.setIcon(test2);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "kingb.gif";
             }
             if (schwarz.getWert() == 325) {
-                try {
-                    Image test = ImageIO.read(new File("bishopb.gif"));
-                    ImageIcon test2  = new ImageIcon(test);
-                    momentan.setIcon(test2);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "bishopb.gif";
             }
             if (schwarz.getWert() == 275) {
-                try {
-                    Image test = ImageIO.read(new File("knightb.gif"));
-                    ImageIcon test2  = new ImageIcon(test);
-                    momentan.setIcon(test2);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "knightb.gif";
             }
             if (schwarz.getWert() == 465) {
-                try {
-                    Image test = ImageIO.read(new File("rookb.gif"));
-                    ImageIcon test2  = new ImageIcon(test);
-                    momentan.setIcon(test2);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "rookb.gif";
+            }
+            try {
+                Image test = ImageIO.read(new File(name));
+                ImageIcon test2  = new ImageIcon(test);
+                momentan.setIcon(test2);
+            } catch (IOException exc) {
+                exc.printStackTrace();
             }
         }
         // - weiße Figurenbilder
@@ -426,60 +397,31 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             Feld momentan = weiss.getPosition();
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
+            String name = "";
             if (weiss.getWert() == 900) {
-                try {
-                    Image test = ImageIO.read(new File("queenw.gif"));
-                    ImageIcon test2  = new ImageIcon(test);
-                    momentan.setIcon(test2);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
-                
+                name = "queenw.gif";
             }
             if (weiss.getWert() == 100) {
-                try {
-                    Image test = ImageIO.read(new File("pawnw.gif"));
-                    ImageIcon test2  = new ImageIcon(test);
-                    momentan.setIcon(test2);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "pawnw.gif";
             }
             if (weiss.getWert() == 0) {
-                try {
-                    Image test = ImageIO.read(new File("kingw.gif"));
-                    ImageIcon test2  = new ImageIcon(test);
-                    momentan.setIcon(test2);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "kingw.gif";
             }
             if (weiss.getWert() == 325) {
-                try {
-                    Image test = ImageIO.read(new File("bishopw.gif"));
-                    ImageIcon test2  = new ImageIcon(test);
-                    momentan.setIcon(test2);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "bishopw.gif";
             }
             if (weiss.getWert() == 275) {
-                try {
-                    Image test = ImageIO.read(new File("knightw.gif"));
-                    ImageIcon test2  = new ImageIcon(test);
-                    momentan.setIcon(test2);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "knightw.gif";
             }
             if (weiss.getWert() == 465) {
-                try {
-                    Image test = ImageIO.read(new File("rookw.gif"));
-                    ImageIcon test2  = new ImageIcon(test);
-                    momentan.setIcon(test2);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "rookw.gif";
+            }
+            try {
+                Image test = ImageIO.read(new File(name));
+                ImageIcon test2  = new ImageIcon(test);
+                momentan.setIcon(test2);
+            } catch (IOException exc) {
+                exc.printStackTrace();
             }
         }
         this.revalidate();
@@ -509,146 +451,67 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             JLabel momentan = new JLabel();
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
+            String name = "";
             if (schwarz.getWert() == 900) {
-                try {
-                    Image test = ImageIO.read(new File("queenb.gif"));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneSchwarze.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
-               
+                name = "queenb.gif";
             }
             if (schwarz.getWert() == 100) {
-                try {
-                    Image test = ImageIO.read(new File("pawnb.gif"));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneSchwarze.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "pawnb.gif";
             }
             if (schwarz.getWert() == 0) {
-                try {
-                    Image test = ImageIO.read(new File("kingb.gif"));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneSchwarze.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "kingb.gif";
             }
             if (schwarz.getWert() == 325) {
-                try {
-                    Image test = ImageIO.read(new File("bishopb.gif"));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneSchwarze.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "bishopb.gif";
             }
             if (schwarz.getWert() == 275) {
-                try {
-                    Image test = ImageIO.read(new File("knightb.gif"));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneSchwarze.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "knightb.gif";
             }
             if (schwarz.getWert() == 465) {
-                try {
-                    Image test = ImageIO.read(new File("rookb.gif"));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneSchwarze.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
-            } 
+                name = "rookb.gif";
+            }
+            try {
+                Image test = ImageIO.read(new File(name));
+                ImageIcon test2  = new ImageIcon(
+                    test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                momentan.setIcon(test2);
+                geschlageneSchwarze.add(momentan);
+            } catch (IOException exc) {
+                exc.printStackTrace();
+            }  
         }
         for (Figur weiss : spielfeld.getGeschlagenWeiss()) {
             JLabel momentan = new JLabel();
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
+            String name = "";
             if (weiss.getWert() == 900) {
-                try {
-                    Image test = ImageIO.read(new File("queenw.gif"));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneWeisse.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
-               
+                name = "queenw.gif";
             }
             if (weiss.getWert() == 100) {
-                try {
-                    Image test = ImageIO.read(new File("pawnw.gif"));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneWeisse.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "pawnw.gif";
             }
             if (weiss.getWert() == 0) {
-                try {
-                    Image test = ImageIO.read(new File("kingw.gif"));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneWeisse.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "kingw.gif";
             }
             if (weiss.getWert() == 325) {
-                try {
-                    Image test = ImageIO.read(new File("bishopw.gif"));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneWeisse.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "bishopw.gif";
             }
             if (weiss.getWert() == 275) {
-                try {
-                    Image test = ImageIO.read(new File("knightw.gif"));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneWeisse.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "knightw.gif";
             }
             if (weiss.getWert() == 465) {
-                try {
-                    Image test = ImageIO.read(new File("rookw.gif"));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneWeisse.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+                name = "rookw.gif";
             }
-            
+            try {
+                Image test = ImageIO.read(new File(name));
+                ImageIcon test2  = new ImageIcon(
+                    test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                momentan.setIcon(test2);
+                geschlageneWeisse.add(momentan);
+            } catch (IOException exc) {
+                exc.printStackTrace();
+            }
         }
         
     }
@@ -702,14 +565,25 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
              dieser ist */
             if (ausgewaehlteFigur.getKorrektFelder().contains(momentanesFeld)) {
-                spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld);
+                sekundenStopp = (int) System.currentTimeMillis()
+                    - sekundenStart;
+                spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
+                    sekundenStopp);
                 start();
                 ausgewaehlteFigur = null;
+                /*for (Feld bedroht : spielfeld.getBedrohteFelder()) {
+                    bedroht.setBackground(new Color(100, 100, 100));
+                }*/
+                /*for (Feld schlagend : spielfeld.getSchlagendeFelder()) {
+                    schlagend.setBackground(new Color(100, 100, 100));
+                }*/
                 if (spielfeld.isSchach()) {
                     System.out.println("Schach");
+                    spielfeld.setSchach(false);
                 }
                 // Wenn das Spiel vorbei ist
                 if (spielfeld.schachMatt()) {
+                    System.out.println("schachMatt");
                     // TODO Popup Fenster mit SIEG
                     // spiel.auswertung();   
                     // if letzter zug = Umwandlungszug übergebe umwandlung(Wert)
@@ -798,7 +672,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         uhrAktiv = true;
         // Thread anlegen
         Thread th = new Thread(this); 
-        sekundenStart = System.currentTimeMillis();
+        sekundenStart = (int) System.currentTimeMillis();
         // Thread starten
         th.start(); 
     }
@@ -818,7 +692,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 e.printStackTrace();
             }
             // Vergangene Ziet in Millisekuden
-            sekundenStopp = System.currentTimeMillis()
+            sekundenStopp = (int) System.currentTimeMillis()
                     - sekundenStart;
             // Formatierungshilfe für Zeiten
             dauer = Calendar.getInstance();
