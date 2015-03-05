@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import daten.Computerspieler;
 import daten.Spiel;
 import daten.Spieldaten;
 import daten.Spieler;
@@ -536,146 +537,163 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * @param arg0 MouseEvent erzeugt von den Feldern des Spielfelds
      */
     public void mouseClicked(MouseEvent arg0) {
+        // Wenn spieler 1 ein Computergegner ist und dran ist
+        if ((spieler1 instanceof Computerspieler 
+            && spieler1.getFarbe() == spielfeld.getAktuellerSpieler())) {
+            ((Computerspieler) spieler1).ziehen();
+        // Wenn spieler 2 ein Computergegner ist und dran ist
+        } else if (spieler2 instanceof Computerspieler 
+            && spieler2.getFarbe() == spielfeld.getAktuellerSpieler()) {
+            ((Computerspieler) spieler2).ziehen();
+        } else {
         // Felder Bewegen
-        Feld momentanesFeld = (Feld) arg0.getSource();
-        /* (Wenn eine korrekte Figur ausgewählt wird und es noch keine 
-         * ausgewaehlte Figur gibt.)
-         * ODER
-         * (Wenn man dann auf eine seiner eigenen Figuren Klickt, wechselt 
-         * die GUI  auf die möglichen Felder dieser Figur.)
-         */
-        if ((momentanesFeld.getFigur() != null 
-            && (momentanesFeld.getFigur().getFarbe() 
-            == spielfeld.getAktuellerSpieler()) && ausgewaehlteFigur == null) 
-            || 
-            (ausgewaehlteFigur != null && momentanesFeld.getFigur() != null 
-            && momentanesFeld.getFigur().getFarbe() 
-            == ausgewaehlteFigur.getFarbe())) {
-            // Wird diese als neue Ausgewählte Figur gespeichert
-            ausgewaehlteFigur = momentanesFeld.getFigur();
-            /* Wenn der Spieler Weiß dran ist und dies angeklickte Figur eine 
-             * weiße ist.
+            Feld momentanesFeld = (Feld) arg0.getSource();
+            /* (Wenn eine korrekte Figur ausgewählt wird und es noch keine 
+             * ausgewaehlte Figur gibt.)
+             * ODER
+             * (Wenn man dann auf eine seiner eigenen Figuren Klickt, wechselt 
+             * die GUI  auf die möglichen Felder dieser Figur.)
              */
-            if (spielfeld.getAktuellerSpieler() 
-                && spielfeld.getWeisseFiguren().contains(ausgewaehlteFigur)) {
+            if ((momentanesFeld.getFigur() != null 
+                && (momentanesFeld.getFigur().getFarbe() 
+                == spielfeld.getAktuellerSpieler()) 
+                && ausgewaehlteFigur == null) 
+                || 
+                (ausgewaehlteFigur != null && momentanesFeld.getFigur() != null 
+                && momentanesFeld.getFigur().getFarbe() 
+                == ausgewaehlteFigur.getFarbe())) {
                 // Wird diese als neue Ausgewählte Figur gespeichert
-                momentanesFeld.setBackground(rot);
-                for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
-                    makieren.setBackground(rot);
+                ausgewaehlteFigur = momentanesFeld.getFigur();
+                /* Wenn der Spieler Weiß dran ist und dies angeklickte Figur 
+                 * eine weiße ist.
+                 */
+                if (spielfeld.getAktuellerSpieler() 
+                    && spielfeld.getWeisseFiguren()
+                        .contains(ausgewaehlteFigur)) {
+                    // Wird diese als neue Ausgewählte Figur gespeichert
+                    momentanesFeld.setBackground(rot);
+                    for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
+                        makieren.setBackground(rot);
+                    }
                 }
-            }
-            /* Wenn der Spieler Schwarz dran ist und dies angeklickte Figur 
-             * eine schwarze ist.
-             */
-            if (!spielfeld.getAktuellerSpieler() 
-                && spielfeld.getSchwarzeFiguren().contains(ausgewaehlteFigur)) {
-                momentanesFeld.setBackground(rot);
-                for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
-                    makieren.setBackground(rot);
+                /* Wenn der Spieler Schwarz dran ist und dies angeklickte Figur 
+                 * eine schwarze ist.
+                 */
+                if (!spielfeld.getAktuellerSpieler() 
+                    && spielfeld.getSchwarzeFiguren()
+                        .contains(ausgewaehlteFigur)) {
+                    momentanesFeld.setBackground(rot);
+                    for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
+                        makieren.setBackground(rot);
+                    }
+                    
                 }
-                
-            }
-        // Wenn es bereits eine ausgewaehlte Figur gibt
-        } else if (ausgewaehlteFigur != null) {
-            sekundenStopp = (int) System.currentTimeMillis()
-                - sekundenStart;
-            // TODO Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button 
-            /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
-             dieser ist */
-            if (ausgewaehlteFigur.getKorrektFelder().contains(momentanesFeld)) {
-                
-                // HIER WIRD GEZOGEN
-                spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
-                    sekundenStopp);
-                // Start der zugzeit
-                start();
-                // Neuer Spieler = keine Ausgewählte Figur
-                ausgewaehlteFigur = null;
-                /*for (Feld bedroht : spielfeld.getBedrohteFelder()) {
-                    bedroht.setBackground(new Color(100, 100, 100));
-                }*/
-                /*for (Feld schlagend : spielfeld.getSchlagendeFelder()) {
-                    schlagend.setBackground(new Color(100, 100, 100));
-                }*/
-                spielfeld.getBedrohteFelder();
-                // Je nach aktuellem Spieler wird das Label auf diesen gesetzt
-                if (spielfeld.getAktuellerSpieler()) {
-                    momentanerSpieler.setText("Weiß");
-                } else {
-                    momentanerSpieler.setText("Schwarz");
-                }
-                List<Zug> zugliste = spielfeld.getSpieldaten().getZugListe();
-                Zug letzterZug = zugliste.get(zugliste.size() - 1);
-                // Wenn das Spiel vorbei ist
-                if (spielfeld.schachMatt()) {
-                    spielfeldAufbau();
-                    // wird die Stoppuhr angehalten
-                    uhrAktiv = false;
-                    // das Spiel ausgewertet
-                    List<Object> auswertung = spiel.auswertung();
-                    Spieler gewinner = (Spieler) auswertung.get(0);
-                    String ergebnis; 
-                    if ((boolean) auswertung.get(1)) {
-                        ergebnis = "Matt";
+            // Wenn es bereits eine ausgewaehlte Figur gibt
+            } else if (ausgewaehlteFigur != null) {
+                sekundenStopp = (int) System.currentTimeMillis()
+                    - sekundenStart;
+                // TODO Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button 
+                /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
+                 dieser ist */
+                if (ausgewaehlteFigur.getKorrektFelder()
+                    .contains(momentanesFeld)) {
+                    
+                    // HIER WIRD GEZOGEN
+                    spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
+                        sekundenStopp);
+                    // Start der zugzeit
+                    start();
+                    // Neuer Spieler = keine Ausgewählte Figur
+                    ausgewaehlteFigur = null;
+                    /*for (Feld bedroht : spielfeld.getBedrohteFelder()) {
+                        bedroht.setBackground(new Color(100, 100, 100));
+                    }*/
+                    /*for (Feld schlagend : spielfeld.getSchlagendeFelder()) {
+                        schlagend.setBackground(new Color(100, 100, 100));
+                    }*/
+                    spielfeld.getBedrohteFelder();
+                    // Je nach aktuellem Spieler wird das Label gesetzt
+                    if (spielfeld.getAktuellerSpieler()) {
+                        momentanerSpieler.setText("Weiß");
                     } else {
-                        ergebnis = "Patt";
+                        momentanerSpieler.setText("Schwarz");
                     }
-                    String zuege = auswertung.get(2).toString();
-                    // Und Ein Dialogfenster für den Gewinner angezeigt
-                    JOptionPane.showMessageDialog(parent, gewinner.getName() 
-                        + " gewinnt nach " + zuege + " Zügen durch " 
-                        + ergebnis);
-                    // Das spiel ist vorbei also keine Züge mehr möglich
-                    for (Feld feld : felderListe) {
-                        feld.removeMouseListener(this);
+                    List<Zug> zugliste 
+                        = spielfeld.getSpieldaten().getZugListe();
+                    Zug letzterZug = zugliste.get(zugliste.size() - 1);
+                    // Wenn das Spiel vorbei ist
+                    if (spielfeld.schachMatt()) {
+                        spielfeldAufbau();
+                        // wird die Stoppuhr angehalten
+                        uhrAktiv = false;
+                        // das Spiel ausgewertet
+                        List<Object> auswertung = spiel.auswertung();
+                        Spieler gewinner = (Spieler) auswertung.get(0);
+                        String ergebnis; 
+                        if ((boolean) auswertung.get(1)) {
+                            ergebnis = "Matt";
+                        } else {
+                            ergebnis = "Patt";
+                        }
+                        String zuege = auswertung.get(2).toString();
+                        // Und Ein Dialogfenster für den Gewinner angezeigt
+                        JOptionPane.showMessageDialog(parent
+                            , gewinner.getName() 
+                            + " gewinnt nach " + zuege + " Zügen durch " 
+                            + ergebnis);
+                        // Das spiel ist vorbei also keine Züge mehr möglich
+                        for (Feld feld : felderListe) {
+                            feld.removeMouseListener(this);
+                        }
+                        this.remove(cEast);
+                        this.add(cEnde, BorderLayout.EAST);
+                        this.revalidate();
+                    // Wenn der momentane Spieler im Schach steht
+                    } else if (spielfeld.isSchach()) {
+                        spielfeldAufbau();
+                        JOptionPane.showMessageDialog(parent, 
+                            "Sie stehen im Schach!", "Schachwarnung!",
+                            JOptionPane.WARNING_MESSAGE);
+                        spielfeld.setSchach(false);
+                    } else if (letzterZug.isUmwandlung())   {
+                        spielfeldAufbau();
+                        String[] moeglicheFiguren = {"Dame", "Turm", "Läufer", 
+                            "Springer", "Bauer"};
+                        String s = (String) JOptionPane.showInputDialog(parent,
+                            "Wählen sie eine Figur aus die sie gegen den "
+                            + "Bauern tauschen Wollen"
+                            , "Figurenwechsel", JOptionPane.
+                            PLAIN_MESSAGE, null, moeglicheFiguren, "Dame");
+                        int wert;
+                        if (s.equals("Dame")) {
+                            wert = 900;
+                        } else if (s.equals("Turm")) {
+                            wert = 465;
+                        } else if (s.equals("Läufer")) {
+                            wert = 325;
+                        } else if (s.equals("Springer")) {
+                            wert = 275;
+                        } else {
+                            wert = 100;
+                        }
+                        spielfeld.umwandeln(letzterZug.getFigur(), wert);   
                     }
-                    this.remove(cEast);
-                    this.add(cEnde, BorderLayout.EAST);
-                    this.revalidate();
-                // Wenn der momentane Spieler im Schach steht
-                } else if (spielfeld.isSchach()) {
                     spielfeldAufbau();
-                    JOptionPane.showMessageDialog(parent, 
-                        "Sie stehen im Schach!", "Schachwarnung!",
-                        JOptionPane.WARNING_MESSAGE);
-                    spielfeld.setSchach(false);
-                } else if (letzterZug.isUmwandlung())   {
+                    
+                /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
+                 * Auswahl aufgehoben.
+                 */
+                } else if (ausgewaehlteFigur.getPosition()
+                    .equals(momentanesFeld)) {
+                    ausgewaehlteFigur = null;
                     spielfeldAufbau();
-                    String[] moeglicheFiguren = {"Dame", "Turm", "Läufer", 
-                        "Springer", "Bauer"};
-                    String s = (String) JOptionPane.showInputDialog(parent,
-                        "Wählen sie eine Figur aus die sie gegen den Bauern "
-                        + "tauschen Wollen", "Figurenwechsel", JOptionPane.
-                        PLAIN_MESSAGE, null, moeglicheFiguren, "Dame");
-                    int wert;
-                    if (s.equals("Dame")) {
-                        wert = 900;
-                    } else if (s.equals("Turm")) {
-                        wert = 465;
-                    } else if (s.equals("Läufer")) {
-                        wert = 325;
-                    } else if (s.equals("Springer")) {
-                        wert = 275;
-                    } else {
-                        wert = 100;
-                    }
-                    spielfeld.umwandeln(letzterZug.getFigur(), wert);   
                 }
-                spielfeldAufbau();
-                
-            /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
-             * Auswahl aufgehoben.
-             */
-            } else if (ausgewaehlteFigur.getPosition().equals(momentanesFeld)) {
-                ausgewaehlteFigur = null;
-                spielfeldAufbau();
             }
-        }
-        // Wenn man ein leeres Feld anklickt
-        if (momentanesFeld.getFigur() == null) {
-            ausgewaehlteFigur = null;
-        }
-          
+            // Wenn man ein leeres Feld anklickt
+            if (momentanesFeld.getFigur() == null) {
+                ausgewaehlteFigur = null;
+            }
+        }  
     }
    
     
