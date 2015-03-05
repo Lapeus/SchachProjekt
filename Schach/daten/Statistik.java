@@ -382,6 +382,7 @@ public class Statistik {
         this.matWertSiegDurchschnitt = matWertSiegDurchschnitt;
     }
     
+    
     /**
      * Gibt den durchschnittlichen Materialwert bei Matt durch den Gegner
      * zur&uuml;ck.

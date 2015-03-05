@@ -8,7 +8,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridBagLayoutInfo;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
@@ -27,7 +26,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 
 import daten.Spiel;
 import daten.Spieldaten;
@@ -164,11 +162,21 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private final String commandAufgeben = "aufgeben";
     
-    //testen
-    private int sekundenStart, sekundenStopp;
-    private boolean uhrAktiv = false;
-    private Calendar dauer; 
-    private int min, sek, ms;
+    /**
+     * Startzeit für die Zugzeit-Stoppuhr (Ueber Systemzeit). 
+     */
+    private int sekundenStart;
+    
+    /**
+     * Endzeit für die Zugzeit-Stoppuhr (Endezeit - Startzeit). 
+     */
+    private int sekundenStopp;
+    
+    /**
+     * Gibt an ob die Uhr aktiv ist.
+     */
+    private boolean uhrAktiv = false; 
+    
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -655,11 +663,16 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(commandRueck)) {
             spielfeld.zugRueckgaengig();
+            if (spielfeld.getAktuellerSpieler()) {
+                momentanerSpieler.setText("Weiß");
+            } else {
+                momentanerSpieler.setText("Schwarz");  
+            }
             start();
             spielfeldAufbau();
         }
         if (e.getActionCommand().equals(commandAufgeben)) {
-            
+            System.out.println("Ich will keinen Fehler");
         }
     }
     
@@ -696,10 +709,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             sekundenStopp = (int) System.currentTimeMillis()
                     - sekundenStart;
             // Formatierungshilfe für Zeiten
+            Calendar dauer;
             dauer = Calendar.getInstance();
             // Zeit in Millisekunden übergeben
             dauer.setTimeInMillis(sekundenStopp);
             // und in Minuten/Sekunden/Millisekunden (0-9/0-9/0-99)
+            int min;
+            int sek;
+            int ms;
             min = dauer.get(Calendar.MINUTE);
             sek = dauer.get(Calendar.SECOND);
             ms = dauer.get(Calendar.MILLISECOND);
