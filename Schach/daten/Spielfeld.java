@@ -301,6 +301,7 @@ public class Spielfeld {
             // Der beteiligte Turm
             Figur turm = felder.get(indexStart).getFigur();
             // Wird umgesetzt
+            System.out.println(turm.getPosition().getXK());
             turm.setPosition(felder.get(indexZiel));
             // Die Felder werden aktualisiert
             felder.get(indexZiel).setFigur(turm);
@@ -555,10 +556,10 @@ public class Spielfeld {
         List<Feld> alleFelder = new ArrayList<Feld>();
         // Wenn weiss dran ist
         if (aktuellerSpieler) {
-            eigeneFiguren = weisseFiguren;
+            eigeneFiguren = clone(weisseFiguren);
         // Wenn schwarz dran ist
         } else {
-            eigeneFiguren = schwarzeFiguren;
+            eigeneFiguren = clone(schwarzeFiguren);
         }
         // Fuer jede eigene Figur
         for (Figur figur : eigeneFiguren) {
@@ -592,6 +593,17 @@ public class Spielfeld {
         return matWert;
     }
     
+    /**
+     * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
+     * Wird beim Speichern ben&ouml;tigt.
+     * @return Eine mehrzeilige Zeichenkette
+     */
+    public String toString() {
+        String string;
+        string = aktuellerSpieler + "\n";
+        
+        return string;
+    }
     /**
      * Gibt die Spieldaten zur&uuml;ck.
      * @return Die Spieldaten
@@ -667,6 +679,18 @@ public class Spielfeld {
     }
     
     /**
+     * Klont die angegebene Liste damit keine CurrentModificationException bei
+     * Schleifendurchl&auml;ufen auftritt.
+     * @param figuren Die zu klonende Figuren-Liste
+     * @return Der Klon der Figuren-Liste
+     */
+    private List<Figur> clone(List<Figur> figuren) {
+        List<Figur> figurenCopy = new ArrayList<Figur>();
+        figurenCopy.addAll(figuren);
+        return figurenCopy;
+    }
+    
+    /**
      * Gibt eine Liste von den aktuell bedrohten Feldern auf denen eine Figur
      * steht zur&uuml;ck. <br>
      * Wenn die entsprechende Option aktiviert ist, werden diese dem Spieler als
@@ -683,10 +707,10 @@ public class Spielfeld {
         List<Figur> gegnerFiguren;
         // Wenn weiss als naechstes dran ist
         if (aktuellerSpieler) {
-            gegnerFiguren = schwarzeFiguren;
+            gegnerFiguren = clone(schwarzeFiguren);
         // Wenn schwarz als naechstes dran ist
         } else {
-            gegnerFiguren = weisseFiguren;
+            gegnerFiguren = clone(weisseFiguren);
         }
         // Fuer alle gegnerischen Figuren
         for (Figur gegner : gegnerFiguren) {

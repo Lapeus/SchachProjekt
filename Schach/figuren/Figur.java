@@ -218,6 +218,20 @@ public abstract class Figur {
     }
     
     /**
+     * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
+     * Wird beim Speichern ben&ouml;tigt.
+     * @return Eine mehrzeilige Zeichenkette
+     */
+    public String toString() {
+        String string;
+        string = position.getXK() + "" + position.getYK() + "\n";
+        string += farbe + "\n";
+        string += wert + "\n";
+        string += bereitsGezogen;
+        return string;
+    }
+    
+    /**
      * Gibt das Spielfeld zur&uuml;ck, auf dem die Figur steht.
      * @return Das Spielfeld
      */
