@@ -17,11 +17,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import daten.Computerspieler;
 import daten.Spieler;
 /**
  * Klasse für ein Spielerauswahl-Panel. 
  * Implementiert einen eigenen ActionListener der "Spiel starten"-Button Klicks 
  * verarbeitet
+ * @author Marvin Wolf
  */
 public class Spielerauswahl extends JPanel implements ActionListener {
     // Anfang Attribute
@@ -262,7 +264,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                 || nameEAST.getText().equals("") 
                 || tSpielname.getText().equals(""))) {
                 spieler1 = new Spieler(nameWEST.getText());
-                spieler2 = new Spieler(nameEAST.getText());
+                spieler2 = new Computerspieler(nameEAST.getText());
                 // Wenn Spieler 1 die Farbe weiss ausgewählt hat
                 if (bGFarbauswahl.getSelection().
                     getActionCommand().equals("weiss")) {

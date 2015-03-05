@@ -4,27 +4,40 @@ import java.awt.Container;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
-import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
 
 import daten.Gesamtdatensatz;
-import daten.Spieler;
 
+/**
+ * Das eigentliche Fenster des Schachspiels. Auf diesem Fenster werden die Panes
+ * gewechselt. Erbt von JFrame
+ * @author Marvin Wolf
+ */
 public class SpielGUI extends JFrame {
     
     // Anfang Attribute
+    
+    /**
+     * Serial-Key zur Identifizierung.
+     */
     private static final long serialVersionUID = -8895681303810255159L;
-    private SpielfeldGUI spielfeld;
+    
+    /**
+     * Gesamtdatensatz, welcher zu Beginn geladen/erstellt und beim beenden 
+     * gespeichert werden muss.
+     */
     private Gesamtdatensatz gesamtdatensatz;
+    
     // Ende Attribute
 
     // Konstruktor
     
+    /**
+     * Erstellt ein neues Spiel-Fenster.
+     * Ruft dabei init() auf.
+     */
     public SpielGUI() {
         super("Schachspiel");
         seitenAuswahl("Eroeffnungsseite");
-        Dimension minimaleGroesse = new Dimension(500, 500);
-        setMinimumSize(minimaleGroesse);
-        setLocationRelativeTo(null);
         //pack();
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -32,12 +45,22 @@ public class SpielGUI extends JFrame {
     }
     
     // Anfang Methoden
+    
+    /**
+     * Dient zum wechsel der Contentpane, welches dur den SeitenwechselnListener
+     * aufgeruden wird.
+     * @param auswahl Auf die zu wechselnde Seite.
+     */
     public void seitenAuswahl(String auswahl) {
         Container seite;
         switch (auswahl) {
         case "Eroeffnungsseite":
             seite = new Eroeffnungsseite(this);
             this.setContentPane(seite);
+            Dimension minimaleGroesse = new Dimension(500, 500);
+            setMinimumSize(minimaleGroesse);
+            setSize(minimaleGroesse);
+            setLocationRelativeTo(null);
             break;
             
         case "Spielerauswahl":
@@ -77,14 +100,24 @@ public class SpielGUI extends JFrame {
         this.paint(getGraphics());
     }
     
+    /**
+     * Gibt den momentanten Gesamtdatensatz dieser Spielsession zurueck.
+     * @return momentaner Gesamtdatensatz
+     */
     public Gesamtdatensatz getGesamtdatensatz() {
         return gesamtdatensatz;
     }
     
+    /**
+     * Initiert das Laden des Gesamtdatensatzes durch die Datenklassen.
+     */
     private void gesamtdatenLaden() {
         
     }
     
+    /**
+     * Initiiert das Speichern des Gesamtdatensatzes durch die Datenklassen.
+     */
     private void gesamtdatenSpeichern() {
         
     }
@@ -93,6 +126,10 @@ public class SpielGUI extends JFrame {
     
     // Ende Methoden
     
+    /**
+     * Sorgt für die Erstellung einer SpielGUI beim start des Programms.
+     * @param args Systemrelevantes Stringarray
+     */
     public static void main(String[] args) {
         new SpielGUI();
     }

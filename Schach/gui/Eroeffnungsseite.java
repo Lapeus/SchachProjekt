@@ -7,34 +7,85 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Panel;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * Dient zur Konfiguration der Eroeffnungsseite.
+ * Von hier aus kann man zu allen anderen Fenstern wechseln und hier fuehrt der
+ * Zurueck-Button aller anderen Panels hin.
+ * @author Marvin Wolf
+ */
 public class Eroeffnungsseite extends Panel {
     
     // Anfang Attribute
     
+    /**
+     * Serial-Key zur Identifizierung.
+     */
     private static final long serialVersionUID = 7611895668957599156L;
+    
+    /**
+     * Eltern-Fenster in Form einer SpielGUI.
+     */
     private SpielGUI parent;
-    private static Color cBraunRot = new Color(172, 59, 32); 
-    private static Color cHellesBeige = new Color(255, 248, 151);
+    
+    /**
+     * JButton um in das Spielerauswahlmenue zu kommen (Spiel anfangen).
+     */
     private JButton spielen = new JButton("Spielen");
+    
+    /**
+     * JButton um in das Menue zum Spielladen zu kommen.
+     */
     private JButton spielLaden = new JButton("Spiel laden");
+    
+    /**
+     * JButton um in das Einstellungsmenue zu kommen.
+     */
     private JButton einstellungen = new JButton("Einstellungen");
+    
+    /**
+     * JButton um auf die Highscore-Seite zu kommen.
+     */
     private JButton highscore = new JButton("Highscore");
+    
+    /**
+     * JButton um sich die Statistik anzusehen.
+     */
     private JButton statistiken = new JButton("Statistiken");
+    
+    /**
+     * JButton um sich das Regelwerk anzusehen.
+     */
     private JButton regelwerk = new JButton("Regelwerk");
+    
+    /**
+     * JLabel um Fenster als Menue zu kennzeichen.
+     */
     private JLabel menue = new JLabel("Menü");
+    
+    /**
+     * Konstante fuer den Farbton des Hintergrundes (Braun).
+     */
+    private final Color cBraunRot = new Color(172, 59, 32); 
+    
+    /**
+     * Konstante fuer den Farbton der Buttons (Beige).
+     */
+    private final Color cHellesBeige = new Color(255, 248, 151);
     
     // Ende Attribute
     
     // Konstruktor
     
+    /**
+     * Erstelllt eine eroeffnungsseite.
+     * @param parent Elter-Fenster uebergeben
+     */
     public Eroeffnungsseite(SpielGUI parent) {
         super();
         this.parent = parent;
@@ -43,6 +94,9 @@ public class Eroeffnungsseite extends Panel {
     
     // Anfang Methoden
     
+    /**
+     * Definiert das Aussehen der Eroeffnungsseite.
+     */
     private void init() {
         this.setLayout(new BorderLayout(140, 20));
         this.setBackground(cBraunRot);

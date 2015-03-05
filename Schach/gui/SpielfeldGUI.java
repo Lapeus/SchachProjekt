@@ -24,6 +24,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
@@ -31,6 +32,7 @@ import daten.Spiel;
 import daten.Spieldaten;
 import daten.Spieler;
 import daten.Spielfeld;
+import daten.Zug;
 import figuren.Figur;
 
 /**
@@ -133,6 +135,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private JPanel cEast = new JPanel();
     
     /**
+     * Panel welches nach Beendigung eines Spiels cEast ersetzt.
+     */
+    private JPanel cEnde = new JPanel();
+    
+    /**
      * Konstante für den Farbton der "schwarzen" Felder (braun).
      */
     private final Color braun = new Color(181, 81, 16);
@@ -161,6 +168,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Action Command fuer den Aufgeben-Button.
      */
     private final String commandAufgeben = "aufgeben";
+    
+    /**
+     * Action Command fuer den Startmenue-Button.
+     */
+    private final String commandStartmenue = "Eroeffnungsseite";
     
     /**
      * Startzeit für die Zugzeit-Stoppuhr (Ueber Systemzeit). 
@@ -288,27 +300,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         gbc.gridy = 6;
         cEast.add(aufgeben, gbc);
         
+        // cEnde
+        JButton startmenue = new JButton("Zurück zum Startmenü");
+        startmenue.setActionCommand(commandStartmenue);
+        startmenue.addActionListener(new SeitenwechselListener(parent));
+        cEnde.add(startmenue);
         
-        /*
-        cEast.setLayout(new BorderLayout());
-        JLabel groesse = new JLabel("                                      "
-            + "                                                            ");
         
-        Container eastCenter = new JPanel();
-        eastCenter.setLayout(new GridLayout(8, 1));
-        rueckgaengig.addActionListener(this);
-        rueckgaengig.setActionCommand(commandRueck);
-        eastCenter.add(rueckgaengig);
-        
-        geschlageneSchwarze.setLayout(new GridLayout(2, 8));
-        geschlageneWeisse.setLayout(new GridLayout(2, 8));
-        
-        cEast.add(groesse, BorderLayout.EAST);
-        cEast.add(geschlageneWeisse, BorderLayout.NORTH);
-        cEast.add(eastCenter, BorderLayout.CENTER);
-        cEast.add(geschlageneSchwarze, BorderLayout.SOUTH);
-//        cEast.add(speichern, BorderLayout.CENTER);
-*/        
         // Zu Panel hinzufügen
         this.add(cCenter, BorderLayout.CENTER);
         this.add(cEast, BorderLayout.EAST);
@@ -453,75 +451,78 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Updated die Anzeigen der geschlagenen Figuren.
      */
     private void geschlageneFigureUpdate() {
-        geschlageneSchwarze.removeAll();
-        geschlageneWeisse.removeAll();
-        for (Figur schwarz : spielfeld.getGeschlagenSchwarz()) {
-            JLabel momentan = new JLabel();
-            momentan.setVerticalAlignment(SwingConstants.CENTER);
-            momentan.setHorizontalAlignment(SwingConstants.CENTER);
-            String name = "";
-            if (schwarz.getWert() == 900) {
-                name = "queenb.gif";
-            }
-            if (schwarz.getWert() == 100) {
-                name = "pawnb.gif";
-            }
-            if (schwarz.getWert() == 0) {
-                name = "kingb.gif";
-            }
-            if (schwarz.getWert() == 325) {
-                name = "bishopb.gif";
-            }
-            if (schwarz.getWert() == 275) {
-                name = "knightb.gif";
-            }
-            if (schwarz.getWert() == 465) {
-                name = "rookb.gif";
-            }
-            try {
-                Image test = ImageIO.read(new File(name));
-                ImageIcon test2  = new ImageIcon(
-                    test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                momentan.setIcon(test2);
-                geschlageneSchwarze.add(momentan);
-            } catch (IOException exc) {
-                exc.printStackTrace();
-            }  
-        }
-        for (Figur weiss : spielfeld.getGeschlagenWeiss()) {
-            JLabel momentan = new JLabel();
-            momentan.setVerticalAlignment(SwingConstants.CENTER);
-            momentan.setHorizontalAlignment(SwingConstants.CENTER);
-            String name = "";
-            if (weiss.getWert() == 900) {
-                name = "queenw.gif";
-            }
-            if (weiss.getWert() == 100) {
-                name = "pawnw.gif";
-            }
-            if (weiss.getWert() == 0) {
-                name = "kingw.gif";
-            }
-            if (weiss.getWert() == 325) {
-                name = "bishopw.gif";
-            }
-            if (weiss.getWert() == 275) {
-                name = "knightw.gif";
-            }
-            if (weiss.getWert() == 465) {
-                name = "rookw.gif";
-            }
-            try {
-                Image test = ImageIO.read(new File(name));
-                ImageIcon test2  = new ImageIcon(
-                    test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                momentan.setIcon(test2);
-                geschlageneWeisse.add(momentan);
-            } catch (IOException exc) {
-                exc.printStackTrace();
+        if (!spielfeld.getGeschlagenSchwarz().isEmpty()) {
+            geschlageneSchwarze.removeAll();
+            for (Figur schwarz : spielfeld.getGeschlagenSchwarzSort()) {
+                JLabel momentan = new JLabel();
+                momentan.setVerticalAlignment(SwingConstants.CENTER);
+                momentan.setHorizontalAlignment(SwingConstants.CENTER);
+                String name = "";
+                if (schwarz.getWert() == 900) {
+                    name = "queenb.gif";
+                }
+                if (schwarz.getWert() == 100) {
+                    name = "pawnb.gif";
+                }
+                if (schwarz.getWert() == 0) {
+                    name = "kingb.gif";
+                }
+                if (schwarz.getWert() == 325) {
+                    name = "bishopb.gif";
+                }
+                if (schwarz.getWert() == 275) {
+                    name = "knightb.gif";
+                }
+                if (schwarz.getWert() == 465) {
+                    name = "rookb.gif";
+                }
+                try {
+                    Image test = ImageIO.read(new File(name));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneSchwarze.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }  
             }
         }
-        
+        if (!spielfeld.getGeschlagenWeiss().isEmpty()) {
+            geschlageneWeisse.removeAll();
+            for (Figur weiss : spielfeld.getGeschlagenWeissSort()) {
+                JLabel momentan = new JLabel();
+                momentan.setVerticalAlignment(SwingConstants.CENTER);
+                momentan.setHorizontalAlignment(SwingConstants.CENTER);
+                String name = "";
+                if (weiss.getWert() == 900) {
+                    name = "queenw.gif";
+                }
+                if (weiss.getWert() == 100) {
+                    name = "pawnw.gif";
+                }
+                if (weiss.getWert() == 0) {
+                    name = "kingw.gif";
+                }
+                if (weiss.getWert() == 325) {
+                    name = "bishopw.gif";
+                }
+                if (weiss.getWert() == 275) {
+                    name = "knightw.gif";
+                }
+                if (weiss.getWert() == 465) {
+                    name = "rookw.gif";
+                }
+                try {
+                    Image test = ImageIO.read(new File(name));
+                    ImageIcon test2  = new ImageIcon(
+                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    momentan.setIcon(test2);
+                    geschlageneWeisse.add(momentan);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+        }
     }
      
     /**
@@ -576,9 +577,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if (ausgewaehlteFigur.getKorrektFelder().contains(momentanesFeld)) {
                 sekundenStopp = (int) System.currentTimeMillis()
                     - sekundenStart;
+                
+                // HIER WIRD GEZOGEN
                 spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
                     sekundenStopp);
+                // Start der zugzeit
                 start();
+                // Neuer Spieler = keine Ausgewählte Figur
                 ausgewaehlteFigur = null;
                 /*for (Feld bedroht : spielfeld.getBedrohteFelder()) {
                     bedroht.setBackground(new Color(100, 100, 100));
@@ -586,24 +591,69 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 /*for (Feld schlagend : spielfeld.getSchlagendeFelder()) {
                     schlagend.setBackground(new Color(100, 100, 100));
                 }*/
-                if (spielfeld.isSchach()) {
-                    System.out.println("Schach");
-                    spielfeld.setSchach(false);
-                }
-                // Wenn das Spiel vorbei ist
-                if (spielfeld.schachMatt()) {
-                    System.out.println("schachMatt");
-                    // TODO Popup Fenster mit SIEG
-                    // spiel.auswertung();   
-                    // if letzter zug = Umwandlungszug übergebe umwandlung(Wert)
-                }
+                spielfeld.getBedrohteFelder();
+                // Je nach aktuellem Spieler wird das Label auf diesen gesetzt
                 if (spielfeld.getAktuellerSpieler()) {
                     momentanerSpieler.setText("Weiß");
                 } else {
                     momentanerSpieler.setText("Schwarz");
                 }
-                
+                List<Zug> zugliste = spielfeld.getSpieldaten().getZugListe();
+                Zug letzterZug = zugliste.get(zugliste.size() - 1);
+                // Wenn das Spiel vorbei ist
+                if (spielfeld.schachMatt()) {
+                    spielfeldAufbau();
+                    // wird die Stoppuhr angehalten
+                    uhrAktiv = false;
+                    // das Spiel ausgewertet
+                    List<Object> auswertung = spiel.auswertung();
+                    Spieler gewinner = (Spieler) auswertung.get(0);
+                    String ergebnis; 
+                    if ((boolean) auswertung.get(1)) {
+                        ergebnis = "Matt";
+                    } else {
+                        ergebnis = "Patt";
+                    }
+                    String zuege = auswertung.get(2).toString();
+                    // Und Ein Dialogfenster für den Gewinner angezeigt
+                    JOptionPane.showMessageDialog(parent, gewinner.getName() 
+                        + " gewinnt nach " + ergebnis + " durch " + zuege 
+                        + "Zügen");
+                    // Das spiel ist vorbei also keine Züge mehr möglich
+                    for (Feld feld : felderListe) {
+                        feld.removeMouseListener(this);
+                    }
+                // Wenn der momentane Spieler im Schach steht
+                } else if (spielfeld.isSchach()) {
+                    spielfeldAufbau();
+                    JOptionPane.showMessageDialog(parent, 
+                        "Sie stehen im Schach!", "Schachwarnung!",
+                        JOptionPane.WARNING_MESSAGE);
+                    spielfeld.setSchach(false);
+                } else if (letzterZug.isUmwandlung())   {
+                    spielfeldAufbau();
+                    String[] moeglicheFiguren = {"Dame", "Turm", "Läufer", 
+                        "Springer", "Bauer"};
+                    String s = (String) JOptionPane.showInputDialog(parent,
+                        "Wählen sie eine Figur aus die sie gegen den Bauern "
+                        + "tauschen Wollen", "Figurenwechsel", JOptionPane.
+                        PLAIN_MESSAGE, null, moeglicheFiguren, "Dame");
+                    int wert;
+                    if (s.equals("Dame")) {
+                        wert = 900;
+                    } else if (s.equals("Turm")) {
+                        wert = 465;
+                    } else if (s.equals("Läufer")) {
+                        wert = 325;
+                    } else if (s.equals("Springer")) {
+                        wert = 275;
+                    } else {
+                        wert = 100;
+                    }
+                    spielfeld.umwandeln(letzterZug.getFigur(), wert);   
+                }
                 spielfeldAufbau();
+                
             /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
              * Auswahl aufgehoben.
              */
@@ -661,6 +711,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * @param e Ausgeloestes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
+        // Wenn der momentante Spieler einen Zug rückgängig macht
         if (e.getActionCommand().equals(commandRueck)) {
             spielfeld.zugRueckgaengig();
             if (spielfeld.getAktuellerSpieler()) {
@@ -671,8 +722,25 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             start();
             spielfeldAufbau();
         }
+        // Wenn der momentane Spieler aufgibt
         if (e.getActionCommand().equals(commandAufgeben)) {
-            System.out.println("Ich will keinen Fehler");
+            uhrAktiv = false;
+            List<Object> aufgeben = spiel
+                .aufgeben(spielfeld.getAktuellerSpieler());
+            Spieler verlierer = (Spieler) aufgeben.get(0);
+            String zuege = aufgeben.get(1).toString();
+            Spieler gewinner = (Spieler) aufgeben.get(2);
+            
+            JOptionPane.showMessageDialog(parent, verlierer.getName() 
+                + " gibt nach " + zuege + " Zügen auf! " + gewinner.getName() 
+                + " gewinnt!!!");
+            // Das spiel ist vorbei also keine Züge mehr möglich
+            for (Feld feld : felderListe) {
+                feld.removeMouseListener(this);
+            }
+            this.remove(cEast);
+            this.add(cEnde, BorderLayout.EAST);
+            this.revalidate();
         }
     }
     

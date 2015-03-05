@@ -4,6 +4,11 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 
+/**
+ * Panel um die Einstellungen zu verwalten.
+ * Moegliche Eintellungen:/n 
+ * 
+ */
 public class Einstellungen extends JPanel {
     // Anfang Attribute
     private static final long serialVersionUID = 6356424037842416199L;
