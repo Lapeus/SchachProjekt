@@ -27,8 +27,19 @@ public class Gesamtdatensatz {
     /**
      * Erzeugt einen neuen Gesamtdatensatz der dann gespeichert werden kann.<br>
      * Einziger Konstruktor dieser Klasse.
+     * @param spielerListe Eine Liste mit allen angelegten Spielern
+     * @param spielListe Eine Liste mit allen gespeicherten Spielen
      */
-    public Gesamtdatensatz() {
+    public Gesamtdatensatz(List<Spieler> spielerListe, List<Spiel> spielListe) {
+        this.spielerListe = spielerListe;
+        this.gespeicherteSpiele = spielListe;
+    }
+    
+    /**
+     * Speichert den Gesamtdatensatz in einen Einstellungsordner um beim 
+     * Neustart des Programms alle Daten wieder Laden zu k&ouml;nnen.
+     */
+    public void speichern() {
         
     }
     

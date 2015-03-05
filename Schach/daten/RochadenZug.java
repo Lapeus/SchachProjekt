@@ -49,6 +49,25 @@ public class RochadenZug extends Zug {
     }
     
     /**
+     * Gibt den Zug in einer stark vereinfachten Schachnotation samt Zugzeit 
+     * wieder.
+     * @return Darstellung des Zugs als Zeichenkette
+     */
+    public String toString() {
+        String string = "";
+        // Wenn es eine kleine Rochade ist
+        if (startfeldT.getXK() == 7) {
+            string += "0-0";
+        } else {
+            string += "0-0-0";
+        }
+        // Die Zugzeit 
+        string += " " + getZugzeit() + " sek";
+        
+        return string;
+    }
+    
+    /**
      * Gibt den beteiligten K&ouml;nig zur&uuml;ck.
      * @return Der beteiligte K&ouml;nig
      */

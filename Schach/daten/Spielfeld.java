@@ -252,7 +252,8 @@ public class Spielfeld {
         /* Der Zug ist nun vorbei. Daher aendert sich der aktive Spieler und
          * das Spielfeld muss gedreht werden.
          */
-        setAktuellerSpieler(!aktuellerSpieler);  
+        aktuellerSpieler = !aktuellerSpieler;  
+        
     }
     
     /**
@@ -375,7 +376,7 @@ public class Spielfeld {
         // Die bedrohten Felder koennen ignoriert werden
         
         // Aktiver Spieler muss geaendert werden.
-        setAktuellerSpieler(!aktuellerSpieler);
+        aktuellerSpieler = !aktuellerSpieler;
         
         // Wenn es ein Rochadenzug war
         if (zug instanceof RochadenZug) {
@@ -716,15 +717,6 @@ public class Spielfeld {
      */
     public boolean getAktuellerSpieler() {
         return aktuellerSpieler;
-    }
-    
-    /**
-     * Setzt den aktiven Spieler und dreht das Spielfeld.
-     * @param aktuellerSpieler <b>true</b> f&uuml;r wei&szlig;, <b>false</b> 
-     * f&uuml;r schwarz
-     */
-    public void setAktuellerSpieler(boolean aktuellerSpieler) {
-        this.aktuellerSpieler = aktuellerSpieler;
     }
 
     /**
