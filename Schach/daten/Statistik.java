@@ -130,6 +130,32 @@ public class Statistik {
     }
     
     /**
+     * Liefert eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
+     * Wird f&uuml;r das Speichern des Gesamtdatensatzes verwendet.
+     * @return Eine mehrzeilige Zeichenkette
+     */
+    public String toString() {
+        String string;
+        string = anzahlSiege + "\n";
+        string += anzahlPatt + "\n";
+        string += anzahlMatt + "\n";
+        string += anzahlSiegeC + "\n";
+        string += anzahlPattC + "\n";
+        string += anzahlMattC + "\n";
+        string += schnellsterSieg + "\n";
+        string += kuerzesterSieg + "\n";
+        string += schnellstesMatt + "\n";
+        string += kuerzestesMatt + "\n";
+        string += zeitSiegDurchschnitt + "\n";
+        string += zeitMattDurchschnitt + "\n";
+        string += zuegeSiegDurchschnitt + "\n";
+        string += zuegeMattDurchschnitt + "\n";
+        string += matWertSiegDurchschnitt + "\n";
+        string += matWertMattDurchschnitt;
+        
+        return string;
+    }
+    /**
      * Gibt die Anzahl der gesamten Spiele zur&uuml;ck.
      * @return Die Anzahl der gespielten Spiele
      */

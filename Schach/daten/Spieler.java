@@ -35,6 +35,19 @@ public class Spieler {
     }
     
     /**
+     * Liefert eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
+     * Wird f&uuml;r das Speichern des Gesamtdatensatzes verwendet.
+     * @return Eine mehrzeilige Zeichenkette
+     */
+    public String toString() {
+        String string;
+        string = name + "\n";
+        string += farbe + "\n";
+        string += statistik.toString();
+        return string;
+    }
+    
+    /**
      * Gibt den Namen des Spielers zur&uuml;ck.
      * @return Name des Spielers
      */

@@ -42,6 +42,27 @@ public class EnPassantZug extends Zug {
     }
     
     /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        String string = "";
+        Feld schlagfeld = geschlagenderBauer.getPosition();
+        // Spaltenbezeichnung
+        String[] spalten = {"a", "b", "c", "d", "e", "f", "g", "h"};
+        // Das Startfeld
+        string += spalten[startfeld.getXK()] + startfeld.getYK();
+        // Ein Bauer wird geschlagen
+        string += "x";
+        // Das Zielfeld
+        string += spalten[schlagfeld.getXK()] + (schlagfeld.getYK() + 1);
+        string += " e.p.";
+        // Die Zugzeit 
+        string += " " + getZugzeit() + " sek";
+        
+        return string;
+    }
+    
+    /**
      * Gibt den ziehenden Bauern zur&uuml;ck.
      * @return Der ziehende Bauer
      */
