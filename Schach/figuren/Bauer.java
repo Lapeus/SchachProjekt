@@ -47,8 +47,12 @@ public class Bauer extends Figur {
             indizes[2] = -9; // Getauscht, weil sie ja entgegengesetzt laufen
             indizes[3] = -7; //   ""           ""          ""           ""
         }
+        
+        // IndexBounds-Pruefung
+        int newIndex = getFeldIndex() + indizes[0];
         // Wenn an der jetzigen Stelle plus 8 (vorne) keine Figur steht  
-        if (getFigurAt(getFeldIndex() + indizes[0]) == null) {
+        if (newIndex >= 0 && newIndex < 64 
+            && getFigurAt(getFeldIndex() + indizes[0]) == null) {
             // Fuege das entsprechende Feld der Liste zu
             moeglicheFelder.add(super.getFeld(getFeldIndex() + indizes[0]));
         }
@@ -62,8 +66,11 @@ public class Bauer extends Figur {
             }
         }
         
+        // IndexBounds-Pruefung
+        newIndex = getFeldIndex() + indizes[2];
         // Wenn links noch ein Feld ist
-        if (super.getPosition().getXK() > 0) {
+        if (newIndex >= 0 && newIndex < 64 
+            && super.getPosition().getXK() > 0) {
             // Wenn schraeg links vorne eine gegnerische Figur steht
             if (super.getFigurAt(getFeldIndex() + indizes[2]) != null 
                 && super.getFigurAt(getFeldIndex() + indizes[2]).getFarbe() 
@@ -73,8 +80,11 @@ public class Bauer extends Figur {
             }
         }
         
+        // IndexBounds-Pruefung
+        newIndex = getFeldIndex() + indizes[3];
         // Wenn rechts noch ein Feld ist
-        if (super.getPosition().getXK() < 7) {
+        if (newIndex >= 0 && newIndex < 64 
+            && super.getPosition().getXK() < 7) {
             // Wenn schraeg rechts vorne eine gegnerische Figur steht
             if (super.getFigurAt(getFeldIndex() + indizes[3]) != null 
                 && super.getFigurAt(getFeldIndex() + indizes[3]).getFarbe() 
