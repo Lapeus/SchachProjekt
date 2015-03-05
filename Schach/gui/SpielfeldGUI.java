@@ -99,6 +99,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private Spieler spieler2;
     
     /**
+     * Spielname welcher von der <b>Spielerauswahl</b> Seite übergeben wird.
+     */
+    private String spielname;
+    
+    /**
      * Liste die 64 Schachfelder enthält.
      */
     private List<Feld> felderListe;
@@ -203,6 +208,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         super();
         this.spieler1 = spieler1;
         this.spieler2 = spieler2;
+        this.spielname = spielname;
         this.parent = parent;
         init();
     }
@@ -232,7 +238,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         spielfeld.setSpieldaten(new Spieldaten());
         
         // Spiel 
-        spiel = new Spiel("Test", spieler1, spieler2, spielfeld);
+        spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
         
         // CENTER
         this.setLayout(new BorderLayout());
@@ -532,7 +538,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     public void mouseClicked(MouseEvent arg0) {
         // Felder Bewegen
         Feld momentanesFeld = (Feld) arg0.getSource();
-        spielfeldAufbau();
         /* (Wenn eine korrekte Figur ausgewählt wird und es noch keine 
          * ausgewaehlte Figur gibt.)
          * ODER
@@ -572,11 +577,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
         // Wenn es bereits eine ausgewaehlte Figur gibt
         } else if (ausgewaehlteFigur != null) {
+            sekundenStopp = (int) System.currentTimeMillis()
+                - sekundenStart;
+            // TODO Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button 
             /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
              dieser ist */
             if (ausgewaehlteFigur.getKorrektFelder().contains(momentanesFeld)) {
-                sekundenStopp = (int) System.currentTimeMillis()
-                    - sekundenStart;
                 
                 // HIER WIRD GEZOGEN
                 spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
@@ -617,12 +623,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     String zuege = auswertung.get(2).toString();
                     // Und Ein Dialogfenster für den Gewinner angezeigt
                     JOptionPane.showMessageDialog(parent, gewinner.getName() 
-                        + " gewinnt nach " + ergebnis + " durch " + zuege 
-                        + "Zügen");
+                        + " gewinnt nach " + zuege + " Zügen durch " 
+                        + ergebnis);
                     // Das spiel ist vorbei also keine Züge mehr möglich
                     for (Feld feld : felderListe) {
                         feld.removeMouseListener(this);
                     }
+                    this.remove(cEast);
+                    this.add(cEnde, BorderLayout.EAST);
+                    this.revalidate();
                 // Wenn der momentane Spieler im Schach steht
                 } else if (spielfeld.isSchach()) {
                     spielfeldAufbau();
@@ -659,6 +668,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
              */
             } else if (ausgewaehlteFigur.getPosition().equals(momentanesFeld)) {
                 ausgewaehlteFigur = null;
+                spielfeldAufbau();
             }
         }
         // Wenn man ein leeres Feld anklickt

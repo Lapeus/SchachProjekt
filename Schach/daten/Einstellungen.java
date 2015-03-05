@@ -14,6 +14,12 @@ public class Einstellungen {
      * Einziger Konstruktor dieser Klasse.
      */
     public Einstellungen() {
-        
+        // Zugzeitbegrenzung getter/setter           (int)
+        // Mögliche Felder anzeigen getter/setter    (boolean)
+        // Bedrohte Figuren anzeigen getter/setter   (boolean)
+        // Rochade Benutzbar getter/setter           (boolean)
+        // Schachwarnung getter/setter               (boolean)
+        // En-Passant-Schlagen getter/setter         (boolean)
+        // Statistik (einbezogen) getter/seter       (boolean)
     }
 }
