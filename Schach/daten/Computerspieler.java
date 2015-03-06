@@ -63,11 +63,11 @@ public class Computerspieler extends Spieler {
             eigeneFiguren = spielfeld.getSchwarzeFiguren();
         }
         // Erzeugt eine Zufallszahl zwischen 0 und eigeneFiguren.size() - 1
-        int zufall = (int) Math.random() * eigeneFiguren.size();
+        int zufall = (int) (Math.random() * eigeneFiguren.size());
         // Alle moeglichen Felder
         List<Feld> alleFelder = eigeneFiguren.get(zufall).getKorrektFelder();
         // Erzeugt eine Zufallszahl zwischen 0 und eigeneFiguren.size() - 1
-        int zufall2 = (int) Math.random() * alleFelder.size();
+        int zufall2 = (int) (Math.random() * alleFelder.size());
         // Ziehe dieses ausgewaehlte Feld
         spielfeld.ziehe(eigeneFiguren.get(zufall), alleFelder.get(zufall2), 1);
         
