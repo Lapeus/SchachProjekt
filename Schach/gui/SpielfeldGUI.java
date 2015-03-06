@@ -275,10 +275,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // geschlagene Schwarz
         geschlageneSchwarze.setLayout(new GridLayout(2, 8));
         gbc.gridy = 9;
-        gbc.gridheight = 1;
         cEast.add(geschlageneSchwarze, gbc);
         
         // Label momentanerSpieler
+        gbc.gridheight = 1;
         gbc.gridy = 3;
         cEast.add(momentanerSpieler, gbc);
         
@@ -458,76 +458,75 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Updated die Anzeigen der geschlagenen Figuren.
      */
     private void geschlageneFigureUpdate() {
-        if (!spielfeld.getGeschlagenSchwarz().isEmpty()) {
-            geschlageneSchwarze.removeAll();
-            for (Figur schwarz : spielfeld.getGeschlagenSchwarzSort()) {
-                JLabel momentan = new JLabel();
-                momentan.setVerticalAlignment(SwingConstants.CENTER);
-                momentan.setHorizontalAlignment(SwingConstants.CENTER);
-                String name = "";
-                if (schwarz.getWert() == 900) {
-                    name = "queenb.gif";
-                }
-                if (schwarz.getWert() == 100) {
-                    name = "pawnb.gif";
-                }
-                if (schwarz.getWert() == 0) {
-                    name = "kingb.gif";
-                }
-                if (schwarz.getWert() == 325) {
-                    name = "bishopb.gif";
-                }
-                if (schwarz.getWert() == 275) {
-                    name = "knightb.gif";
-                }
-                if (schwarz.getWert() == 465) {
-                    name = "rookb.gif";
-                }
-                try {
-                    Image test = ImageIO.read(new File(name));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneSchwarze.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }  
+        geschlageneSchwarze.removeAll();
+        System.out.println(geschlageneSchwarze.getComponentCount());
+        for (Figur schwarz : spielfeld.getGeschlagenSchwarzSort()) {
+            JLabel momentan = new JLabel();
+            momentan.setVerticalAlignment(SwingConstants.CENTER);
+            momentan.setHorizontalAlignment(SwingConstants.CENTER);
+            String name = "";
+            if (schwarz.getWert() == 900) {
+                name = "queenb.gif";
             }
+            if (schwarz.getWert() == 100) {
+                name = "pawnb.gif";
+            }
+            if (schwarz.getWert() == 0) {
+                name = "kingb.gif";
+            }
+            if (schwarz.getWert() == 325) {
+                name = "bishopb.gif";
+            }
+            if (schwarz.getWert() == 275) {
+                name = "knightb.gif";
+            }
+            if (schwarz.getWert() == 465) {
+                name = "rookb.gif";
+            }
+            try {
+                Image imageB = ImageIO.read(new File(name));
+                ImageIcon iconB  = new ImageIcon(
+                    imageB.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                momentan.setIcon(iconB);
+                geschlageneSchwarze.add(momentan);
+            } catch (IOException exc) {
+                exc.printStackTrace();
+            }  
         }
-        if (!spielfeld.getGeschlagenWeiss().isEmpty()) {
-            geschlageneWeisse.removeAll();
-            for (Figur weiss : spielfeld.getGeschlagenWeissSort()) {
-                JLabel momentan = new JLabel();
-                momentan.setVerticalAlignment(SwingConstants.CENTER);
-                momentan.setHorizontalAlignment(SwingConstants.CENTER);
-                String name = "";
-                if (weiss.getWert() == 900) {
-                    name = "queenw.gif";
-                }
-                if (weiss.getWert() == 100) {
-                    name = "pawnw.gif";
-                }
-                if (weiss.getWert() == 0) {
-                    name = "kingw.gif";
-                }
-                if (weiss.getWert() == 325) {
-                    name = "bishopw.gif";
-                }
-                if (weiss.getWert() == 275) {
-                    name = "knightw.gif";
-                }
-                if (weiss.getWert() == 465) {
-                    name = "rookw.gif";
-                }
-                try {
-                    Image test = ImageIO.read(new File(name));
-                    ImageIcon test2  = new ImageIcon(
-                        test.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
-                    momentan.setIcon(test2);
-                    geschlageneWeisse.add(momentan);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
+        System.out.println(geschlageneSchwarze.getComponentCount());
+        
+        geschlageneWeisse.removeAll();
+        for (Figur weiss : spielfeld.getGeschlagenWeissSort()) {
+            JLabel momentan = new JLabel();
+            momentan.setVerticalAlignment(SwingConstants.CENTER);
+            momentan.setHorizontalAlignment(SwingConstants.CENTER);
+            String name = "";
+            if (weiss.getWert() == 900) {
+                name = "queenw.gif";
+            }
+            if (weiss.getWert() == 100) {
+                name = "pawnw.gif";
+            }
+            if (weiss.getWert() == 0) {
+                name = "kingw.gif";
+            }
+            if (weiss.getWert() == 325) {
+                name = "bishopw.gif";
+            }
+            if (weiss.getWert() == 275) {
+                name = "knightw.gif";
+            }
+            if (weiss.getWert() == 465) {
+                name = "rookw.gif";
+            }
+            try {
+                Image imageW = ImageIO.read(new File(name));
+                ImageIcon iconW  = new ImageIcon(
+                    imageW.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                momentan.setIcon(iconW);
+                geschlageneWeisse.add(momentan);
+            } catch (IOException exc) {
+                exc.printStackTrace();
             }
         }
     }
@@ -537,7 +536,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * @param momentanesFeld Das momentan ausgewählte Feld
      */
     private void zugGUI(Feld momentanesFeld) {
-     // HIER WIRD GEZOGEN
+        // HIER WIRD GEZOGEN
         spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
             sekundenStopp);
         // Start der zugzeit
@@ -624,11 +623,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             && spieler1.getFarbe() == spielfeld.getAktuellerSpieler())) {
             ((Computerspieler) spieler1).setSpielfeld(spielfeld);
             ((Computerspieler) spieler1).ziehen();
+            spielfeldAufbau();
         // Wenn spieler 2 ein Computergegner ist und dran ist
         } else if (spieler2 instanceof Computerspieler 
             && spieler2.getFarbe() == spielfeld.getAktuellerSpieler()) {
             ((Computerspieler) spieler2).setSpielfeld(spielfeld);
             ((Computerspieler) spieler2).ziehen();
+            spielfeldAufbau();
         } else {
         // Felder Bewegen
             Feld momentanesFeld = (Feld) arg0.getSource();
@@ -758,6 +759,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             start();
             spielfeldAufbau();
+            this.revalidate();
         }
         // Wenn der momentane Spieler aufgibt
         if (e.getActionCommand().equals(commandAufgeben)) {
