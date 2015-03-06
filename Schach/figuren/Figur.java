@@ -142,21 +142,6 @@ public abstract class Figur {
         // Jetzt koennen die nicht zulaessigen Felder entfernt werden
         korrekt.removeAll(nichtKorrekt);
         
-        /* Zusatz: Vorbereitung fuer die grafische Hilfestellung "Es werden
-         * die Figuren gezeigt, die von dieser Figur geschlagen werden koennen."
-         */
-        // Liste mit den in diesem Zug zu schlagenden Feldern leeren
-        spielfeld.getSchlagendeFelder().clear();
-        // Wenn es moegliche Zuege gibt
-        if (!korrekt.isEmpty()) {
-            for (Feld feld : korrekt) {
-                // Wenn das Feld nicht leer ist
-                if (feld.getFigur() != null) {
-                    // Fuege das Feld den zu schlagenden Feldern zu
-                    spielfeld.getSchlagendeFelder().add(feld);
-                }
-            }
-        }
         // Gib die korrigierte Liste zurueck
         return korrekt;
         

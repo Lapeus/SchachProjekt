@@ -198,6 +198,7 @@ public class Spielfeld {
         if (!figur.getGezogen()) {
             // Ist es der erste Zug
             ersterZug = true;
+            figur.setGezogen(true);
         }
         // Wenn ein Bauer auf die gegnerische Grundlinie zieht
         boolean umwandlung = false;
@@ -242,12 +243,6 @@ public class Spielfeld {
         zielfeld.setFigur(figur);
         // Die aktuelle Position wird angepasst
         figur.setPosition(zielfeld);
-        
-        // Der erste Zug von Bauer, Turm und Koenig muessen erfasst werden.
-        // Zur Vereinfachung wird dies einfach bei allen Figuren durchgefuerht.
-        if (!figur.getGezogen()) {
-            figur.setGezogen(true);
-        }
         
         /* Der Zug ist nun vorbei. Daher aendert sich der aktive Spieler und
          * das Spielfeld muss gedreht werden.
@@ -300,8 +295,8 @@ public class Spielfeld {
             }
             // Der beteiligte Turm
             Figur turm = felder.get(indexStart).getFigur();
+            System.out.println(indexStart);
             // Wird umgesetzt
-            System.out.println(turm.getPosition().getXK());
             turm.setPosition(felder.get(indexZiel));
             // Die Felder werden aktualisiert
             felder.get(indexZiel).setFigur(turm);
@@ -434,22 +429,37 @@ public class Spielfeld {
             
         // Sonst war es ein normaler Zug
         } else {
+            Figur gezogeneFigur = zug.getFigur();
+            // Wenn es ein Umwandlungszug war und eine Figur umgewandelt wurde
+            if (zug.isUmwandlung() 
+                && !(zug.getZielfeld().getFigur() instanceof Bauer)) {
+                // Die Listen muessen aktualisiert werden
+                if (gezogeneFigur.getFarbe()) {
+                    // Die umgewandelte Figur muss weg
+                    weisseFiguren.remove(zug.getZielfeld().getFigur());
+                    weisseFiguren.add(gezogeneFigur);
+                } else {
+                    // Die umgewandelte Figur muss weg
+                    schwarzeFiguren.remove(zug.getZielfeld().getFigur());
+                    schwarzeFiguren.add(gezogeneFigur);
+                }
+            }
             // Figur an die vorherige Stelle setzen
-            zug.getFigur().setPosition(zug.getStartfeld());
+            gezogeneFigur.setPosition(zug.getStartfeld());
             // Die Felder aktualisieren
-            zug.getStartfeld().setFigur(zug.getFigur());
+            zug.getStartfeld().setFigur(gezogeneFigur);
             zug.getZielfeld().setFigur(null);
             // Falls das der erste Zug dieser Figur war
             if (zug.isErsterZug()) {
                 // Muss das rueckgaengig gemacht werden
-                zug.getFigur().setGezogen(false);
+                gezogeneFigur.setGezogen(false);
             }
             // Falls im letzten Zug eine Figur geschlagen wurde
             if (zug.isSchlagzug()) {
                 // Muss die wieder hergestellt werden
                 Figur geschlageneFigur = null;
                 // Wenn wir selbst weiss sind
-                if (zug.getFigur().getFarbe()) {
+                if (gezogeneFigur.getFarbe()) {
                     // Muss eine schwarze Figur wieder hergestellt werden
                     // Letzte geschlagene Figur wieder herstellen
                     geschlageneFigur = geschlagenSchwarz
@@ -459,7 +469,7 @@ public class Spielfeld {
                      */
                     geschlagenSchwarz.remove(geschlageneFigur);
                     schwarzeFiguren.add(geschlageneFigur);
-                } else if (!zug.getFigur().getFarbe()) {
+                } else if (!gezogeneFigur.getFarbe()) {
                     // Muss eine weisse Figur wieder hergestellt werden
                     // Letzte geschlagene Figur wieder herstellen
                     geschlageneFigur = geschlagenWeiss
@@ -485,9 +495,6 @@ public class Spielfeld {
      */
     public void umwandeln(Figur figur, int wert) {
         // Erzeugen der neuen Figur
-        /* Cast wird benoetigt, damit die Variable auch ausserhalb des ifs 
-         * gueltig ist.
-         */
         Figur neueFigur;
         if (wert == 275) {
             neueFigur = new Springer(
@@ -503,7 +510,9 @@ public class Spielfeld {
                 figur.getPosition(), figur.getFarbe());
         }     
         // Sie auf das neue Feld stellen
-        figur.getPosition().setFigur(figur);
+        neueFigur.getPosition().setFigur(neueFigur);
+        // Das Spielfeld zuweisen
+        neueFigur.setSpielfeld(this);
         // WICHTIG um Pam-Krabbé-Rochade zu verhindern
         neueFigur.setGezogen(figur.getGezogen());
         // Die entsprechende Liste aktualisieren
@@ -666,7 +675,7 @@ public class Spielfeld {
      * @return Liste von schwarzen Figuren
      */
     public List<Figur> getGeschlagenSchwarzSort() {
-        return sortiereListe(geschlagenSchwarz);
+        return sortiereListe(clone(geschlagenSchwarz));
     }
     
     /**
@@ -675,7 +684,7 @@ public class Spielfeld {
      * @return Liste von wei&szlig;en Figuren
      */
     public List<Figur> getGeschlagenWeissSort() {
-        return sortiereListe(geschlagenWeiss);
+        return sortiereListe(clone(geschlagenWeiss));
     }
     
     /**
@@ -769,6 +778,33 @@ public class Spielfeld {
      * @return Eine Liste mit den Feldern auf denen zu schlagende Figuren stehen
      */
     public List<Feld> getSchlagendeFelder() {
+        /* Zusatz: Vorbereitung fuer die grafische Hilfestellung "Es werden
+         * alle in diesem Zug zu schlagende Figuren angezeigt."
+         */
+        // Liste mit zu schlagenden Figuren leeren
+        schlagendeFelder.clear();
+        // Liste mit den eigenen Figuren
+        List<Figur> eigeneFiguren;
+        // Wenn weiss als naechstes dran ist
+        if (aktuellerSpieler) {
+            eigeneFiguren = clone(weisseFiguren);
+        // Wenn schwarz als naechstes dran ist
+        } else {
+            eigeneFiguren = clone(schwarzeFiguren);
+        }
+        // Fuer alle eigenen Figuren
+        for (Figur eigen : eigeneFiguren) {
+            // Liste mit den korrekten Feldern dieser Figur
+            List<Feld> felder = eigen.getKorrektFelder();
+            // Fuer jedes dieser Felder
+            for (Feld feld : felder) {
+                // Wenn auf dem Feld eine Figur steht
+                if (feld.getFigur() != null) {
+                    // Ist das eine gegnerische und somit schlagbar
+                    schlagendeFelder.add(feld);
+                }
+            }
+        }
         return schlagendeFelder;
     }
     

@@ -136,7 +136,7 @@ public class Koenig extends Figur {
      * @return Wahrheitswert, ob Rochade durchgef&uuml;hrt werden darf
      */
     private boolean rochadeMoeglich(boolean kleineRochade) {
-        boolean moeglich = true;
+        boolean moeglich = false;
         // Der beteiligte Turm
         Figur turm = null;
         // Wenn: Es die kleine Rochade ist und es eine Figur 3 Felder rechts 
@@ -173,6 +173,7 @@ public class Koenig extends Figur {
         
         // Wenn es einen beteiligten Turm gibt
         if (turm != null) {
+            moeglich = true;
             // Wenn der Turm bereits gezogen wurde
             if (turm.getGezogen()) {
                 // Unzulaessig
@@ -184,8 +185,7 @@ public class Koenig extends Figur {
                 moeglich = false;
             } else {
                 // Berechnung der bedrohten Felder
-                List<Feld> bedrohteFelder = alleBedrohtenFelder();
-                    
+                List<Feld> bedrohteFelder = alleBedrohtenFelder(); 
                 // Wenn der Koenig momentan bedroht ist
                 if (bedrohteFelder.contains(pruefFelder.get(0))) {
                     moeglich = false;

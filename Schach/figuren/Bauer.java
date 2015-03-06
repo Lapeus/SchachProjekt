@@ -60,7 +60,7 @@ public class Bauer extends Figur {
         if (!super.getGezogen()) {
             // Wenn an der jetzigen Stelle plus 16 (2 vorne) keine Figur steht
             if (super.getFigurAt(getFeldIndex() + indizes[0]) == null
-                && super.getFigurAt(getFeldIndex() + indizes[1]) == null) {
+                && super.getFigurAt(getFeldIndex() + indizes[0]) == null) {
                 // Fuege das entsprechende Feld der Liste zu
                 moeglicheFelder.add(super.getFeld(getFeldIndex() + indizes[1]));
             }
