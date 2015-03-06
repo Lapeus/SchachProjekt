@@ -58,8 +58,11 @@ public class Bauer extends Figur {
         }
         // Wenn die Figur noch nicht bewegt wurde
         if (!super.getGezogen()) {
+            // IndexBounds-Pruefung
+            newIndex = getFeldIndex() + indizes[0];
             // Wenn an der jetzigen Stelle plus 16 (2 vorne) keine Figur steht
-            if (super.getFigurAt(getFeldIndex() + indizes[0]) == null
+            if (newIndex >= 0 && newIndex < 64 
+                && super.getFigurAt(getFeldIndex() + indizes[0]) == null
                 && super.getFigurAt(getFeldIndex() + indizes[1]) == null) {
                 // Fuege das entsprechende Feld der Liste zu
                 moeglicheFelder.add(super.getFeld(getFeldIndex() + indizes[1]));

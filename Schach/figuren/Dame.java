@@ -39,7 +39,7 @@ public class Dame extends Figur {
         int[] indizes = {-9, -8, -7, -1, 1, 7, 8, 9};
         // Fuer alle Felder
         for (int i : indizes) {
-         // Hilfsvariablen
+        // Hilfsvariablen
             int zaehl = 1;
             int newIndex = i;
             boolean keinZeilenumbruch = true;

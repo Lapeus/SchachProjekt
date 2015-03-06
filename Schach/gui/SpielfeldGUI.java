@@ -368,7 +368,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         } else {
             rueckgaengig.setEnabled(true);
         }
-        geschlageneFigureUpdate();
         // Alle Bilder löschen damit keine Bilder doppelt bleiben
         for (Feld feld : felderListe) {
             feld.setIcon(null);
@@ -437,6 +436,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 exc.printStackTrace();
             }
         }
+        geschlageneFigureUpdate();
         this.revalidate();
     }
     
@@ -531,19 +531,103 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
         }
     }
+    
+    /**
+     * Hier werden die Züge veranlasst und auf der Gui geupdated.
+     * @param momentanesFeld Das momentan ausgewählte Feld
+     */
+    private void zugGUI(Feld momentanesFeld) {
+     // HIER WIRD GEZOGEN
+        spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
+            sekundenStopp);
+        // Start der zugzeit
+        start();
+        // Neuer Spieler = keine Ausgewählte Figur
+        ausgewaehlteFigur = null;
+        
+        spielfeld.getBedrohteFelder();
+        // Je nach aktuellem Spieler wird das Label gesetzt
+        if (spielfeld.getAktuellerSpieler()) {
+            momentanerSpieler.setText("Weiß");
+        } else {
+            momentanerSpieler.setText("Schwarz");
+        }
+        List<Zug> zugliste 
+            = spielfeld.getSpieldaten().getZugListe();
+        Zug letzterZug = zugliste.get(zugliste.size() - 1);
+        // Wenn das Spiel vorbei ist
+        if (spielfeld.schachMatt()) {
+            spielfeldAufbau();
+            // wird die Stoppuhr angehalten
+            uhrAktiv = false;
+            // das Spiel ausgewertet
+            List<Object> auswertung = spiel.auswertung();
+            Spieler gewinner = (Spieler) auswertung.get(0);
+            String ergebnis; 
+            if ((boolean) auswertung.get(1)) {
+                ergebnis = "Matt";
+            } else {
+                ergebnis = "Patt";
+            }
+            String zuege = auswertung.get(2).toString();
+            // Und Ein Dialogfenster für den Gewinner angezeigt
+            JOptionPane.showMessageDialog(parent
+                , gewinner.getName() 
+                + " gewinnt nach " + zuege + " Zügen durch " 
+                + ergebnis);
+            // Das spiel ist vorbei also keine Züge mehr möglich
+            for (Feld feld : felderListe) {
+                feld.removeMouseListener(this);
+            }
+            this.remove(cEast);
+            this.add(cEnde, BorderLayout.EAST);
+            this.revalidate();
+        // Wenn der momentane Spieler im Schach steht
+        } else if (spielfeld.isSchach()) {
+            spielfeldAufbau();
+            JOptionPane.showMessageDialog(parent, 
+                "Sie stehen im Schach!", "Schachwarnung!",
+                JOptionPane.WARNING_MESSAGE);
+            spielfeld.setSchach(false);
+        } else if (letzterZug.isUmwandlung())   {
+            spielfeldAufbau();
+            String[] moeglicheFiguren = {"Dame", "Turm", "Läufer", 
+                "Springer"};
+            String s = (String) JOptionPane.showInputDialog(parent,
+                "Wählen sie eine Figur aus die sie gegen den "
+                + "Bauern tauschen Wollen"
+                , "Figurenwechsel", JOptionPane.
+                PLAIN_MESSAGE, null, moeglicheFiguren, "Dame");
+            int wert;
+            if (s.equals("Dame")) {
+                wert = 900;
+            } else if (s.equals("Turm")) {
+                wert = 465;
+            } else if (s.equals("Läufer")) {
+                wert = 325;
+            } else {
+                wert = 275;
+            }
+            spielfeld.umwandeln(letzterZug.getFigur(), wert); 
+        }
+    }
      
     /**
      * MouseEvent-Methode mouseClicked.
      * @param arg0 MouseEvent erzeugt von den Feldern des Spielfelds
      */
     public void mouseClicked(MouseEvent arg0) {
+        spielfeldAufbau();
+        
         // Wenn spieler 1 ein Computergegner ist und dran ist
         if ((spieler1 instanceof Computerspieler 
             && spieler1.getFarbe() == spielfeld.getAktuellerSpieler())) {
+            ((Computerspieler) spieler1).setSpielfeld(spielfeld);
             ((Computerspieler) spieler1).ziehen();
         // Wenn spieler 2 ein Computergegner ist und dran ist
         } else if (spieler2 instanceof Computerspieler 
             && spieler2.getFarbe() == spielfeld.getAktuellerSpieler()) {
+            ((Computerspieler) spieler2).setSpielfeld(spielfeld);
             ((Computerspieler) spieler2).ziehen();
         } else {
         // Felder Bewegen
@@ -597,89 +681,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                  dieser ist */
                 if (ausgewaehlteFigur.getKorrektFelder()
                     .contains(momentanesFeld)) {
-                    
-                    // HIER WIRD GEZOGEN
-                    spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
-                        sekundenStopp);
-                    // Start der zugzeit
-                    start();
-                    // Neuer Spieler = keine Ausgewählte Figur
-                    ausgewaehlteFigur = null;
-                    /*for (Feld bedroht : spielfeld.getBedrohteFelder()) {
-                        bedroht.setBackground(new Color(100, 100, 100));
-                    }*/
-                    /*for (Feld schlagend : spielfeld.getSchlagendeFelder()) {
-                        schlagend.setBackground(new Color(100, 100, 100));
-                    }*/
-                    spielfeld.getBedrohteFelder();
-                    // Je nach aktuellem Spieler wird das Label gesetzt
-                    if (spielfeld.getAktuellerSpieler()) {
-                        momentanerSpieler.setText("Weiß");
-                    } else {
-                        momentanerSpieler.setText("Schwarz");
-                    }
-                    List<Zug> zugliste 
-                        = spielfeld.getSpieldaten().getZugListe();
-                    Zug letzterZug = zugliste.get(zugliste.size() - 1);
-                    // Wenn das Spiel vorbei ist
-                    if (spielfeld.schachMatt()) {
-                        spielfeldAufbau();
-                        // wird die Stoppuhr angehalten
-                        uhrAktiv = false;
-                        // das Spiel ausgewertet
-                        List<Object> auswertung = spiel.auswertung();
-                        Spieler gewinner = (Spieler) auswertung.get(0);
-                        String ergebnis; 
-                        if ((boolean) auswertung.get(1)) {
-                            ergebnis = "Matt";
-                        } else {
-                            ergebnis = "Patt";
-                        }
-                        String zuege = auswertung.get(2).toString();
-                        // Und Ein Dialogfenster für den Gewinner angezeigt
-                        JOptionPane.showMessageDialog(parent
-                            , gewinner.getName() 
-                            + " gewinnt nach " + zuege + " Zügen durch " 
-                            + ergebnis);
-                        // Das spiel ist vorbei also keine Züge mehr möglich
-                        for (Feld feld : felderListe) {
-                            feld.removeMouseListener(this);
-                        }
-                        this.remove(cEast);
-                        this.add(cEnde, BorderLayout.EAST);
-                        this.revalidate();
-                    // Wenn der momentane Spieler im Schach steht
-                    } else if (spielfeld.isSchach()) {
-                        spielfeldAufbau();
-                        JOptionPane.showMessageDialog(parent, 
-                            "Sie stehen im Schach!", "Schachwarnung!",
-                            JOptionPane.WARNING_MESSAGE);
-                        spielfeld.setSchach(false);
-                    } else if (letzterZug.isUmwandlung())   {
-                        spielfeldAufbau();
-                        String[] moeglicheFiguren = {"Dame", "Turm", "Läufer", 
-                            "Springer", "Bauer"};
-                        String s = (String) JOptionPane.showInputDialog(parent,
-                            "Wählen sie eine Figur aus die sie gegen den "
-                            + "Bauern tauschen Wollen"
-                            , "Figurenwechsel", JOptionPane.
-                            PLAIN_MESSAGE, null, moeglicheFiguren, "Dame");
-                        int wert;
-                        if (s.equals("Dame")) {
-                            wert = 900;
-                        } else if (s.equals("Turm")) {
-                            wert = 465;
-                        } else if (s.equals("Läufer")) {
-                            wert = 325;
-                        } else if (s.equals("Springer")) {
-                            wert = 275;
-                        } else {
-                            wert = 100;
-                        }
-                        spielfeld.umwandeln(letzterZug.getFigur(), wert);   
-                    }
+                    zugGUI(momentanesFeld);
                     spielfeldAufbau();
-                    
                 /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
                  * Auswahl aufgehoben.
                  */
@@ -693,7 +696,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if (momentanesFeld.getFigur() == null) {
                 ausgewaehlteFigur = null;
             }
-        }  
+            
+        }
+        // Färbt die bedrohten Felder Grau
+        for (Feld bedroht : spielfeld.getBedrohteFelder()) {
+            bedroht.setBackground(new Color(100, 100, 100));
+        }
+        this.revalidate();   
     }
    
     

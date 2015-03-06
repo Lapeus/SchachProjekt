@@ -11,6 +11,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -21,6 +23,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
 
 /**
  * Panel um die Einstellungen zu verwalten.
@@ -39,6 +42,14 @@ public class Einstellungen extends JPanel implements ActionListener {
      * Eltern-Fenster Eltern-Fenster in Form einer SpielGUI.
      */
     private SpielGUI parent;
+    
+    /**
+     * RadioButton zur positiven Auswahl einer
+     */
+    private JRadioButton ja;
+    private JRadioButton nein;
+    private ButtonGroup bGAuswahl;
+    private List<JRadioButton> radiobutton;
     
     /**
      * Konstante fuer den Farbton des Hintergrundes (Braun).
@@ -88,9 +99,7 @@ public class Einstellungen extends JPanel implements ActionListener {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
         
-        JRadioButton ja;
-        JRadioButton nein;
-        ButtonGroup bGAuswahl;
+        
         
         // Label Zugzeitbegrenzung
         gbc.gridx = 0;
@@ -114,17 +123,8 @@ public class Einstellungen extends JPanel implements ActionListener {
         cCenter.add(lblMoeglicheFelder, gbc);
         
         // RadioButtons Mögliche Felder anzeigen
+        auswahlJaNein("moeglicheFelderJa", "moeglicheFelderNein");
         gbc.gridx = 1;
-        ja = new JRadioButton("Ja");
-        ja.setActionCommand("moeglicheFelderJa");
-        ja.setBackground(cBraunRot);
-        nein = new JRadioButton("Nein");
-        nein.setActionCommand("moeglicheFelderNein");
-        nein.setBackground(cBraunRot);
-        bGAuswahl = new ButtonGroup();
-        bGAuswahl.add(ja);
-        bGAuswahl.add(nein);
-        // TODO Wenn es schon eine Einstellung gibt einstellen sonst nein
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
         cCenter.add(nein, gbc);
@@ -137,17 +137,8 @@ public class Einstellungen extends JPanel implements ActionListener {
         cCenter.add(lblBedrohtefelder, gbc);
         
         // RadioButtons bedrohte Felder anzeigen
+        auswahlJaNein("bedrohteFelderJa", "bedrohteFelderNein");
         gbc.gridx = 1;
-        ja = new JRadioButton("Ja");
-        ja.setActionCommand("bedrohteFelderJa");
-        ja.setBackground(cBraunRot);
-        nein = new JRadioButton("Nein");
-        nein.setActionCommand("bedrohteFelderNein");
-        nein.setBackground(cBraunRot);
-        bGAuswahl = new ButtonGroup();
-        bGAuswahl.add(ja);
-        bGAuswahl.add(nein);
-        // TODO Wenn es schon eine Einstellung gibt einstellen sonst nein
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
         cCenter.add(nein, gbc);
@@ -160,17 +151,8 @@ public class Einstellungen extends JPanel implements ActionListener {
         cCenter.add(lblRochadeBenutzbar, gbc);
         
         // Radio Buttons Rochade Benutzbar
+        auswahlJaNein("rochadeBenutzbarJa", "rochadeBenutzbarNein");
         gbc.gridx = 1;
-        ja = new JRadioButton("Ja");
-        ja.setActionCommand("rochadeBenutzbarJa");
-        ja.setBackground(cBraunRot);
-        nein = new JRadioButton("Nein");
-        nein.setActionCommand("rochadeBenutzbarNein");
-        nein.setBackground(cBraunRot);
-        bGAuswahl = new ButtonGroup();
-        bGAuswahl.add(ja);
-        bGAuswahl.add(nein);
-        // TODO Wenn es schon eine Einstellung gibt einstellen sonst nein
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
         cCenter.add(nein, gbc);
@@ -184,16 +166,7 @@ public class Einstellungen extends JPanel implements ActionListener {
         
         // Radio Buttons Schachwarnung
         gbc.gridx = 1;
-        ja = new JRadioButton("Ja");
-        ja.setActionCommand("schachWarnungJa");
-        ja.setBackground(cBraunRot);
-        nein = new JRadioButton("Nein");
-        nein.setActionCommand("schachWarnungNein");
-        nein.setBackground(cBraunRot);
-        bGAuswahl = new ButtonGroup();
-        bGAuswahl.add(ja);
-        bGAuswahl.add(nein);
-        // TODO Wenn es schon eine Einstellung gibt einstellen sonst nein
+        auswahlJaNein("schachwarnungJa", "schachwarnungNein");
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
         cCenter.add(nein, gbc);
@@ -207,17 +180,8 @@ public class Einstellungen extends JPanel implements ActionListener {
         cCenter.add(lblEnPassantSchlagen, gbc);
         
         // Radio Buttons En-Passant-Schlagen
+        auswahlJaNein("enPassantSchlagenJa", "enPassantSchlagenNein");
         gbc.gridx = 1;
-        ja = new JRadioButton("Ja");
-        ja.setActionCommand("enPassantSchlagenJa");
-        ja.setBackground(cBraunRot);
-        nein = new JRadioButton("Nein");
-        nein.setActionCommand("enPassantSchlagenNein");
-        nein.setBackground(cBraunRot);
-        bGAuswahl = new ButtonGroup();
-        bGAuswahl.add(ja);
-        bGAuswahl.add(nein);
-        // TODO Wenn es schon eine Einstellung gibt einstellen sonst nein
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
         cCenter.add(nein, gbc);
@@ -230,17 +194,8 @@ public class Einstellungen extends JPanel implements ActionListener {
         cCenter.add(lblStatistik, gbc);
         
         // Radio Buttons Statistik
+        auswahlJaNein("statistikJa", "statistikNein");
         gbc.gridx = 1;
-        ja = new JRadioButton("Ja");
-        ja.setActionCommand("statistikJa");
-        ja.setBackground(cBraunRot);
-        nein = new JRadioButton("Nein");
-        nein.setActionCommand("statistikNein");
-        nein.setBackground(cBraunRot);
-        bGAuswahl = new ButtonGroup();
-        bGAuswahl.add(ja);
-        bGAuswahl.add(nein);
-        // TODO Wenn es schon eine Einstellung gibt einstellen sonst nein
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
         cCenter.add(nein, gbc);
@@ -250,6 +205,28 @@ public class Einstellungen extends JPanel implements ActionListener {
         speichern.addActionListener(this);
         
         this.add(cCenter, BorderLayout.CENTER);
+    }
+    
+    /**
+     * Erstellt neue Buttons und gibt ihnen die uebergebenen ActionCommands.
+     * @param commmandJa ActionCommand fuer den Ja-RadioButton
+     * @param commandNein ActionCommand fuer den Nein-RadioButton
+     */
+    private void auswahlJaNein(String commmandJa,
+        String commandNein) {
+        List<JRadioButton> radioButtons = new ArrayList<JRadioButton>();
+        ja = new JRadioButton("Ja");
+        ja.setActionCommand(commmandJa);
+        ja.setBackground(cBraunRot);
+        nein = new JRadioButton("Nein");
+        nein.setActionCommand(commandNein);
+        nein.setBackground(cBraunRot);
+        bGAuswahl = new ButtonGroup();
+        bGAuswahl.add(ja);
+        bGAuswahl.add(nein);
+        // TODO Wenn es schon eine Einstellung gibt einstellen sonst nein
+        radioButtons.add(ja);
+        radioButtons.add(nein);
     }
     
     /**
