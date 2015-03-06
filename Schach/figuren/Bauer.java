@@ -119,8 +119,13 @@ public class Bauer extends Figur {
             Zug letzterZug = getSpielfeld().getSpieldaten()
                 .getZugListe().get(lastIndex);
             // Wenn der letzte Zug ein Sonderzug war, ist en-passant nicht mogl.
+            /* Durch die erweiterte Methode getBedrohteFelder wurde es moeglich
+             * dass ein Spieler in der Theorie doppelt zieht. Darauf muss hier
+             * geachtet werden.
+             */
             if (!(letzterZug instanceof RochadenZug 
-                || letzterZug instanceof EnPassantZug)) {
+                || letzterZug instanceof EnPassantZug)
+                && letzterZug.getFigur().getFarbe() != getFarbe()) {
                 // Wenn im letzten Zug ein Bauer ein Doppelzug gemacht hat
                 if (letzterZug.getFigur().getWert() == 100 
                     && letzterZug.isErsterZug()

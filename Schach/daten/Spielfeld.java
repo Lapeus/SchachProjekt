@@ -373,7 +373,6 @@ public class Spielfeld {
         
         // Aktiver Spieler muss geaendert werden.
         aktuellerSpieler = !aktuellerSpieler;
-        
         // Wenn es ein Rochadenzug war
         if (zug instanceof RochadenZug) {
             // Umwandlung des Zugs
@@ -404,7 +403,6 @@ public class Spielfeld {
             Figur bauer = enpasszug.getAusfuehrer();
             // Geschlagenener Bauer
             Figur geschlagBauer = enpasszug.getGeschlagenen();
-            
             // Ausfuehrender Bauer zuruecksetzen
             bauer.getPosition().setFigur(null);
             // Die Position des ausfuehrenden Bauerns auf das Startfeld setzen
@@ -420,13 +418,12 @@ public class Spielfeld {
                 schwarzeFiguren.add(geschlagBauer);
             // Wenn der schlagende Bauer schwarz ist
             } else {
-                // Weisse Liste aktualisieren
+                // Weisse Listen aktualisieren
                 geschlagenWeiss.remove(geschlagBauer);
                 weisseFiguren.add(geschlagBauer);
             }
             // Dem Feld die Figur zuweisen
             geschlagBauer.getPosition().setFigur(geschlagBauer);
-            
         // Sonst war es ein normaler Zug
         } else {
             Figur gezogeneFigur = zug.getFigur();
@@ -483,7 +480,6 @@ public class Spielfeld {
                 // Sie auf ihr vorheriges Feld setzen
                 geschlageneFigur.getPosition().setFigur(geschlageneFigur);
             }
-            
         } // Ende von Rochaden-if
         
     }
@@ -731,7 +727,6 @@ public class Spielfeld {
                 if (feld.getFigur() != null) {
                     // Ist das meine und somit bedroht
                     bedrohteFelder.add(feld);
-                    
                     // Wenn es der Koenig ist, steht er nun im Schach
                     if (feld.getFigur().getWert() == 0) {
                         schach = true;
