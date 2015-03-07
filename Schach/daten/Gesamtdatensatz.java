@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -20,12 +22,12 @@ public class Gesamtdatensatz {
     /**
      * Eine Liste mit allen bisher angelegten Spielern.
      */
-    private List<Spieler> spielerListe = new ArrayList<Spieler>();
+    private List<Spieler> spielerListe;
     
     /**
      * Eine Liste mit allen gespeicherten Spielen.
      */
-    private List<Spiel> gespeicherteSpiele = new ArrayList<Spiel>();
+    private List<Spiel> gespeicherteSpiele;
     
     /**
      * Die Standardeinstellungen des Spiels.
@@ -38,7 +40,8 @@ public class Gesamtdatensatz {
      * Methode mit Informationen gef&uuml;llt.
      */
     public Gesamtdatensatz() {
-  
+        this.spielerListe = new ArrayList<Spieler>();
+        this.gespeicherteSpiele  = new ArrayList<Spiel>();
     }
     
     /**
@@ -153,8 +156,58 @@ public class Gesamtdatensatz {
      * Legt neue Computerspieler und den Standard-Einstellungssatz an.
      */
     private void erzeugeNeueDaten() {
-        
+        /* Grundeinstellungen:
+         * Zugzeit-Begrenzung: Nicht vorhanden (6000)
+         * Moegliche Felder anzeigen: True
+         * Bedrohte Felder anzeigen: False
+         * Rochade moeglich: True
+         * En Passant moeglich: False
+         * Schachwarnung: True
+         * Statistik: True
+         */
+        einstellungen = new Einstellungen(6000, true, false, true, false, 
+            true, true);
+        spielerListe.add(new Computerspieler("Comp1"));
+        spielerListe.add(new Computerspieler("Comp2"));
+        spielerListe.add(new Computerspieler("Comp3"));
+        spielerListe.add(new Computerspieler("Comp4"));
     }
+    
+    /**
+     * Gibt die Liste der Spieler nach absteigendem Score sortiert wieder.
+     * @return Eine Liste mit den gerankten Spielern
+     */
+    public List<Spieler> getRanking() {
+        return sortiereListe(spielerListe);
+    }
+    
+    /**
+     * Eine statische Klasse, die zwei Spieler aufgrund ihres Scores vergleicht.
+     * @author Christian Ackermann
+     */
+    public static class SpielerComparator implements Comparator<Spieler> {
+        @Override
+        public int compare(Spieler sp1, Spieler sp2) {
+            // Wenn der Score des ersten Spielers kleiner ist
+            if (sp1.getStatistik().getScore() 
+                < sp2.getStatistik().getScore()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    }
+    
+    /**
+     * Sortiert die angegebene Liste von Spielern nach Score.
+     * @param spieler Die zu sortierende Liste von Spielern
+     * @return Die sortierte Liste
+     */
+    private List<Spieler> sortiereListe(List<Spieler> spieler) {
+        Collections.sort(spieler, new SpielerComparator());
+        return spieler;
+    }
+    
     /**
      * Gibt die Liste der Spieler zur&uuml;ck.
      * @return Liste der Spieler
