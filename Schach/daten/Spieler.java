@@ -42,8 +42,7 @@ public class Spieler {
     public String toString() {
         String string;
         String lineSep = System.getProperty("line.separator");
-        string = farbe + lineSep;
-        string += statistik.toString();
+        string = statistik.toString();
         return string;
     }
     
