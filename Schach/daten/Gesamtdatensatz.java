@@ -68,7 +68,7 @@ public class Gesamtdatensatz {
         
         // Den Inhalt des Spiele-Ordners - sofern vorhanden - loeschen
         ordner = new File("settings" + System.getProperty(
-            "file.separator") + "Spieler");
+            "file.separator") + "Spiele");
         if (ordner.exists()) {         
             File[] listFiles = ordner.listFiles();
             for (File file : listFiles) {            

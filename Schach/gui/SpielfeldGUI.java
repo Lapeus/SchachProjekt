@@ -563,17 +563,16 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             List<Object> auswertung = spiel.auswertung();
             Spieler gewinner = (Spieler) auswertung.get(0);
             String ergebnis; 
-            if ((boolean) auswertung.get(1)) {
-                ergebnis = "Matt";
-            } else {
-                ergebnis = "Patt";
-            }
             String zuege = auswertung.get(2).toString();
+            if ((boolean) auswertung.get(1)) {
+                ergebnis = gewinner.getName() 
+                    + " gewinnt nach " + zuege + " Zügen.";
+            } else {
+                ergebnis = "Das Spiel endet mit einem Patt";
+            }
             // Und Ein Dialogfenster für den Gewinner angezeigt
             JOptionPane.showMessageDialog(parent
-                , gewinner.getName() 
-                + " gewinnt nach " + zuege + " Zügen durch " 
-                + ergebnis);
+                , ergebnis);
             // Das spiel ist vorbei also keine Züge mehr möglich
             for (Feld feld : felderListe) {
                 feld.removeMouseListener(this);

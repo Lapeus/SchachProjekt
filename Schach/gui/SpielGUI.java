@@ -2,17 +2,20 @@ package gui;
 
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
 import daten.Gesamtdatensatz;
+import daten.Spieler;
 
 /**
  * Das eigentliche Fenster des Schachspiels. Auf diesem Fenster werden die Panes
  * gewechselt. Erbt von JFrame
  * @author Marvin Wolf
  */
-public class SpielGUI extends JFrame {
+public class SpielGUI extends JFrame implements WindowListener {
     
     // Anfang Attribute
     
@@ -40,8 +43,10 @@ public class SpielGUI extends JFrame {
         seitenAuswahl("Eroeffnungsseite");
         //pack();
         setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(this);
         
+        gesamtdatenLaden();
     }
     
     // Anfang Methoden
@@ -109,17 +114,28 @@ public class SpielGUI extends JFrame {
     }
     
     /**
+     * Fuegt einen Spieler zum gesamtdatensatz hinzu.
+     * @param spieler Spieler, welcher zum Gesamtdatensatz hinzugefuegt werden 
+     * soll
+     */
+    public void addSpieler(Spieler spieler) {
+        gesamtdatensatz.addSpieler(spieler);
+    }
+    
+    /**
      * Initiert das Laden des Gesamtdatensatzes durch die Datenklassen.
      */
     private void gesamtdatenLaden() {
-        
+        // gesamtdatensatz = new Gesamtdatensatz();
+        // gesamtdatensatz.laden
+        // TODO Laden  
     }
     
     /**
      * Initiiert das Speichern des Gesamtdatensatzes durch die Datenklassen.
      */
     private void gesamtdatenSpeichern() {
-        
+        gesamtdatensatz.speichern();
     }
     
     
@@ -132,5 +148,34 @@ public class SpielGUI extends JFrame {
      */
     public static void main(String[] args) {
         new SpielGUI();
+    }
+
+    public void windowActivated(WindowEvent e) {
+        // TODO Auto-generated method stub
+    }
+
+    public void windowClosed(WindowEvent e) {
+        // TODO Auto-generated method stub
+    }
+
+    public void windowClosing(WindowEvent e) {
+        // Sicherheitsfenster Wirklich beenden?  
+        gesamtdatenSpeichern();
+    }
+
+    public void windowDeactivated(WindowEvent e) {
+        // TODO Auto-generated method stub
+    }
+
+    public void windowDeiconified(WindowEvent e) {
+        // TODO Auto-generated method stub
+    }
+
+    public void windowIconified(WindowEvent e) {
+        // TODO Auto-generated method stub
+    }
+
+    public void windowOpened(WindowEvent e) {
+        // TODO Auto-generated method stub
     }
 }
