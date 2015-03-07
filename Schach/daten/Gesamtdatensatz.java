@@ -348,7 +348,26 @@ public class Gesamtdatensatz {
      * @param spiel Das Spiel, welches zugef&uuml;gt werden soll.
      */
     public void spielSpeichern(Spiel spiel) {
-        gespeicherteSpiele.add(spiel.getSpielname());
+        // Die Spieldatei - sofern vorhanden - loeschen
+        File file = new File("settings" + System.getProperty(
+            "file.separator") + "Spiele" + System.getProperty(
+                "file.separator") + spiel.getSpielname() + ".txt");
+        if (file.exists()) {
+            file.delete();
+        }
+        try {
+            File spielDatei = new File("settings" + System.getProperty(
+                "file.separator") + "Spieler" + System.getProperty(
+                    "file.separator") + spiel.getSpielname() + ".txt");
+            FileWriter fw = new FileWriter(spielDatei);
+            fw.write(spiel.toString());
+            fw.close();
+        } catch (IOException ioEx) {
+            ioEx.printStackTrace();
+        }
+        if (!gespeicherteSpiele.contains(spiel.getSpielname())) {
+            gespeicherteSpiele.add(spiel.getSpielname());
+        }
         
     }
     /**
