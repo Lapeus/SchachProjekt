@@ -28,6 +28,11 @@ public class Gesamtdatensatz {
     private List<Spiel> gespeicherteSpiele = new ArrayList<Spiel>();
     
     /**
+     * Die Standardeinstellungen des Spiels.
+     */
+    private Einstellungen einstellungen;
+    
+    /**
      * Erzeugt einen neuen Gesamtdatensatz der dann gespeichert werden kann.<br>
      * Einziger Konstruktor dieser Klasse. Ist leer und wird durch die Laden-
      * Methode mit Informationen gef&uuml;llt.
@@ -41,15 +46,47 @@ public class Gesamtdatensatz {
      * Neustart des Programms alle Daten wieder Laden zu k&ouml;nnen.
      */
     public void speichern() {
+        // Ordnerstruktur abfragen oder erstellen
+        File settingsOrdner = new File("settings");
+        // Wenn es den settings Ordner nicht gibt
+        if (!settingsOrdner.exists()) {
+            // Wird er erstellt
+            settingsOrdner.mkdir();
+        }
+        File spielerOrdner = new File("settings" + System.getProperty(
+            "file.separator") + "Spieler");
+        // Wenn es den Spieler Ordner nicht gibt
+        if (!spielerOrdner.exists()) {
+            // Wird er erstellt
+            spielerOrdner.mkdir();
+        }
+        File spielOrdner = new File("settings" + System.getProperty(
+            "file.separator") + "Spieler");
+        // Wenn es den Spiele Ordner nicht gibt
+        if (!spielOrdner.exists()) {
+            // Wird er erstellt
+            spielOrdner.mkdir();
+        }
+        
+        // Die Einstellungsdatei - sofern vorhanden - loeschen
+        File settings = new File("settings" + System.getProperty(
+            "file.separator") + "settings.txt");
+        if (settings.exists()) {
+            settings.delete();
+        }
+        
         // Den Inhalt des Spieler-Ordners - sofern vorhanden - loeschen
         File ordner = new File("settings" + System.getProperty(
-            "file.separator") + "Spieler");
-        if (ordner.exists()) {         
-            File[] listFiles = ordner.listFiles();
-            for (File file : listFiles) {            
+            "file.separator") + "Spieler");         
+        File[] listFiles = ordner.listFiles();
+        for (File file : listFiles) {            
+            try {
                 file.delete();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
+     
         // Spieler speichern
         for (Spieler spieler : spielerListe) {
             try {
@@ -66,13 +103,16 @@ public class Gesamtdatensatz {
         
         // Den Inhalt des Spiele-Ordners - sofern vorhanden - loeschen
         ordner = new File("settings" + System.getProperty(
-            "file.separator") + "Spiele");
-        if (ordner.exists()) {         
-            File[] listFiles = ordner.listFiles();
-            for (File file : listFiles) {            
+            "file.separator") + "Spiele");      
+        listFiles = ordner.listFiles();
+        for (File file : listFiles) { 
+            try {
                 file.delete();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
+
         // Spiele speichern
         for (Spiel spiel : gespeicherteSpiele) {
             try {
@@ -93,9 +133,28 @@ public class Gesamtdatensatz {
      * ausf&uuml;hrenden Ordner.
      */
     public void laden() {
+        File ordner = new File("settings" + System.getProperty(
+            "file.separator") + "Spieler");
+        if (ordner.exists() && ordner.listFiles().length != 0) {         
+            ladeDaten();
+        } else {
+            erzeugeNeueDaten();
+        }
+    }
+    
+    /**
+     * L&auml;dt die vorhandenen Daten in den Gesamtdatensatz.
+     */
+    private void ladeDaten() {
         
     }
     
+    /**
+     * Legt neue Computerspieler und den Standard-Einstellungssatz an.
+     */
+    private void erzeugeNeueDaten() {
+        
+    }
     /**
      * Gibt die Liste der Spieler zur&uuml;ck.
      * @return Liste der Spieler
@@ -127,5 +186,20 @@ public class Gesamtdatensatz {
     public void addSpiel(Spiel spiel) {
         gespeicherteSpiele.add(spiel);
         
+    }
+    /**
+     * Gibt die Standardeinstellungen zur&uum;ck.
+     * @return Der Standardeinstellungssatz
+     */
+    public Einstellungen getEinstellungen() {
+        return einstellungen;
+    }
+    
+    /**
+     * Setzt die Standardeinstellungen.
+     * @param einstellungen Der neue Einstellungssatz
+     */
+    public void setEinstellungen(Einstellungen einstellungen) {
+        this.einstellungen = einstellungen;
     }
 }

@@ -69,6 +69,17 @@ public class Einstellungen {
         this.inStatistikEinbeziehen = inStat;
     }
 
+    public String toString() {
+        String string;
+        string = zugZeitBegrenzung + "\n";
+        string += moeglicheFelderAnzeigen + "\n";
+        string += bedrohteFigurenAnzeigen + "\n";
+        string += rochadeMoeglich + "\n";
+        string += enPassantMoeglich + "\n";
+        string += schachWarnung + "\n";
+        string += inStatistikEinbeziehen;
+        return string;
+    }
 
     public int getZugZeitBegrenzung() {
         return zugZeitBegrenzung;
