@@ -209,10 +209,11 @@ public abstract class Figur {
      */
     public String toString() {
         String string;
-        string = position.getXK() + "" + position.getYK() + "\n";
-        string += farbe + "\n";
-        string += wert + "\n";
-        string += bereitsGezogen;
+        String lineSep = System.getProperty("line.separator");
+        string = position.getXK() + "" + position.getYK() + lineSep;
+        string += farbe + lineSep;
+        string += wert + lineSep;
+        string += bereitsGezogen + lineSep;
         return string;
     }
     

@@ -69,83 +69,133 @@ public class Einstellungen {
         this.inStatistikEinbeziehen = inStat;
     }
 
+    /**
+     * Gibt die Einstellungen als mehrzeilige Zeichenkette zur&uuml;ck.
+     * @return Eine mehrzeilige Zeichenkette
+     */
     public String toString() {
         String string;
-        string = zugZeitBegrenzung + "\n";
-        string += moeglicheFelderAnzeigen + "\n";
-        string += bedrohteFigurenAnzeigen + "\n";
-        string += rochadeMoeglich + "\n";
-        string += enPassantMoeglich + "\n";
-        string += schachWarnung + "\n";
+        String lineSep = System.getProperty("line.separator");
+        string = zugZeitBegrenzung + lineSep;
+        string += moeglicheFelderAnzeigen + lineSep;
+        string += bedrohteFigurenAnzeigen + lineSep;
+        string += rochadeMoeglich + lineSep;
+        string += enPassantMoeglich + lineSep;
+        string += schachWarnung + lineSep;
         string += inStatistikEinbeziehen;
         return string;
     }
 
+    /**
+     * Gibt die maximale Bedenkzeit pro Zug an.
+     * @return Maximale Zugzeit in Sekunden
+     */
     public int getZugZeitBegrenzung() {
         return zugZeitBegrenzung;
     }
 
-
+    /**
+     * Setzt die maximale Bedenkzeit pro Zug.
+     * @param zugZeitBegrenzung Die maximale Bedenkzeit in ganzen Sekunden
+     */
     public void setZugZeitBegrenzung(int zugZeitBegrenzung) {
         this.zugZeitBegrenzung = zugZeitBegrenzung;
     }
 
-
+    /**
+     * Gibt an, ob die GUI m&ouml;gliche Felder anzeigen soll.
+     * @return Wahrheitswert
+     */
     public boolean isMoeglicheFelderAnzeigen() {
         return moeglicheFelderAnzeigen;
     }
 
-
+    /**
+     * Setzt, ob die GUI m&ouml;gliche Felder anzeigen soll.
+     * @param moeglicheFelderAnzeigen Wahrheitswert
+     */
     public void setMoeglicheFelderAnzeigen(boolean moeglicheFelderAnzeigen) {
         this.moeglicheFelderAnzeigen = moeglicheFelderAnzeigen;
     }
 
-
+    /**
+     * Gibt an, ob die GUI bedrohte Figuren kenntlich machen soll.
+     * @return Wahrheitswert
+     */
     public boolean isBedrohteFigurenAnzeigen() {
         return bedrohteFigurenAnzeigen;
     }
 
-
+    /**
+     * Setzt, ob die GUI bedrohte Figuren kenntlich machen soll.
+     * @param bedrohteFigurenAnzeigen Wahrheitswert
+     */
     public void setBedrohteFigurenAnzeigen(boolean bedrohteFigurenAnzeigen) {
         this.bedrohteFigurenAnzeigen = bedrohteFigurenAnzeigen;
     }
 
-
+    /**
+     * Gibt an, ob eine Rochade erlaubt ist.
+     * @return Wahrheitswert
+     */
     public boolean isRochadeMoeglich() {
         return rochadeMoeglich;
     }
 
-
+    /**
+     * Setzt, ob eine Rochade erlaubt sein soll.
+     * @param rochadeMoeglich Wahrheitswert
+     */
     public void setRochadeMoeglich(boolean rochadeMoeglich) {
         this.rochadeMoeglich = rochadeMoeglich;
     }
 
-
+    /**
+     * Gibt an, ob En-Passant-Schlagen erlaubt ist.
+     * @return Wahrheitswert
+     */
     public boolean isEnPassantMoeglich() {
         return enPassantMoeglich;
     }
 
-
+    /**
+     * Setzt, ob En-Passant-Schlagen erlaubt sein soll.
+     * @param enPassantMoeglich Wahrheitswert
+     */
     public void setEnPassantMoeglich(boolean enPassantMoeglich) {
         this.enPassantMoeglich = enPassantMoeglich;
     }
 
-
+    /**
+     * Gibt an, ob die GUI eine Warnung ausgeben soll, wenn der K&ouml;nig im
+     * Schach steht.
+     * @return Wahrheitswert
+     */
     public boolean isSchachWarnung() {
         return schachWarnung;
     }
 
-
+    /**
+     * Setzt, ob die GUI eine Warnung ausgeben soll, wenn der K&ouml;nig im
+     * Schach steht.
+     * @param schachWarnung Wahrheitswert
+     */
     public void setSchachWarnung(boolean schachWarnung) {
         this.schachWarnung = schachWarnung;
     }
 
-
+    /**
+     * Gibt an, ob das Spiel in die Statistik mit einbezogen wird.
+     * @return Wahrheitswert
+     */
     public boolean isInStatistikEinbeziehen() {
         return inStatistikEinbeziehen;
     }
 
-
+    /**
+     * Setzt, ob das Spiel in die Statistik mit einbezogen werden soll.
+     * @param inStatistikEinbeziehen Wahrheitswert
+     */
     public void setInStatistikEinbeziehen(boolean inStatistikEinbeziehen) {
         this.inStatistikEinbeziehen = inStatistikEinbeziehen;
     }

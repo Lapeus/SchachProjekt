@@ -136,21 +136,22 @@ public class Statistik {
      */
     public String toString() {
         String string;
-        string = anzahlSiege + "\n";
-        string += anzahlPatt + "\n";
-        string += anzahlMatt + "\n";
-        string += anzahlSiegeC + "\n";
-        string += anzahlPattC + "\n";
-        string += anzahlMattC + "\n";
-        string += schnellsterSieg + "\n";
-        string += kuerzesterSieg + "\n";
-        string += schnellstesMatt + "\n";
-        string += kuerzestesMatt + "\n";
-        string += zeitSiegDurchschnitt + "\n";
-        string += zeitMattDurchschnitt + "\n";
-        string += zuegeSiegDurchschnitt + "\n";
-        string += zuegeMattDurchschnitt + "\n";
-        string += matWertSiegDurchschnitt + "\n";
+        String lineSep = System.getProperty("line.separator");
+        string = anzahlSiege + lineSep;
+        string += anzahlPatt + lineSep;
+        string += anzahlMatt + lineSep;
+        string += anzahlSiegeC + lineSep;
+        string += anzahlPattC + lineSep;
+        string += anzahlMattC + lineSep;
+        string += schnellsterSieg + lineSep;
+        string += kuerzesterSieg + lineSep;
+        string += schnellstesMatt + lineSep;
+        string += kuerzestesMatt + lineSep;
+        string += zeitSiegDurchschnitt + lineSep;
+        string += zeitMattDurchschnitt + lineSep;
+        string += zuegeSiegDurchschnitt + lineSep;
+        string += zuegeMattDurchschnitt + lineSep;
+        string += matWertSiegDurchschnitt + lineSep;
         string += matWertMattDurchschnitt;
         
         return string;
