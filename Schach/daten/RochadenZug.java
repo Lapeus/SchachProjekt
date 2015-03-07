@@ -53,7 +53,7 @@ public class RochadenZug extends Zug {
      * wieder.
      * @return Darstellung des Zugs als Zeichenkette
      */
-    public String toString() {
+    public String toSchachNotation() {
         String string = "";
         // Wenn es eine kleine Rochade ist
         if (startfeldT.getXK() == 7) {

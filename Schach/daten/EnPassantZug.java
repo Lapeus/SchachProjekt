@@ -44,7 +44,7 @@ public class EnPassantZug extends Zug {
     /**
      * {@inheritDoc}
      */
-    public String toString() {
+    public String toSchachNotation() {
         String string = "";
         Feld schlagfeld = geschlagenderBauer.getPosition();
         // Spaltenbezeichnung
