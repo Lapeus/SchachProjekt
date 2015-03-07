@@ -44,7 +44,6 @@ public class Einstellungen {
      */
     private boolean inStatistikEinbeziehen;
     
-    
     /**
      * Erzeugt einen neuen Satz Einstellungen, der sp&auml;ter einem Spiel 
      * hinzugef&uuml;gt werden kann.<br>

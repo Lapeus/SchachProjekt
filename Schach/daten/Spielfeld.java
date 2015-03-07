@@ -28,6 +28,12 @@ public class Spielfeld {
     private Spieldaten spieldaten;
     
     /**
+     * Alle spielbezogenen Einstellungen, die beim Laden &uuml;bernommen werden
+     * m&uuml;ssten.
+     */
+    private Einstellungen einstellungen;
+    
+    /**
      * Eine Liste mit allen 64 Felder des Spielbrettes. <br>
      * Index 0 entspricht dem Feld links unten, Index 63 dem Feld rechts oben.
      */
@@ -640,6 +646,22 @@ public class Spielfeld {
     }
     
     /**
+     * Gibt die Einstellungen des Spiels zur&uuml;ck.
+     * @return Die Einstellungen
+     */
+    public Einstellungen getEinstellungen() {
+        return einstellungen;
+    }
+
+    /**
+     * Setzt die Einstellungen des Spiels.
+     * @param einstellungen Die Einstellungen
+     */
+    public void setEinstellungen(Einstellungen einstellungen) {
+        this.einstellungen = einstellungen;
+    }
+    
+    /**
      * Gibt die Liste der Felder zur&uuml;ck.
      * @return Liste von Feldern
      */
@@ -703,7 +725,7 @@ public class Spielfeld {
      * @param figuren Die zu klonende Figuren-Liste
      * @return Der Klon der Figuren-Liste
      */
-    private List<Figur> clone(List<Figur> figuren) {
+    public List<Figur> clone(List<Figur> figuren) {
         List<Figur> figurenCopy = new ArrayList<Figur>();
         figurenCopy.addAll(figuren);
         return figurenCopy;

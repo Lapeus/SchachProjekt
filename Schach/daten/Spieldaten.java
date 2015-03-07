@@ -75,5 +75,6 @@ public class Spieldaten {
         }
         return anzahl;
     }
+
   
 }
