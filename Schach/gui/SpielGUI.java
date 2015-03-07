@@ -191,7 +191,7 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @param e WindowListenerEvent
      */
     public void windowClosing(WindowEvent e) {
-        // Sicherheitsfenster Wirklich beenden?  
+        // Sicherheitsfenster Wirklich beenden?
         
     }
     

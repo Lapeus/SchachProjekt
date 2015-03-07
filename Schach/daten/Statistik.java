@@ -94,10 +94,37 @@ public class Statistik {
     
     /**
      * Erstellt eine neue Statistik f&uuml;r den Spieler.<br>
-     * Einziger Konstruktor dieser Klasse.
+     * &Uuml;blicher Konstruktor der Klasse. Aufruf in der Regel beim Erstellen
+     * eines neuen Spielers.
      */
     public Statistik() {
         
+    }
+    
+    /**
+     * Erstellt eine neue Statistik f&uuml;r den Spieler.<br>
+     * Aufruf in der Regel beim Laden der Statistik eines Spielers im 
+     * Gesamtdatensatz.
+     */
+    public Statistik(int anzS, int anzP, int anzM, int anzSC, int anzPC, 
+        int anzMC, int schnellS, int kurzS, int schnellM, int kurzM, 
+        int zeitS, int zeitM, int zugS, int zugM, int matWertS, int matWertM) {
+        this.anzahlSiege = anzS;
+        this.anzahlPatt = anzP;
+        this.anzahlMatt = anzM;
+        this.anzahlSiegeC = anzSC;
+        this.anzahlPattC = anzPC;
+        this.anzahlMattC = anzMC;
+        this.schnellsterSieg = schnellS;
+        this.kuerzesterSieg = kurzS;
+        this.schnellstesMatt = schnellM;
+        this.kuerzestesMatt = kurzM;
+        this.zeitSiegDurchschnitt = zeitS;
+        this.zeitMattDurchschnitt = zeitM;
+        this.zuegeSiegDurchschnitt = zugS;
+        this.zuegeMattDurchschnitt = zugM;
+        this.matWertSiegDurchschnitt = matWertS;
+        this.matWertMattDurchschnitt = matWertM;
     }
     
     /**

@@ -1,9 +1,12 @@
 package daten;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -64,7 +67,7 @@ public class Gesamtdatensatz {
             spielerOrdner.mkdir();
         }
         File spielOrdner = new File("settings" + System.getProperty(
-            "file.separator") + "Spieler");
+            "file.separator") + "Spiele");
         // Wenn es den Spiele Ordner nicht gibt
         if (!spielOrdner.exists()) {
             // Wird er erstellt
@@ -78,6 +81,16 @@ public class Gesamtdatensatz {
             settings.delete();
         }
         
+        // Die Einstellungen speichern
+        try {
+            File sett = new File("settings" + System.getProperty(
+                "file.separator") + "settings.txt");
+            FileWriter fw1 = new FileWriter(sett);
+            fw1.write(einstellungen.toString());
+            fw1.close();
+        } catch (IOException ioEx) {
+            ioEx.printStackTrace();
+        }
         // Den Inhalt des Spieler-Ordners - sofern vorhanden - loeschen
         File ordner = new File("settings" + System.getProperty(
             "file.separator") + "Spieler");         
@@ -136,8 +149,11 @@ public class Gesamtdatensatz {
      * ausf&uuml;hrenden Ordner.
      */
     public void laden() {
+        // Spieler Ordner
         File ordner = new File("settings" + System.getProperty(
             "file.separator") + "Spieler");
+        // Wenn dieser gefuellt ist, muesste es einen intakten gespeicherten
+        // Datensatz geben
         if (ordner.exists() && ordner.listFiles().length != 0) {         
             ladeDaten();
         } else {
@@ -149,6 +165,95 @@ public class Gesamtdatensatz {
      * L&auml;dt die vorhandenen Daten in den Gesamtdatensatz.
      */
     private void ladeDaten() {
+        // Die Einstellungen laden
+        try {
+            // Die Datei in der die Einstellungen liegen
+            File sett = new File("settings" + System.getProperty(
+                "file.separator") + "settings.txt");
+            // Ein Reader um sie zeilenweise auslesen zu koennen
+            BufferedReader br = new BufferedReader(new FileReader(sett));
+            // Die ZugzeitBegrenzung
+            int zzb = Integer.parseInt(br.readLine());
+            // Die sechs booleans
+            boolean[] bool = new boolean[6];
+            for (int i = 0; i <= 5; i++) {
+                bool[i] = Boolean.parseBoolean(br.readLine());
+            }
+            br.close();
+            // Einen neuen Einstellungssatz mit den gelesenen Daten erstellen
+            einstellungen = new Einstellungen(zzb, bool[0], bool[1], bool[2], 
+                bool[3], bool[4], bool[5]);
+        } catch (IOException ioEx) {
+            ioEx.printStackTrace();
+        }
+        
+        // Die Spieler laden
+        File spielerOrdner = new File("settings" + System.getProperty(
+            "file.separator") + "Spieler");
+        File[] files = spielerOrdner.listFiles();
+        // Liste mit den Namen der Computerspieler
+        List<String> computerNamen = new ArrayList<String>(
+            Arrays.asList("Comp1", "Comp2", "Comp3", "Comp4"));        
+        for (int i = 0; i < files.length; i++) {
+            try {
+                // Die Datei in der die Spielerdaten liegen
+                File file = new File("settings" + System.getProperty(
+                    "file.separator") + "Spieler" + System.getProperty(
+                        "file.separator") + files[i].getName() + ".txt");
+                // Ein Reader um sie zeilenweise auslesen zu koennen
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
+                Spieler spieler;
+                // Wenn es ein Computerspieler ist
+                if (computerNamen.contains(files[i].getName())) {
+                    spieler = new Computerspieler(files[i].getName());
+                } else {
+                    // Wenn es ein normaler Spieler ist
+                    spieler = new Spieler(files[i].getName());
+                }
+                // Die aktuelle Farbe des Spielers (wichtig f&uuml;r laufende
+                // Spiele)
+                boolean farbe = Boolean.parseBoolean(br.readLine());
+                spieler.setFarbe(farbe);
+                // Die Statistik des Spielers
+                int[] stat = new int[16];
+                for (int j = 0; j <= 15; j++) {
+                    stat[j] = Integer.parseInt(br.readLine());
+                }
+                br.close();
+                // Neue Statistik erstellen
+                Statistik statistik = new Statistik(stat[0], stat[1], stat[2], 
+                    stat[3], stat[4], stat[5], stat[6], stat[7], stat[8], 
+                    stat[9], stat[10], stat[11], stat[12], stat[13], stat[14], 
+                    stat[15]);
+                // Die Statistik dem Spieler zuordnen
+                spieler.setStatistik(statistik);
+            } catch (IOException ioEx) {
+                ioEx.printStackTrace();
+            }
+        }
+        
+        File spieleOrdner = new File("settings" + System.getProperty(
+            "file.separator") + "Spiele");
+        files = spieleOrdner.listFiles();    
+        for (int i = 0; i < files.length; i++) {
+            try {
+                // Die Datei in der die Spielerdaten liegen
+                File file = new File("settings" + System.getProperty(
+                    "file.separator") + "Spiele" + System.getProperty(
+                        "file.separator") + files[i].getName() + ".txt");
+                // Ein Reader um sie zeilenweise auslesen zu koennen
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
+                
+                
+                
+                br.close();
+            } catch (IOException ioEx) {
+                ioEx.printStackTrace();
+            }
+        }
+        
         
     }
     
@@ -171,6 +276,8 @@ public class Gesamtdatensatz {
         spielerListe.add(new Computerspieler("Comp2"));
         spielerListe.add(new Computerspieler("Comp3"));
         spielerListe.add(new Computerspieler("Comp4"));
+        
+        
     }
     
     /**

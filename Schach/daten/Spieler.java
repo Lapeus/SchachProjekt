@@ -42,8 +42,7 @@ public class Spieler {
     public String toString() {
         String string;
         String lineSep = System.getProperty("line.separator");
-        string = name + lineSep;
-        string += farbe + lineSep;
+        string = farbe + lineSep;
         string += statistik.toString();
         return string;
     }
@@ -88,6 +87,15 @@ public class Spieler {
      */
     public Statistik getStatistik() {
         return statistik;
+    }
+    
+    /**
+     * Setzt die Statistik des Spielers. <br>
+     * Wird von der Laden-Methode des Gesamtdatensatzes aufgerufen.
+     * @param statistik Die Statistik
+     */
+    public void setStatistik(Statistik statistik) {
+        this.statistik = statistik;
     }
     
 }
