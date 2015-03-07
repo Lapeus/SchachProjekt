@@ -1,5 +1,8 @@
 package daten;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +43,51 @@ public class Gesamtdatensatz {
      * Neustart des Programms alle Daten wieder Laden zu k&ouml;nnen.
      */
     public void speichern() {
+        // Den Inhalt des Spieler-Ordners - sofern vorhanden - loeschen
+        File ordner = new File("settings" + System.getProperty(
+            "file.separator") + "Spieler");
+        if (ordner.exists()) {         
+            File[] listFiles = ordner.listFiles();
+            for (File file : listFiles) {            
+                file.delete();
+            }
+        }
+        // Spieler speichern
+        for (Spieler spieler : spielerListe) {
+            try {
+                File file = new File("settings" + System.getProperty(
+                    "file.separator") + "Spieler" + System.getProperty(
+                        "file.separator") + spieler.getName() + ".txt");
+                FileWriter fw = new FileWriter(file);
+                fw.write(spieler.toString());
+                fw.close();
+            } catch (IOException ioEx) {
+                ioEx.printStackTrace();
+            }
+        }
         
+        // Den Inhalt des Spiele-Ordners - sofern vorhanden - loeschen
+        ordner = new File("settings" + System.getProperty(
+            "file.separator") + "Spieler");
+        if (ordner.exists()) {         
+            File[] listFiles = ordner.listFiles();
+            for (File file : listFiles) {            
+                file.delete();
+            }
+        }
+        // Spiele speichern
+        for (Spiel spiel : gespeicherteSpiele) {
+            try {
+                File file = new File("settings" + System.getProperty(
+                    "file.separator") + "Spiele" + System.getProperty(
+                        "file.separator") + spiel.getSpielname() + ".txt");
+                FileWriter fw = new FileWriter(file);
+                fw.write(spiel.toString());
+                fw.close();
+            } catch (IOException ioEx) {
+                ioEx.printStackTrace();
+            }
+        }
     }
     
     /**

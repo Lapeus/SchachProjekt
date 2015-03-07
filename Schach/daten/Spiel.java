@@ -287,6 +287,20 @@ public class Spiel {
         // In der Statistik aendern
         stat.setMatWertMattDurchschnitt(matWertDurchschnitt);
     }
+    
+    /**
+     * Gibt eine Zeichenkette mit allen wichtigen Daten des Spiels zur&uuml;ck.
+     * Wird zum Speichern ben&ouml;tigt.
+     * @return Eine Zeichenkette mit allen wichtigen Daten
+     */
+    public String toString() {
+        String string;
+        string = spielname + "/n";
+        string += spieler1 + "/n";
+        string += spieler2 + "/n";
+        string += spielfeld.toString();
+        return string;
+    }
     /**
      * Gibt den Namen des Spiels zur&uuml;ck.
      * @return Der Name als String

@@ -68,10 +68,10 @@ public class Spieldaten {
         int anzahl;
         if (spieler) {
             // Aufgerundete Anzahl, weil weiss anfaengt
-            anzahl = (int) Math.ceil(zugListe.size() / 2);
+            anzahl = zugListe.size() / 2 + 1;
         } else {
-            // Abgerundete Anzahl, weil schwarz nach ziehts
-            anzahl = (int) Math.floor(zugListe.size() / 2);
+            // Abgerundete Anzahl, weil schwarz nach zieht
+            anzahl = zugListe.size() / 2;
         }
         return anzahl;
     }

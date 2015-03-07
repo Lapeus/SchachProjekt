@@ -295,7 +295,6 @@ public class Spielfeld {
             }
             // Der beteiligte Turm
             Figur turm = felder.get(indexStart).getFigur();
-            System.out.println(indexStart);
             // Wird umgesetzt
             turm.setPosition(felder.get(indexZiel));
             // Die Felder werden aktualisiert
@@ -606,7 +605,22 @@ public class Spielfeld {
     public String toString() {
         String string;
         string = aktuellerSpieler + "\n";
-        
+        for (Figur figur : weisseFiguren) {
+            string += figur.toString();
+        }
+        string += "\n";
+        for (Figur figur : schwarzeFiguren) {
+            string += figur.toString();
+        }
+        string += "\n";
+        for (Figur figur : geschlagenWeiss) {
+            string += figur.toString();
+        }
+        string += "\n";
+        for (Figur figur : geschlagenSchwarz) {
+            string += figur.toString();
+        }
+        string += "\n";
         return string;
     }
     /**
@@ -727,10 +741,6 @@ public class Spielfeld {
                 if (feld.getFigur() != null) {
                     // Ist das meine und somit bedroht
                     bedrohteFelder.add(feld);
-                    // Wenn es der Koenig ist, steht er nun im Schach
-                    if (feld.getFigur().getWert() == 0) {
-                        schach = true;
-                    }
                 }
             }
         }
@@ -753,6 +763,13 @@ public class Spielfeld {
      * @return Wahrheitswert
      */
     public boolean isSchach() {
+        List<Feld> bedrohteFelder = getBedrohteFelder();
+        for (Feld bedroht : bedrohteFelder) {
+            // Wenn es der Koenig ist, steht er nun im Schach
+            if (bedroht.getFigur().getWert() == 0) {
+                schach = true;
+            }
+        }
         return schach;
     }
 
