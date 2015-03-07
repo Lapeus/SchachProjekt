@@ -31,6 +31,7 @@ public class SpielGUI extends JFrame implements WindowListener {
      */
     private Gesamtdatensatz gesamtdatensatz;
     
+    
     // Ende Attribute
 
     // Konstruktor
@@ -44,10 +45,11 @@ public class SpielGUI extends JFrame implements WindowListener {
         seitenAuswahl("Eroeffnungsseite");
         //pack();
         setVisible(true);
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        this.addWindowListener(this);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //this.addWindowListener(this);
         
         gesamtdatenLaden();
+        gesamtdatenSpeichern();
     }
     
     // Anfang Methoden
@@ -119,12 +121,15 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @return momentaner Einstellungssatz
      */
     public Einstellungen getEinstellungen() {
-        return new Einstellungen(6000, true, false, true, true, true, true);
-        // return gesamtdatensatz.getEinstellungen();
+        return gesamtdatensatz.getEinstellungen();
     }
     
+    /**
+     * Setzt die Grundeinstellung auf die neu Eingegebenen Einstellungen.
+     * @param einstellungen neue Einstellungen
+     */
     public void setEinstellungen(Einstellungen einstellungen) {
-        // gesamtdatensatz.setEinstellungen(einstellungen);
+        gesamtdatensatz.setEinstellungen(einstellungen);
     }
     
     /**
@@ -187,7 +192,7 @@ public class SpielGUI extends JFrame implements WindowListener {
      */
     public void windowClosing(WindowEvent e) {
         // Sicherheitsfenster Wirklich beenden?  
-        gesamtdatenSpeichern();
+        
     }
     
     /**
