@@ -36,12 +36,6 @@ public class Spiel {
     private Spielfeld spielfeld;
     
     /**
-     * Alle spielbezogenen Einstellungen, die beim Laden &uuml;bernommen werden
-     * m&uuml;ssten.
-     */
-    //private Einstellungen einstellungen;
-    
-    /**
      * Legt ein neues Spiel an, welches gespielt und sp&auml;ter gespeichert
      * werden kann. <br>
      * Einziger Konstruktor dieser Klasse.
@@ -52,12 +46,11 @@ public class Spiel {
      * @param spielfeld : Das zugeh&ouml;rige Spielfeld
      */
     public Spiel(String spielname, Spieler spieler1, Spieler spieler2,
-        Spielfeld spielfeld/*, Einstellungen einstellungen*/) {
+        Spielfeld spielfeld) {
         this.spielname = spielname;
         this.spieler1 = spieler1;
         this.spieler2 = spieler2;
         this.spielfeld = spielfeld;
-        //this.einstellungen = einstellungen;
     }
     
     /**

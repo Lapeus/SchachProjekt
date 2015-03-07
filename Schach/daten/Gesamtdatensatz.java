@@ -29,13 +29,11 @@ public class Gesamtdatensatz {
     
     /**
      * Erzeugt einen neuen Gesamtdatensatz der dann gespeichert werden kann.<br>
-     * Einziger Konstruktor dieser Klasse.
-     * @param spielerListe Eine Liste mit allen angelegten Spielern
-     * @param spielListe Eine Liste mit allen gespeicherten Spielen
+     * Einziger Konstruktor dieser Klasse. Ist leer und wird durch die Laden-
+     * Methode mit Informationen gef&uuml;llt.
      */
-    public Gesamtdatensatz(List<Spieler> spielerListe, List<Spiel> spielListe) {
-        this.spielerListe = spielerListe;
-        this.gespeicherteSpiele = spielListe;
+    public Gesamtdatensatz() {
+  
     }
     
     /**
@@ -68,7 +66,7 @@ public class Gesamtdatensatz {
         
         // Den Inhalt des Spiele-Ordners - sofern vorhanden - loeschen
         ordner = new File("settings" + System.getProperty(
-            "file.separator") + "Spieler");
+            "file.separator") + "Spiele");
         if (ordner.exists()) {         
             File[] listFiles = ordner.listFiles();
             for (File file : listFiles) {            
@@ -104,5 +102,22 @@ public class Gesamtdatensatz {
      */
     public List<Spiel> getSpieleListe() {
         return gespeicherteSpiele;
+    }
+    
+    /**
+     * F&uuml;gt einen Spieler hinzu.
+     * @param spieler Der Spieler der zugef&uuml;gt werden soll.
+     */
+    public void addSpieler(Spieler spieler) {
+        spielerListe.add(spieler);
+    }
+    
+    /**
+     * F&uuml;gt ein Spiel hinzu.
+     * @param spiel Das Spiel, welches zugef&uuml;gt werden soll.
+     */
+    public void addSpiel(Spiel spiel) {
+        gespeicherteSpiele.add(spiel);
+        
     }
 }
