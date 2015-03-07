@@ -54,7 +54,16 @@ public class Computerspieler extends Spieler {
          *    Spiel beider Seiten in n Zuegen die beste Spielsituation hervor-
          *    ruft. Dieser Zug wird anschliessend gezogen.
          */
-        
+       
+        zufallsZug();
+    }
+
+    
+    
+    /**
+     * F&uuml;hrt einen zuf&auml;lligen Zug aus.
+     */
+    private void zufallsZug() {
         // Eigene Figuren
         List<Figur> eigeneFiguren;
         if (getFarbe()) {
@@ -62,18 +71,20 @@ public class Computerspieler extends Spieler {
         } else {
             eigeneFiguren = spielfeld.getSchwarzeFiguren();
         }
-        // Erzeugt eine Zufallszahl zwischen 0 und eigeneFiguren.size() - 1
-        int zufall = (int) (Math.random() * eigeneFiguren.size());
-        // Alle moeglichen Felder
-        List<Feld> alleFelder = eigeneFiguren.get(zufall).getKorrektFelder();
-        // Erzeugt eine Zufallszahl zwischen 0 und eigeneFiguren.size() - 1
-        int zufall2 = (int) (Math.random() * alleFelder.size());
+        List<Feld> alleFelder;
+        int zufall, zufall2;
+        do {
+            // Erzeugt eine Zufallszahl zwischen 0 und eigeneFiguren.size() - 1
+            zufall = (int) (Math.random() * eigeneFiguren.size());
+            // Alle moeglichen Felder
+            alleFelder = eigeneFiguren.get(zufall).getKorrektFelder();
+            // Erzeugt eine Zufallszahl zwischen 0 und alleFelder.size() - 1
+            zufall2 = (int) (Math.random() * alleFelder.size());
+        } while (alleFelder.isEmpty());
         // Ziehe dieses ausgewaehlte Feld
         spielfeld.ziehe(eigeneFiguren.get(zufall), alleFelder.get(zufall2), 1);
-        
-        
     }
-
+    
     /**
      * Setzt das Spielfeld des Computergegners.
      * @param spielfeld Das Spielfeld
