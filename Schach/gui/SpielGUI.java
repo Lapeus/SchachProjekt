@@ -4,10 +4,12 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.List;
 
 import javax.swing.JFrame;
 
 import daten.Gesamtdatensatz;
+import daten.Spiel;
 import daten.Spieler;
 import daten.Einstellungen;
 
@@ -117,6 +119,14 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
+     * Methode zur Rueckgabe der SpieleListe.
+     * @return Gibt die SpieleListe des Gesamtdatensatzes zurueck
+     */
+    public List<Spiel> getSpieleListe() {
+        return gesamtdatensatz.getSpieleListe();
+    }
+    
+    /**
      * Gibt den Einstellungsatz der momentanten Spielsession zurueck.
      * @return momentaner Einstellungssatz
      */
@@ -139,6 +149,14 @@ public class SpielGUI extends JFrame implements WindowListener {
      */
     public void addSpieler(Spieler spieler) {
         gesamtdatensatz.addSpieler(spieler);
+    }
+    
+    /**
+     * Fuegt ein Spiel zur SpieleListe des Gesamtdatensatzes hinzu.
+     * @param spiel Das hinzuzufuegende Spieleobjekt
+     */
+    public void addSpiel(Spiel spiel) {
+        gesamtdatensatz.addSpiel(spiel);
     }
     
     /**

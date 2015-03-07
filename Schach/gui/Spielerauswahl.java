@@ -217,7 +217,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         // ComboBox
         // TODO Array mit den Spielern (spielerArray)
         String[] spielerArray = {"neuer Spieler", "Test"};
-        JComboBox spielerMenu = new JComboBox(spielerArray);
+        JComboBox<String> spielerMenu = new JComboBox<String>(spielerArray);
         spielerMenu.addActionListener(this);
         if (seite.equals("West")) {
             spielerMenu.setActionCommand("boxWEST");

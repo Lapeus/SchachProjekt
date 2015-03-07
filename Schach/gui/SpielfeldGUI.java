@@ -781,6 +781,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             this.add(cEnde, BorderLayout.EAST);
             this.revalidate();
         }
+        // Wenn das Spiel gespeichert werden soll
+        if (e.getActionCommand().equals(commandSpeichern)) {
+            for (Spiel spiel : parent.getSpieleListe()) {
+                if (spiel.equals(this.spiel)) {
+                    parent.getSpieleListe().remove(spiel);
+                }
+            }
+            parent.addSpiel(spiel);
+        }
     }
     
     /**
