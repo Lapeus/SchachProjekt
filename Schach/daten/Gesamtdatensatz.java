@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import figuren.Figur;
+
 /**
  * Verwaltet alle Daten, die beim Schlie&szlig;en des Programms gespeichert und
  * beim &Ouml;ffnen des Programms geladen werden m&uuml;ssen.<br>
@@ -28,9 +30,9 @@ public class Gesamtdatensatz {
     private List<Spieler> spielerListe;
     
     /**
-     * Eine Liste mit allen gespeicherten Spielen.
+     * Eine Liste mit den Namen aller gespeicherten Spiele.
      */
-    private List<Spiel> gespeicherteSpiele;
+    private List<String> gespeicherteSpiele;
     
     /**
      * Die Standardeinstellungen des Spiels.
@@ -44,7 +46,7 @@ public class Gesamtdatensatz {
      */
     public Gesamtdatensatz() {
         this.spielerListe = new ArrayList<Spieler>();
-        this.gespeicherteSpiele  = new ArrayList<Spiel>();
+        this.gespeicherteSpiele  = new ArrayList<String>();
     }
     
     /**
@@ -117,31 +119,6 @@ public class Gesamtdatensatz {
             }
         }
         
-        // Den Inhalt des Spiele-Ordners - sofern vorhanden - loeschen
-        ordner = new File("settings" + System.getProperty(
-            "file.separator") + "Spiele");      
-        listFiles = ordner.listFiles();
-        for (File file : listFiles) { 
-            try {
-                file.delete();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        // Spiele speichern
-        for (Spiel spiel : gespeicherteSpiele) {
-            try {
-                File file = new File("settings" + System.getProperty(
-                    "file.separator") + "Spiele" + System.getProperty(
-                        "file.separator") + spiel.getSpielname() + ".txt");
-                FileWriter fw = new FileWriter(file);
-                fw.write(spiel.toString());
-                fw.close();
-            } catch (IOException ioEx) {
-                ioEx.printStackTrace();
-            }
-        }
     }
     
     /**
@@ -206,15 +183,13 @@ public class Gesamtdatensatz {
                 Spieler spieler;
                 // Wenn es ein Computerspieler ist
                 if (computerNamen.contains(files[i].getName())) {
-                    spieler = new Computerspieler(files[i].getName());
+                    spieler = new Computerspieler(files[i].getName()
+                        .substring(0, files[i].getName().length() - 4));
                 } else {
                     // Wenn es ein normaler Spieler ist
-                    spieler = new Spieler(files[i].getName());
+                    spieler = new Spieler(files[i].getName()
+                        .substring(0, files[i].getName().length() - 4));
                 }
-                // Die aktuelle Farbe des Spielers (wichtig f&uuml;r laufende
-                // Spiele)
-                boolean farbe = Boolean.parseBoolean(br.readLine());
-                spieler.setFarbe(farbe);
                 // Die Statistik des Spielers
                 int[] stat = new int[16];
                 for (int j = 0; j <= 15; j++) {
@@ -231,29 +206,7 @@ public class Gesamtdatensatz {
             } catch (IOException ioEx) {
                 ioEx.printStackTrace();
             }
-        }
-        
-        File spieleOrdner = new File("settings" + System.getProperty(
-            "file.separator") + "Spiele");
-        files = spieleOrdner.listFiles();    
-        for (int i = 0; i < files.length; i++) {
-            try {
-                // Die Datei in der die Spielerdaten liegen
-                File file = new File("settings" + System.getProperty(
-                    "file.separator") + "Spiele" + System.getProperty(
-                        "file.separator") + files[i].getName() + ".txt");
-                // Ein Reader um sie zeilenweise auslesen zu koennen
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
-                
-                
-                
-                br.close();
-            } catch (IOException ioEx) {
-                ioEx.printStackTrace();
-            }
-        }
-        
+        } 
         
     }
     
@@ -280,6 +233,57 @@ public class Gesamtdatensatz {
         
     }
     
+    /**
+     * Gibt den Spieler mit dem angegebenen Namen zur&uuml;ck.
+     * @param name Der Name des gesuchten Spielers
+     * @return  Der Spieler mit dem angegebenen Namen
+     */
+    private Spieler getSpieler(String name) {
+        Spieler gesuchterSpieler = null;
+        for (Spieler spieler : spielerListe) {
+            if (spieler.getName().equals(name)) {
+                gesuchterSpieler = spieler;
+            }
+        }
+        return gesuchterSpieler;
+    }
+    
+    /**
+     * L&auml;dt das angegebene Spiel und gibt es zur&uuml;ck.
+     * @param name Der Name des Spiels
+     * @return Das Spiel mit dem angegebenen Namen
+     */
+    public Spiel getSpiel(String name) {
+        File file = new File("settings" + System.getProperty(
+            "file.separator") + "Spiele" + System.getProperty(
+                "file.separator") + name + ".txt");
+        try {
+            // Ein Reader um die Datei zeilenweise auslesen zu koennen
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
+            Spieler spieler1 = getSpieler(br.readLine());
+            boolean farbe1 = Boolean.parseBoolean(br.readLine());
+            Spieler spieler2 = getSpieler(br.readLine());
+            boolean farbe2 = Boolean.parseBoolean(br.readLine());
+            List<Figur> weisseFiguren = new ArrayList<Figur>();
+            String line;
+            // Solange keine Leerzeile erreicht ist
+            while (!(line = br.readLine()).equals("")) {
+                String position = line;
+                    
+                boolean farbe = Boolean.parseBoolean(br.readLine());
+                int wert = Integer.parseInt(br.readLine());
+                boolean gezogen = Boolean.parseBoolean(br.readLine());
+                Figur figur;
+                    
+            }
+            br.close();
+        } catch (IOException ioEx) {
+            ioEx.printStackTrace();
+        }
+       
+        return null;
+    }
     /**
      * Gibt die Liste der Spieler nach absteigendem Score sortiert wieder.
      * @return Eine Liste mit den gerankten Spielern
@@ -327,7 +331,7 @@ public class Gesamtdatensatz {
      * Gibt die Liste der Spiele zur&uuml;ck.
      * @return Liste der Spiele
      */
-    public List<Spiel> getSpieleListe() {
+    public List<String> getSpieleListe() {
         return gespeicherteSpiele;
     }
     
@@ -343,8 +347,8 @@ public class Gesamtdatensatz {
      * F&uuml;gt ein Spiel hinzu.
      * @param spiel Das Spiel, welches zugef&uuml;gt werden soll.
      */
-    public void addSpiel(Spiel spiel) {
-        gespeicherteSpiele.add(spiel);
+    public void spielSpeichern(Spiel spiel) {
+        gespeicherteSpiele.add(spiel.getSpielname());
         
     }
     /**
