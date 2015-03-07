@@ -265,8 +265,9 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                 || nameEAST.getText().equals("") 
                 || tSpielname.getText().equals(""))) {
                 spieler1 = new Spieler(nameWEST.getText());
-                parent.getGesamtdatensatz()
+                parent.addSpieler(spieler1);
                 spieler2 = new Computerspieler(nameEAST.getText());
+                parent.addSpieler(spieler2);
                 // Wenn Spieler 1 die Farbe weiss ausgewählt hat
                 if (bGFarbauswahl.getSelection().
                     getActionCommand().equals("weiss")) {

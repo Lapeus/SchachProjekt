@@ -236,6 +236,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         // Spielfeld
         spielfeld = new Spielfeld(felderListe);
+        spielfeld.setEinstellungen(parent.getEinstellungen());
         spielfeld.setSpieldaten(new Spieldaten());
         
         // Spiel 

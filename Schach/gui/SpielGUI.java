@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 
 import daten.Gesamtdatensatz;
 import daten.Spieler;
+import daten.Einstellungen;
 
 /**
  * Das eigentliche Fenster des Schachspiels. Auf diesem Fenster werden die Panes
@@ -79,7 +80,7 @@ public class SpielGUI extends JFrame implements WindowListener {
             break;
             
         case "Einstellungen":
-            seite = new Einstellungen(this);
+            seite = new EinstellungenGUI(this);
             this.setContentPane(seite);
             break;
             
@@ -114,6 +115,19 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
+     * Gibt den Einstellungsatz der momentanten Spielsession zurueck.
+     * @return momentaner Einstellungssatz
+     */
+    public Einstellungen getEinstellungen() {
+        return new Einstellungen(6000, true, false, true, true, true, true);
+        // return gesamtdatensatz.getEinstellungen();
+    }
+    
+    public void setEinstellungen(Einstellungen einstellungen) {
+        // gesamtdatensatz.setEinstellungen(einstellungen);
+    }
+    
+    /**
      * Fuegt einen Spieler zum gesamtdatensatz hinzu.
      * @param spieler Spieler, welcher zum Gesamtdatensatz hinzugefuegt werden 
      * soll
@@ -126,9 +140,10 @@ public class SpielGUI extends JFrame implements WindowListener {
      * Initiert das Laden des Gesamtdatensatzes durch die Datenklassen.
      */
     private void gesamtdatenLaden() {
-        // gesamtdatensatz = new Gesamtdatensatz();
-        // gesamtdatensatz.laden
-        // TODO Laden  
+        gesamtdatensatz = new Gesamtdatensatz();
+        gesamtdatensatz.laden();
+        // TODO Laden
+        
     }
     
     /**
@@ -149,32 +164,60 @@ public class SpielGUI extends JFrame implements WindowListener {
     public static void main(String[] args) {
         new SpielGUI();
     }
-
+    
+    /**
+     * Automatisch generierte Methode zur Behandlung von WindowListenerEvents.
+     * @param e WindowListenerEvent
+     */
     public void windowActivated(WindowEvent e) {
         // TODO Auto-generated method stub
     }
-
+    
+    /**
+     * Automatisch generierte Methode zur Behandlung von WindowListenerEvents.
+     * @param e WindowListenerEvent
+     */
     public void windowClosed(WindowEvent e) {
         // TODO Auto-generated method stub
     }
-
+    
+    /**
+     * Automatisch generierte Methode zur Behandlung von WindowListenerEvents.
+     * @param e WindowListenerEvent
+     */
     public void windowClosing(WindowEvent e) {
         // Sicherheitsfenster Wirklich beenden?  
         gesamtdatenSpeichern();
     }
-
+    
+    /**
+     * Automatisch generierte Methode zur Behandlung von WindowListenerEvents.
+     * @param e WindowListenerEvent
+     */
     public void windowDeactivated(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
+    /**
+     * Automatisch generierte Methode zur Behandlung von WindowListenerEvents.
+     * @param e WindowListenerEvent
+     */    
     public void windowDeiconified(WindowEvent e) {
         // TODO Auto-generated method stub
     }
-
+    
+    /**
+     * Automatisch generierte Methode zur Behandlung von WindowListenerEvents.
+     * @param e WindowListenerEvent
+     */
     public void windowIconified(WindowEvent e) {
         // TODO Auto-generated method stub
     }
-
+    
+    /**
+     * Automatisch generierte Methode zur Behandlung von WindowListenerEvents.
+     * @param e WindowListenerEvent
+     */
     public void windowOpened(WindowEvent e) {
         // TODO Auto-generated method stub
     }

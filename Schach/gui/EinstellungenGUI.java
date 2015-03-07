@@ -3,7 +3,6 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -14,23 +13,21 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
+
+import daten.Einstellungen;
 
 /**
  * Panel um die Einstellungen zu verwalten.
  * Moegliche Eintellungen:/n 
  * 
  */
-public class Einstellungen extends JPanel implements ActionListener {
+public class EinstellungenGUI extends JPanel implements ActionListener {
     // Anfang Attribute
     
     /**
@@ -44,12 +41,25 @@ public class Einstellungen extends JPanel implements ActionListener {
     private SpielGUI parent;
     
     /**
-     * RadioButton zur positiven Auswahl einer
+     * Einstellungen welche spaeter aus der ElternGUI ausgelesen werden. 
+     */
+    private Einstellungen einstellungen;
+    
+    /**
+     * RadioButton zur positiven Auswahl einer Option.
      */
     private JRadioButton ja;
+    
+    /**
+     * RadioButton zur negativen Auswahl einer Option.
+     */
     private JRadioButton nein;
+    
+    /**
+     * ButtonGroup fuer ja- und nein- Buttons, damit immer nur einer der Buttons
+     * auswaehlbar ist.
+     */
     private ButtonGroup bGAuswahl;
-    private List<JRadioButton> radiobutton;
     
     /**
      * Konstante fuer den Farbton des Hintergrundes (Braun).
@@ -69,10 +79,11 @@ public class Einstellungen extends JPanel implements ActionListener {
      * Erstellt eine neue Einstellungspane.
      * @param parent Eltern-SpielGui auf der die Pane dragestellt werden soll
      */
-    public Einstellungen(SpielGUI parent) {
+    public EinstellungenGUI(SpielGUI parent) {
         super();
         this.parent = parent;
         init();
+        this.einstellungen = parent.getEinstellungen();
     }
     
     /**
@@ -204,6 +215,7 @@ public class Einstellungen extends JPanel implements ActionListener {
         JButton speichern = new JButton("Einstellungen Speichern");
         speichern.addActionListener(this);
         
+        this.add(speichern, BorderLayout.SOUTH);
         this.add(cCenter, BorderLayout.CENTER);
     }
     
@@ -235,6 +247,6 @@ public class Einstellungen extends JPanel implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         //TODO Auswahl abfragen und setten
-        
+        parent.setEinstellungen(einstellungen);
     }
 }
