@@ -198,7 +198,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     
     /**
      * Erzeugt eine SpielfeldGUI.
-     * Einziger Konstruktor dieser Klasse!
      * @param parent Das Objekt der dazugehörigen <b>SpielGUI</b>
      * @param spieler1 Ein Objekt der Klasse <b>Spieler</b>
      * @param spieler2 Ein weiteres Objekt der Klasse <b>Spieler</b>
@@ -207,28 +206,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     public SpielfeldGUI(SpielGUI parent, String spielname,
         Spieler spieler1, Spieler spieler2) {
         super();
+        this.parent = parent;
         this.spieler1 = spieler1;
         this.spieler2 = spieler2;
         this.spielname = spielname;
-        this.parent = parent;
-        init();
-    }
-    
-    /**
-     * Initialisierungmethode eines Spielfelds.
-     * Wird vom Konstruktor aufgerufen. <br>
-     * Ruft auf: <br>
-     * 1. Füllung der felderListe <br>
-     * 2. Erzeugt ein <b>Spielfelds</b> mit dieser felderListe <br>
-     * 3. Erzeugt ein <b>Spiel</b> mit Spielname, spieler1, spieler2 und
-     *  dem spielfeld
-     * 4. Erstellt das Aussehen des Spielfelds  
-     */
-    private void init() { 
-        Dimension size = new Dimension(1200, 800);
-        parent.setMinimumSize(size);
-        parent.setSize(size);
-        parent.setLocationRelativeTo(null);
         
         // FelderListe füllen
         felderListe = new ArrayList<Feld>();
@@ -241,6 +222,38 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         // Spiel 
         spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
+        
+        init();
+    }
+    
+    /**
+     * 
+     */
+    public SpielfeldGUI(SpielGUI parent, Spiel spiel) {
+        this.parent = parent;
+        this.spieler1 = spiel.getSpieler1();
+        this.spieler2 = spiel.getSpieler2();
+        this.spielname = spiel.getSpielname();
+        this.spielfeld = spiel.getSpielfeld();
+        this.felderListe = spielfeld.getFelder();
+        init();
+    }
+    
+    /**
+     * Initialisierungmethode eines Spielfelds.
+     * Wird vom Konstruktor aufgerufen. <br>
+     * Ruft auf: <br>
+     * 1. Füllung der felderListe <br>
+     * 2. Erzeugt ein <b>Spielfeld</b> mit dieser felderListe <br>
+     * 3. Erzeugt ein <b>Spiel</b> mit Spielname, spieler1, spieler2 und
+     *  dem spielfeld
+     * 4. Erstellt das Aussehen des Spielfelds  
+     */
+    private void init() { 
+        Dimension size = new Dimension(1200, 800);
+        parent.setMinimumSize(size);
+        parent.setSize(size);
+        parent.setLocationRelativeTo(null);
         
         // CENTER
         this.setLayout(new BorderLayout());
@@ -460,7 +473,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private void geschlageneFigureUpdate() {
         geschlageneSchwarze.removeAll();
-        System.out.println(geschlageneSchwarze.getComponentCount());
         for (Figur schwarz : spielfeld.getGeschlagenSchwarzSort()) {
             JLabel momentan = new JLabel();
             momentan.setVerticalAlignment(SwingConstants.CENTER);
@@ -494,8 +506,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 exc.printStackTrace();
             }  
         }
-        System.out.println(geschlageneSchwarze.getComponentCount());
-        
+               
         geschlageneWeisse.removeAll();
         for (Figur weiss : spielfeld.getGeschlagenWeissSort()) {
             JLabel momentan = new JLabel();
@@ -788,7 +799,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     parent.getSpieleListe().remove(spiel);
                 }
             }
-            parent.addSpiel(spiel);
+            parent.spielSpeichern(spiel);
         }
     }
     

@@ -13,12 +13,11 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import daten.Computerspieler;
-import daten.Gesamtdatensatz;
 import daten.Spieler;
 /**
  * Klasse für ein Spielerauswahl-Panel. 
@@ -90,12 +89,12 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     /**
      * Combobox zur Auswahl von bereits erstellten Spielern für Spieler 1.
      */
-    private JComboBox boxWEST;
+    private JComboBox<String> boxWEST;
     
     /**
      * Combobox zur Auswahl von bereits erstellten Spielern für Spieler 2.
      */
-    private JComboBox boxEAST;
+    private JComboBox<String> boxEAST;
     
     /**
      * ButtonGroup aus der im ActionListener die Farbauswahl für Spieler 1 
@@ -200,7 +199,6 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         this.add(cCenter, BorderLayout.CENTER);
         
     }
-    // spielfeld.spieldaten.getZugliste --> letztes element.(boolean) Umwandlung
     
     /**
      * Gibt ein Panel mit den Feldern für die Eingabe eines Spielers aus.
@@ -214,10 +212,15 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     private JPanel auswahlPanel(String seite) {
         JPanel eingabePanel = new JPanel();
         eingabePanel.setLayout(new GridLayout(6, 1, 5, 0));
+        
         // ComboBox
         // TODO Array mit den Spielern (spielerArray)
-        String[] spielerArray = {"neuer Spieler", "Test"};
-        JComboBox<String> spielerMenu = new JComboBox<String>(spielerArray);
+        String[] spielerListe = new String[parent.getSpielerListe().size() + 1];
+        spielerListe[0] = "neuer Spieler";
+        for (int i = 0; i < spielerListe.length - 1; i++) {
+            spielerListe[i + 1] = parent.getSpielerListe().get(i).getName();
+        }
+        JComboBox<String> spielerMenu = new JComboBox<String>(spielerListe);
         spielerMenu.addActionListener(this);
         if (seite.equals("West")) {
             spielerMenu.setActionCommand("boxWEST");
@@ -244,6 +247,23 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         return eingabePanel;
     }
     
+    /**
+     * Gibt zurueck ob es schon einen Spieler mit dem neu Eingegebenen 
+     * namen ist.
+     * @param name name nach dem in der SpielerListe gesucht werden soll
+     * @return true - Spielernamen gibt es schon. false - Spielernamen gibt es 
+     * noch nicht 
+     */
+    private Spieler istBereitsVorhanden(String name) {
+        Spieler spielerVorhanden = null;
+        for (Spieler spieler : parent.getSpielerListe()) {
+            if (spieler.getName().equals(name)) {
+                spielerVorhanden = spieler;
+            }
+        }
+        return spielerVorhanden;
+    }
+    
     // Methoden Ende
     
     // ActionListener
@@ -258,22 +278,42 @@ public class Spielerauswahl extends JPanel implements ActionListener {
      * @param arg0 Ausgeloestes Event
      */
     public void actionPerformed(ActionEvent arg0) {
+        String nameWest = (String) boxWEST.getSelectedItem();
+        String nameEast = (String) boxEAST.getSelectedItem();
         // Wenn der "Spiel starten"-Button gedrueckt wird
         if (arg0.getActionCommand().equals("Spiel starten")) {
             // Wenn zwei Spielernamen und ein Spiename vorhanden sind
             if (!((nameWEST.getText().equals("")) 
                 || nameEAST.getText().equals("") 
-                || tSpielname.getText().equals(""))) {
-                spieler1 = new Spieler(nameWEST.getText());
-                parent.addSpieler(spieler1);
-                spieler2 = new Computerspieler(nameEAST.getText());
-                parent.addSpieler(spieler2);
+                || tSpielname.getText().equals("                   "))) {
+                
+                // Wenn Spieler1 ein neuer Spieler ist
+                if (nameWest.equals("neuer Spieler") 
+                    && !(istBereitsVorhanden(nameWest) == null)) {
+                    spieler1 = new Spieler(nameWEST.getText());
+                    parent.addSpieler(spieler1);
+                }
+                // Wenn Spieler2 ein neuer Spieler ist
+                if (nameEast.equals("neuer Spieler")) {
+                    spieler2 = new Spieler(nameEAST.getText());
+                    parent.addSpieler(spieler2);
+                }
+                
+                // Wenn Spieler1 ein bereits vorhandener Spieler ist
+                if (istBereitsVorhanden(nameWest) != null) {
+                    spieler1 = istBereitsVorhanden(nameWest);
+                }
+                // Wenn Spieler2 ein bereits vorhandener Spieler ist
+                if (istBereitsVorhanden(nameEast) != null) {
+                    spieler2 = istBereitsVorhanden(nameEast);
+                }
+                
                 // Wenn Spieler 1 die Farbe weiss ausgewählt hat
                 if (bGFarbauswahl.getSelection().
                     getActionCommand().equals("weiss")) {
                     spieler1.setFarbe(true);
                     spieler2.setFarbe(false);
-                // Wenn Spieler 1 die Farbe weiss ausgewählt hat
+                // Wenn Spieler 1 die Farbe schwarz ausgewählt hat
                 } else {
                     spieler1.setFarbe(false);
                     spieler2.setFarbe(true);
@@ -285,14 +325,24 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                 parent.setContentPane(new SpielfeldGUI(parent,
                     tSpielname.getText(), spieler1, spieler2));
                 parent.revalidate();
+            } else {
+                JOptionPane.showMessageDialog(parent, "Geben sie bitte gültige"
+                    + " Namen für die das Spiel und die Spieler ein bzw. wählen"
+                    + " sie bereits vorhandenen Spielerprofile aus",
+                    "Fehlerhafte Eingabe", JOptionPane.WARNING_MESSAGE);
             }
-        }
-        // TODO Wenn dann die Speicherung funktioniert
-        if (arg0.getActionCommand().equals("boxWEST")) {
-            nameWEST.setText("TEST WEST");
         } 
-        if (arg0.getActionCommand().equals("boxEAST")) {
-            nameEAST.setText("TEST EAST");
+        if (arg0.getActionCommand().equals("boxWEST")) {
+            if (!nameWest.equals("neuer Spieler")) {
+                nameWEST.setText(nameWest);
+                nameWEST.setEditable(false);
+            }
+        } 
+        if (arg0.getActionCommand().equals("boxEAST")) {           
+            if (!nameEast.equals("neuer Spieler")) {
+                nameEAST.setText(nameEast);
+                nameEAST.setEditable(false);
+            }
         }
     }
 

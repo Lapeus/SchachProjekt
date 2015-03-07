@@ -31,8 +31,7 @@ public class SpielGUI extends JFrame implements WindowListener {
      * Gesamtdatensatz, welcher zu Beginn geladen/erstellt und beim beenden 
      * gespeichert werden muss.
      */
-    private Gesamtdatensatz gesamtdatensatz;
-    
+    private Gesamtdatensatz gesamtdatensatz;    
     
     // Ende Attribute
 
@@ -124,6 +123,14 @@ public class SpielGUI extends JFrame implements WindowListener {
      */
     public List<Spiel> getSpieleListe() {
         return gesamtdatensatz.getSpieleListe();
+    }
+    
+    /**
+     * Methode zur rueckgabe der SpielerListe des Gesamtdatensatzes.
+     * @return SpielerListe des Gesamtdatensatzes
+     */
+    public List<Spieler> getSpielerListe() {
+        return gesamtdatensatz.getSpielerListe();
     }
     
     /**
