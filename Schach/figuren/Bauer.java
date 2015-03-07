@@ -98,7 +98,20 @@ public class Bauer extends Figur {
         }
         
         // En-passant-Schlagen
+        if (getSpielfeld().getEinstellungen().isEnPassantMoeglich()) {
+            moeglicheFelder.addAll(enPassant());
+        }
         
+        // Gibt die Liste der moeglichen Felder zurueck
+        return moeglicheFelder;
+    }
+   
+    /**
+     * Gibt alle zus&auml;tzlichen m&ouml;glichen Felder zur&uuml;ck, wenn das
+     * Schlagen En-Passant m&ouml;glich ist.
+     * @return Eine Liste mit den zus&auml;tzlich m&ouml;glichen Feldern
+     */
+    private List<Feld> enPassant() {
         /* Das Schlagen en-passant ist erlaubt, wenn der Gegner im vorherigen
          * Zug mit seinem Bauern zwei Felder gezogen ist und nun neben einem
          * von unseren Bauern steht.
@@ -111,7 +124,7 @@ public class Bauer extends Figur {
          * (steht jetzt auf Reihe 3 bzw 4)
          * 2. Der eigene Bauer steht direkt daneben
          */
-       
+        List<Feld> moeglicheFelder = new ArrayList<Feld>();
         int lastIndex = getSpielfeld().getSpieldaten().getZugListe().size() - 1;
         // Wenn das nicht der erste Zug ist
         if (!getSpielfeld().getSpieldaten().getZugListe().isEmpty()) {
@@ -153,10 +166,9 @@ public class Bauer extends Figur {
                 }
             }
         }
-        // Gibt die Liste der moeglichen Felder zurueck
         return moeglicheFelder;
     }
-   
+    
     
     
 

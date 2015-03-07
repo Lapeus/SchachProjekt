@@ -610,23 +610,26 @@ public class Spielfeld {
      */
     public String toString() {
         String string;
-        string = aktuellerSpieler + "\n";
+        String lineSep = System.getProperty("line.separator");
+        string = aktuellerSpieler + lineSep;
         for (Figur figur : weisseFiguren) {
             string += figur.toString();
         }
-        string += "\n";
+        string += lineSep;
         for (Figur figur : schwarzeFiguren) {
             string += figur.toString();
         }
-        string += "\n";
+        string += lineSep;
         for (Figur figur : geschlagenWeiss) {
             string += figur.toString();
         }
-        string += "\n";
+        string += lineSep;
         for (Figur figur : geschlagenSchwarz) {
             string += figur.toString();
         }
-        string += "\n";
+        string += lineSep;
+        string += einstellungen.toString() + lineSep;
+        string += spieldaten.toString() + lineSep;
         return string;
     }
     /**

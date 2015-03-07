@@ -75,6 +75,19 @@ public class Spieldaten {
         }
         return anzahl;
     }
+    
+    /**
+     * Gibt die gesamte Zugliste als Zeichenkette zur&uuml;ck.
+     * @return Eine Zeichenkette mit allen Z&uuml;gen
+     */
+    public String toString() {
+        String string = "";
+        String lineSep = System.getProperty("line.separator");
+        for (Zug zug : zugListe) {
+            string += zug.toSchachNotation() + lineSep;
+        }
+        return string;
+    }
 
   
 }

@@ -122,7 +122,9 @@ public class Spiel {
         ergebnis.add(gewinner);
         
         // Statistik-Auswertung aufrufen
-        statistik(true, gewinner, verlierer);
+        if (spielfeld.getEinstellungen().isInStatistikEinbeziehen()) {
+            statistik(true, gewinner, verlierer);
+        }
         
         return ergebnis;
     }
@@ -288,9 +290,10 @@ public class Spiel {
      */
     public String toString() {
         String string;
-        string = spielname + "/n";
-        string += spieler1 + "/n";
-        string += spieler2 + "/n";
+        String lineSep = System.getProperty("line.separator");
+        string = spielname + lineSep;
+        string += spieler1 + lineSep;
+        string += spieler2 + lineSep;
         string += spielfeld.toString();
         return string;
     }

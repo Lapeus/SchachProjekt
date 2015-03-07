@@ -53,7 +53,9 @@ public class Koenig extends Figur {
         moeglicheFelder.addAll(normaleZuege());
         
         // Rochade
-        moeglicheFelder.addAll(rochade());
+        if (getSpielfeld().getEinstellungen().isRochadeMoeglich()) {
+            moeglicheFelder.addAll(rochade());
+        }
         
         return moeglicheFelder;
     }
