@@ -89,6 +89,14 @@ public class Gesamtdatensatz {
     }
     
     /**
+     * L&auml;dt - sofern vorhanden - alle ben&ouml;tigten Daten aus dem
+     * ausf&uuml;hrenden Ordner.
+     */
+    public void laden() {
+        
+    }
+    
+    /**
      * Gibt die Liste der Spieler zur&uuml;ck.
      * @return Liste der Spieler
      */
