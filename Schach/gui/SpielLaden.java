@@ -15,12 +15,18 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.Border;
 
 import daten.Spiel;
 
-public class SpielLaden extends JPanel implements ActionListener{
+/**
+ * Bietet ein JPanel zur Darstellung und Anwendung von zu ladenden Spielen.
+ * @author Marvin Wolf
+ */
+public class SpielLaden extends JPanel implements ActionListener {
     // Angfnag Attribute
+    /**
+     * 
+     */
     private static final long serialVersionUID = 2145670587480648629L;
     SpielGUI parent;
     JScrollPane gespeicherteSpiele = new JScrollPane();

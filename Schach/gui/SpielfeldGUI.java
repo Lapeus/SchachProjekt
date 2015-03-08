@@ -235,6 +235,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         this.spieler2 = spiel.getSpieler2();
         this.spielfeld = spiel.getSpielfeld();
         this.felderListe = spielfeld.getFelder();
+        for (Feld feld : felderListe) {
+            feld.addMouseListener(this);
+        }
         init();
     }
     
@@ -815,6 +818,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Wenn das Spiel gespeichert werden soll
         if (e.getActionCommand().equals(commandSpeichern)) {
             parent.spielSpeichern(spiel);
+            JOptionPane.showMessageDialog(parent, "Spiel gespeichert",
+                "Speichern", JOptionPane.INFORMATION_MESSAGE);
         }
     }
     

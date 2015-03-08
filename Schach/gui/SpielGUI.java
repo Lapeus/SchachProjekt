@@ -7,6 +7,7 @@ import java.awt.event.WindowListener;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import daten.Gesamtdatensatz;
 import daten.Spiel;
@@ -46,6 +47,7 @@ public class SpielGUI extends JFrame implements WindowListener {
         seitenAuswahl("Eroeffnungsseite");
         //pack();
         setVisible(true);
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.addWindowListener(this);
         gesamtdatenLaden();
         gesamtdatenSpeichern();
@@ -224,9 +226,15 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @param e WindowListenerEvent
      */
     public void windowClosing(WindowEvent e) {
-        // Sicherheitsfenster Wirklich beenden?
-        gesamtdatenSpeichern();
-        System.exit(0);
+        int auswahl = JOptionPane.showConfirmDialog(this, "Wollen sie das Spiel"
+            + " wirklich beenden", "Fenster schließen",
+            JOptionPane.YES_NO_OPTION);
+        // Wenn Ja angeklickt wird
+        if (auswahl == 0) {
+            gesamtdatenSpeichern();
+            System.exit(0);
+        }
+        // Wenn 
     }
     
     /**
