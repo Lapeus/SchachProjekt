@@ -100,11 +100,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private Spieler spieler2;
     
     /**
-     * Spielname welcher von der <b>Spielerauswahl</b> Seite übergeben wird.
-     */
-    private String spielname;
-    
-    /**
      * Liste die 64 Schachfelder enthält.
      */
     private List<Feld> felderListe;
@@ -198,6 +193,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     
     /**
      * Erzeugt eine SpielfeldGUI.
+     * Wird von der Spielerauswahl-Seite aufgerufen und erstellt eine Spielfeld
+     * GUI fuer ein neues Spiel.
      * @param parent Das Objekt der dazugehörigen <b>SpielGUI</b>
      * @param spieler1 Ein Objekt der Klasse <b>Spieler</b>
      * @param spieler2 Ein weiteres Objekt der Klasse <b>Spieler</b>
@@ -209,7 +206,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         this.parent = parent;
         this.spieler1 = spieler1;
         this.spieler2 = spieler2;
-        this.spielname = spielname;
         
         // FelderListe füllen
         felderListe = new ArrayList<Feld>();
@@ -227,13 +223,16 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * 
+     * Erzeugt eine neue SpielfeldGUI.
+     * Wird von der SpielLaden-Seite Aufgerufen und erzuegt eine SpielfeldGUI 
+     * fuer ein bereits gespeichertes Spiel.
+     * @param parent Das Objekt der dazugehörigen <b>SpielGUI</b>
+     * @param spiel Ein Objekt von typ Spiel, welches bereits Paramenter hat
      */
     public SpielfeldGUI(SpielGUI parent, Spiel spiel) {
         this.parent = parent;
         this.spieler1 = spiel.getSpieler1();
         this.spieler2 = spiel.getSpieler2();
-        this.spielname = spiel.getSpielname();
         this.spielfeld = spiel.getSpielfeld();
         this.felderListe = spielfeld.getFelder();
         init();
@@ -332,9 +331,26 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         this.add(cCenter, BorderLayout.CENTER);
         this.add(cEast, BorderLayout.EAST);
         
+        /* Wenn ein Computerspieler mitspielt und anfangen soll muss er hier 
+         * den ersten Zug machen
+         */
+        // Wenn spieler 1 ein Computergegner ist und dran ist
+        if (spieler1 instanceof Computerspieler) {
+            ((Computerspieler) spieler1).setSpielfeld(spielfeld);
+            if (spieler1.getFarbe() == spielfeld.getAktuellerSpieler()) {
+                ((Computerspieler) spieler1).setSpielfeld(spielfeld);
+                ((Computerspieler) spieler1).ziehen();
+            }
+        // Wenn spieler 2 ein Computergegner ist und dran ist
+        } else if (spieler2 instanceof Computerspieler) {
+            ((Computerspieler) spieler2).setSpielfeld(spielfeld);
+            if (spieler2.getFarbe() == spielfeld.getAktuellerSpieler()) {
+                ((Computerspieler) spieler2).ziehen();
+            }
+        }
+        
         // SpielfeldGUI erstellen
         spielfeldAufbau();
-        
 
     }
     /**
@@ -543,11 +559,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
     }
     
+    
     /**
      * Hier werden die Züge veranlasst und auf der Gui geupdated.
      * @param momentanesFeld Das momentan ausgewählte Feld
      */
-    private void zugGUI(Feld momentanesFeld) {
+    private void spielerzugGUI(Feld momentanesFeld) {
         // HIER WIRD GEZOGEN
         spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
             sekundenStopp);
@@ -629,90 +646,93 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     public void mouseClicked(MouseEvent arg0) {
         spielfeldAufbau();
         
-        // Wenn spieler 1 ein Computergegner ist und dran ist
-        if ((spieler1 instanceof Computerspieler 
-            && spieler1.getFarbe() == spielfeld.getAktuellerSpieler())) {
-            ((Computerspieler) spieler1).setSpielfeld(spielfeld);
-            ((Computerspieler) spieler1).ziehen();
-            spielfeldAufbau();
-        // Wenn spieler 2 ein Computergegner ist und dran ist
-        } else if (spieler2 instanceof Computerspieler 
-            && spieler2.getFarbe() == spielfeld.getAktuellerSpieler()) {
-            ((Computerspieler) spieler2).setSpielfeld(spielfeld);
-            ((Computerspieler) spieler2).ziehen();
-            spielfeldAufbau();
-        } else {
         // Felder Bewegen
-            Feld momentanesFeld = (Feld) arg0.getSource();
-            /* (Wenn eine korrekte Figur ausgewählt wird und es noch keine 
-             * ausgewaehlte Figur gibt.)
-             * ODER
-             * (Wenn man dann auf eine seiner eigenen Figuren Klickt, wechselt 
-             * die GUI  auf die möglichen Felder dieser Figur.)
+        Feld momentanesFeld = (Feld) arg0.getSource();
+        /* (Wenn eine korrekte Figur ausgewählt wird und es noch keine 
+         * ausgewaehlte Figur gibt.)
+         * ODER
+         * (Wenn man dann auf eine seiner eigenen Figuren Klickt, wechselt 
+         * die GUI  auf die möglichen Felder dieser Figur.)
+         */
+        if ((momentanesFeld.getFigur() != null 
+            && (momentanesFeld.getFigur().getFarbe() 
+            == spielfeld.getAktuellerSpieler()) 
+            && ausgewaehlteFigur == null) 
+            || 
+            (ausgewaehlteFigur != null && momentanesFeld.getFigur() != null 
+            && momentanesFeld.getFigur().getFarbe() 
+            == ausgewaehlteFigur.getFarbe())) {
+            // Wird diese als neue Ausgewählte Figur gespeichert
+            ausgewaehlteFigur = momentanesFeld.getFigur();
+            /* Wenn der Spieler Weiß dran ist und dies angeklickte Figur 
+             * eine weiße ist.
              */
-            if ((momentanesFeld.getFigur() != null 
-                && (momentanesFeld.getFigur().getFarbe() 
-                == spielfeld.getAktuellerSpieler()) 
-                && ausgewaehlteFigur == null) 
-                || 
-                (ausgewaehlteFigur != null && momentanesFeld.getFigur() != null 
-                && momentanesFeld.getFigur().getFarbe() 
-                == ausgewaehlteFigur.getFarbe())) {
+            if (spielfeld.getAktuellerSpieler() 
+                && spielfeld.getWeisseFiguren()
+                    .contains(ausgewaehlteFigur)) {
                 // Wird diese als neue Ausgewählte Figur gespeichert
-                ausgewaehlteFigur = momentanesFeld.getFigur();
-                /* Wenn der Spieler Weiß dran ist und dies angeklickte Figur 
-                 * eine weiße ist.
-                 */
-                if (spielfeld.getAktuellerSpieler() 
-                    && spielfeld.getWeisseFiguren()
-                        .contains(ausgewaehlteFigur)) {
-                    // Wird diese als neue Ausgewählte Figur gespeichert
-                    momentanesFeld.setBackground(rot);
+                momentanesFeld.setBackground(rot);
+                if (parent.getEinstellungen().isMoeglicheFelderAnzeigen()) {
                     for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
                         makieren.setBackground(rot);
                     }
-                }
-                /* Wenn der Spieler Schwarz dran ist und dies angeklickte Figur 
-                 * eine schwarze ist.
-                 */
-                if (!spielfeld.getAktuellerSpieler() 
-                    && spielfeld.getSchwarzeFiguren()
-                        .contains(ausgewaehlteFigur)) {
-                    momentanesFeld.setBackground(rot);
-                    for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
-                        makieren.setBackground(rot);
-                    }
-                    
-                }
-            // Wenn es bereits eine ausgewaehlte Figur gibt
-            } else if (ausgewaehlteFigur != null) {
-                sekundenStopp = (int) System.currentTimeMillis()
-                    - sekundenStart;
-                // TODO Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button 
-                /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
-                 dieser ist */
-                if (ausgewaehlteFigur.getKorrektFelder()
-                    .contains(momentanesFeld)) {
-                    zugGUI(momentanesFeld);
-                    spielfeldAufbau();
-                /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
-                 * Auswahl aufgehoben.
-                 */
-                } else if (ausgewaehlteFigur.getPosition()
-                    .equals(momentanesFeld)) {
-                    ausgewaehlteFigur = null;
-                    spielfeldAufbau();
                 }
             }
-            // Wenn man ein leeres Feld anklickt
-            if (momentanesFeld.getFigur() == null) {
+            /* Wenn der Spieler Schwarz dran ist und dies angeklickte Figur 
+             * eine schwarze ist.
+             */
+            if (!spielfeld.getAktuellerSpieler() 
+                && spielfeld.getSchwarzeFiguren()
+                    .contains(ausgewaehlteFigur)) {
+                momentanesFeld.setBackground(rot);
+                if (parent.getEinstellungen().isMoeglicheFelderAnzeigen()) {
+                    for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
+                        makieren.setBackground(rot);
+                    }
+                }
+            }
+        // Wenn es bereits eine ausgewaehlte Figur gibt
+        } else if (ausgewaehlteFigur != null) {
+            sekundenStopp = ((int) System.currentTimeMillis()
+                - sekundenStart) / 1000;
+            // TODO Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button 
+            /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
+             dieser ist */
+            if (ausgewaehlteFigur.getKorrektFelder()
+                .contains(momentanesFeld)) {
+                spielerzugGUI(momentanesFeld);
+                if ((spieler1 instanceof Computerspieler 
+                    && spieler1.getFarbe() 
+                    == spielfeld.getAktuellerSpieler())) {
+                    ((Computerspieler) spieler1).setSpielfeld(spielfeld);
+                    ((Computerspieler) spieler1).ziehen();
+                    spielfeldAufbau();
+                // Wenn spieler 2 ein Computergegner ist und dran ist
+                } else if (spieler2 instanceof Computerspieler 
+                    && spieler2.getFarbe() == spielfeld.getAktuellerSpieler()) {
+                    ((Computerspieler) spieler2).setSpielfeld(spielfeld);
+                    ((Computerspieler) spieler2).ziehen();
+                    spielfeldAufbau();
+                }
+                spielfeldAufbau();
+            /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
+             * Auswahl aufgehoben.
+             */
+            } else if (ausgewaehlteFigur.getPosition()
+                .equals(momentanesFeld)) {
                 ausgewaehlteFigur = null;
+                spielfeldAufbau();
             }
-            
+        }
+        // Wenn man ein leeres Feld anklickt
+        if (momentanesFeld.getFigur() == null) {
+            ausgewaehlteFigur = null;
         }
         // Färbt die bedrohten Felder Grau
-        for (Feld bedroht : spielfeld.getBedrohteFelder()) {
-            bedroht.setBackground(new Color(100, 100, 100));
+        if (parent.getEinstellungen().isBedrohteFigurenAnzeigen()) {
+            for (Feld bedroht : spielfeld.getBedrohteFelder()) {
+                bedroht.setBackground(new Color(100, 100, 100));
+            }
         }
         this.revalidate();   
     }
@@ -794,11 +814,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         // Wenn das Spiel gespeichert werden soll
         if (e.getActionCommand().equals(commandSpeichern)) {
-            for (Spiel spiel : parent.getSpieleListe()) {
-                if (spiel.equals(this.spiel)) {
-                    parent.getSpieleListe().remove(spiel);
-                }
-            }
             parent.spielSpeichern(spiel);
         }
     }

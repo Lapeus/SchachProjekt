@@ -39,6 +39,10 @@ public class Statistiken extends JPanel {
         init();
     }
     
+    /**
+     * Initialisert eine Statistik-Seite, auf welcher man einen Spieler 
+     * auswaehlen kann und von diesem die Statistik angezeigt bekommt.
+     */
     private void init() {
         
     }

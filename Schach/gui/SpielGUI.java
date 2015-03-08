@@ -46,9 +46,7 @@ public class SpielGUI extends JFrame implements WindowListener {
         seitenAuswahl("Eroeffnungsseite");
         //pack();
         setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //this.addWindowListener(this);
-        
+        this.addWindowListener(this);
         gesamtdatenLaden();
         gesamtdatenSpeichern();
     }
@@ -121,8 +119,18 @@ public class SpielGUI extends JFrame implements WindowListener {
      * Methode zur Rueckgabe der SpieleListe.
      * @return Gibt die SpieleListe des Gesamtdatensatzes zurueck
      */
-    public List<Spiel> getSpieleListe() {
+    public List<String> getSpieleListe() {
         return gesamtdatensatz.getSpieleListe();
+    }
+    
+    /**
+     * Ruft die getSpiel-Methode des Gesamdatensatzes aus und gibt das Spiel mit
+     * diesem Namen zurueck.
+     * @param spielname Name eines bereits gespeicherten Spiels
+     * @return Spiel zu dem eingegeben Namen
+     */
+    public Spiel getSpiel(String spielname) {
+        return gesamtdatensatz.getSpiel(spielname);
     }
     
     /**
@@ -162,8 +170,8 @@ public class SpielGUI extends JFrame implements WindowListener {
      * Fuegt ein Spiel zur SpieleListe des Gesamtdatensatzes hinzu.
      * @param spiel Das hinzuzufuegende Spieleobjekt
      */
-    public void addSpiel(Spiel spiel) {
-        gesamtdatensatz.addSpiel(spiel);
+    public void spielSpeichern(Spiel spiel) {
+        gesamtdatensatz.spielSpeichern(spiel);
     }
     
     /**
@@ -217,7 +225,8 @@ public class SpielGUI extends JFrame implements WindowListener {
      */
     public void windowClosing(WindowEvent e) {
         // Sicherheitsfenster Wirklich beenden?
-        
+        gesamtdatenSpeichern();
+        System.exit(0);
     }
     
     /**

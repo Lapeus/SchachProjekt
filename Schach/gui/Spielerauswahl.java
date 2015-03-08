@@ -283,13 +283,13 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         // Wenn der "Spiel starten"-Button gedrueckt wird
         if (arg0.getActionCommand().equals("Spiel starten")) {
             // Wenn zwei Spielernamen und ein Spiename vorhanden sind
+            // TODO !Zwei gleiche Spielnamen / !Zwei gleiche Spielernamen
             if (!((nameWEST.getText().equals("")) 
                 || nameEAST.getText().equals("") 
                 || tSpielname.getText().equals("                   "))) {
                 
                 // Wenn Spieler1 ein neuer Spieler ist
-                if (nameWest.equals("neuer Spieler") 
-                    && !(istBereitsVorhanden(nameWest) == null)) {
+                if (nameWest.equals("neuer Spieler")) {
                     spieler1 = new Spieler(nameWEST.getText());
                     parent.addSpieler(spieler1);
                 }
