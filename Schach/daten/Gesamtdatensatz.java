@@ -342,7 +342,22 @@ public class Gesamtdatensatz {
                 bool[3], bool[4], bool[5]);
             
             // TODO Schachnotation laden
-            
+            /*String line = br.readLine();
+            while (!line.equals("")) {
+                if (line.equals("0-0")) {
+                    
+                } else if (line.equals("0-0-0")) {
+                    
+                } else {
+                    int stelleLeerzeichen = line.indexOf(" ");
+                    String vordererTeil = line.substring(0, stelleLeerzeichen);
+                    int stelleTrennung = line.indexOf("-");
+                    
+                }
+                // Naechste Zeile lesen
+                line = br.readLine();
+            }
+            */
             
             // Den Reader schliessen
             br.close();

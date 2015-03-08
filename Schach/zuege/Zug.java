@@ -97,7 +97,7 @@ public class Zug {
         // Spaltenbezeichnung
         String[] spalten = {"a", "b", "c", "d", "e", "f", "g", "h"};
         // Das Startfeld
-        string += spalten[startfeld.getXK()] + startfeld.getYK();
+        string += spalten[startfeld.getXK()] + (startfeld.getYK() + 1);
         // Wenn es ein Schlagzug ist
         if (schlagzug) {
             string += "x";
@@ -106,7 +106,7 @@ public class Zug {
             string += "-";
         }
         // Das Zielfeld
-        string += spalten[zielfeld.getXK()] + zielfeld.getYK();
+        string += spalten[zielfeld.getXK()] + (zielfeld.getYK() + 1);
         // Die Zugzeit 
         string += " " + zugzeit + " sek";
         
