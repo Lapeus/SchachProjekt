@@ -153,6 +153,7 @@ public class Statistiken extends JPanel implements ActionListener {
         momentan += "Matt: " + statistik.getAnzahlMatt() + lineSep;
         momentan += "Siege vs. Comp: " + statistik.getAnzahlSiegeC() + lineSep;
         momentan += "Patt vs. Comp: " + statistik.getAnzahlPattC() + lineSep;
+        momentan += "Matt vs. Comp:" + statistik.getAnzahlMattC() + lineSep;
         momentan += "Schnellster Sieg: " + statistik.getSchnellsterSieg() 
             + lineSep;
         momentan += "Kürzester Sieg: " + statistik.getKuerzesterSieg() 
@@ -163,7 +164,7 @@ public class Statistiken extends JPanel implements ActionListener {
             + lineSep;
         momentan += "Durschnittliche Siegzeit: " 
             + statistik.getZeitSiegDurchschnitt() + lineSep;
-        momentan += "Durschnittliche Mattzeit" 
+        momentan += "Durschnittliche Mattzeit: " 
             + statistik.getZeitMattDurchschnitt() + lineSep;
         momentan += "Durschnittliche Siegzüge: " 
             + statistik.getZuegeSiegDurchschnitt() + lineSep;

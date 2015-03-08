@@ -274,6 +274,7 @@ public class Gesamtdatensatz {
         File file = new File("settings" + System.getProperty(
             "file.separator") + "Spiele" + System.getProperty(
                 "file.separator") + name + ".txt");
+       
         // Das Spiel anlegen
         Spiel spiel = null;
         
@@ -360,6 +361,8 @@ public class Gesamtdatensatz {
             ioEx.printStackTrace();
         }
         
+        // Die Quelldatei loeschen
+        file.delete();
         return spiel;
     }
     

@@ -5,9 +5,9 @@ import gui.Feld;
 import java.util.ArrayList;
 import java.util.List;
 
-import daten.EnPassantZug;
-import daten.RochadenZug;
-import daten.Zug;
+import zuege.EnPassantZug;
+import zuege.RochadenZug;
+import zuege.Zug;
 
 /**
  * Der Bauplan f&uuml;r die Spielfigur Bauer. <br>

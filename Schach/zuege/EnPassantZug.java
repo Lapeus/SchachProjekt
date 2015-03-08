@@ -1,10 +1,10 @@
-package daten;
+package zuege;
 
 import figuren.Figur;
 import gui.Feld;
 
 /**
- * Ist ein Sonderzug, den das En-Passant-Schlagen aufzeichnet. <br>
+ * Ist ein Sonderzug, der das En-Passant-Schlagen aufzeichnet. <br>
  * Erbt von Zug, muss dieser Klasse nur die Dauer des Zuges &uuml;bergeben.
  * @author Christian Ackermann
  */
