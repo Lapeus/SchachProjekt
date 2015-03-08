@@ -191,6 +191,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private boolean uhrAktiv = false; 
     
+    /**
+     * Gibt an ob Spiel vorbei ist.
+     */
+    private boolean spielVorbei = false;
+    
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -607,6 +612,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             this.remove(cEast);
             this.add(cEnde, BorderLayout.EAST);
             this.revalidate();
+            spielVorbei = true;
         // Wenn der momentane Spieler im Schach steht
         } else if (spielfeld.isSchach()) {
             spielfeldAufbau();
@@ -700,16 +706,16 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 .contains(momentanesFeld)) {
                 // Hier wird gezogen
                 spielerzugGUI(momentanesFeld);
-                if ((spieler1 instanceof Computerspieler 
-                    && spieler1.getFarbe() 
-                    == spielfeld.getAktuellerSpieler())) {
+                if ((spieler1 instanceof Computerspieler && spieler1.getFarbe() 
+                    == spielfeld.getAktuellerSpieler() && !spielVorbei)) {
                     ((Computerspieler) spieler1).setSpielfeld(spielfeld);
                     ((Computerspieler) spieler1).ziehen();
                     spielfeld.setSchach(false);
                     spielfeldAufbau();
                 // Wenn spieler 2 ein Computergegner ist und dran ist
                 } else if (spieler2 instanceof Computerspieler 
-                    && spieler2.getFarbe() == spielfeld.getAktuellerSpieler()) {
+                    && spieler2.getFarbe() == spielfeld.getAktuellerSpieler()
+                    && !spielVorbei) {
                     ((Computerspieler) spieler2).setSpielfeld(spielfeld);
                     ((Computerspieler) spieler2).ziehen();
                     spielfeld.setSchach(false);
@@ -892,7 +898,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Zugzeitbegrenzung ?!?!?!?
             if (sekundenStopp / 1000 
                 >= parent.getEinstellungen().getZugZeitBegrenzung()) {
-                System.out.println("tada");
                 aufgeben.doClick();
             }
         }
