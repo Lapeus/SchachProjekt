@@ -217,7 +217,7 @@ public class Computerspieler extends Spieler {
     }
     
     /**
-     * Setzt das Spielfeld des Computergegners. Computer
+     * Setzt das Spielfeld des Computergegners.
      * @param spielfeld Das Spielfeld
      */
     public void setSpielfeld(Spielfeld spielfeld) {
