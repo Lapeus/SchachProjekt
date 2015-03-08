@@ -332,9 +332,9 @@ public class Spiel {
     public String toString() {
         String string;
         String lineSep = System.getProperty("line.separator");
-        string = spieler1 + lineSep;
+        string = spieler1.getName() + lineSep;
         string += spieler1.getFarbe() + lineSep;
-        string += spieler2 + lineSep;
+        string += spieler2.getName() + lineSep;
         string += spieler2.getFarbe() + lineSep;
         string += spielfeld.toString();
         return string;

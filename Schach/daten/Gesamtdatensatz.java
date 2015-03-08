@@ -186,7 +186,7 @@ public class Gesamtdatensatz {
                 // Die Datei in der die Spielerdaten liegen
                 File file = new File("settings" + System.getProperty(
                     "file.separator") + "Spieler" + System.getProperty(
-                        "file.separator") + files[i].getName() + ".txt");
+                        "file.separator") + name + ".txt");
                 // Ein Reader um sie zeilenweise auslesen zu koennen
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 // Hier muessen alle Zeilen ausgelesen und zugeordnet werden

@@ -120,7 +120,7 @@ public class Zug {
         // Wenn es ein Umwandlungszug ist
         if (umwandlung) {
             // Wird nur auf die Tatsache hingewiesen
-            string += "UW";
+            string += " UW";
         }
         // Die Zugzeit 
         string += " " + zugzeit + " sek";
