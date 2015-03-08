@@ -147,29 +147,36 @@ public class Statistiken extends JPanel implements ActionListener {
         Statistik statistik = spieler.getStatistik();
         String momentan;
         String lineSep = System.getProperty("line.separator");
-        momentan = "Spiele: " + statistik.getAnzahlSpiele() + lineSep;
-        momentan += "Siege: " + statistik.getAnzahlSiege() + lineSep;
-        momentan += "Patt: " + statistik.getAnzahlPatt() + lineSep;
-        momentan += "Matt: " + statistik.getAnzahlMatt() + lineSep;
-        momentan += "Siege vs. Comp: " + statistik.getAnzahlSiegeC() + lineSep;
-        momentan += "Patt vs. Comp: " + statistik.getAnzahlPattC() + lineSep;
-        momentan += "Matt vs. Comp:" + statistik.getAnzahlMattC() + lineSep;
-        momentan += "Schnellster Sieg: " + statistik.getSchnellsterSieg() 
-            + lineSep;
-        momentan += "Kürzester Sieg: " + statistik.getKuerzesterSieg() 
-            + lineSep;
-        momentan += "Schnellstes Matt: " + statistik.getSchnellstesMatt() 
-            + lineSep;
-        momentan += "Kürzestes Matt: " + statistik.getKuerzestesMatt() 
-            + lineSep;
+        momentan = "Spiele: " 
+            + statistik.getAnzahlSpiele() + lineSep;
+        momentan += "Siege: " 
+            + statistik.getAnzahlSiege() + lineSep;
+        momentan += "Patt: " 
+            + statistik.getAnzahlPatt() + lineSep;
+        momentan += "Matt: " 
+            + statistik.getAnzahlMatt() + lineSep;
+        momentan += "Siege vs. Comp: "
+            + statistik.getAnzahlSiegeC() + lineSep;
+        momentan += "Patt vs. Comp: " 
+            + statistik.getAnzahlPattC() + lineSep;
+        momentan += "Matt vs. Comp: " 
+            + statistik.getAnzahlMattC() + lineSep;
+        momentan += "Schnellster Sieg: " 
+            + statistik.getSchnellsterSieg() + " Sekunden" + lineSep;
+        momentan += "Kürzester Sieg: "
+            + statistik.getKuerzesterSieg() + " Zuege" + lineSep;
+        momentan += "Schnellstes Matt: " 
+            + statistik.getSchnellstesMatt() + " Sekunden" + lineSep;
+        momentan += "Kürzestes Matt:  "
+            + statistik.getKuerzestesMatt() + " Zuege" + lineSep;
         momentan += "Durschnittliche Siegzeit: " 
-            + statistik.getZeitSiegDurchschnitt() + lineSep;
+            + statistik.getZeitSiegDurchschnitt() + " Sekunden" + lineSep;
         momentan += "Durschnittliche Mattzeit: " 
-            + statistik.getZeitMattDurchschnitt() + lineSep;
+            + statistik.getZeitMattDurchschnitt() + " Sekunden" + lineSep;
         momentan += "Durschnittliche Siegzüge: " 
-            + statistik.getZuegeSiegDurchschnitt() + lineSep;
+            + statistik.getZuegeSiegDurchschnitt() + " Zuege" + lineSep;
         momentan += "Durschnittliche Mattzüge: " 
-            + statistik.getZuegeMattDurchschnitt() + lineSep;
+            + statistik.getZuegeMattDurchschnitt() + " Zuege" + lineSep;
         momentan += "Durschnittlicher Materialwert Sieg: " 
             + statistik.getMatWertSiegDurchschnitt() + lineSep;
         momentan += "Durchschnittlicher Materialwert Matt: "

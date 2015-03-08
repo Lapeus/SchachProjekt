@@ -178,7 +178,7 @@ public class Gesamtdatensatz {
         File[] files = spielerOrdner.listFiles();
         // Liste mit den Namen der Computerspieler
         List<String> computerNamen = new ArrayList<String>(
-            Arrays.asList("Comp1", "Comp2", "Comp3", "Comp4"));        
+            Arrays.asList("Walter", "Karl Heinz", "Rosalinde", "Ursula"));
         for (int i = 0; i < files.length; i++) {
             // Der Name des Spielers (Name der Datei ohne .txt)
             String name = files[i].getName()
@@ -242,10 +242,10 @@ public class Gesamtdatensatz {
          */
         einstellungen = new Einstellungen(6000, true, false, true, false, 
             true, true);
-        spielerListe.add(new Computerspieler("Comp1"));
-        spielerListe.add(new Computerspieler("Comp2"));
-        spielerListe.add(new Computerspieler("Comp3"));
-        spielerListe.add(new Computerspieler("Comp4"));
+        spielerListe.add(new Computerspieler("Walter"));
+        spielerListe.add(new Computerspieler("Karl Heinz"));
+        spielerListe.add(new Computerspieler("Rosalinde"));
+        spielerListe.add(new Computerspieler("Ursula"));
         
         
     }
