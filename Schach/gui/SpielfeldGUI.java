@@ -898,7 +898,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Zugzeitbegrenzung ?!?!?!?
             if (sekundenStopp / 1000 
                 >= parent.getEinstellungen().getZugZeitBegrenzung()) {
-                System.out.println("tada");
                 aufgeben.doClick();
             }
         }
