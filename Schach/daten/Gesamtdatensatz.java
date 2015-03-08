@@ -179,6 +179,9 @@ public class Gesamtdatensatz {
         List<String> computerNamen = new ArrayList<String>(
             Arrays.asList("Comp1", "Comp2", "Comp3", "Comp4"));        
         for (int i = 0; i < files.length; i++) {
+            // Der Name des Spielers (Name der Datei ohne .txt)
+            String name = files[i].getName()
+                .substring(0, files[i].getName().length() - 4);
             try {
                 // Die Datei in der die Spielerdaten liegen
                 File file = new File("settings" + System.getProperty(
@@ -188,9 +191,6 @@ public class Gesamtdatensatz {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
                 Spieler spieler;
-                // Der Name des Spielers (Name der Datei ohne .txt)
-                String name = files[i].getName()
-                    .substring(0, files[i].getName().length() - 4);
                 // Wenn es ein Computerspieler ist
                 if (computerNamen.contains(name)) {
                     spieler = new Computerspieler(name);
