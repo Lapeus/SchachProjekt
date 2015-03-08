@@ -208,6 +208,7 @@ public class Gesamtdatensatz {
                 Statistik statistik = new Statistik(stat);
                 // Die Statistik dem Spieler zuordnen
                 spieler.setStatistik(statistik);
+                spielerListe.add(spieler);
             } catch (IOException ioEx) {
                 ioEx.printStackTrace();
             }
@@ -290,7 +291,7 @@ public class Gesamtdatensatz {
             // Neues Spielfeld erzeugen
             boolean aktuellerSpieler = Boolean.parseBoolean(br.readLine());
             Spielfeld spielfeld = new Spielfeld(felderListe, aktuellerSpieler);
-
+            spielfeld.setSpieldaten(new Spieldaten());
             // Nacheinander werden jetzt die Listen ausgelesen
             // Die weisse Figuren-Liste
             List<Figur> weisseFiguren = fuelleFigurenListe(br, felderListe);
