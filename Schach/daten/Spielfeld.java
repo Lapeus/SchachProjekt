@@ -183,6 +183,18 @@ public class Spielfeld {
     }
     
     /**
+     * Zweiter Konstruktor, um ein Spielfeld laden zu k&ouml;nnen ohne dass 
+     * dabei alle Figuren neu erzeugt werden m&uuml;ssen.
+     * @param felder Die Felder-Liste
+     * @param aktuellerSpieler Setzt den aktuellen Spieler: <b>True</b> f&uuml;r
+     * wei&szlig;, <b>false</b> f&uuml;r schwarz
+     */
+    public Spielfeld(List<Feld> felder, boolean aktuellerSpieler) {
+        this.felder = felder;
+        this.aktuellerSpieler =  aktuellerSpieler;
+    }
+    
+    /**
      * F&uuml;hrt einen Zug durch und passt alle n&ouml;tigen Listen und Felder
      * an.
      * @param figur Die Figur, die gezogen werden soll
@@ -612,18 +624,22 @@ public class Spielfeld {
         String string;
         String lineSep = System.getProperty("line.separator");
         string = aktuellerSpieler + lineSep;
+        string += "Weisse Figuren" + lineSep;
         for (Figur figur : weisseFiguren) {
             string += figur.toString();
         }
         string += lineSep;
+        string += "Schwarze Figuren" + lineSep;
         for (Figur figur : schwarzeFiguren) {
             string += figur.toString();
         }
         string += lineSep;
+        string += "Geschlagene weisse Figuren" + lineSep;
         for (Figur figur : geschlagenWeiss) {
             string += figur.toString();
         }
         string += lineSep;
+        string += "Geschlagene schwarze Figuren" + lineSep;
         for (Figur figur : geschlagenSchwarz) {
             string += figur.toString();
         }
@@ -681,11 +697,29 @@ public class Spielfeld {
     }
     
     /**
+     * Setzt die Liste der schwarzen Figuren. <br>
+     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
+     * @param schwarzeFiguren Die Liste der schwarzen Figuren
+     */
+    public void setSchwarzeFiguren(List<Figur> schwarzeFiguren) {
+        this.schwarzeFiguren = schwarzeFiguren;
+    }
+    
+    /**
      * Gibt die wei&szlig;en noch im Spiel befindlichen Figuren zur&uuml;ck.
      * @return Liste von wei&szlig;en Figuren
      */
     public List<Figur> getWeisseFiguren() {
         return sortiereListe(weisseFiguren);
+    }
+    
+    /**
+     * Setzt die Liste der wei&szlig;en Figuren. <br>
+     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
+     * @param weisseFiguren Die Liste der wei&szlig;en Figuren
+     */
+    public void setWeisseFiguren(List<Figur> weisseFiguren) {
+        this.weisseFiguren = weisseFiguren;
     }
     
     /**
@@ -697,11 +731,29 @@ public class Spielfeld {
     }
     
     /**
+     * Setzt die Liste der geschlagenen schwarzen Figuren. <br>
+     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
+     * @param geschlagenSchwarz Die Liste der geschlagenen schwarzen Figuren
+     */
+    public void setGeschlagenSchwarz(List<Figur> geschlagenSchwarz) {
+        this.geschlagenSchwarz = geschlagenSchwarz;
+    }
+    
+    /**
      * Gibt die geschlagenen wei&szlig;en Figuren zur&uuml;ck.
      * @return Liste von wei&szlig;en Figuren
      */
     public List<Figur> getGeschlagenWeiss() {
         return geschlagenWeiss;
+    }
+    
+    /**
+     * Setzt die Liste der geschlagenen wei&szlig;en Figuren. <br>
+     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
+     * @param geschlagenWeiss Die Liste der geschlagenen wei&szlig;en Figuren
+     */
+    public void setGeschlagenWeiss(List<Figur> geschlagenWeiss) {
+        this.geschlagenWeiss = geschlagenWeiss;
     }
     
     /**

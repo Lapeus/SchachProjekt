@@ -138,17 +138,38 @@ public class Spiel {
     private void statistik(boolean matt, Spieler gewinner, Spieler verlierer) {
         // Wenn es einen Sieger gibt
         if (matt) {
+            // Wenn es einen Computergegner gab
+            if (verlierer instanceof Computerspieler) {
+                gewinner.getStatistik().setAnzahlSiegeC(
+                    gewinner.getStatistik().getAnzahlSiegeC() + 1);
+            }
             statistikSieg(gewinner);
+            
+            // Wenn es einen Computergegner gab
+            if (gewinner instanceof Computerspieler) {
+                verlierer.getStatistik().setAnzahlMattC(
+                    verlierer.getStatistik().getAnzahlMattC() + 1);
+            }
             statistikMatt(verlierer);
         // Wenn es ein Patt ist
-        } else {
+        } else {     
             // Die Statistik des Patt setzenden
             Statistik stat = gewinner.getStatistik();
             stat.setAnzahlPatt(stat.getAnzahlPatt() + 1);
             
+            // Wenn es einen Computergegner gab
+            if (verlierer instanceof Computerspieler) {
+                stat.setAnzahlPattC(stat.getAnzahlPattC() + 1);
+            }
+            
             // Die Statistik des Patt gesetzten 
             stat = verlierer.getStatistik();
             stat.setAnzahlPatt(stat.getAnzahlPatt() + 1);
+            
+            // Wenn es einen Computergegner gab
+            if (gewinner instanceof Computerspieler) {
+                stat.setAnzahlPattC(stat.getAnzahlPattC() + 1);
+            }
         }
     }
     
@@ -173,9 +194,19 @@ public class Spiel {
             stat.setKuerzesterSieg(zuege);
         }
         
+        // Wenn es noch gar keinen Rekord gibt
+        if (stat.getKuerzesterSieg() == 0) {
+            stat.setKuerzesterSieg(zuege);
+        }
+        
         // Wenn es weniger Zeit war als beim Rekord
         if (zugzeit < stat.getSchnellsterSieg()) {
             // Muss das geaendert werden
+            stat.setSchnellsterSieg(zugzeit);
+        }
+        
+        // Wenn es noch gar keinen Rekord gibt
+        if (stat.getSchnellsterSieg() == 0) {
             stat.setSchnellsterSieg(zugzeit);
         }
         
@@ -239,12 +270,22 @@ public class Spiel {
             stat.setKuerzestesMatt(zuege);
         }
         
+        // Wenn es noch gar keinen Rekord gibt
+        if (stat.getKuerzestesMatt() == 0) {
+            stat.setKuerzestesMatt(zuege);
+        }
+        
         // Wenn es weniger Zeit war als beim Rekord
         if (zugzeit < stat.getSchnellstesMatt()) {
             // Muss das geaendert werden
             stat.setSchnellstesMatt(zugzeit);
         }
         
+        // Wenn es noch gar keinen Rekord gibt
+        if (stat.getSchnellstesMatt() == 0) {
+            stat.setSchnellstesMatt(zugzeit);
+        }
+
         // Durchschnittliche Anzahl Zuege bis zum Matt aktualisieren
         // durchschnittliche Anzahl bisher
         int zuegeDurchschnitt = stat.getZuegeMattDurchschnitt();

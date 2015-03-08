@@ -105,26 +105,25 @@ public class Statistik {
      * Erstellt eine neue Statistik f&uuml;r den Spieler.<br>
      * Aufruf in der Regel beim Laden der Statistik eines Spielers im 
      * Gesamtdatensatz.
+     * @param stat Ein Integer-Array mit allen Statistik-Werten
      */
-    public Statistik(int anzS, int anzP, int anzM, int anzSC, int anzPC, 
-        int anzMC, int schnellS, int kurzS, int schnellM, int kurzM, 
-        int zeitS, int zeitM, int zugS, int zugM, int matWertS, int matWertM) {
-        this.anzahlSiege = anzS;
-        this.anzahlPatt = anzP;
-        this.anzahlMatt = anzM;
-        this.anzahlSiegeC = anzSC;
-        this.anzahlPattC = anzPC;
-        this.anzahlMattC = anzMC;
-        this.schnellsterSieg = schnellS;
-        this.kuerzesterSieg = kurzS;
-        this.schnellstesMatt = schnellM;
-        this.kuerzestesMatt = kurzM;
-        this.zeitSiegDurchschnitt = zeitS;
-        this.zeitMattDurchschnitt = zeitM;
-        this.zuegeSiegDurchschnitt = zugS;
-        this.zuegeMattDurchschnitt = zugM;
-        this.matWertSiegDurchschnitt = matWertS;
-        this.matWertMattDurchschnitt = matWertM;
+    public Statistik(int[] stat) {
+        this.anzahlSiege = stat[0];
+        this.anzahlPatt = stat[1];
+        this.anzahlMatt = stat[2];
+        this.anzahlSiegeC = stat[3];
+        this.anzahlPattC = stat[4];
+        this.anzahlMattC = stat[5];
+        this.schnellsterSieg = stat[6];
+        this.kuerzesterSieg = stat[7];
+        this.schnellstesMatt = stat[8];
+        this.kuerzestesMatt = stat[9];
+        this.zeitSiegDurchschnitt = stat[10];
+        this.zeitMattDurchschnitt = stat[11];
+        this.zuegeSiegDurchschnitt = stat[12];
+        this.zuegeMattDurchschnitt = stat[13];
+        this.matWertSiegDurchschnitt = stat[14];
+        this.matWertMattDurchschnitt = stat[15];
     }
     
     /**
