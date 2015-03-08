@@ -40,7 +40,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     /**
      * Konstante für den Farbton den Hintergrunds (Braun).
      */
-    private static Color cBraunRot = new Color(172, 59, 32); 
+    private static Color cBraunRot = new Color(164, 43, 24); 
     
     /**
      * Konstante für den Farbton der Auswahlfelder (Beige).
@@ -236,6 +236,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             spielerMenu.setActionCommand("boxWEST");
             boxEAST = spielerMenu;
         } else {
+        // Array mit allen Spielern ohne Computerspieler (West)
             String[] menschlicheSpielerListe 
                 = new String[parent.getMenschlicheSpielerListe().size() + 1];
             menschlicheSpielerListe[0] = "neuer Spieler";
@@ -320,7 +321,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         String nameEast = (String) boxEAST.getSelectedItem();
         // Wenn der "Spiel starten"-Button gedrueckt wird
         if (arg0.getActionCommand().equals("Spiel starten")) {
-            /* Wenn zwei Spielernamen und ein Spiename vorhanden sind
+            /* Wenn zwei Spielernamen und ein Spielname vorhanden sind
              * !Zwei gleiche Spielnamen
              * !Zwei gleiche Spielernamen
              * !Spiel existisiert bereits
@@ -330,9 +331,9 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                 || nameWEST.getText().equals(nameEAST.getText())
                 || tSpielname.getText().equals("")
                 || spielIstBereitsVorhanden(tSpielname.getText()))) {
-                
                 // Wenn Spieler1 ein neuer Spieler ist
                 if (nameWest.equals("neuer Spieler")) { 
+                    // Wenn kein spieler mit diesem namen vorhanden ist
                     if (istBereitsVorhanden(nameWEST.getText()) == null) {
                         spieler1 = new Spieler(nameWEST.getText());
                         parent.addSpieler(spieler1);

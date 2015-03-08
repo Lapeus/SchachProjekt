@@ -698,6 +698,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
              dieser ist */
             if (ausgewaehlteFigur.getKorrektFelder()
                 .contains(momentanesFeld)) {
+                // Hier wird gezogen
                 spielerzugGUI(momentanesFeld);
                 if ((spieler1 instanceof Computerspieler 
                     && spieler1.getFarbe() 
@@ -724,11 +725,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
              * Auswahl aufgehoben.
              */
-            } else if (ausgewaehlteFigur.getPosition()
-                .equals(momentanesFeld)) {
-                ausgewaehlteFigur = null;
-                spielfeldAufbau();
-            }
+                //TODO Wenn gleiche Figur dann keine auswählen
+            } 
         }
         // Wenn man ein leeres Feld anklickt
         if (momentanesFeld.getFigur() == null) {
@@ -891,8 +889,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             // Auf das Zugzeit-Label schreiben
             zugzeit.setText(ausgabe.toString());
+            // Zugzeitbegrenzung ?!?!?!?
             if (sekundenStopp / 1000 
                 >= parent.getEinstellungen().getZugZeitBegrenzung()) {
+                System.out.println("tada");
                 aufgeben.doClick();
             }
         }
