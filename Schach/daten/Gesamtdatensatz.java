@@ -316,6 +316,19 @@ public class Gesamtdatensatz {
                 figur.getPosition().setFigur(figur);
             }
             
+            // Den Figuren das fertige Spielfeld uebergeben
+            for (Figur figur : weisseFiguren) {
+                figur.setSpielfeld(spielfeld);
+            }
+            for (Figur figur : schwarzeFiguren) {
+                figur.setSpielfeld(spielfeld);
+            }
+            for (Figur figur : geschlagenWeiss) {
+                figur.setSpielfeld(spielfeld);
+            }
+            for (Figur figur : geschlagenSchwarz) {
+                figur.setSpielfeld(spielfeld);
+            }
             // Einstellungen laden
             // Die ZugzeitBegrenzung
             int zzb = Integer.parseInt(br.readLine());
