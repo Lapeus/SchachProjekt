@@ -40,9 +40,7 @@ public class Spieler {
      * @return Eine mehrzeilige Zeichenkette
      */
     public String toString() {
-        String string;
-        String lineSep = System.getProperty("line.separator");
-        string = statistik.toString();
+        String string = statistik.toString();
         return string;
     }
     

@@ -11,7 +11,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import figuren.Bauer;
+import figuren.Dame;
 import figuren.Figur;
+import figuren.Koenig;
+import figuren.Laeufer;
+import figuren.Springer;
+import figuren.Turm;
+import gui.Feld;
 
 /**
  * Verwaltet alle Daten, die beim Schlie&szlig;en des Programms gespeichert und
@@ -181,14 +188,15 @@ public class Gesamtdatensatz {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
                 Spieler spieler;
+                // Der Name des Spielers (Name der Datei ohne .txt)
+                String name = files[i].getName()
+                    .substring(0, files[i].getName().length() - 4);
                 // Wenn es ein Computerspieler ist
-                if (computerNamen.contains(files[i].getName())) {
-                    spieler = new Computerspieler(files[i].getName()
-                        .substring(0, files[i].getName().length() - 4));
+                if (computerNamen.contains(name)) {
+                    spieler = new Computerspieler(name);
+                // Wenn es ein normaler Spieler ist
                 } else {
-                    // Wenn es ein normaler Spieler ist
-                    spieler = new Spieler(files[i].getName()
-                        .substring(0, files[i].getName().length() - 4));
+                    spieler = new Spieler(name);
                 }
                 // Die Statistik des Spielers
                 int[] stat = new int[16];
@@ -197,16 +205,23 @@ public class Gesamtdatensatz {
                 }
                 br.close();
                 // Neue Statistik erstellen
-                Statistik statistik = new Statistik(stat[0], stat[1], stat[2], 
-                    stat[3], stat[4], stat[5], stat[6], stat[7], stat[8], 
-                    stat[9], stat[10], stat[11], stat[12], stat[13], stat[14], 
-                    stat[15]);
+                Statistik statistik = new Statistik(stat);
                 // Die Statistik dem Spieler zuordnen
                 spieler.setStatistik(statistik);
             } catch (IOException ioEx) {
                 ioEx.printStackTrace();
             }
         } 
+        
+        // Die Namen der vorhandenen Spiele laden
+        File spieleOrdner = new File("settings" + System.getProperty(
+            "file.separator") + "Spiele");
+        files = spieleOrdner.listFiles();
+        for (File file : files) {
+            // Den Namen (Name der Datei ohne das .txt)
+            gespeicherteSpiele.add(file.getName().substring(
+                0, file.getName().length() - 4));
+        }
         
     }
     
@@ -254,9 +269,13 @@ public class Gesamtdatensatz {
      * @return Das Spiel mit dem angegebenen Namen
      */
     public Spiel getSpiel(String name) {
+        // Die Quelldatei fuer das Spiel
         File file = new File("settings" + System.getProperty(
             "file.separator") + "Spiele" + System.getProperty(
                 "file.separator") + name + ".txt");
+        // Das Spiel anlegen
+        Spiel spiel = null;
+        
         try {
             // Ein Reader um die Datei zeilenweise auslesen zu koennen
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -265,25 +284,164 @@ public class Gesamtdatensatz {
             boolean farbe1 = Boolean.parseBoolean(br.readLine());
             Spieler spieler2 = getSpieler(br.readLine());
             boolean farbe2 = Boolean.parseBoolean(br.readLine());
-            List<Figur> weisseFiguren = new ArrayList<Figur>();
-            String line;
-            // Solange keine Leerzeile erreicht ist
-            while (!(line = br.readLine()).equals("")) {
-                String position = line;
-                    
-                boolean farbe = Boolean.parseBoolean(br.readLine());
-                int wert = Integer.parseInt(br.readLine());
-                boolean gezogen = Boolean.parseBoolean(br.readLine());
-                Figur figur;
-                    
+            // Neue FelderListe wird erstellt
+            List<Feld> felderListe = erstelleFelderListe();
+            
+            // Neues Spielfeld erzeugen
+            boolean aktuellerSpieler = Boolean.parseBoolean(br.readLine());
+            Spielfeld spielfeld = new Spielfeld(felderListe, aktuellerSpieler);
+
+            // Nacheinander werden jetzt die Listen ausgelesen
+            // Die weisse Figuren-Liste
+            List<Figur> weisseFiguren = fuelleFigurenListe(br, felderListe);
+            // Die schwarze Figuren-Liste
+            List<Figur> schwarzeFiguren = fuelleFigurenListe(br, felderListe);
+            // Die geschlagenen weissen Figuren
+            List<Figur> geschlagenWeiss = fuelleFigurenListe(br, felderListe);
+            // Die geschlagenen schwarzen Figuren
+            List<Figur> geschlagenSchwarz = fuelleFigurenListe(br, felderListe);
+            
+            // Listen dem Spielfeld uebergeben
+            spielfeld.setWeisseFiguren(weisseFiguren);
+            spielfeld.setSchwarzeFiguren(schwarzeFiguren);
+            spielfeld.setGeschlagenWeiss(geschlagenWeiss);
+            spielfeld.setGeschlagenSchwarz(geschlagenSchwarz);
+            
+            // Den Feldern die Figuren zuweisen
+            for (Figur figur : weisseFiguren) {
+                figur.getPosition().setFigur(figur);
             }
+            for (Figur figur : schwarzeFiguren) {
+                figur.getPosition().setFigur(figur);
+            }
+            
+            // Einstellungen laden
+            // Die ZugzeitBegrenzung
+            int zzb = Integer.parseInt(br.readLine());
+            // Die sechs booleans
+            boolean[] bool = new boolean[6];
+            for (int i = 0; i <= 5; i++) {
+                bool[i] = Boolean.parseBoolean(br.readLine());
+            }
+            einstellungen = new Einstellungen(zzb, bool[0], bool[1], bool[2], 
+                bool[3], bool[4], bool[5]);
+            
+            // TODO Schachnotation laden
+            
+            
+            // Den Reader schliessen
             br.close();
+            
+            // Dem Spielfeld die Einstellungen zuf&uuml;gen
+            spielfeld.setEinstellungen(einstellungen);
+            
+            // Den Spielern ihre Farben setzen
+            spieler1.setFarbe(farbe1);
+            spieler2.setFarbe(farbe2);
+            
+            // Das Spiel erstellen
+            spiel = new Spiel(name, spieler1, spieler2, spielfeld);
+            
         } catch (IOException ioEx) {
             ioEx.printStackTrace();
         }
-       
-        return null;
+        
+        return spiel;
     }
+    
+    /**
+     * Erstellt eine neue felderListe mit 64 Feldern(Index 0-7, 0-7).
+     * @return Die neu erstellte Felder-Liste
+     */
+    
+    private List<Feld> erstelleFelderListe() {
+        List<Feld> felderListe = new ArrayList<Feld>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Feld temp = new Feld(j, i);
+                felderListe.add(temp);
+            }    
+        }
+        return felderListe;
+    }
+    
+    /**
+     * Wandelt die gespeicherte zweistellige Position in das entsprechende
+     * Feld um und gibt es zur&uuml;ck.
+     * @param position Die zweistelligen Koordinaten des Feldes
+     * @param felderListe Die Liste der Felder auf die zugegriffen werden soll
+     * @return Das gesuchte Feld
+     */
+    private Feld positionToFeld(String position, List<Feld> felderListe) {
+        int x = Integer.parseInt(position.substring(0, 1));
+        int y = Integer.parseInt(position.substring(1));
+        return felderListe.get(x + 8 * y);
+    }
+    
+    /**
+     * Liest mithilfe des angegebenen BufferedReaders eine Liste von Figuren
+     * aus der Textdatei.
+     * @param br Ein BufferedReader der entsprechenden Textdatei
+     * @param felderListe Die Felder-Liste um die Figuren richtig setzen zu
+     * k&ouml;nnen
+     * @return Eine Liste mit Figuren
+     */
+    private List<Figur> fuelleFigurenListe(BufferedReader br, 
+        List<Feld> felderListe) {
+        List<Figur> figuren = new ArrayList<Figur>();
+        // Solange keine Leerzeile erreicht ist
+        try {
+            // Die Ueberschrift lesen aber nicht speichern
+            br.readLine();
+            // Die erste korrekte Zeile
+            String line = br.readLine();
+            // Solange die erste Zeile nicht leer ist
+            while (!line.equals("")) {
+                // Die Position
+                String position = line;
+                // Aus der Position das Feld bestimmen
+                Feld feld = positionToFeld(position, felderListe); 
+                // Farbe der Figur
+                boolean farbe = Boolean.parseBoolean(br.readLine());
+                // Wert der Figur
+                int wert = Integer.parseInt(br.readLine());
+                // Ob sie schon gezogen wurde
+                boolean gezogen = Boolean.parseBoolean(br.readLine());
+                // Neue Figur anlegen
+                Figur figur;
+                // Je nach Wert die Figur entsprechend erstellen
+                if (wert == 0) {
+                    figur = new Koenig(feld, farbe);
+                } else if (wert == 100) {
+                    figur = new Bauer(feld, farbe);
+                } else if (wert == 275) {
+                    figur = new Springer(feld, farbe);
+                } else if (wert == 325) {
+                    figur = new Laeufer(feld, farbe);
+                } else if (wert == 465) {
+                    figur = new Turm(feld, farbe);
+                } else {
+                    figur = new Dame(feld, farbe);
+                }
+             
+                figur.setGezogen(gezogen);
+                // Die Figur der Liste zufuegen
+                figuren.add(figur);
+                // Naechste Zeile einlesen
+                /* Entweder ist das die erste Zeile der neuen Figur oder die 
+                 * Leerzeile die der while-Schleife signalisiert, dass die Liste
+                 * zu Ende ist und abgebrochen werden soll.
+                 */
+                line = br.readLine();
+            }
+        } catch (IOException ioEx) {
+            ioEx.printStackTrace();
+        }
+        
+        return figuren;
+        
+    }    
+        
     /**
      * Gibt die Liste der Spieler nach absteigendem Score sortiert wieder.
      * @return Eine Liste mit den gerankten Spielern
@@ -328,8 +486,24 @@ public class Gesamtdatensatz {
     }
     
     /**
-     * Gibt die Liste der Spiele zur&uuml;ck.
-     * @return Liste der Spiele
+     * Gibt eine Liste der menschlichen Spieler zur&uuml;ck.
+     * Wird ben&ouml;tigt, damit keine zwei Computerspieler gegen einander 
+     * spielen k&ouml;nnen.
+     * @return Eine Liste der menschlichen Spieler
+     */
+    public List<Spieler> getMenschlicheSpieler() {
+        List<Spieler> menschSpieler = new ArrayList<Spieler>();
+        for (Spieler spieler : spielerListe) {
+            if (!(spieler instanceof Computerspieler)) {
+                menschSpieler.add(spieler);
+            }
+        }
+        return menschSpieler;
+    }
+    
+    /**
+     * Gibt die Liste der Namen der Spiele zur&uuml;ck.
+     * @return Liste der Namen der Spiele
      */
     public List<String> getSpieleListe() {
         return gespeicherteSpiele;
@@ -344,8 +518,8 @@ public class Gesamtdatensatz {
     }
     
     /**
-     * F&uuml;gt ein Spiel hinzu.
-     * @param spiel Das Spiel, welches zugef&uuml;gt werden soll.
+     * Speichert das angegebene Spiel in den Text-Dateien.
+     * @param spiel Das Spiel, welches gespeichert werden soll
      */
     public void spielSpeichern(Spiel spiel) {
         // Die Spieldatei - sofern vorhanden - loeschen
@@ -357,7 +531,7 @@ public class Gesamtdatensatz {
         }
         try {
             File spielDatei = new File("settings" + System.getProperty(
-                "file.separator") + "Spieler" + System.getProperty(
+                "file.separator") + "Spiele" + System.getProperty(
                     "file.separator") + spiel.getSpielname() + ".txt");
             FileWriter fw = new FileWriter(spielDatei);
             fw.write(spiel.toString());
