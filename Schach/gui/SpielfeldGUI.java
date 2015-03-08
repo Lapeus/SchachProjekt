@@ -577,12 +577,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         ausgewaehlteFigur = null;
         
         spielfeld.getBedrohteFelder();
-        // Je nach aktuellem Spieler wird das Label gesetzt
-        if (spielfeld.getAktuellerSpieler()) {
-            momentanerSpieler.setText("Weiß");
-        } else {
-            momentanerSpieler.setText("Schwarz");
-        }
         List<Zug> zugliste 
             = spielfeld.getSpieldaten().getZugListe();
         Zug letzterZug = zugliste.get(zugliste.size() - 1);
@@ -718,6 +712,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     ((Computerspieler) spieler2).ziehen();
                     spielfeld.setSchach(false);
                     spielfeldAufbau();
+                }
+                // Je nach aktuellem Spieler wird das Label gesetzt
+                if (spielfeld.getAktuellerSpieler()) {
+                    momentanerSpieler.setText("Weiß");
+                } else {
+                    momentanerSpieler.setText("Schwarz");
                 }
                 spielfeldAufbau();
             /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
@@ -890,6 +890,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             // Auf das Zugzeit-Label schreiben
             zugzeit.setText(ausgabe.toString());
+            if (sekundenStopp / 1000 
+                >= parent.getEinstellungen().getZugZeitBegrenzung()) {
+                aufgeben.doClick();
+            }
         }
     }
     

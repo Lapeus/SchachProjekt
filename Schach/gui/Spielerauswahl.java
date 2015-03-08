@@ -5,7 +5,10 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 import daten.Spieler;
 /**
@@ -52,7 +56,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     /**
      * Label für den Spielnamen.
      */
-    private JLabel lSpielname = new JLabel("Spielname: ");
+    private JLabel lSpielname = new JLabel("Spielname");
     
     /**
      * Button um eine Partie zu starten.
@@ -62,7 +66,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     /**
      * Textfeld in den der Spielname eingegeben werden muss.
      */
-    private JTextField tSpielname = new JTextField("                   ");
+    private JTextPane tSpielname = new JTextPane();
     
     /**
      * Spieler der mit dem Namen aus dem Textfeld nameWest erstellt und 
@@ -133,12 +137,16 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         setBackground(cBraunRot);        
         // North (Spielname)
         Container cNorth = new JPanel();
-        cNorth.setLayout(new FlowLayout());
+        cNorth.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
         cNorth.setBackground(cBraunRot);
         lSpielname.setMinimumSize(new Dimension(150, 50));
-        cNorth.add(lSpielname);
+        cNorth.add(lSpielname, gbc);
         tSpielname.setBackground(cHellesBeige);
-        cNorth.add(tSpielname);
+        gbc.gridy = 1;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        cNorth.add(tSpielname, gbc);
         this.add(cNorth, BorderLayout.NORTH);
         
         // West (Spieler 1)
@@ -238,6 +246,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             spielerMenu 
                 = new JComboBox<String>(menschlicheSpielerListe);
             spielerMenu.setActionCommand("boxEAST");
+            spielerMenu.addActionListener(this);
             boxWEST = spielerMenu;
         }
         
@@ -311,12 +320,15 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         String nameEast = (String) boxEAST.getSelectedItem();
         // Wenn der "Spiel starten"-Button gedrueckt wird
         if (arg0.getActionCommand().equals("Spiel starten")) {
-            // Wenn zwei Spielernamen und ein Spiename vorhanden sind
-            // TODO !Zwei gleiche Spielnamen / !Zwei gleiche Spielernamen
+            /* Wenn zwei Spielernamen und ein Spiename vorhanden sind
+             * !Zwei gleiche Spielnamen
+             * !Zwei gleiche Spielernamen
+             * !Spiel existisiert bereits
+             */  
             if (!((nameWEST.getText().equals("")) 
                 || nameEAST.getText().equals("")
                 || nameWEST.getText().equals(nameEAST.getText())
-                || tSpielname.getText().equals("                   ")
+                || tSpielname.getText().equals("")
                 || spielIstBereitsVorhanden(tSpielname.getText()))) {
                 
                 // Wenn Spieler1 ein neuer Spieler ist
@@ -341,6 +353,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                             "Fehlerhafte Eingabe", JOptionPane.ERROR_MESSAGE);
                     }
                 }
+            
                 // Wenn Spieler1 ein bereits vorhandener Spieler ist
                 if (istBereitsVorhanden(nameWest) != null) {
                     spieler1 = istBereitsVorhanden(nameWest);
@@ -349,6 +362,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                 if (istBereitsVorhanden(nameEast) != null) {
                     spieler2 = istBereitsVorhanden(nameEast);
                 }
+               
                 
                 // Wenn Spieler 1 die Farbe weiss ausgewählt hat
                 if (spieler1 != null && spieler2 != null) {
@@ -376,22 +390,23 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                     "Fehlerhafte Eingabe", JOptionPane.WARNING_MESSAGE);
             }
         } 
-        if (arg0.getActionCommand().equals("boxWEST")) {
+        if (arg0.getSource().equals(boxWEST)) {
             if (!nameWest.equals("neuer Spieler")) {
                 nameWEST.setText(nameWest);
                 nameWEST.setEditable(false);
             } else {
                 nameWEST.setText("");
+                nameWEST.setEditable(true);
             }
-        } 
-        if (arg0.getActionCommand().equals("boxEAST")) {           
+        }
+        if (arg0.getSource().equals(boxEAST)) {
             if (!nameEast.equals("neuer Spieler")) {
                 nameEAST.setText(nameEast);
                 nameEAST.setEditable(false);
             } else {
                 nameEAST.setText("");
+                nameEAST.setEditable(true);
             }
         }
     }
-
 }
