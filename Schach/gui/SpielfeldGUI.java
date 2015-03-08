@@ -33,8 +33,9 @@ import daten.Spiel;
 import daten.Spieldaten;
 import daten.Spieler;
 import daten.Spielfeld;
-import daten.Zug;
 import figuren.Figur;
+import zuege.Zug;
+import zuege.Umwandlungszug;
 
 /**
  * Eine Klasse die von <b>JPanel</b> und einen eigenen <b>MouseListener</b>
@@ -619,7 +620,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 "Sie stehen im Schach!", "Schachwarnung!",
                 JOptionPane.WARNING_MESSAGE);
             spielfeld.setSchach(false);
-        } else if (letzterZug.isUmwandlung())   {
+        } else if (letzterZug instanceof Umwandlungszug)   {
             spielfeldAufbau();
             String[] moeglicheFiguren = {"Dame", "Turm", "Läufer", 
                 "Springer"};

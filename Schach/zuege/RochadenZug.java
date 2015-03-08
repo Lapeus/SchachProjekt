@@ -1,4 +1,4 @@
-package daten;
+package zuege;
 
 import figuren.Figur;
 import gui.Feld;

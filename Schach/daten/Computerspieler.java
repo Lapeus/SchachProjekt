@@ -5,6 +5,8 @@ import java.util.List;
 
 import figuren.Figur;
 import gui.Feld;
+import zuege.Zug;
+import zuege.Umwandlungszug;
 
 /**
  * Stellt einen Computergegner dar. <br>
@@ -63,7 +65,7 @@ public class Computerspieler extends Spieler {
             .size() - 1;
         Zug letzterZug = spielfeld.getSpieldaten().getZugListe()
             .get(letzterZugIndex);
-        if (letzterZug.isUmwandlung()) {
+        if (letzterZug instanceof Umwandlungszug) {
             spielfeld.umwandeln(letzterZug.getFigur(), 900);
         }
     }

@@ -3,6 +3,8 @@ package daten;
 import java.util.ArrayList;
 import java.util.List;
 
+import zuege.Zug;
+
 /**
  * Verwaltet alle spielspezifischen Daten wie die durchgef&uuml;hrten 
  * Z&uuml;ge und die Zugzeit jeden Spielers.

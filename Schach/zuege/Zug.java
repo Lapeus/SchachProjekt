@@ -1,4 +1,4 @@
-package daten;
+package zuege;
 
 import figuren.Figur;
 import gui.Feld;
@@ -45,13 +45,6 @@ public class Zug {
     private boolean ersterZug;
     
     /**
-     * Gibt an, ob dieser Zug zu einer Umwandlung eines Bauers f&uuml;hrt. <br>
-     * Ist wichtig, damit auf der Benutzeroberfl&auml;che die Auswahl, in welche
-     * Figur umgewandelt werden soll, aufgerufen werden kann.
-     */
-    private boolean umwandlung;
-    
-    /**
      * Leerer Konstrukor um Sonderz&uuml;ge mit anderen Attributen anlegen zu
      * k&ouml;nnen. <br>
      * @see RochadenZug
@@ -70,18 +63,15 @@ public class Zug {
      * @param schlagzug Ob bei diesem Zug eine andere Figur geschlagen wird
      * @param zugzeit Die Dauer des Zuges in Sekunden
      * @param ersterZug Ob es der erste Zug dieser Figur ist
-     * @param umwandlung Ob die Figur ein Bauer ist und mit diesem Zug die 
-     * gegnerische Grundlinie erreicht
      */
     public Zug(Feld startfeld, Feld zielfeld, Figur figur, boolean schlagzug
-        , int zugzeit, boolean ersterZug, boolean umwandlung) {
+        , int zugzeit, boolean ersterZug) {
         this.startfeld = startfeld;
         this.zielfeld = zielfeld;
         this.figur = figur;
         this.schlagzug = schlagzug;
         this.zugzeit = zugzeit;
         this.ersterZug = ersterZug;
-        this.umwandlung = umwandlung;
     }
     
     /**
@@ -117,11 +107,6 @@ public class Zug {
         }
         // Das Zielfeld
         string += spalten[zielfeld.getXK()] + zielfeld.getYK();
-        // Wenn es ein Umwandlungszug ist
-        if (umwandlung) {
-            // Wird nur auf die Tatsache hingewiesen
-            string += " UW";
-        }
         // Die Zugzeit 
         string += " " + zugzeit + " sek";
         
@@ -200,19 +185,5 @@ public class Zug {
         this.ersterZug = ersterZug;
     }
 
-    /**
-     * Gibt an, ob dieser Zug zu einer Umwandlung des Bauers f&uuml;hrt.
-     * @return Wahrheitswert, ob er zu einer Umwandlung f&uuml;hrt
-     */
-    public boolean isUmwandlung() {
-        return umwandlung;
-    }
-
-    /**
-     * Setzt, ob dieser Zug zu einer Umwandlung des Bauers f&uuml;hrt.
-     * @param umwandlung Wahrheitswert, ob er zu einer Umwandlung f&uuml;hrt
-     */
-    public void setUmwandlung(boolean umwandlung) {
-        this.umwandlung = umwandlung;
-    }
+  
 }

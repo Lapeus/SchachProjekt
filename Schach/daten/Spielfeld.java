@@ -13,6 +13,10 @@ import figuren.Laeufer;
 import figuren.Springer;
 import figuren.Turm;
 import gui.Feld;
+import zuege.Zug;
+import zuege.RochadenZug;
+import zuege.EnPassantZug;
+import zuege.Umwandlungszug;
 
 /**
  * Verwaltet die Figuren und ihre Position auf dem Brett.
@@ -218,17 +222,18 @@ public class Spielfeld {
             ersterZug = true;
             figur.setGezogen(true);
         }
-        // Wenn ein Bauer auf die gegnerische Grundlinie zieht
-        boolean umwandlung = false;
-        if (figur.getWert() == 100 
-            && (zielfeld.getYK() == 0 || zielfeld.getYK() == 7)) {
-            // Dann ist es ein Umwandlungszug
-            umwandlung = true;
-        }
         
         // Neuer Zug wird erstellt
-        zug = new Zug(figur.getPosition(), zielfeld, figur, schlagzug,  zugzeit,
-            ersterZug, umwandlung);
+        // Wenn es ein Umwandlungszug wird
+        if (figur.getWert() == 100 
+            && (zielfeld.getYK() == 0 || zielfeld.getYK() == 7)) {
+            zug = new Umwandlungszug(figur.getPosition(), zielfeld, figur, 
+                schlagzug, zugzeit);
+        // Wenn es ein normaler Zug wird
+        } else {
+            zug = new Zug(figur.getPosition(), zielfeld, figur, schlagzug,  
+                zugzeit, ersterZug);
+        }
         spieldaten.getZugListe().add(zug);
         // Figur wird von der aktuellen Position entfernt
         figur.getPosition().setFigur(null);
@@ -441,20 +446,20 @@ public class Spielfeld {
             }
             // Dem Feld die Figur zuweisen
             geschlagBauer.getPosition().setFigur(geschlagBauer);
-        // Sonst war es ein normaler Zug
+        // Sonst war es ein normaler Zug oder ein Umwandlungszug
         } else {
             Figur gezogeneFigur = zug.getFigur();
             // Wenn es ein Umwandlungszug war und eine Figur umgewandelt wurde
-            if (zug.isUmwandlung() 
-                && !(zug.getZielfeld().getFigur() instanceof Bauer)) {
+            if (zug instanceof Umwandlungszug) {
+                Umwandlungszug umwandlZug = (Umwandlungszug) zug;
                 // Die Listen muessen aktualisiert werden
                 if (gezogeneFigur.getFarbe()) {
                     // Die umgewandelte Figur muss weg
-                    weisseFiguren.remove(zug.getZielfeld().getFigur());
+                    weisseFiguren.remove(umwandlZug.getNeueFigur());
                     weisseFiguren.add(gezogeneFigur);
                 } else {
                     // Die umgewandelte Figur muss weg
-                    schwarzeFiguren.remove(zug.getZielfeld().getFigur());
+                    schwarzeFiguren.remove(umwandlZug.getNeueFigur());
                     schwarzeFiguren.add(gezogeneFigur);
                 }
             }
@@ -521,7 +526,10 @@ public class Spielfeld {
         } else {    
             neueFigur = new Dame(
                 figur.getPosition(), figur.getFarbe());
-        }     
+        } 
+        Umwandlungszug umwandlZug = (Umwandlungszug) spieldaten.getZugListe()
+            .get(spieldaten.getZugListe().size() - 1);
+        umwandlZug.setNeueFigur(neueFigur);
         // Sie auf das neue Feld stellen
         neueFigur.getPosition().setFigur(neueFigur);
         // Das Spielfeld zuweisen

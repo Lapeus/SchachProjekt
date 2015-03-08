@@ -182,7 +182,6 @@ public abstract class Figur {
      * @return Ein Objekt vom Typ Feld
      */
     protected Feld getFeld(int index) {
-        System.out.println(index);
         return spielfeld.getFelder().get(index);
     }
     
