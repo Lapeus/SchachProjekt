@@ -116,7 +116,7 @@ public class Spiel {
         ergebnis.add(verlierer);
         
         // Anzahl Zuege
-        ergebnis.add(spielfeld.getSpieldaten().getAnzahlZuege(spieler));
+        ergebnis.add(spielfeld.getSpieldaten().getAnzahlZuege(spieler) - 1);
         
         // Der Gewinner
         ergebnis.add(gewinner);
@@ -255,7 +255,7 @@ public class Spiel {
      * @param verlierer Der Spieler der verloren hat
      */
     private void statistikMatt(Spieler verlierer) {
-     // Die Statistik des Verlierers
+        // Die Statistik des Verlierers
         Statistik stat = verlierer.getStatistik();
         int zuege = spielfeld.getSpieldaten().getAnzahlZuege(
             verlierer.getFarbe());
