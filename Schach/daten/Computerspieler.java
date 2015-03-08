@@ -169,10 +169,11 @@ public class Computerspieler extends Spieler {
             // Suche eine Figur die das Feld schlagen kann
             List<Figur> eigeneFiguren;
             if (getFarbe()) {
-                eigeneFiguren = spielfeld.getWeisseFiguren();
+                eigeneFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
             } else {
-                eigeneFiguren = spielfeld.getSchwarzeFiguren();
+                eigeneFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
             }
+            // Groesser als 900
             int minWert = 1000;
             Figur ziehendeFigur = null;
             // Fuer jede eigene Figur
