@@ -353,7 +353,7 @@ public class Gesamtdatensatz {
             boolean aktuell = true;
             String line = br.readLine();
             // Solange es noch neue Zuege gibt
-            while (!line.equals("")) {
+            while (!(line == null || line.equals(""))) {
                 // Ganze Zeile speichern
                 notation += line + System.getProperty("line.separator");
                 /* Es gibt verschiedene Arten von Schachnotation:

@@ -241,6 +241,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         this.spieler2 = spiel.getSpieler2();
         this.spielfeld = spiel.getSpielfeld();
         this.felderListe = spielfeld.getFelder();
+        this.spiel = spiel;
         for (Feld feld : felderListe) {
             feld.addMouseListener(this);
         }
