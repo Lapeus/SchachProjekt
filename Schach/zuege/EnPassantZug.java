@@ -50,11 +50,19 @@ public class EnPassantZug extends Zug {
         // Spaltenbezeichnung
         String[] spalten = {"a", "b", "c", "d", "e", "f", "g", "h"};
         // Das Startfeld
-        string += spalten[startfeld.getXK()] + startfeld.getYK();
+        string += spalten[startfeld.getXK()] + (startfeld.getYK() + 1);
         // Ein Bauer wird geschlagen
         string += "x";
         // Das Zielfeld
-        string += spalten[schlagfeld.getXK()] + (schlagfeld.getYK() + 1);
+        // Wenn der geschlagene Bauer weiss ist
+        if (geschlagenderBauer.getFarbe()) {
+            // Ist das Zielfeld Y-1 plus die Index-Korrektur von 1
+            string += spalten[schlagfeld.getXK()] + (schlagfeld.getYK());
+        // Wenn der geschlagene Bauer schwarz ist
+        } else {
+            // Ist das Zielfeld Y+1 plus die Index-Korrektur von 1
+            string += spalten[schlagfeld.getXK()] + (schlagfeld.getYK() + 2);
+        }
         string += " e.p.";
         // Die Zugzeit 
         string += " " + getZugzeit() + " sek";

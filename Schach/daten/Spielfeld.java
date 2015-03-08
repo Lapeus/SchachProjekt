@@ -653,7 +653,7 @@ public class Spielfeld {
         }
         string += lineSep;
         string += einstellungen.toString() + lineSep;
-        string += spieldaten.toString() + lineSep;
+        string += spieldaten.toString();
         return string;
     }
     /**
