@@ -374,7 +374,7 @@ public class Gesamtdatensatz {
      */
     private Feld positionToFeld(String position, List<Feld> felderListe) {
         int x = Integer.parseInt(position.substring(0, 1));
-        int y = Integer.parseInt(position.substring(0));
+        int y = Integer.parseInt(position.substring(1));
         return felderListe.get(x + 8 * y);
     }
     
