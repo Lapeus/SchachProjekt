@@ -20,6 +20,32 @@ public class Spieldaten {
     private List<Zug> zugListe = new ArrayList<Zug>();
     
     /**
+     * Die Zugzeit von wei&szlig;, sofern ein gespeichertes Spiel vorliegt.
+     */
+    private int geladenZeitWeiss = 0;
+    
+    /**
+     * Die Zugzeit von schwarz, sofern ein gespeichertes Spiel vorliegt.
+     */
+    private int geladenZeitSchwarz = 0;
+    
+    /**
+     * Die Zuganzahl von wei&szlig;, sofern ein gespeichertes Spiel vorliegt.
+     */
+    private int geladenZuegeWeiss = 0;
+    
+    /**
+     * Die Zuganzahl von schwarz, sofern ein gespeichertes Spiel vorliegt.
+     */
+    private int geladenZuegeSchwarz = 0;
+    
+    /**
+     * Die komplette Zugliste in Schachnotation, sofern ein gespeichertes Spiel
+     * vorliegt.
+     */
+    private String geladenNotation = "";
+    
+    /**
      * Der (leere) Konstruktor dieser Klasse. <br>
      * Hierbei muss nichts passieren, da lediglich eine leere Zugliste 
      * ben&ouml;tigt wird und diese automatisch erzeugt wird.
@@ -44,13 +70,14 @@ public class Spieldaten {
      * @return Die Zugzeit des Spielers in ganzen Sekunden
      */
     public int getZugzeit(boolean spieler) {
-        int zugzeit = 0;
+        int zugzeit = geladenZeitWeiss;
         // Startindex
         int start = 0;
         // Wenn der Spieler schwarz ist
         if (!spieler) {
             // Beginnt es erst bei 1
             start = 1;
+            zugzeit = geladenZeitSchwarz;
         }
         // Fuer jeden zweiten Zug
         for (int i = start; i <= zugListe.size() - 1; i += 2) {
@@ -71,9 +98,11 @@ public class Spieldaten {
         if (spieler) {
             // Aufgerundete Anzahl, weil weiss anfaengt
             anzahl = zugListe.size() / 2 + 1;
+            anzahl += geladenZuegeWeiss;
         } else {
             // Abgerundete Anzahl, weil schwarz nach zieht
             anzahl = zugListe.size() / 2;
+            anzahl += geladenZuegeSchwarz;
         }
         return anzahl;
     }
@@ -83,7 +112,7 @@ public class Spieldaten {
      * @return Eine Zeichenkette mit allen Z&uuml;gen
      */
     public String toString() {
-        String string = "";
+        String string = geladenNotation;
         String lineSep = System.getProperty("line.separator");
         for (Zug zug : zugListe) {
             string += zug.toSchachNotation() + lineSep;
@@ -91,5 +120,50 @@ public class Spieldaten {
         return string;
     }
 
-  
+    /**
+     * Setzt die bisherige Zeit von schwarz im Falle eines gespeicherten 
+     * Spieles.
+     * @param geladenZeitSchwarz Zeit in ganzen Sekunden;
+     */
+    public void setGeladenZeitSchwarz(int geladenZeitSchwarz) {
+        this.geladenZeitSchwarz = geladenZeitSchwarz;
+    }
+    
+    /**
+     * Setzt die bisherige Zeit von wei&szlig; im Falle eines gespeicherten 
+     * Spieles.
+     * @param geladenZeitWeiss Zeit in ganzen Sekunden;
+     */
+    public void setGeladenZeitWeiss(int geladenZeitWeiss) {
+        this.geladenZeitWeiss = geladenZeitWeiss;
+    }
+    
+    /**
+     * Setzt die bisherige Zuganzahl von schwarz im Falle eines gespeicherten 
+     * Spieles.
+     * @param geladenZuegeSchwarz Anzahl der Z&uuml;ge;
+     */
+    public void setGeladenZuegeSchwarz(int geladenZuegeSchwarz) {
+        this.geladenZuegeSchwarz = geladenZuegeSchwarz;
+    }
+
+    /**
+     * Setzt die bisherige Zuganzahl von wei&szlig; im Falle eines 
+     * gespeicherten Spieles.
+     * @param geladenZuegeWeiss Anzahl der Z&uuml;ge;
+     */
+    public void setGeladenZuegeWeiss(int geladenZuegeWeiss) {
+        this.geladenZuegeWeiss = geladenZuegeWeiss;
+    }
+    
+    /**
+     * Setzt die bisherigen Z&uuml;ge in Schachnotation im Falle eines 
+     * gespeicherten Spieles.
+     * @param notation Eine mehrzeilige Zeichenkette mit der Schachnotation;
+     */
+    public void setGeladenNotation(String notation) {
+        this.geladenNotation = notation;
+    }
+    
+    
 }

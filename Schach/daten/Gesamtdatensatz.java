@@ -19,6 +19,7 @@ import figuren.Laeufer;
 import figuren.Springer;
 import figuren.Turm;
 import gui.Feld;
+import zuege.Zug;
 
 /**
  * Verwaltet alle Daten, die beim Schlie&szlig;en des Programms gespeichert und
@@ -341,24 +342,60 @@ public class Gesamtdatensatz {
             einstellungen = new Einstellungen(zzb, bool[0], bool[1], bool[2], 
                 bool[3], bool[4], bool[5]);
             
-            // TODO Schachnotation laden
-            /*String line = br.readLine();
+            // Schachnotation laden
+            String notation = "";
+            // Zugzeiten und Anzahl der Zuege fuer beide Spieler
+            int zugZeitWeiss = 0;
+            int zugZeitSchwarz = 0;
+            int zuegeWeiss = 0;
+            int zuegeSchwarz = 0;
+            // Der aktuell zu behandelne Spieler (weiss beginnt)
+            boolean aktuell = true;
+            String line = br.readLine();
+            // Solange es noch neue Zuege gibt
             while (!line.equals("")) {
-                if (line.equals("0-0")) {
-                    
-                } else if (line.equals("0-0-0")) {
-                    
+                // Ganze Zeile speichern
+                notation += line + System.getProperty("line.separator");
+                /* Es gibt verschiedene Arten von Schachnotation:
+                 * Klassisch: Db3-c4 23 sek
+                 * Schlag: Db3xc4 23 sek
+                 * Bauer: b3-b4 23 sek
+                 * Rochade: 0-0 bzw. 0-0-0 23 sek
+                 * en Passant: f5xg6 e.p. 23 sek
+                 * Die Zugzeit kann natuerlich auch verschieden viele Stellen
+                 * haben.
+                 * Daher: Die Zugzeit steht immer zwischen den letzten beiden 
+                 * Leerzeichen
+                 */
+                // Letztes Leerzeichen
+                int hinteresLeerzeichen = line.lastIndexOf(" ");
+                String vordererTeil = line.substring(0, hinteresLeerzeichen);
+                // Vorletztes Leerzeichen
+                int vorderesLeerzeichen = vordererTeil.lastIndexOf(" ");
+                // Zugzeit steht dazwischen
+                int zugzeit = Integer.parseInt(line.substring(
+                    vorderesLeerzeichen + 1, hinteresLeerzeichen));
+                // Wenn das ein weisser Zug ist
+                if (aktuell) {
+                    // Addiere die Zugzeit auf weiss und erhoehe die Zuganzahl
+                    zugZeitWeiss += zugzeit;
+                    zuegeWeiss++;
                 } else {
-                    int stelleLeerzeichen = line.indexOf(" ");
-                    String vordererTeil = line.substring(0, stelleLeerzeichen);
-                    int stelleTrennung = line.indexOf("-");
-                    
+                    // Addiere die Zugzeit auf schwarz und erhoehe die Zuganzahl
+                    zugZeitSchwarz += zugzeit;
+                    zuegeSchwarz++;
                 }
+                // Betreffenden Spieler aendern
+                aktuell = !aktuell;
                 // Naechste Zeile lesen
                 line = br.readLine();
             }
-            */
-            
+            // Die gelesenen Daten in die Spieldaten schreiben
+            spielfeld.getSpieldaten().setGeladenZeitWeiss(zugZeitWeiss);
+            spielfeld.getSpieldaten().setGeladenZeitSchwarz(zugZeitSchwarz);
+            spielfeld.getSpieldaten().setGeladenZuegeWeiss(zuegeWeiss);
+            spielfeld.getSpieldaten().setGeladenZuegeSchwarz(zuegeSchwarz);
+            spielfeld.getSpieldaten().setGeladenNotation(notation);
             // Den Reader schliessen
             br.close();
             
@@ -381,6 +418,47 @@ public class Gesamtdatensatz {
         return spiel;
     }
     
+    /**
+     * L&auml;dt mithilfe des &uuml;bergebenen BufferedReaders die Zugliste aus
+     * der Textdatei. Dabei wird Schachnotation in einen Zug umgewandelt.
+     * @param br Ein BufferedReader der entsprechenden Textdatei
+     * @param felderListe Die zugeh&ouml;hrige Liste der Felder 
+     * @return Die vollst&auml;ndige Zugliste
+     */
+    private List<Zug> ladeZugListe(BufferedReader br, List<Feld> felderListe) {
+        List<Zug> zugListe = new ArrayList<Zug>();
+        try {
+            // Schachnotation laden
+            String line = br.readLine();
+            while (!line.equals("")) {
+                if (line.equals("0-0")) {
+                
+                } else if (line.equals("0-0-0")) {
+                
+                } else {
+                    int stelleLeerzeichen = line.indexOf(" ");
+                    String vordererTeil = line.substring(0, stelleLeerzeichen);
+                    int stelleTrennung = line.indexOf("-");
+                    if (stelleTrennung == -1) {
+                        stelleTrennung = line.indexOf("x");
+                    }
+                    String figPos = vordererTeil.substring(
+                        stelleTrennung - 2, stelleTrennung);
+                    // Spaltenbezeichnung
+                    List<String> spalten = new ArrayList<String>(Arrays.asList(
+                        "a", "b", "c", "d", "e", "f", "g", "h"));
+                    int x = spalten.indexOf(figPos.substring(0, 1));
+                    int y = Integer.parseInt(figPos.substring(1)) - 1;
+                    
+                }
+                // Naechste Zeile lesen
+                line = br.readLine();
+            }
+        } catch (IOException ioEx) {
+            ioEx.printStackTrace();
+        }
+        return zugListe;
+    }
     /**
      * Erstellt eine neue felderListe mit 64 Feldern(Index 0-7, 0-7).
      * @return Die neu erstellte Felder-Liste
