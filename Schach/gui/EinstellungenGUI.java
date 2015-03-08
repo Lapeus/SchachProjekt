@@ -72,6 +72,11 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     private JButton zurueck;
     
     /**
+     * Textpain.
+     */
+    private JTextPane txtZugzeitbegrenzung;
+    
+    /**
      * Konstante fuer den Farbton des Hintergrundes (Braun).
      */
     private final Color cBraunRot = new Color(172, 59, 32); 
@@ -126,7 +131,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         String zugzeit = this.einstellungen.getZugZeitBegrenzung() + "";
-        JTextPane txtZugzeitbegrenzung = new JTextPane();
+        txtZugzeitbegrenzung = new JTextPane();
         txtZugzeitbegrenzung.setText(zugzeit);
         txtZugzeitbegrenzung.setBackground(cHellesBeige);
         // TODO Getter auf null überprüfen sonst 0 (infinty) 
@@ -279,6 +284,8 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (e.getSource().equals(speichern)) {
+            einstellungen.setZugZeitBegrenzung(
+                Integer.parseInt(txtZugzeitbegrenzung.getText()));
             parent.setEinstellungen(einstellungen);
         } else if (command.equals("moeglicheFelderJa")) {
             einstellungen.setMoeglicheFelderAnzeigen(true);
