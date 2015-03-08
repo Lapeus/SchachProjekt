@@ -709,12 +709,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     == spielfeld.getAktuellerSpieler())) {
                     ((Computerspieler) spieler1).setSpielfeld(spielfeld);
                     ((Computerspieler) spieler1).ziehen();
+                    spielfeld.setSchach(false);
                     spielfeldAufbau();
                 // Wenn spieler 2 ein Computergegner ist und dran ist
                 } else if (spieler2 instanceof Computerspieler 
                     && spieler2.getFarbe() == spielfeld.getAktuellerSpieler()) {
                     ((Computerspieler) spieler2).setSpielfeld(spielfeld);
                     ((Computerspieler) spieler2).ziehen();
+                    spielfeld.setSchach(false);
                     spielfeldAufbau();
                 }
                 spielfeldAufbau();

@@ -58,10 +58,6 @@ public class Eroeffnungsseite extends Panel {
      */
     private JButton statistiken = new JButton("Statistiken");
     
-    /**
-     * JButton um sich das Regelwerk anzusehen.
-     */
-    private JButton regelwerk = new JButton("Regelwerk");
     
     /**
      * JLabel um Fenster als Menue zu kennzeichen.
@@ -109,10 +105,10 @@ public class Eroeffnungsseite extends Panel {
         spielLaden.setActionCommand(spielLaden.getText());
         einstellungen.addActionListener(wechselListener);
         einstellungen.setActionCommand(einstellungen.getText());
+        statistiken.addActionListener(wechselListener);
+        statistiken.setActionCommand(statistiken.getText());
         highscore.addActionListener(wechselListener);
         highscore.setActionCommand(highscore.getText());
-        regelwerk.addActionListener(wechselListener);
-        regelwerk.setActionCommand(regelwerk.getText());
         
         //North
         Container cNorth = new JPanel();
@@ -125,19 +121,17 @@ public class Eroeffnungsseite extends Panel {
         // Center
         Container cCenter = new JPanel();
         cCenter.setBackground(cBraunRot);
-        cCenter.setLayout(new GridLayout(0, 1, 0, 30));
+        cCenter.setLayout(new GridLayout(0, 1, 0, 40));
         spielen.setBackground(cHellesBeige);
         spielLaden.setBackground(cHellesBeige);
         einstellungen.setBackground(cHellesBeige);
         highscore.setBackground(cHellesBeige);
         statistiken.setBackground(cHellesBeige);
-        regelwerk.setBackground(cHellesBeige);
         cCenter.add(spielen);
         cCenter.add(spielLaden);
         cCenter.add(einstellungen);
         cCenter.add(highscore);
         cCenter.add(statistiken);
-        cCenter.add(regelwerk);
         this.add(cCenter, BorderLayout.CENTER);
         
         // East 

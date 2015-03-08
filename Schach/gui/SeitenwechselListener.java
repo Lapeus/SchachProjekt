@@ -51,9 +51,6 @@ public class SeitenwechselListener implements ActionListener {
         if (command == "Statistiken") {
             parent.seitenAuswahl(command);
         }
-        if (command == "Regelwerk") {
-            parent.seitenAuswahl(command);
-        }
         if (command == "Spiel starten") {
             parent.seitenAuswahl("SpielfeldGUI");
         } 

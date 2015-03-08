@@ -93,6 +93,8 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         super();
         this.parent = parent;
         this.einstellungen = parent.getEinstellungen();
+        this.setLayout(new BorderLayout());
+        this.setBackground(cBraunRot);
         init();
     }
     
@@ -100,8 +102,6 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
      * Erstellt das Aussehen der Einstellungsseite.
      */
     private void init() {
-        this.setLayout(new BorderLayout());
-        this.setBackground(cBraunRot);
         // North
         Container cNorth = new Container(); 
         cNorth.setLayout(new FlowLayout());
@@ -109,8 +109,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         JLabel einstellungen = new JLabel("Einstellungen");
         einstellungen.setFont(new Font("Arial", Font.BOLD, 20));
         cNorth.add(einstellungen);
-        add(cNorth, BorderLayout.NORTH);
-        
+        add(cNorth, BorderLayout.NORTH);        
         // Center
         Container cCenter = new JPanel();
         cCenter.setLayout(new GridBagLayout());
@@ -118,7 +117,6 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
-
         // Label Zugzeitbegrenzung
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -132,8 +130,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         txtZugzeitbegrenzung.setText(zugzeit);
         txtZugzeitbegrenzung.setBackground(cHellesBeige);
         // TODO Getter auf null überprüfen sonst 0 (infinty) 
-        cCenter.add(txtZugzeitbegrenzung, gbc);
-        
+        cCenter.add(txtZugzeitbegrenzung, gbc);        
         // Label Mögliche Felder anzeigen
         gbc.gridwidth = 1;
         gbc.gridx = 0;
@@ -150,8 +147,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         gbc.gridx = 1;
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
-        cCenter.add(nein, gbc);
-        
+        cCenter.add(nein, gbc);      
         // Label bedrohte Figuren anzeigen
         gbc.gridy = 2;
         gbc.gridx = 0;
@@ -168,8 +164,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         gbc.gridx = 1;
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
-        cCenter.add(nein, gbc);
-        
+        cCenter.add(nein, gbc);       
         // Label Rochade benutzbar
         gbc.gridy = 3;
         gbc.gridx = 0;
@@ -186,8 +181,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         gbc.gridx = 1;
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
-        cCenter.add(nein, gbc);
-        
+        cCenter.add(nein, gbc);        
         // Label En-passant-Schlagen
         gbc.gridy = 4;
         gbc.gridx = 0;
@@ -204,8 +198,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         gbc.gridx = 1;
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
-        cCenter.add(nein, gbc);
-        
+        cCenter.add(nein, gbc);       
         // Label Schachwarnung
         gbc.gridy = 5;
         gbc.gridx = 0;
@@ -222,8 +215,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         gbc.gridx = 1;
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
-        cCenter.add(nein, gbc);
-        
+        cCenter.add(nein, gbc);        
         // Label Statistik
         gbc.gridy = 6;
         gbc.gridx = 0;
@@ -240,23 +232,19 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         gbc.gridx = 1;
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
-        cCenter.add(nein, gbc);
-        
+        cCenter.add(nein, gbc);        
         // South
         JPanel cSouth = new JPanel();
         cSouth.setBackground(cBraunRot);
-
         speichern = new JButton("Einstellungen Speichern");
         speichern.setBackground(cHellesBeige);
         speichern.addActionListener(this);
-        cSouth.add(speichern);
-        
+        cSouth.add(speichern);        
         zurueck = new JButton("Zurück");
         zurueck.setBackground(cHellesBeige);
         zurueck.setActionCommand("Eroeffnungsseite");
         zurueck.addActionListener(new SeitenwechselListener(parent));
-        cSouth.add(zurueck);
-        
+        cSouth.add(zurueck); 
         this.add(cSouth, BorderLayout.SOUTH);
         this.add(cCenter, BorderLayout.CENTER);
     }

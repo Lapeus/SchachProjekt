@@ -62,11 +62,12 @@ public class SpielGUI extends JFrame implements WindowListener {
      */
     public void seitenAuswahl(String auswahl) {
         Container seite;
+        Dimension minimaleGroesse;
         switch (auswahl) {
         case "Eroeffnungsseite":
             seite = new Eroeffnungsseite(this);
             this.setContentPane(seite);
-            Dimension minimaleGroesse = new Dimension(500, 500);
+            minimaleGroesse = new Dimension(500, 500);
             setMinimumSize(minimaleGroesse);
             setSize(minimaleGroesse);
             setLocationRelativeTo(null);
@@ -80,6 +81,9 @@ public class SpielGUI extends JFrame implements WindowListener {
         case "Spiel laden":
             seite = new SpielLaden(this);
             this.setContentPane(seite);
+            minimaleGroesse = new Dimension(300, 300);
+            setMinimumSize(minimaleGroesse);
+            setSize(minimaleGroesse);
             break;
             
         case "Einstellungen":
@@ -90,13 +94,9 @@ public class SpielGUI extends JFrame implements WindowListener {
         case "Highscore":
             seite = new Highscore(this);
             this.setContentPane(seite);
-            
-        case "Statistiken":
-            seite = new Statistiken(this);
-            this.setContentPane(seite);
             break;
             
-        case "Regelwerk":
+        case "Statistiken":
             seite = new Statistiken(this);
             this.setContentPane(seite);
             break;
@@ -144,6 +144,14 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
+     * Methode zur rueckgabe der MenschlichenSpielerListe des Gesamtdatensatzes.
+     * @return MeschlicheSpielerListe des Gesamtdatensatzes
+     */
+    public List<Spieler> getMenschlicheSpielerListe() {
+        return  gesamtdatensatz.getMenschlicheSpieler();
+    }
+    
+    /**
      * Gibt den Einstellungsatz der momentanten Spielsession zurueck.
      * @return momentaner Einstellungssatz
      */
@@ -177,6 +185,14 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
+     * Gibt die HighscoreListe des Gesamtdatensatzes zurueck.
+     * @return nach Punkten gerankedte Spielerliste 
+     */
+    public List<Spieler> getRanking() {
+        return gesamtdatensatz.getRanking();
+    }
+    
+    /**
      * Initiert das Laden des Gesamtdatensatzes durch die Datenklassen.
      */
     private void gesamtdatenLaden() {
@@ -192,6 +208,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     private void gesamtdatenSpeichern() {
         gesamtdatensatz.speichern();
     }
+    
     
     
     
@@ -234,7 +251,7 @@ public class SpielGUI extends JFrame implements WindowListener {
             gesamtdatenSpeichern();
             System.exit(0);
         }
-        // Wenn 
+        // Wenn Nein angeklickt wird passiert nichts
     }
     
     /**

@@ -214,21 +214,35 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         eingabePanel.setLayout(new GridLayout(6, 1, 5, 0));
         
         // ComboBox
-        // TODO Array mit den Spielern (spielerArray)
-        String[] spielerListe = new String[parent.getSpielerListe().size() + 1];
-        spielerListe[0] = "neuer Spieler";
-        for (int i = 0; i < spielerListe.length - 1; i++) {
-            spielerListe[i + 1] = parent.getSpielerListe().get(i).getName();
-        }
-        JComboBox<String> spielerMenu = new JComboBox<String>(spielerListe);
-        spielerMenu.addActionListener(this);
-        if (seite.equals("West")) {
+        JComboBox<String> spielerMenu;
+        // Array mit allen Spielern + Computerspieler (EAST)
+        if (seite.equals("East")) {
+            String[] spielerListe 
+                = new String[parent.getSpielerListe().size() + 1];
+            spielerListe[0] = "neuer Spieler";
+            for (int i = 0; i < spielerListe.length - 1; i++) {
+                spielerListe[i + 1] = parent.getSpielerListe().get(i).getName();
+            }
+            spielerMenu = new JComboBox<String>(spielerListe);
+            spielerMenu.addActionListener(this);
             spielerMenu.setActionCommand("boxWEST");
-            boxWEST = spielerMenu;
-        } else {
-            spielerMenu.setActionCommand("boxEAST");
             boxEAST = spielerMenu;
+        } else {
+            String[] menschlicheSpielerListe 
+                = new String[parent.getMenschlicheSpielerListe().size() + 1];
+            menschlicheSpielerListe[0] = "neuer Spieler";
+            for (int i = 0; i < menschlicheSpielerListe.length - 1; i++) {
+                menschlicheSpielerListe[i + 1] 
+                    = parent.getMenschlicheSpielerListe().get(i).getName();
+            }
+            spielerMenu 
+                = new JComboBox<String>(menschlicheSpielerListe);
+            spielerMenu.setActionCommand("boxEAST");
+            boxWEST = spielerMenu;
         }
+        
+        
+        
         spielerMenu.setBackground(cHellesBeige);
         eingabePanel.add(spielerMenu);
         
@@ -264,6 +278,21 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         return spielerVorhanden;
     }
     
+    /**
+     * Gibt zurueck ob ein Spiel mit dem Namen schon existiert.
+     * @param name String name nach welchem gesucht werden soll
+     * @return true - spiel gibt es bereits false - spiel gibt es noch nicht
+     */
+    private boolean spielIstBereitsVorhanden(String name) {
+        boolean vorhanden = false;
+        for (String spielname : parent.getSpieleListe()) {
+            if (spielname.equals(name)) {
+                vorhanden = true;
+            }
+        }
+        return vorhanden;    
+    }
+    
     // Methoden Ende
     
     // ActionListener
@@ -285,20 +314,33 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             // Wenn zwei Spielernamen und ein Spiename vorhanden sind
             // TODO !Zwei gleiche Spielnamen / !Zwei gleiche Spielernamen
             if (!((nameWEST.getText().equals("")) 
-                || nameEAST.getText().equals("") 
-                || tSpielname.getText().equals("                   "))) {
+                || nameEAST.getText().equals("")
+                || nameWEST.getText().equals(nameEAST.getText())
+                || tSpielname.getText().equals("                   ")
+                || spielIstBereitsVorhanden(tSpielname.getText()))) {
                 
                 // Wenn Spieler1 ein neuer Spieler ist
-                if (nameWest.equals("neuer Spieler")) {
-                    spieler1 = new Spieler(nameWEST.getText());
-                    parent.addSpieler(spieler1);
+                if (nameWest.equals("neuer Spieler")) { 
+                    if (istBereitsVorhanden(nameWEST.getText()) == null) {
+                        spieler1 = new Spieler(nameWEST.getText());
+                        parent.addSpieler(spieler1);
+                    } else {
+                        JOptionPane.showMessageDialog(parent, "Der Spieler " 
+                            + nameWEST.getText() + " existiert bereits!", 
+                            "Fehlerhafte Eingabe", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 // Wenn Spieler2 ein neuer Spieler ist
                 if (nameEast.equals("neuer Spieler")) {
-                    spieler2 = new Spieler(nameEAST.getText());
-                    parent.addSpieler(spieler2);
+                    if (istBereitsVorhanden(nameEAST.getText()) == null) {
+                        spieler2 = new Spieler(nameEAST.getText());
+                        parent.addSpieler(spieler2);
+                    } else {
+                        JOptionPane.showMessageDialog(parent, "Der Spieler " 
+                            + nameEAST.getText() + " existiert bereits!", 
+                            "Fehlerhafte Eingabe", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
-                
                 // Wenn Spieler1 ein bereits vorhandener Spieler ist
                 if (istBereitsVorhanden(nameWest) != null) {
                     spieler1 = istBereitsVorhanden(nameWest);
@@ -309,22 +351,24 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                 }
                 
                 // Wenn Spieler 1 die Farbe weiss ausgewählt hat
-                if (bGFarbauswahl.getSelection().
-                    getActionCommand().equals("weiss")) {
-                    spieler1.setFarbe(true);
-                    spieler2.setFarbe(false);
-                // Wenn Spieler 1 die Farbe schwarz ausgewählt hat
-                } else {
-                    spieler1.setFarbe(false);
-                    spieler2.setFarbe(true);
-                }
-                /* Die Pane für das Hauptfenster auf eine neue SpielfeldGUI
-                 * setzten und die oben gefilterten Parameter für spielernamen
-                 * und Spielnamen übergben
-                */
-                parent.setContentPane(new SpielfeldGUI(parent,
-                    tSpielname.getText(), spieler1, spieler2));
-                parent.revalidate();
+                if (spieler1 != null && spieler2 != null) {
+                    if (bGFarbauswahl.getSelection().
+                        getActionCommand().equals("weiss")) {
+                        spieler1.setFarbe(true);
+                        spieler2.setFarbe(false);
+                    // Wenn Spieler 1 die Farbe schwarz ausgewählt hat
+                    } else {
+                        spieler1.setFarbe(false);
+                        spieler2.setFarbe(true);
+                    }
+                    /* Die Pane für das Hauptfenster auf eine neue SpielfeldGUI
+                     * setzten und die oben gefilterten Parameter für 
+                     * spielernamen und Spielnamen übergben
+                    */
+                    parent.setContentPane(new SpielfeldGUI(parent,
+                        tSpielname.getText(), spieler1, spieler2));
+                    parent.revalidate();
+                }  
             } else {
                 JOptionPane.showMessageDialog(parent, "Geben sie bitte gültige"
                     + " Namen für die das Spiel und die Spieler ein bzw. wählen"
@@ -336,12 +380,16 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             if (!nameWest.equals("neuer Spieler")) {
                 nameWEST.setText(nameWest);
                 nameWEST.setEditable(false);
+            } else {
+                nameWEST.setText("");
             }
         } 
         if (arg0.getActionCommand().equals("boxEAST")) {           
             if (!nameEast.equals("neuer Spieler")) {
                 nameEAST.setText(nameEast);
                 nameEAST.setEditable(false);
+            } else {
+                nameEAST.setText("");
             }
         }
     }
