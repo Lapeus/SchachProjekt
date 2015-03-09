@@ -403,6 +403,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Updaten der Spielfeldoberfläche.
      */
     private void spielfeldUIUpdate() {
+        spielfeldDrehen();
         if (spielfeld.getSpieldaten().getZugListe().isEmpty()) {
             rueckgaengig.setEnabled(false);
         } else {
@@ -902,6 +903,31 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 aufgeben.doClick();
             }
         }
+    }
+    
+    /**
+     * Dreht das Spielfeld, sodass es immer vom aktuellen Spieler aus gesehen 
+     * wird.
+     */
+    private void spielfeldDrehen() {
+        // Entfernt alle Felder
+        cCenter.removeAll();
+        // Wenn weiss dran ist
+        if (spielfeld.getAktuellerSpieler()) {
+            for (int i = 7; i >= 0; i--) {
+                for (int j = 0; j < 8; j++) {
+                    cCenter.add(felderListe.get(j + i * 8));
+                }
+            }
+        // Wenn schwarz dran ist
+        } else {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    cCenter.add(felderListe.get(j + i * 8));
+                }
+            }
+        }
+        this.revalidate();
     }
     
 }
