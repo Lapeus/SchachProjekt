@@ -3,6 +3,8 @@ package daten;
 import java.util.ArrayList;
 import java.util.List;
 
+import zuege.Zug;
+
 /**
  * Verwaltet alle wichtigen Daten f&uuml;r ein Spiel. <br>
  * Ein Spiel besteht aus einem Namen, den beteiligten Spielern, dem 
@@ -102,6 +104,10 @@ public class Spiel {
      * Aufgeben
      */
     public List<Object> aufgeben(boolean spieler) {
+        // Aufgeben-Zug hinzuf&uuml;gen
+        Zug zug = new Zug();
+        spielfeld.getSpieldaten().getZugListe().add(zug);
+        // ErgebnisListe erstellen
         List<Object> ergebnis = new ArrayList<Object>();
         Spieler gewinner;
         Spieler verlierer;
@@ -127,6 +133,15 @@ public class Spiel {
         }
         
         return ergebnis;
+    }
+    
+    /**
+     * Wertet eine Einigung auf Unentschieden zwischen den Spielern aus.
+     */
+    public void unentschieden() {
+        if (spielfeld.getEinstellungen().isInStatistikEinbeziehen()) {
+            statistik(false, spieler1, spieler2);
+        }
     }
     
     /**
@@ -195,7 +210,7 @@ public class Spiel {
         }
         
         // Wenn es noch gar keinen Rekord gibt
-        if (stat.getKuerzesterSieg() == 0) {
+        if (stat.getKuerzesterSieg() == -1) {
             stat.setKuerzesterSieg(zuege);
         }
         
@@ -206,7 +221,7 @@ public class Spiel {
         }
         
         // Wenn es noch gar keinen Rekord gibt
-        if (stat.getSchnellsterSieg() == 0) {
+        if (stat.getSchnellsterSieg() == -1) {
             stat.setSchnellsterSieg(zugzeit);
         }
         
@@ -271,7 +286,7 @@ public class Spiel {
         }
         
         // Wenn es noch gar keinen Rekord gibt
-        if (stat.getKuerzestesMatt() == 0) {
+        if (stat.getKuerzestesMatt() == -1) {
             stat.setKuerzestesMatt(zuege);
         }
         
@@ -282,7 +297,7 @@ public class Spiel {
         }
         
         // Wenn es noch gar keinen Rekord gibt
-        if (stat.getSchnellstesMatt() == 0) {
+        if (stat.getSchnellstesMatt() == -1) {
             stat.setSchnellstesMatt(zugzeit);
         }
 

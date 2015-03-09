@@ -624,6 +624,31 @@ public class Spielfeld {
     }
     
     /**
+     * Gibt das Startfeld und das Zielfeld der zuletzt gezogenen Figur in einer
+     * Liste zur&uuml;ck.
+     * @return Eine Liste mit zwei Feldern: erst das Startfeld, dann das 
+     * Zielfeld
+     */
+    public List<Feld> getLetzteFelder() {
+        List<Feld> letzteFelder = new ArrayList<Feld>();
+        Zug zug = spieldaten.getZugListe().get(
+            spieldaten.getZugListe().size() - 1);
+        if (zug instanceof EnPassantZug) {
+            letzteFelder.add(zug.getStartfeld());
+            letzteFelder.add(
+                ((EnPassantZug) zug).getAusfuehrer().getPosition());
+        } else if (zug instanceof RochadenZug) {
+            letzteFelder.add(((RochadenZug) zug).getStartfeldK());
+            letzteFelder.add(((RochadenZug) zug).getKoenig().getPosition());
+            letzteFelder.add(((RochadenZug) zug).getStartfeldT());
+            letzteFelder.add(((RochadenZug) zug).getTurm().getPosition());
+        } else {
+            letzteFelder.add(zug.getStartfeld());
+            letzteFelder.add(zug.getZielfeld());
+        }
+        return letzteFelder;
+    }
+    /**
      * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
      * Wird beim Speichern ben&ouml;tigt.
      * @return Eine mehrzeilige Zeichenkette

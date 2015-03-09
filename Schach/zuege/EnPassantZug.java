@@ -41,6 +41,9 @@ public class EnPassantZug extends Zug {
         setZugzeit(zugzeit);
     }
     
+    public EnPassantZug(Feld startfeld, Feld zielfeld, int zugzeit) {
+        this.startfeld = startfeld;
+    }
     /**
      * {@inheritDoc}
      */
@@ -75,7 +78,11 @@ public class EnPassantZug extends Zug {
      * @return Der ziehende Bauer
      */
     public Figur getAusfuehrer() {
-        return ausfuehrenderBauer;
+        if (ausfuehrenderBauer == null) {
+            return startfeld.getFigur();
+        } else {
+            return ausfuehrenderBauer;
+        }
     }
     
     /**
@@ -91,6 +98,11 @@ public class EnPassantZug extends Zug {
      * @return Der geschlagene Bauer
      */
     public Figur getGeschlagenen() {
+        if (geschlagenderBauer == null) {
+            if (startfeld.getYK() == 4) {
+                
+            }
+        }
         return geschlagenderBauer;
     }
   

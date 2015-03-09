@@ -19,6 +19,7 @@ import figuren.Laeufer;
 import figuren.Springer;
 import figuren.Turm;
 import gui.Feld;
+import zuege.Umwandlungszug;
 import zuege.Zug;
 
 /**
@@ -430,26 +431,62 @@ public class Gesamtdatensatz {
         try {
             // Schachnotation laden
             String line = br.readLine();
+            // Solange noch eine Zeile zu laden ist
             while (!line.equals("")) {
+                // Wenn es eine kleine Rochade ist
                 if (line.equals("0-0")) {
                 
+                // Wenn es eine grosse Rochade ist
                 } else if (line.equals("0-0-0")) {
                 
+                // Wenn es ein normaler Zug ist
                 } else {
+                    // Das erste Leerzeichen
                     int stelleLeerzeichen = line.indexOf(" ");
+                    // Der reine Zug
                     String vordererTeil = line.substring(0, stelleLeerzeichen);
+                    // Das Trennungszeichen (x oder -)
                     int stelleTrennung = line.indexOf("-");
+                    // Es ist grundsaetzlich kein Schlagzug
+                    boolean schlagzug = false;
+                    // Wenn kein - vorhanden ist, ist es doch ein Schlagzug
                     if (stelleTrennung == -1) {
                         stelleTrennung = line.indexOf("x");
+                        schlagzug = true;
                     }
-                    String figPos = vordererTeil.substring(
-                        stelleTrennung - 2, stelleTrennung);
                     // Spaltenbezeichnung
                     List<String> spalten = new ArrayList<String>(Arrays.asList(
                         "a", "b", "c", "d", "e", "f", "g", "h"));
-                    int x = spalten.indexOf(figPos.substring(0, 1));
-                    int y = Integer.parseInt(figPos.substring(1)) - 1;
-                    
+                    // Das Startfeld
+                    String figPos1 = vordererTeil.substring(
+                        stelleTrennung - 2, stelleTrennung);
+                    // Koordinaten des Startfeldes
+                    int x = spalten.indexOf(figPos1.substring(0, 1));
+                    int y = Integer.parseInt(figPos1.substring(1)) - 1;
+                    // Das Startfeld
+                    Feld startfeld = felderListe.get(x + 8 * y);
+                    // Das Zielfeld
+                    String figPos2 = vordererTeil.substring(
+                        stelleTrennung + 1, stelleTrennung + 3);
+                    // Koordinaten des Zielfeldes
+                    x = spalten.indexOf(figPos2.substring(0, 1));
+                    y = Integer.parseInt(figPos2.substring(1)) - 1;
+                    // Das Zielfeld
+                    Feld zielfeld = felderListe.get(x + 8 * y);
+                    /* Wenn hinter dem Trennungszeichen 3 Zeichen kommen, ist
+                     * es ein Umwandlungszug
+                     */
+                    if (vordererTeil.substring(stelleTrennung + 1)
+                        .length() == 3) {
+                        // TODO Neuer Umwandlungszug ohne Figuren zu haben
+                    /* Wenn die Zeile ein e.p. enthaelt, ist es ein En-Passant
+                     * Zug
+                     */
+                    } else if (line.contains("e.p.")) {
+                        
+                    } else {
+                        
+                    }
                 }
                 // Naechste Zeile lesen
                 line = br.readLine();
@@ -561,30 +598,13 @@ public class Gesamtdatensatz {
     }
     
     /**
-     * Eine statische Klasse, die zwei Spieler aufgrund ihres Scores vergleicht.
-     * @author Christian Ackermann
-     */
-    public static class SpielerComparator implements Comparator<Spieler> {
-        @Override
-        public int compare(Spieler sp1, Spieler sp2) {
-            // Wenn der Score des ersten Spielers kleiner ist
-            if (sp1.getStatistik().getScore() 
-                < sp2.getStatistik().getScore()) {
-                return 1;
-            } else {
-                return -1;
-            }
-        }
-    }
-    
-    /**
      * Sortiert die angegebene Liste von Spielern nach Score.
      * @param spieler Die zu sortierende Liste von Spielern
      * @return Die sortierte Liste
      */
     private List<Spieler> sortiereListe(List<Spieler> spieler) {
-        Collections.sort(spieler, new SpielerComparator());
-        return spieler;
+        // TODO Sortiere
+        return null;
     }
     
     /**

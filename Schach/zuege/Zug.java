@@ -74,6 +74,15 @@ public class Zug {
         this.ersterZug = ersterZug;
     }
     
+    public Zug(Feld startfeld, Feld zielfeld, boolean schlagzug, int zugzeit,
+        boolean ersterZug) {
+        this.startfeld = startfeld;
+        this.zielfeld = zielfeld;
+        this.schlagzug = schlagzug;
+        this.zugzeit = zugzeit;
+        this.ersterZug = ersterZug;
+    }
+    
     /**
      * Gibt den Zug in einer stark vereinfachten Schachnotation samt Zugzeit 
      * wieder.
@@ -81,7 +90,7 @@ public class Zug {
      */
     public String toSchachNotation() {
         String string = "";
-        int wert = figur.getWert();
+        int wert = getFigur().getWert();
         // Figurensymbol
         if (wert == 275) {
             string += "S";
@@ -134,7 +143,11 @@ public class Zug {
      * @return Die Figur
      */
     public Figur getFigur() {
-        return figur;
+        if (figur == null) {
+            return startfeld.getFigur();
+        } else {
+            return figur;
+        }
     }
     
     /**

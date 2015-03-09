@@ -45,52 +45,52 @@ public class Statistik {
     /**
      * Zeit bis zum schnellsten Sieg.
      */
-    private int schnellsterSieg = 0;
+    private int schnellsterSieg = -1;
     
     /**
      * Anzahl Z&uuml;ge bis zum schnellsten Sieg.
      */
-    private int kuerzesterSieg = 0;
+    private int kuerzesterSieg = -1;
     
     /**
      * Zeit bis zum Schnellsten Matt.
      */
-    private int schnellstesMatt = 0;
+    private int schnellstesMatt = -1;
     
     /**
      * Anzahl Z&uuml;ge bis zum schnellsten Matt.
      */
-    private int kuerzestesMatt = 0;
+    private int kuerzestesMatt = -1;
     
     /**
      * Durchschnittlich ben&ouml;tigte Zeit f&uuml;r einen Sieg.
      */
-    private int zeitSiegDurchschnitt = 0;
+    private int zeitSiegDurchschnitt = -1;
     
     /**
      * Durchschnittlich ben&ouml;tigte Zeit bis zum Matt.
      */
-    private int zeitMattDurchschnitt = 0;
+    private int zeitMattDurchschnitt = -1;
     
     /**
      * Durchschnittliche Anzahl an Z&uuml;gen bis zum Sieg.
      */
-    private int zuegeSiegDurchschnitt = 0;
+    private int zuegeSiegDurchschnitt = -1;
     
     /**
      * Durchschnittliche Anzahl an Z&uuml;gen bis zum Matt.
      */
-    private int zuegeMattDurchschnitt = 0;
+    private int zuegeMattDurchschnitt = -1;
     
     /**
      * Durchschnittlicher Materialwert beim Sieg.
      */
-    private int matWertSiegDurchschnitt = 0;
+    private int matWertSiegDurchschnitt = -1;
     
     /**
      * Durchschnittlicher Materialwert beim Matt.
      */
-    private int matWertMattDurchschnitt = 0;
+    private int matWertMattDurchschnitt = -1;
     
     /**
      * Erstellt eine neue Statistik f&uuml;r den Spieler.<br>
@@ -135,18 +135,27 @@ public class Statistik {
         double score = 0;
         // Anzahl der gespielten Partien
         int anzahlSpiele = getAnzahlSpiele();
-        // Drei Punkte fuer Sieg
-        score = 3 * anzahlSiege;
-        // Ein Punkt fuer Patt
-        score += anzahlPatt;
+        // 300 Punkte fuer Sieg
+        score = 300 * anzahlSiege;
+        // 100 Punkte fuer Patt
+        score += 100 * anzahlPatt;
         // Durchschnitt pro Partie
         score /= anzahlSpiele;
-        // Ganzzahliger hundertfacher Wert
-        score = Math.round(score * 100);
         /* Einbeziehen von durchschnittlichen Zuegen und durchschnittlichem
          * Materialwert bei Gewinn und Verlust
          */
-        
+        if (zuegeSiegDurchschnitt != -1) {
+         // Addiert, wie viel eher man gewinnt
+            score += (50 - zuegeSiegDurchschnitt);
+        }
+        if (zuegeMattDurchschnitt != -1) {
+         // Abgezogen, wie viel eher man verliert
+            score -= (50 - zuegeMattDurchschnitt);
+        }
+        if (matWertSiegDurchschnitt != -1) {
+         // Abgezogen, wie viele Figuren man im Schnitt verliert
+            score -= (3830 - matWertSiegDurchschnitt) / 100.0;
+        }
         // Versuch, den maxWert auf 1000 zu setzen
         /* Durchschnitt pro Partie sind 300
          * Maximaler Materialwert ist 3830

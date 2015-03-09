@@ -3,6 +3,9 @@ package daten;
 import java.util.ArrayList;
 import java.util.List;
 
+import zuege.EnPassantZug;
+import zuege.RochadenZug;
+import zuege.Umwandlungszug;
 import zuege.Zug;
 
 /**
@@ -55,13 +58,36 @@ public class Spieldaten {
     }
     
     /**
-     * Gibt die Liste mit den durchgef&uuml;hrten Z&uuml;gen zur&uuml;ck.
-     * @return Eine Liste mit allen Z&uuml;gen
+     * Pr&uuml;ft, ob laut der 50-Z&uuml;ge-Regel die Partie Remis ausgeht.<br>
+     * Voraussetzungen: In den letzten 50 Z&uuml;gen durfte kein Bauer gezogen
+     * und keine Figur geschlagen worden sein.
+     * @return <b>true</b> wenn das Spiel nach der Regel beendet werden kann
      */
-    public List<Zug> getZugListe() {
-        return zugListe;
+    public boolean fuenfzigZuegeRegel() {
+        // Grundsaetzliche Annahme, die 50 Zuege Regel wuerde zutreffen
+        boolean remis = true;
+        int zaehl = 0; 
+        /* Solange noch nicht alle letzten 50 Zuege getestet wurden und noch
+         * keine Anforderung nicht erfuellt wurde
+         */
+        while (remis && zaehl < 50) {
+            // Der zaehlte Zug von hinten
+            Zug zug = zugListe.get(zugListe.size() - zaehl - 1);
+            // Wenn es ein EnPassantZug oder ein Umwandlungszug war
+            if (zug instanceof EnPassantZug || zug instanceof Umwandlungszug) {
+                // Wurde ein Bauer bewegt
+                remis = false;
+            // Wenn es kein RochadenZug war (also ein normaler)
+            } else if (!(zug instanceof RochadenZug)) {
+                // Wenn die Figur ein Bauer war oder eine Figur geschlagen wurde
+                if (zug.getFigur().getWert() == 100 || zug.isSchlagzug()) {
+                    remis = false;
+                }
+            }
+            zaehl++;
+        }
+        return remis;
     }
-    
     /**
      * Gibt die gesamte Zugzeit des angegebenen Spielers zur&uuml;ck.
      * @param spieler Die Spielfarbe des Spielers, f&uuml;r den die Zugzeit
@@ -81,7 +107,9 @@ public class Spieldaten {
         }
         // Fuer jeden zweiten Zug
         for (int i = start; i <= zugListe.size() - 1; i += 2) {
-            zugzeit += zugListe.get(i).getZugzeit();
+            if (zugListe.get(i) != null) {
+                zugzeit += zugListe.get(i).getZugzeit();
+            }
         }
         return zugzeit;
     }
@@ -120,6 +148,14 @@ public class Spieldaten {
         return string;
     }
 
+    /**
+     * Gibt die Liste mit den durchgef&uuml;hrten Z&uuml;gen zur&uuml;ck.
+     * @return Eine Liste mit allen Z&uuml;gen
+     */
+    public List<Zug> getZugListe() {
+        return zugListe;
+    }
+    
     /**
      * Setzt die bisherige Zeit von schwarz im Falle eines gespeicherten 
      * Spieles.
