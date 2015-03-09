@@ -145,15 +145,15 @@ public class Statistik {
          * Materialwert bei Gewinn und Verlust
          */
         if (zuegeSiegDurchschnitt != -1) {
-         // Addiert, wie viel eher man gewinnt
-            score += (50 - zuegeSiegDurchschnitt);
+            // Addiert, wie viel eher man gewinnt
+            score += (40 - zuegeSiegDurchschnitt);
         }
         if (zuegeMattDurchschnitt != -1) {
-         // Abgezogen, wie viel eher man verliert
-            score -= (50 - zuegeMattDurchschnitt);
+            // Abgezogen, wie viel eher man verliert
+            score -= (40 - zuegeMattDurchschnitt);
         }
         if (matWertSiegDurchschnitt != -1) {
-         // Abgezogen, wie viele Figuren man im Schnitt verliert
+            // Abgezogen, wie viele Figuren man im Schnitt verliert
             score -= (3830 - matWertSiegDurchschnitt) / 100.0;
         }
         // Versuch, den maxWert auf 1000 zu setzen

@@ -416,6 +416,9 @@ public class Gesamtdatensatz {
         
         // Die Quelldatei loeschen
         file.delete();
+        // Die Liste aktualisieren
+        gespeicherteSpiele.remove(name);
+        
         return spiel;
     }
     

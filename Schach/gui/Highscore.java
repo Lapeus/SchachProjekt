@@ -43,7 +43,7 @@ public class Highscore extends JPanel {
     /**
      * Konstante fuer den Farbton des Hintergrundes (Braun).
      */
-    private final Color cBraunRot = new Color(172, 59, 32); 
+    private final Color cBraunRot = new Color(164, 43, 24); 
     
     /**
      * Konstante fuer den Farbton der Buttons (Beige).

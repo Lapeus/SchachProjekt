@@ -70,25 +70,70 @@ public class Computerspieler extends Spieler {
         }
     }
     
-    private int zugGenerator(int stufe) {
+    private void stufe2(int maxStufe) {
         List<Figur> alleFiguren;
+        // Wenn momentan weiss dran ist
+        if (getFarbe()) {
+            alleFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
+        } else {
+            alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
+        }
+        // Maximale Bewertung; initialisiert mit niedrigstem Wert
+        int maxbewertung = -3830;
+        // Der Zug der durchgefuehrt werden soll
+        List<Object> besterZug = new ArrayList<Object>();
+        // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
+        for (Figur figur : alleFiguren) {
+            for (Feld feld : figur.getKorrektFelder()) {
+                spielfeld.ziehe(figur, feld, 0);
+                int bewertung = zugGenerator(1, maxStufe);
+                if (getFarbe()) {
+                    if (bewertung > maxbewertung) {
+                        besterZug.clear();
+                        besterZug.add(figur);
+                        besterZug.add(feld);
+                        maxbewertung = bewertung;
+                    }
+                }
+                spielfeld.zugRueckgaengig();
+            }
+        }
+        System.out.println(maxbewertung);
+        spielfeld.ziehe((Figur) besterZug.get(0), (Feld) besterZug.get(1), 0);
+    }
+    
+    private int zugGenerator(int stufe, int maxStufe) {
+        List<Figur> alleFiguren;
+        // Wenn momentan weiss dran ist
         if (spielfeld.getAktuellerSpieler()) {
             alleFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
         } else {
             alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
         }
+        // Neue Bewertungsliste
         List<Integer> bewertung = new ArrayList<Integer>();
+        // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         for (Figur figur : alleFiguren) {
             for (Feld feld : figur.getKorrektFelder()) {
                 spielfeld.ziehe(figur, feld, 0);
-                if (stufe < 3) {
-                    zugGenerator(stufe + 1);
+                // Wenn die Abbruchtiefe noch nicht erreicht ist
+                if (stufe < maxStufe) {
+                    // Fuege der Bewertung den Wert der tieferen Stufe zu
+                    bewertung.add(zugGenerator(stufe + 1, maxStufe));
                 } else {
+                    // Fuege der Bewertung den aktuellen Stand zu
                     bewertung.add(bewertungsfunktion());
                 }
+                spielfeld.zugRueckgaengig();
             }
         }
-        return getMaxWert(bewertung);
+        // Gibt fuer weiss den max-Wert zurueck
+        int returnWert = getMaxWert(bewertung);
+        // Gibt fuer schwarz den min-Wert zurueck
+        if (!spielfeld.getAktuellerSpieler()) {
+            returnWert = getMinWert(bewertung);
+        }
+        return returnWert;
     }
     
     private int getMaxWert(List<Integer> liste) {

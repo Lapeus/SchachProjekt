@@ -54,7 +54,7 @@ public class SpielLaden extends JPanel implements ActionListener {
     /**
      * Konstante für den Farbton den Hintergrunds (Braun).
      */
-    private static Color cBraunRot = new Color(172, 59, 32); 
+    private static Color cBraunRot = new Color(164, 43, 24); 
     
     /**
      * Konstante für den Farbton der Auswahlfelder (Beige).

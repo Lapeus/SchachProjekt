@@ -39,7 +39,8 @@ public class SeitenwechselListener implements ActionListener {
         if (command == "Spielen") {
             parent.seitenAuswahl("Spielerauswahl");
         }
-        if (command == "Spiel laden") {
+        if (command == "Spiel laden" 
+            && !parent.getGesamtdatensatz().getSpieleListe().isEmpty()) {
             parent.seitenAuswahl(command);
         }
         if (command == "Einstellungen") {
