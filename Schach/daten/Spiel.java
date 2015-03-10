@@ -1,5 +1,7 @@
 package daten;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -347,7 +349,11 @@ public class Spiel {
     public String toString() {
         String string;
         String lineSep = System.getProperty("line.separator");
-        string = spieler1.getName() + lineSep;
+        // Aktuelles Datum und Uhrzeit
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        string = sdf.format(time) + lineSep;
+        string += spieler1.getName() + lineSep;
         string += spieler1.getFarbe() + lineSep;
         string += spieler2.getName() + lineSep;
         string += spieler2.getFarbe() + lineSep;

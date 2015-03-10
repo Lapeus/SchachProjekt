@@ -58,7 +58,16 @@ public class Computerspieler extends Spieler {
          *    ruft. Dieser Zug wird anschliessend gezogen.
          */
        
-        stufe1();
+        if (getName().equals("Karl Heinz")) {
+            zufall();
+        } else if (getName().equals("Rosalinde")) {
+            nachRegeln();
+        } else if (getName().equals("Ursula")) {
+            rekursKI(2);
+        } else if (getName().equals("Walter")) {
+            rekursKI(3);
+        }
+        
         
         // Wenn ein Bauer umgewandelt wird
         int letzterZugIndex = spielfeld.getSpieldaten().getZugListe()
@@ -70,7 +79,13 @@ public class Computerspieler extends Spieler {
         }
     }
     
-    private void stufe2(int maxStufe) {
+    /**
+     * Ein rekursiver Computergegner, der theoretisch beliebig viele Stufen 
+     * untersuchen kann. Ermittelt den besten Zug und zieht ihn.
+     * Praktisch nur sinnvoll f&uuml;r die Stufen 2 und 3.
+     * @param maxStufe Die maximale Suchtiefe (sinnvollerweise 2 oder 3)
+     */
+    private void rekursKI(int maxStufe) {
         List<Figur> alleFiguren;
         // Wenn momentan weiss dran ist
         if (getFarbe()) {
@@ -79,91 +94,228 @@ public class Computerspieler extends Spieler {
             alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
         }
         // Maximale Bewertung; initialisiert mit niedrigstem Wert
-        int maxbewertung = -3830;
+        int maxbewertung = 4000;
+        if (getFarbe()) {
+            maxbewertung = -4000;
+        }
         // Der Zug der durchgefuehrt werden soll
-        List<Object> besterZug = new ArrayList<Object>();
+        List<Figur> besteFiguren = new ArrayList<Figur>();
+        List<Feld> besteFelder = new ArrayList<Feld>();
+        int zaehl = 0;
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         for (Figur figur : alleFiguren) {
             for (Feld feld : figur.getKorrektFelder()) {
+                zaehl++;
+                // Mache den Zug
                 spielfeld.ziehe(figur, feld, 0);
-                int bewertung = zugGenerator(1, maxStufe);
+                // Wenn ein Bauer umgewandelt wird
+                int letzterZugIndex = spielfeld.getSpieldaten().getZugListe()
+                    .size() - 1;
+                Zug letzterZug = spielfeld.getSpieldaten().getZugListe()
+                    .get(letzterZugIndex);
+                if (letzterZug instanceof Umwandlungszug) {
+                    spielfeld.umwandeln(letzterZug.getFigur(), 900);
+                }
+                
+                // In Abhaengigkeit der Farbe
                 if (getFarbe()) {
+                    // Bekomme die Bewertung dafuer
+                    int bewertung = min(maxStufe - 1, -4000, 4000);
+                    // Wenn ein neuer MaxWert entsteht (weiss)
                     if (bewertung > maxbewertung) {
-                        besterZug.clear();
-                        besterZug.add(figur);
-                        besterZug.add(feld);
+                        // Loesche bisherige Figuren und Felder
+                        besteFiguren.clear();
+                        besteFelder.clear();
+                        besteFiguren.add(figur);
+                        besteFelder.add(feld);
                         maxbewertung = bewertung;
+                    // Wenn es eine Alternative mit gleicher Bewertung gibt
+                    } else if (bewertung == maxbewertung) {
+                        // Wird diese hinzugefuegt
+                        besteFiguren.add(figur);
+                        besteFelder.add(feld);
+                    }
+                } else {
+                    // Bekomme die Bewertung dafuer
+                    int bewertung = max(maxStufe - 1, -4000, 4000);
+                    // Wenn ein neuer MinWert entsteht (schwarz)
+                    if (bewertung < maxbewertung) {
+                        // Loesche bisherige Figuren und Felder
+                        besteFiguren.clear();
+                        besteFelder.clear();
+                        besteFiguren.add(figur);
+                        besteFelder.add(feld);
+                        maxbewertung = bewertung;
+                    // Wenn es eine Alternative mit gleicher Bewertung gibt
+                    } else if (bewertung == maxbewertung) {
+                        // Wird diese hinzugefuegt
+                        besteFiguren.add(figur);
+                        besteFelder.add(feld);
                     }
                 }
+                // Mache den Zug rueckgaengig
                 spielfeld.zugRueckgaengig();
             }
         }
-        System.out.println(maxbewertung);
-        spielfeld.ziehe((Figur) besterZug.get(0), (Feld) besterZug.get(1), 0);
+        
+        // Ermittle eine der Alternativen
+        // Erzeugt eine Zufallszahl zwischen 0 und besteFiguren.size() - 1
+        int zufallsIndex = (int) (Math.random() * besteFiguren.size());
+        
+        /* Ist nicht ganz schoen, hilft aber an einigen Stellen und macht den
+         * Algorithmus instabil, sodass der Computer nicht mit den gleichen
+         * Schritten in jeder Partie Matt gesetzt werden kann.
+         */
+        System.out.println(zaehl);
+        // Wenn es noch einen Zug zu ziehen gibt
+        if (!besteFiguren.isEmpty()) {
+            // Ziehe den besten Zug
+            spielfeld.ziehe(besteFiguren.get(zufallsIndex), 
+                besteFelder.get(zufallsIndex), 0);
+        } else {
+            System.out.println("Matt");
+        }
     }
     
-    private int zugGenerator(int stufe, int maxStufe) {
-        List<Figur> alleFiguren;
+    /**
+     * Berechnet den Maximalwert f&uuml;r die aktuelle Stufe.
+     * @param stufe Die aktuelle Stufe
+     * @param alpha Der Max-Wert
+     * @param beta Der Min-Wert
+     * @return Maximale Bewertung
+     */
+    private int max(int stufe, int alpha, int beta) {
+        if (stufe == 0) {
+            return bewertungsfunktion();
+        }
+        int maxWert = alpha;
+        List<Figur> alleFiguren = new ArrayList<Figur>();
         // Wenn momentan weiss dran ist
         if (spielfeld.getAktuellerSpieler()) {
             alleFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
         } else {
             alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
         }
-        // Neue Bewertungsliste
-        List<Integer> bewertung = new ArrayList<Integer>();
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         for (Figur figur : alleFiguren) {
             for (Feld feld : figur.getKorrektFelder()) {
                 spielfeld.ziehe(figur, feld, 0);
-                // Wenn die Abbruchtiefe noch nicht erreicht ist
-                if (stufe < maxStufe) {
-                    // Fuege der Bewertung den Wert der tieferen Stufe zu
-                    bewertung.add(zugGenerator(stufe + 1, maxStufe));
-                } else {
-                    // Fuege der Bewertung den aktuellen Stand zu
-                    bewertung.add(bewertungsfunktion());
+                // Wenn ein Bauer umgewandelt wird
+                int letzterZugIndex = spielfeld.getSpieldaten().getZugListe()
+                    .size() - 1;
+                Zug letzterZug = spielfeld.getSpieldaten().getZugListe()
+                    .get(letzterZugIndex);
+                if (letzterZug instanceof Umwandlungszug) {
+                    spielfeld.umwandeln(letzterZug.getFigur(), 900);
                 }
+                int wert = min(stufe - 1, maxWert, beta);
                 spielfeld.zugRueckgaengig();
+                if (wert > maxWert) {
+                    maxWert = wert;
+                    if (maxWert >= beta) {
+                        return maxWert;
+                    }
+                }
             }
         }
-        // Gibt fuer weiss den max-Wert zurueck
-        int returnWert = getMaxWert(bewertung);
-        // Gibt fuer schwarz den min-Wert zurueck
-        if (!spielfeld.getAktuellerSpieler()) {
-            returnWert = getMinWert(bewertung);
-        }
-        return returnWert;
+        return maxWert;
     }
     
-    private int getMaxWert(List<Integer> liste) {
-        int max = liste.get(0);
-        for (int aktuell : liste) {
-            if (aktuell > max) {
-                max = aktuell;
+    /**
+     * Berechnet den Minimalwert f&uuml;r die aktuelle Stufe.
+     * @param stufe Die aktuelle Stufe
+     * @param alpha Der Max-Wert
+     * @param beta Der Min-Wert
+     * @return Minimale Bewertung
+     */
+    private int min(int stufe, int alpha, int beta) {
+        if (stufe == 0) {
+            return bewertungsfunktion();
+        }
+        int minWert = beta;
+        List<Figur> alleFiguren = new ArrayList<Figur>();
+        // Wenn momentan weiss dran ist
+        if (spielfeld.getAktuellerSpieler()) {
+            alleFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
+        } else {
+            alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
+        }
+        // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
+        for (Figur figur : alleFiguren) {
+            for (Feld feld : figur.getKorrektFelder()) {
+                spielfeld.ziehe(figur, feld, 0);
+                // Wenn ein Bauer umgewandelt wird
+                int letzterZugIndex = spielfeld.getSpieldaten().getZugListe()
+                    .size() - 1;
+                Zug letzterZug = spielfeld.getSpieldaten().getZugListe()
+                    .get(letzterZugIndex);
+                if (letzterZug instanceof Umwandlungszug) {
+                    spielfeld.umwandeln(letzterZug.getFigur(), 900);
+                }
+                int wert = max(stufe - 1, alpha, minWert);
+                spielfeld.zugRueckgaengig();
+                if (wert < minWert) {
+                    minWert = wert;
+                    if (minWert <= alpha) {
+                        return minWert;
+                    }
+                }
             }
         }
-        return max;
+        return minWert;
     }
     
-    private int getMinWert(List<Integer> liste) {
-        int min = liste.get(0);
-        for (int aktuell : liste) {
-            if (aktuell < min) {
-                min = aktuell;
-            }
-        }
-        return min;
-    }
+    // Teile des oben genannten Algorithmus' nach 
+    // "de.wikipedia.org/wiki/Alpha-Beta-Suche" 
     
+    /**
+     * Bewertet das Spielfeld nach verschiedenen Kriterien.
+     * @return Eine Bewertung in Form einer ganzen Zahl im Bereich von etwa
+     * -4000 bis +4000; <b> positiv </b> ist gut f&uuml;r wei&szlig;,
+     * <b> negativ </b> ist gut f&uuml;r schwarz.
+     */
     private int bewertungsfunktion() {
-        return spielfeld.getMaterialwert(true) 
+        int bewertung;
+        bewertung = spielfeld.getMaterialwert(true) 
             - spielfeld.getMaterialwert(false);
+        // Bauern kurz vor der Umwandlung und imSchachStehen
+        int index = 1;
+        while (spielfeld.getSchwarzeFiguren().get(index).getWert() == 100) {
+            Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
+            int y = bauer.getPosition().getYK();
+            if (y <= 3) {
+                bewertung -= 15;
+                if (y <= 2) {
+                    bewertung -= 25;
+                    if (y == 1) {
+                        bewertung -= 30;
+                    }
+                }
+            }
+            index++;
+        }
+        index = 1;
+        while (spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
+            Figur bauer = spielfeld.getWeisseFiguren().get(index);
+            int y = bauer.getPosition().getYK();
+            if (y <= 3) {
+                bewertung += 15;
+                if (y <= 2) {
+                    bewertung += 25;
+                    if (y == 1) {
+                        bewertung += 30;
+                    }
+                }
+            }
+            index++;
+        }
+        return bewertung;
     }
+    
     /**
      * F&uuml;hrt einen Computerzug nach relativ simplen Zug-Regeln durch.
      */
-    private void stufe1() {
+    private void nachRegeln() {
         // Liste mit den zu schlagenden Feldern
         List<Feld> schlagend = spielfeld.getSchlagendeFelder();
         int maxWertSchlag = 0;
@@ -198,7 +350,7 @@ public class Computerspieler extends Spieler {
         // Wenn man niemanden schlagen kann, aber auch nichts verliert
         if (maxWertSchlag == 0 && maxWertVerlust == 0) {
             // Soll er per Zufall ziehen
-            stufe0();
+            zufall();
         // Wenn man niemanden schlagen kann, oder der Verlust hoeher waere
         } else if (maxWertSchlag == 0 || maxWertSchlag < maxWertVerlust) {
             Figur verlust = maxFeldVerlust.getFigur();
@@ -239,7 +391,7 @@ public class Computerspieler extends Spieler {
     /**
      * F&uuml;hrt einen zuf&auml;lligen Zug aus.
      */
-    private void stufe0() {
+    private void zufall() {
         // Eigene Figuren
         List<Figur> eigeneFiguren;
         if (getFarbe()) {

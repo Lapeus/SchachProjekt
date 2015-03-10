@@ -33,6 +33,22 @@ public class Umwandlungszug extends Zug {
         , boolean schlagzug, int zugzeit) {
         super(startfeld, zielfeld, bauer, schlagzug, zugzeit, false);
     }
+    
+    /**
+     * Zweiter Konstruktor dieser Klasse. Wird ben&ouml;tigt, wenn ein Spiel 
+     * geladen wird, da es dort noch keine ziehenden Figuren sondern nur deren
+     * Felder gibt.
+     * @param startfeld Das Startfeld der ziehenden Figur
+     * @param zielfeld Das Zielfeld der ziehenden Figur
+     * @param schlagzug Ob bei dem Zug eine andere Figur geschlagen wurde
+     * @param zugzeit Die Dauer des Zuges in Sekunden
+     * @param neueFigur Die neue Figur die anstelle des Bauern im Spiel ist
+     */
+    public Umwandlungszug(Feld startfeld, Feld zielfeld, boolean schlagzug, 
+        int zugzeit, Figur neueFigur) {
+        super(startfeld, zielfeld, schlagzug, zugzeit);
+        this.neueFigur = neueFigur;
+    }
 
     /**
      * {@inheritDoc}
@@ -56,6 +72,19 @@ public class Umwandlungszug extends Zug {
         
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    public Figur getFigur() {
+        // Wenn es keine gezogene Figur gibt, weil dieser Zug beim Laden 
+        // erstellt wurde
+        if (super.getFigur() == null) {
+            // Wird die Figur auf dem Startfeld zurueckgegeben
+            return getStartfeld().getFigur();
+        } else {
+            return super.getFigur();
+        }
+    }
     /**
      * Gibt die umgewandelte Figur zur&uuml;ck.
      * @return Die neue Figur

@@ -146,20 +146,20 @@ public class Statistik {
          */
         if (zuegeSiegDurchschnitt != -1) {
             // Addiert, wie viel eher man gewinnt
-            score += (40 - zuegeSiegDurchschnitt);
+            score += (30 - zuegeSiegDurchschnitt);
         }
         if (zuegeMattDurchschnitt != -1) {
             // Abgezogen, wie viel eher man verliert
-            score -= (40 - zuegeMattDurchschnitt);
+            score -= (30 - zuegeMattDurchschnitt);
         }
         if (matWertSiegDurchschnitt != -1) {
             // Abgezogen, wie viele Figuren man im Schnitt verliert
             score -= (3830 - matWertSiegDurchschnitt) / 100.0;
         }
         // Versuch, den maxWert auf 1000 zu setzen
+        score *= 3;
         /* Durchschnitt pro Partie sind 300
-         * Maximaler Materialwert ist 3830
-         * Minimaler Materialwert ist 0
+         * Maximaler Materialwert ist 3830 (38)
          */
         return (int) score;
     }

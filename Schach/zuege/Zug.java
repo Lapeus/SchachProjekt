@@ -74,13 +74,21 @@ public class Zug {
         this.ersterZug = ersterZug;
     }
     
-    public Zug(Feld startfeld, Feld zielfeld, boolean schlagzug, int zugzeit,
-        boolean ersterZug) {
+    /**
+     * Erstellt einen neuen Zug, ohne zu wissen, welche Figur gezogen wird.
+     * Beim Laden wird dieser Konstruktor verwendet, da in der Schachnotation
+     * zwar die Felder angegeben sind, aber kein Verweis auf das Objekt der 
+     * schlagenden Figur.
+     * @param startfeld Das Startfeld der ziehenden Figur
+     * @param zielfeld Das Zielfeld der ziehenden Figur
+     * @param schlagzug Ob bei diesem Zug eine andere Figur geschlagen wird
+     * @param zugzeit Die Dauer des Zuges in Sekunden
+     */
+    public Zug(Feld startfeld, Feld zielfeld, boolean schlagzug, int zugzeit) {
         this.startfeld = startfeld;
         this.zielfeld = zielfeld;
         this.schlagzug = schlagzug;
         this.zugzeit = zugzeit;
-        this.ersterZug = ersterZug;
     }
     
     /**

@@ -403,7 +403,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Updaten der Spielfeldoberfläche.
      */
     private void spielfeldUIUpdate() {
-        spielfeldDrehen();
+        // spielfeldDrehen();
         if (spielfeld.getSpieldaten().getZugListe().isEmpty()) {
             rueckgaengig.setEnabled(false);
         } else {

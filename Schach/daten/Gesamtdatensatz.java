@@ -7,8 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import figuren.Bauer;
@@ -99,6 +97,8 @@ public class Gesamtdatensatz {
             FileWriter fw1 = new FileWriter(sett);
             fw1.write(einstellungen.toString());
             fw1.close();
+            // Schreibschutz
+            sett.setReadOnly();
         } catch (IOException ioEx) {
             ioEx.printStackTrace();
         }
@@ -123,6 +123,8 @@ public class Gesamtdatensatz {
                 FileWriter fw = new FileWriter(file);
                 fw.write(spieler.toString());
                 fw.close();
+                // Schreibschutz
+                file.setReadOnly();
             } catch (IOException ioEx) {
                 ioEx.printStackTrace();
             }
@@ -140,7 +142,7 @@ public class Gesamtdatensatz {
             "file.separator") + "Spieler");
         // Wenn dieser gefuellt ist, muesste es einen intakten gespeicherten
         // Datensatz geben
-        if (ordner.exists() && ordner.listFiles().length != 0) {         
+        if (ordner.exists() && ordner.listFiles().length > 4) {         
             ladeDaten();
         } else {
             erzeugeNeueDaten();
@@ -170,7 +172,11 @@ public class Gesamtdatensatz {
             einstellungen = new Einstellungen(zzb, bool[0], bool[1], bool[2], 
                 bool[3], bool[4], bool[5]);
         } catch (IOException ioEx) {
-            ioEx.printStackTrace();
+            /* Wenn irgendwas beim Laden schief geht, werden die Standard-
+             * Einstellungen wiederhergestellt.
+             */
+            einstellungen = new Einstellungen(6000, true, false, true, false, 
+                true, true);
         }
         
         // Die Spieler laden
@@ -180,10 +186,10 @@ public class Gesamtdatensatz {
         // Liste mit den Namen der Computerspieler
         List<String> computerNamen = new ArrayList<String>(
             Arrays.asList("Walter", "Karl Heinz", "Rosalinde", "Ursula"));
-        for (int i = 0; i < files.length; i++) {
+        for (File spielerFile : files) {
             // Der Name des Spielers (Name der Datei ohne .txt)
-            String name = files[i].getName()
-                .substring(0, files[i].getName().length() - 4);
+            String name = spielerFile.getName()
+                .substring(0, spielerFile.getName().length() - 4);
             try {
                 // Die Datei in der die Spielerdaten liegen
                 File file = new File("settings" + System.getProperty(
@@ -212,7 +218,10 @@ public class Gesamtdatensatz {
                 spieler.setStatistik(statistik);
                 spielerListe.add(spieler);
             } catch (IOException ioEx) {
-                ioEx.printStackTrace();
+                // Wenn das schief geht, wird der Spieler neu erzeugt
+                spielerListe.add(new Spieler(name));
+                // Und die fehlerhafte Datei geloescht
+                spielerFile.delete();
             }
         } 
         
@@ -276,21 +285,20 @@ public class Gesamtdatensatz {
         File file = new File("settings" + System.getProperty(
             "file.separator") + "Spiele" + System.getProperty(
                 "file.separator") + name + ".txt");
-       
         // Das Spiel anlegen
         Spiel spiel = null;
-        
         try {
             // Ein Reader um die Datei zeilenweise auslesen zu koennen
             BufferedReader br = new BufferedReader(new FileReader(file));
             // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
+            String time = br.readLine();
+            System.out.println(time);
             Spieler spieler1 = getSpieler(br.readLine());
             boolean farbe1 = Boolean.parseBoolean(br.readLine());
             Spieler spieler2 = getSpieler(br.readLine());
             boolean farbe2 = Boolean.parseBoolean(br.readLine());
             // Neue FelderListe wird erstellt
             List<Feld> felderListe = erstelleFelderListe();
-            
             // Neues Spielfeld erzeugen
             boolean aktuellerSpieler = Boolean.parseBoolean(br.readLine());
             Spielfeld spielfeld = new Spielfeld(felderListe, aktuellerSpieler);
@@ -409,9 +417,10 @@ public class Gesamtdatensatz {
             
             // Das Spiel erstellen
             spiel = new Spiel(name, spieler1, spieler2, spielfeld);
-            
         } catch (IOException ioEx) {
-            ioEx.printStackTrace();
+            // Wenn irgendwas schief geht
+            // TODO Fehlermeldung ausgeben
+            System.out.println("Soll kein CheckstyleFehler kommen");
         }
         
         // Die Quelldatei loeschen
@@ -431,17 +440,45 @@ public class Gesamtdatensatz {
      */
     private List<Zug> ladeZugListe(BufferedReader br, List<Feld> felderListe) {
         List<Zug> zugListe = new ArrayList<Zug>();
+        // Die Farbe der aktuell ziehenden Figur (weiss beginnt)
+        boolean aktuelleFarbe = true;
         try {
             // Schachnotation laden
             String line = br.readLine();
+            Zug zug;
             // Solange noch eine Zeile zu laden ist
             while (!line.equals("")) {
+                // Letztes Leerzeichen
+                int hinteresLeerzeichen = line.lastIndexOf(" ");
+                String vorne = line.substring(0, hinteresLeerzeichen);
+                // Vorletztes Leerzeichen
+                int vorderesLeerzeichen = vorne.lastIndexOf(" ");
+                // Zugzeit steht dazwischen
+                int zugzeit = Integer.parseInt(line.substring(
+                    vorderesLeerzeichen + 1, hinteresLeerzeichen));
+                
+                Feld startfeld;
+                Feld zielfeld;
                 // Wenn es eine kleine Rochade ist
                 if (line.equals("0-0")) {
-                
+                    if (aktuelleFarbe) {
+                        startfeld = felderListe.get(4);
+                        zielfeld = felderListe.get(6);
+                    } else {
+                        startfeld = felderListe.get(60);
+                        zielfeld = felderListe.get(62);
+                    }
+                    zug = new Zug(startfeld, zielfeld, false, zugzeit);
                 // Wenn es eine grosse Rochade ist
                 } else if (line.equals("0-0-0")) {
-                
+                    if (aktuelleFarbe) {
+                        startfeld = felderListe.get(4);
+                        zielfeld = felderListe.get(2);
+                    } else {
+                        startfeld = felderListe.get(60);
+                        zielfeld = felderListe.get(58);
+                    }
+                    zug = new Zug(startfeld, zielfeld, false, zugzeit);
                 // Wenn es ein normaler Zug ist
                 } else {
                     // Das erste Leerzeichen
@@ -467,7 +504,7 @@ public class Gesamtdatensatz {
                     int x = spalten.indexOf(figPos1.substring(0, 1));
                     int y = Integer.parseInt(figPos1.substring(1)) - 1;
                     // Das Startfeld
-                    Feld startfeld = felderListe.get(x + 8 * y);
+                    startfeld = felderListe.get(x + 8 * y);
                     // Das Zielfeld
                     String figPos2 = vordererTeil.substring(
                         stelleTrennung + 1, stelleTrennung + 3);
@@ -475,24 +512,37 @@ public class Gesamtdatensatz {
                     x = spalten.indexOf(figPos2.substring(0, 1));
                     y = Integer.parseInt(figPos2.substring(1)) - 1;
                     // Das Zielfeld
-                    Feld zielfeld = felderListe.get(x + 8 * y);
+                    zielfeld = felderListe.get(x + 8 * y);
+                    
                     /* Wenn hinter dem Trennungszeichen 3 Zeichen kommen, ist
                      * es ein Umwandlungszug
                      */
                     if (vordererTeil.substring(stelleTrennung + 1)
                         .length() == 3) {
-                        // TODO Neuer Umwandlungszug ohne Figuren zu haben
-                    /* Wenn die Zeile ein e.p. enthaelt, ist es ein En-Passant
-                     * Zug
-                     */
-                    } else if (line.contains("e.p.")) {
-                        
+                        String umgewandelteFigur = 
+                            vordererTeil.substring(stelleTrennung + 3);
+                        Figur neueFigur;
+                        if (umgewandelteFigur.equals("S")) {
+                            neueFigur = new Springer(zielfeld, aktuelleFarbe);
+                        } else if (umgewandelteFigur.equals("L")) {
+                            neueFigur = new Laeufer(zielfeld, aktuelleFarbe);
+                        } else if (umgewandelteFigur.equals("T")) {
+                            neueFigur = new Turm(zielfeld, aktuelleFarbe);
+                        } else {
+                            neueFigur = new Dame(zielfeld, aktuelleFarbe);
+                        }
+                        zug = new Umwandlungszug(startfeld, zielfeld, 
+                            schlagzug, zugzeit, neueFigur);
                     } else {
-                        
+                        // Normaler neuer Zug
+                        zug = new Zug(startfeld, zielfeld, schlagzug, zugzeit);
                     }
                 }
+                // Den erzeugten Zug der Liste hinzufuegen
+                zugListe.add(zug);
                 // Naechste Zeile lesen
                 line = br.readLine();
+                aktuelleFarbe = !aktuelleFarbe;
             }
         } catch (IOException ioEx) {
             ioEx.printStackTrace();
@@ -597,17 +647,35 @@ public class Gesamtdatensatz {
      * @return Eine Liste mit den gerankten Spielern
      */
     public List<Spieler> getRanking() {
-        return sortiereListe(spielerListe);
+        List<Spieler> sortedList = new ArrayList<Spieler>();
+        for (Spieler spieler : spielerListe) {
+            sortedList.add(spieler);
+        }
+        return sortiereListe(sortedList);
     }
     
     /**
-     * Sortiert die angegebene Liste von Spielern nach Score.
+     * Sortiert die angegebene Liste von Spielern nach Score.<br>
+     * Verwendet den rekursiven Bubble-Sort-Algorithmus.
      * @param spieler Die zu sortierende Liste von Spielern
      * @return Die sortierte Liste
      */
     private List<Spieler> sortiereListe(List<Spieler> spieler) {
-        // TODO Sortiere
-        return null;
+        // Temporaerer Spieler
+        Spieler temp;
+        for (int i = 0; i < spieler.size() - 1; i++) {
+            // Wenn zwei Spieler in der falschen Reihenfolge stehen
+            if (spieler.get(i).getStatistik().getScore() 
+                < spieler.get(i + 1).getStatistik().getScore()) {
+                // Werden sie getauscht
+                temp = spieler.get(i);
+                spieler.set(i, spieler.get(i + 1));
+                spieler.set(i + 1, temp);
+                // Rekursiver Aufruf
+                sortiereListe(spieler);
+            }
+        }
+        return spieler;
     }
     
     /**
@@ -669,6 +737,8 @@ public class Gesamtdatensatz {
             FileWriter fw = new FileWriter(spielDatei);
             fw.write(spiel.toString());
             fw.close();
+            // Schreibschutz
+            spielDatei.setReadOnly();
         } catch (IOException ioEx) {
             ioEx.printStackTrace();
         }
@@ -676,6 +746,51 @@ public class Gesamtdatensatz {
             gespeicherteSpiele.add(spiel.getSpielname());
         }
         
+    }
+    
+    /**
+     * Speichert das angegebene Spiel f&uuml;r den Fall, dass der Computer
+     * abst&uuml;rzt. <br>
+     * Es kann immer nur ein Spiel gespeichert werden. Ruft man diese Methode
+     * mehrfach auf, wird immer nur das letzte Spiel gespeichert.
+     * @param spiel Das aktuelle Spiel was gespeichert werden soll
+     */
+    public void automatischesSpeichern(Spiel spiel) {
+        // Die letzte automatische Speicherung loeschen, sofern vorhanden
+        autosaveLoeschen();
+        // Das Spiel speicher mit dem Zusatz (autosave)
+        try {
+            File spielDatei = new File("settings" + System.getProperty(
+                "file.separator") + "Spiele" + System.getProperty(
+                    "file.separator") + spiel.getSpielname() + " (autosave)" 
+                        + ".txt");
+            FileWriter fw = new FileWriter(spielDatei);
+            fw.write(spiel.toString());
+            fw.close();
+        } catch (IOException ioEx) {
+            ioEx.printStackTrace();
+        }
+        // Das Spiel der Liste zufuegen
+        if (!gespeicherteSpiele.contains(spiel.getSpielname() 
+            + " (autosave)")) {
+            gespeicherteSpiele.add(spiel.getSpielname() + " (autosave)");
+        }
+        // Einstellungen und Spieler vorsorglich auch mit speichern
+        speichern();
+    }
+    
+    /**
+     * L&ouml;scht automatisch gespeicherte Spiele.
+     */
+    public void autosaveLoeschen() {
+        File ordner = new File("settings" + System.getProperty(
+            "file.separator") + "Spiele");
+        File[] files = ordner.listFiles();
+        for (File file : files) {
+            if (file.getName().contains("autosave")) {
+                file.delete();
+            }
+        }
     }
     /**
      * Gibt die Standardeinstellungen zur&uum;ck.

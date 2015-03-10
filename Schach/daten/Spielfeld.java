@@ -1,8 +1,6 @@
 package daten;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import figuren.Bauer;
@@ -98,7 +96,29 @@ public class Spielfeld {
     public Spielfeld(List<Feld> felder) {
         // Liste mit den Feldern wurde uebergeben
         this.felder = felder;
+        // Figuren erzeugen und sie an die richtige Stelle setzen
+        init();
         
+    }
+    
+    /**
+     * Zweiter Konstruktor, um ein Spielfeld laden zu k&ouml;nnen ohne dass 
+     * dabei alle Figuren neu erzeugt werden m&uuml;ssen.
+     * @param felder Die Felder-Liste
+     * @param aktuellerSpieler Setzt den aktuellen Spieler: <b>True</b> f&uuml;r
+     * wei&szlig;, <b>false</b> f&uuml;r schwarz
+     */
+    public Spielfeld(List<Feld> felder, boolean aktuellerSpieler) {
+        this.felder = felder;
+        this.aktuellerSpieler = aktuellerSpieler;
+    }
+    
+    /**
+     * Erzeugt neue Figuren und stellt sie in die Startaufstellung.<br>
+     * Ist <b>public</b> weil sie f&uuml;r das Spielvideo aus Gesamtdatensatz 
+     * aufgerufen werden k&ouml;nnen muss.
+     */
+    public void init() {
         // Acht schwarze Bauern
         for (int i = 1; i <= 8; i++) {
             // Erstellen
@@ -183,19 +203,6 @@ public class Spielfeld {
         for (Figur figur : weisseFiguren) {
             figur.setSpielfeld(this);
         }
-        
-    }
-    
-    /**
-     * Zweiter Konstruktor, um ein Spielfeld laden zu k&ouml;nnen ohne dass 
-     * dabei alle Figuren neu erzeugt werden m&uuml;ssen.
-     * @param felder Die Felder-Liste
-     * @param aktuellerSpieler Setzt den aktuellen Spieler: <b>True</b> f&uuml;r
-     * wei&szlig;, <b>false</b> f&uuml;r schwarz
-     */
-    public Spielfeld(List<Feld> felder, boolean aktuellerSpieler) {
-        this.felder = felder;
-        this.aktuellerSpieler = aktuellerSpieler;
     }
     
     /**
@@ -547,30 +554,27 @@ public class Spielfeld {
             schwarzeFiguren.add(neueFigur);
         }
     }
-   
-    /**
-     * Eine statische Klasse, die zwei Figuren aufgrund ihres Wertes vergleicht.
-     * @author Christian Ackermann
-     */
-    public static class FigurenComparator implements Comparator<Figur> {
-        @Override
-        public int compare(Figur fig1, Figur fig2) {
-            // Wenn der Wert der ersten Figur nicht kleiner ist
-            if (fig1.getWert() >= fig2.getWert()) {
-                return 1;
-            } else {
-                return -1;
-            }
-        }
-    }
     
     /**
-     * Sortiert eine Liste von Figuren aufsteigend nach Wert.
+     * Sortiert eine Liste von Figuren aufsteigend nach Wert. <br>
+     * Verwendet den rekursiven Bubble-Sort-Algorithmus.
      * @param figuren Eine Liste von Figuren die sortiert werden soll
      * @return Die sortierte Liste
      */
     private List<Figur> sortiereListe(List<Figur> figuren) {
-        Collections.sort(figuren, new FigurenComparator());
+        // Temporaere Figur
+        Figur temp;
+        for (int i = 0; i < figuren.size() - 1; i++) {
+            // Wenn zwei Figuren in der falschen Reihenfolge sind
+            if (figuren.get(i).getWert() < figuren.get(i + 1).getWert()) {
+                // Werden sie getauscht
+                temp = figuren.get(i);
+                figuren.set(i, figuren.get(i + 1));
+                figuren.set(i + 1, temp);
+                // Rekursiver Aufruf
+                sortiereListe(figuren);
+            }
+        }
         return figuren;
     }
     
