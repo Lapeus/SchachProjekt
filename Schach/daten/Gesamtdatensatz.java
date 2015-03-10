@@ -683,7 +683,14 @@ public class Gesamtdatensatz {
      * @return Liste der Spieler
      */
     public List<Spieler> getSpielerListe() {
-        return spielerListe;
+        List<Spieler> spielerSorted = new ArrayList<Spieler>();
+        // Alle Spieler kopieren
+        spielerSorted.addAll(spielerListe);
+        // Alle menschlichen Spieler entfernen
+        spielerSorted.removeAll(getMenschlicheSpieler());
+        // Und hinten wieder anhaengen
+        spielerSorted.addAll(getMenschlicheSpieler());
+        return spielerSorted;
     }
     
     /**
