@@ -566,7 +566,7 @@ public class Spielfeld {
         Figur temp;
         for (int i = 0; i < figuren.size() - 1; i++) {
             // Wenn zwei Figuren in der falschen Reihenfolge sind
-            if (figuren.get(i).getWert() < figuren.get(i + 1).getWert()) {
+            if (figuren.get(i).getWert() > figuren.get(i + 1).getWert()) {
                 // Werden sie getauscht
                 temp = figuren.get(i);
                 figuren.set(i, figuren.get(i + 1));
