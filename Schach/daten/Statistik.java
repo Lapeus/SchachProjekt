@@ -161,6 +161,10 @@ public class Statistik {
         /* Durchschnitt pro Partie sind 300
          * Maximaler Materialwert ist 3830 (38)
          */
+        // Kein negativer Wert moeglich
+        if (score < 0) {
+            score = 0;
+        }
         return (int) score;
     }
     
