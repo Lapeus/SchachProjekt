@@ -287,6 +287,11 @@ public class Gesamtdatensatz {
                 "file.separator") + name + ".txt");
         // Das Spiel anlegen
         Spiel spiel = null;
+        // Wenn es ein Autosave Spiel war, muss der urspruengliche Name 
+        // rausgefiltert werden
+        if (name.contains("(autosave)")) {
+            name = name.substring(0, name.length() - 11);
+        }
         try {
             // Ein Reader um die Datei zeilenweise auslesen zu koennen
             BufferedReader br = new BufferedReader(new FileReader(file));
