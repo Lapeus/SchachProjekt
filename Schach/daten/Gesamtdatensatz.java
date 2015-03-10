@@ -175,7 +175,7 @@ public class Gesamtdatensatz {
             /* Wenn irgendwas beim Laden schief geht, werden die Standard-
              * Einstellungen wiederhergestellt.
              */
-            einstellungen = new Einstellungen(6000, true, false, true, false, 
+            einstellungen = new Einstellungen(0, true, false, true, false, 
                 true, true);
         }
         
@@ -242,7 +242,7 @@ public class Gesamtdatensatz {
      */
     private void erzeugeNeueDaten() {
         /* Grundeinstellungen:
-         * Zugzeit-Begrenzung: Nicht vorhanden (6000)
+         * Zugzeit-Begrenzung: Nicht vorhanden (0)
          * Moegliche Felder anzeigen: True
          * Bedrohte Felder anzeigen: False
          * Rochade moeglich: True
@@ -250,7 +250,7 @@ public class Gesamtdatensatz {
          * Schachwarnung: True
          * Statistik: True
          */
-        einstellungen = new Einstellungen(6000, true, false, true, false, 
+        einstellungen = new Einstellungen(0, true, false, true, false, 
             true, true);
         spielerListe.add(new Computerspieler("Walter"));
         spielerListe.add(new Computerspieler("Karl Heinz"));
