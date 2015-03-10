@@ -14,7 +14,10 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import daten.Spiel;
 
 /**
  * Bietet ein JPanel zur Darstellung und Anwendung von zu ladenden Spielen.
@@ -131,8 +134,15 @@ public class SpielLaden extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(btnSpielLaden)) {
             String name = (String) spielAuswahl.getSelectedItem();
-            parent.setContentPane(new SpielfeldGUI(parent, 
-                parent.getSpiel(name)));
+            Spiel spiel = parent.getSpiel(name);
+            if (spiel != null) {
+                parent.setContentPane(new SpielfeldGUI(parent, 
+                    spiel));
+            } else {
+                JOptionPane.showMessageDialog(parent, "Das ausgewählte Spiel "
+                    + "kann nicht geladen werden");
+            }
+            
         }
     }
 }

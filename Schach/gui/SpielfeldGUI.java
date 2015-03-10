@@ -66,6 +66,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private JButton rueckgaengig = new JButton("Zug Rückgängig");
     
     /**
+     * Button um ein unetschieden anzubieten.
+     */
+    private JButton btnUnentschieden = new JButton("Remis anbieten");
+    
+    /**
      * Button um aufzugeben.
      */
     private JButton aufgeben = new JButton("Spiel Aufgeben");
@@ -172,9 +177,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private final String commandAufgeben = "aufgeben";
     
     /**
+     * Action Command fuer Remi-Button.
+     */
+    private final String commandRemi = "remis";
+    
+    /**
      * Action Command fuer den Startmenue-Button.
      */
-    private final String commandStartmenue = "Eroeffnungsseite";
+    private final String commandStartmenue = "spielende";
     
     /**
      * Startzeit für die Zugzeit-Stoppuhr (Ueber Systemzeit). 
@@ -245,6 +255,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         for (Feld feld : felderListe) {
             feld.addMouseListener(this);
         }
+        
         init();
     }
     
@@ -312,7 +323,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Button rueck
         rueckgaengig.addActionListener(this);
         rueckgaengig.setActionCommand(commandRueck);
-        gbc.gridy = 5;
+        gbc.gridy = 4;
         gbc.gridwidth = 2;
         cEast.add(rueckgaengig, gbc);
         
@@ -322,6 +333,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         gbc.gridx = 2;
         gbc.gridy = 4;
         cEast.add(speichern, gbc);
+        
+        // Button unentschieden
+        btnUnentschieden.addActionListener(this);
+        btnUnentschieden.setActionCommand(commandRemi);
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        cEast.add(btnUnentschieden, gbc);
+        
         
         // Button aufgeben
         aufgeben.addActionListener(this);
@@ -344,20 +363,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         /* Wenn ein Computerspieler mitspielt und anfangen soll muss er hier 
          * den ersten Zug machen
          */
-        // Wenn spieler 1 ein Computergegner ist und dran ist
-        if (spieler1 instanceof Computerspieler) {
-            ((Computerspieler) spieler1).setSpielfeld(spielfeld);
-            if (spieler1.getFarbe() == spielfeld.getAktuellerSpieler()) {
-                ((Computerspieler) spieler1).setSpielfeld(spielfeld);
-                ((Computerspieler) spieler1).ziehen();
-            }
-        // Wenn spieler 2 ein Computergegner ist und dran ist
-        } else if (spieler2 instanceof Computerspieler) {
-            ((Computerspieler) spieler2).setSpielfeld(spielfeld);
-            if (spieler2.getFarbe() == spielfeld.getAktuellerSpieler()) {
-                ((Computerspieler) spieler2).ziehen();
-            }
-        }
+        wennComputerDannZiehen();
         
         // SpielfeldGUI erstellen
         spielfeldAufbau();
@@ -526,7 +532,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             try {
                 Image imageB = ImageIO.read(new File(name));
                 ImageIcon iconB  = new ImageIcon(
-                    imageB.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    imageB.getScaledInstance(45, 45, Image.SCALE_DEFAULT));
                 momentan.setIcon(iconB);
                 geschlageneSchwarze.add(momentan);
             } catch (IOException exc) {
@@ -570,24 +576,77 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
     }
     
+    /**
+     * Wertet aus, ob der Spieler ein Computerspieler ist und ob dieser 
+     * momentan am Zug ist.
+     * @param spieler der ueberprueft werden soll
+     * @return true - ist ein Computerspieler false - ist kein Computerspieler
+     */
+    private boolean istComputerSpielerUndIstAmZug(Spieler spieler) {
+        boolean istCompSpielerUndDran = false;
+        if (spieler instanceof Computerspieler
+            && spieler.getFarbe() == spielfeld.getAktuellerSpieler() 
+            && !spielVorbei) {
+            istCompSpielerUndDran = true;
+        }
+        return istCompSpielerUndDran;
+        
+    }
     
     /**
-     * Hier werden die Züge veranlasst und auf der Gui geupdated.
-     * @param momentanesFeld Das momentan ausgewählte Feld
+     * Ermittelt ob ein Computerspieler dran ist und laesst ihn wenn dies so ist
+     * ziehen.
      */
-    private void spielerzugGUI(Feld momentanesFeld) {
-        // HIER WIRD GEZOGEN
-        spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
-            sekundenStopp);
-        // Start der zugzeit
-        start();
-        // Neuer Spieler = keine Ausgewählte Figur
-        ausgewaehlteFigur = null;
-        
-        spielfeld.getBedrohteFelder();
-        List<Zug> zugliste 
-            = spielfeld.getSpieldaten().getZugListe();
-        Zug letzterZug = zugliste.get(zugliste.size() - 1);
+    private void wennComputerDannZiehen() {
+        // Wenn spieler 1 ein Computerspieler ist
+        if (istComputerSpielerUndIstAmZug(spieler1)) {
+            ((Computerspieler) spieler1).setSpielfeld(spielfeld);
+            ((Computerspieler) spieler1).ziehen();
+            mattOderSchach();
+            spielfeldAufbau();
+            for (Feld feld : spielfeld.getLetzteFelder()) {
+                feld.setBackground(rot);
+            }
+        // Wenn spieler 2 ein Computergegner ist und dran ist
+        } else if (istComputerSpielerUndIstAmZug(spieler2)) {
+            ((Computerspieler) spieler2).setSpielfeld(spielfeld);
+            ((Computerspieler) spieler2).ziehen();
+            mattOderSchach();
+            spielfeldAufbau();
+            for (Feld feld : spielfeld.getLetzteFelder()) {
+                feld.setBackground(rot);
+            }
+        }
+    }
+    
+    /**
+     * Gibt eine Schachwarnung aus, wenn der aktuelle Spieler ein menschlicher 
+     * Spieler ist. Computerspieler benoetigen diese Warung aus offensichtilchen
+     * Gruenden nicht.
+     */
+    private void schachWarnung() {
+        // Wenn kein Computerspieler dran ist und das Spiel nocht vorbei ist
+        if (!((spieler1 instanceof Computerspieler && spieler1.getFarbe() 
+            == spielfeld.getAktuellerSpieler() && !spielVorbei)
+            ||
+            spieler2 instanceof Computerspieler 
+            && spieler2.getFarbe() == spielfeld.getAktuellerSpieler()
+            && !spielVorbei)) {
+            spielfeldAufbau();
+            // Schachmeldung ausgeben
+            JOptionPane.showMessageDialog(parent, 
+                "Sie stehen im Schach!", "Schachwarnung!",
+                JOptionPane.WARNING_MESSAGE);
+        }
+        // Schach wieder aufheben, da nun ein Zug aus dem Schach gezwungen ist
+        spielfeld.setSchach(false);
+    }
+    
+    /**
+     * Prueft nach einem Zug, ob der neue aktuelle Spieler matt ist oder im 
+     * schach steht.
+     */
+    private void mattOderSchach() {
         // Wenn das Spiel vorbei ist
         if (spielfeld.schachMatt()) {
             spielfeldAufbau();
@@ -611,18 +670,39 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             for (Feld feld : felderListe) {
                 feld.removeMouseListener(this);
             }
+            // Den letzten Zug kenntlich machen
             this.remove(cEast);
             this.add(cEnde, BorderLayout.EAST);
             this.revalidate();
             spielVorbei = true;
         // Wenn der momentane Spieler im Schach steht
         } else if (spielfeld.isSchach()) {
-            spielfeldAufbau();
-            JOptionPane.showMessageDialog(parent, 
-                "Sie stehen im Schach!", "Schachwarnung!",
-                JOptionPane.WARNING_MESSAGE);
-            spielfeld.setSchach(false);
-        } else if (letzterZug instanceof Umwandlungszug)   {
+            schachWarnung();
+        }
+    }
+    
+    
+    /**
+     * Hier werden die Züge veranlasst und auf der Gui geupdated.
+     * @param momentanesFeld Das momentan ausgewählte Feld
+     */
+    private void spielerzugGUI(Feld momentanesFeld) {
+        // Hier ist der jetzige Zug beendet also auch die Zugzeit
+        sekundenStopp = ((int) System.currentTimeMillis()
+            - sekundenStart) / 1000;
+        // Ein Zug wird ausgeführt und die Zugzeit uebergeben
+        spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
+            sekundenStopp);
+        // Start der neuen Zugzeit
+        start();
+        // Neuer Spieler = keine Ausgewählte Figur
+        ausgewaehlteFigur = null;
+        spielfeld.getBedrohteFelder();
+        List<Zug> zugliste 
+            = spielfeld.getSpieldaten().getZugListe();
+        Zug letzterZug = zugliste.get(zugliste.size() - 1);
+        mattOderSchach();
+        if (!spielVorbei && letzterZug instanceof Umwandlungszug)   {
             spielfeldAufbau();
             String[] moeglicheFiguren = {"Dame", "Turm", "Läufer", 
                 "Springer"};
@@ -641,7 +721,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             } else {
                 wert = 275;
             }
-            spielfeld.umwandeln(letzterZug.getFigur(), wert); 
+            spielfeld.umwandeln(letzterZug.getFigur(), wert);
         }
     }
      
@@ -651,7 +731,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     public void mouseClicked(MouseEvent arg0) {
         spielfeldAufbau();
-        
         // Felder Bewegen
         Feld momentanesFeld = (Feld) arg0.getSource();
         /* (Wenn eine korrekte Figur ausgewählt wird und es noch keine 
@@ -699,37 +778,31 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
         // Wenn es bereits eine ausgewaehlte Figur gibt
         } else if (ausgewaehlteFigur != null) {
-            sekundenStopp = ((int) System.currentTimeMillis()
-                - sekundenStart) / 1000;
-            // TODO Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button 
             /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
              dieser ist */
             if (ausgewaehlteFigur.getKorrektFelder()
                 .contains(momentanesFeld)) {
-                // Hier wird gezogen
+                // Hier zieht ein menschlicher Spieler
                 spielerzugGUI(momentanesFeld);
-                if ((spieler1 instanceof Computerspieler && spieler1.getFarbe() 
-                    == spielfeld.getAktuellerSpieler() && !spielVorbei)) {
-                    ((Computerspieler) spieler1).setSpielfeld(spielfeld);
-                    ((Computerspieler) spieler1).ziehen();
-                    spielfeld.setSchach(false);
-                    spielfeldAufbau();
-                // Wenn spieler 2 ein Computergegner ist und dran ist
-                } else if (spieler2 instanceof Computerspieler 
-                    && spieler2.getFarbe() == spielfeld.getAktuellerSpieler()
-                    && !spielVorbei) {
-                    ((Computerspieler) spieler2).setSpielfeld(spielfeld);
-                    ((Computerspieler) spieler2).ziehen();
-                    spielfeld.setSchach(false);
-                    spielfeldAufbau();
-                }
+                spielfeldAufbau();
+                /* Wenn ein Computerspieler mitspielt muss er hier den  Zug
+                 * machen
+                 */
+                wennComputerDannZiehen();
                 // Je nach aktuellem Spieler wird das Label gesetzt
                 if (spielfeld.getAktuellerSpieler()) {
                     momentanerSpieler.setText("Weiß");
                 } else {
                     momentanerSpieler.setText("Schwarz");
                 }
-                spielfeldAufbau();
+                // Wenn das Spiel vorbei ist wieder das Spielfeld aufbauen
+                if (!spielVorbei) {
+                    spielfeldAufbau();
+                    parent.autoSave(spiel);
+                    if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
+                        aufgeben.doClick();
+                    }
+                } 
             /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
              * Auswahl aufgehoben.
              */
@@ -746,7 +819,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 bedroht.setBackground(new Color(100, 100, 100));
             }
         }
-        this.revalidate();   
+        this.revalidate();  
+        
     }
    
     
@@ -794,15 +868,38 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     public void actionPerformed(ActionEvent e) {
         // Wenn der momentante Spieler einen Zug rückgängig macht
         if (e.getActionCommand().equals(commandRueck)) {
+            /* Wenn es einen Computerspieler gibt dann muss dessen Zug auch 
+             * rueckgaenig gemacht werden.
+            */
+            if (spieler1 instanceof Computerspieler 
+                || spieler2 instanceof Computerspieler) {
+                spielfeld.zugRueckgaengig();
+            }
             spielfeld.zugRueckgaengig();
+            // Labels wieder richtig setzen
             if (spielfeld.getAktuellerSpieler()) {
                 momentanerSpieler.setText("Weiß");
             } else {
                 momentanerSpieler.setText("Schwarz");  
             }
+            // Zugzeit neu starten
             start();
             spielfeldAufbau();
             this.revalidate();
+        }
+        // Wenn ein Spieler ein Remis anbietet
+        if (e.getActionCommand().equals(commandRemi)) {
+            int eingabe = JOptionPane.showConfirmDialog(parent, "Möchten sie "
+                + "sich auf ein Unentschieden einigen?");
+            if (eingabe == 0) {
+                spiel.unentschieden();
+                for (Feld feld : felderListe) {
+                    feld.removeMouseListener(this);
+                }
+                this.remove(cEast);
+                this.add(cEnde, BorderLayout.EAST);
+                this.revalidate();
+            }
         }
         // Wenn der momentane Spieler aufgibt
         if (e.getActionCommand().equals(commandAufgeben)) {
@@ -897,9 +994,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             // Auf das Zugzeit-Label schreiben
             zugzeit.setText(ausgabe.toString());
-            // Zugzeitbegrenzung ?!?!?!?
-            if (sekundenStopp / 1000 
-                >= parent.getEinstellungen().getZugZeitBegrenzung()) {
+            // Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button
+            int begrenzung = parent.getEinstellungen().getZugZeitBegrenzung();
+            if (begrenzung > 0 && sekundenStopp / 1000 >= begrenzung) {
                 aufgeben.doClick();
             }
         }
@@ -929,5 +1026,4 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         this.revalidate();
     }
-    
 }

@@ -193,6 +193,21 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
+     * Speichert das spiel als autosave zwischen.
+     * @param spiel das zu speichernde Spiel
+     */
+    public void autoSave(Spiel spiel) {
+        gesamtdatensatz.automatischesSpeichern(spiel);
+    }
+    
+    /**
+     * Löscht die automtische speicherung des momentanen Spiels.
+     */
+    public void autoSaveLoeschen() {
+        gesamtdatensatz.autosaveLoeschen();
+    }
+    
+    /**
      * Initiert das Laden des Gesamtdatensatzes durch die Datenklassen.
      */
     private void gesamtdatenLaden() {
