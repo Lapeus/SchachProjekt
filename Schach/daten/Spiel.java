@@ -124,7 +124,7 @@ public class Spiel {
         ergebnis.add(verlierer);
         
         // Anzahl Zuege
-        ergebnis.add(spielfeld.getSpieldaten().getAnzahlZuege(spieler) - 1);
+        ergebnis.add(spielfeld.getSpieldaten().getAnzahlZuege(spieler));
         
         // Der Gewinner
         ergebnis.add(gewinner);
