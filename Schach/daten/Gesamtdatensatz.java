@@ -493,6 +493,10 @@ public class Gesamtdatensatz {
             br.readLine(); // Aktuellen Spieler lesen lassen
             Spielfeld spielfeld = new Spielfeld(felderListe, true);
             spielfeld.setSpieldaten(new Spieldaten());
+            // Einem Computergegner muss das Spielfeld zugefuegt werden
+            if (spieler2 instanceof Computerspieler) {
+                ((Computerspieler) spieler2).setSpielfeld(spielfeld);
+            }
             // Nacheinander werden jetzt die Listen ausgelesen
             // Die weisse Figuren-Liste
             fuelleFigurenListe(br, felderListe);

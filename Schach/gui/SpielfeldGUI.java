@@ -245,6 +245,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         spielfeld.setEinstellungen(parent.getEinstellungen());
         spielfeld.setSpieldaten(new Spieldaten());
         
+        // Einem Computergegner das Spielfeld uebergeben
+        if (spieler2 instanceof Computerspieler) {
+            ((Computerspieler) spieler2).setSpielfeld(spielfeld);
+        }
+        
         // Spiel 
         spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
         

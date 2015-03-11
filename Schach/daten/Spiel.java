@@ -346,7 +346,8 @@ public class Spiel {
      * @return Die Liste aller Z&uuml;ge
      */
     public List<Zug> spielvideo() {
-        List<Zug> zugListe = spielfeld.getSpieldaten().getZugListe();
+        List<Zug> zugListe = new ArrayList<Zug>();
+        zugListe.addAll(spielfeld.getSpieldaten().getZugListe());
         for (int i = 0; i < zugListe.size(); i++) {
             spielfeld.zugRueckgaengig();
         }
