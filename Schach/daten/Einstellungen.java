@@ -80,7 +80,8 @@ public class Einstellungen {
         string += rochadeMoeglich + lineSep;
         string += enPassantMoeglich + lineSep;
         string += schachWarnung + lineSep;
-        string += inStatistikEinbeziehen;
+        string += inStatistikEinbeziehen + lineSep;
+        string += spielfeldDrehen;
         return string;
     }
 

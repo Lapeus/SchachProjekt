@@ -483,8 +483,8 @@ public class Gesamtdatensatz {
             // Neue FelderListe wird erstellt
             List<Feld> felderListe = erstelleFelderListe();
             // Neues Spielfeld erzeugen
-            boolean aktuellerSpieler = Boolean.parseBoolean(br.readLine());
-            Spielfeld spielfeld = new Spielfeld(felderListe, aktuellerSpieler);
+            br.readLine(); // Aktuellen Spieler lesen lassen
+            Spielfeld spielfeld = new Spielfeld(felderListe, true);
             spielfeld.setSpieldaten(new Spieldaten());
             // Nacheinander werden jetzt die Listen ausgelesen
             // Die weisse Figuren-Liste
@@ -517,7 +517,16 @@ public class Gesamtdatensatz {
             // Schachnotation wird zurueckuebersetzt
             List<Zug> zugliste = ladeZugListe(br, felderListe);
             for (Zug zug : zugliste) {
-                spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), zug.getZugzeit());
+                // Ziehe jeden Zug
+                spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), 
+                    zug.getZugzeit());
+                // Wenn es ein Umwandlungszug war
+                if (zug instanceof Umwandlungszug) {
+                    // Wandel die Figur entsprechend um
+                    spielfeld.umwandeln(spielfeld.getSpieldaten()
+                        .getLetzterZug().getFigur(), 
+                        ((Umwandlungszug) zug).getNeueFigur().getWert());
+                }
             }
 
             // Den Reader schliessen
@@ -632,7 +641,6 @@ public class Gesamtdatensatz {
                     /* Wenn hinter dem Trennungszeichen 3 Zeichen kommen, ist
                      * es ein Umwandlungszug
                      */
-                    System.out.println(vordererTeil);
                     if (vordererTeil.substring(stelleTrennung + 1)
                         .length() == 3) {
                         String umgewandelteFigur = 
@@ -645,10 +653,9 @@ public class Gesamtdatensatz {
                         } else if (umgewandelteFigur.equals("T")) {
                             neueFigur = new Turm(zielfeld, aktuelleFarbe);
                         } else {
+                            System.out.println("Tadaaa");
                             neueFigur = new Dame(zielfeld, aktuelleFarbe);
                         }
-                        // Figur wurde schon gezogen
-                        neueFigur.setGezogen(true);
                         zug = new Umwandlungszug(startfeld, zielfeld, 
                             schlagzug, zugzeit, neueFigur);
                     } else {
