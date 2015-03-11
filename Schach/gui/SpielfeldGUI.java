@@ -492,7 +492,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
         }
         geschlageneFigureUpdate();
-        this.revalidate();
+        this.validate();
+        this.repaint();  
     }
     
     /**
@@ -674,7 +675,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Den letzten Zug kenntlich machen
             this.remove(cEast);
             this.add(cEnde, BorderLayout.EAST);
-            this.revalidate();
+            this.validate();
+            this.repaint();  
             spielVorbei = true;
         // Wenn der momentane Spieler im Schach steht
         } else if (spielfeld.isSchach()) {
@@ -694,6 +696,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Ein Zug wird ausgeführt und die Zugzeit uebergeben
         spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
             sekundenStopp);
+        spielfeldAufbau();
+        this.validate();
+        this.repaint();  
         // Start der neuen Zugzeit
         start();
         // Neuer Spieler = keine Ausgewählte Figur
@@ -820,7 +825,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 bedroht.setBackground(new Color(100, 100, 100));
             }
         }
-        this.revalidate();  
+        this.validate();
+        this.repaint();  
         
     }
    
@@ -886,7 +892,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Zugzeit neu starten
             start();
             spielfeldAufbau();
-            this.revalidate();
+            this.validate();
+            this.repaint();  
         }
         // Wenn ein Spieler ein Remis anbietet
         if (e.getActionCommand().equals(commandRemi)) {
@@ -898,7 +905,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     + "verletzt. Das Spiel endet in einem Unentschieden");
                 this.remove(cEast);
                 this.add(cEnde, BorderLayout.EAST);
-                this.revalidate();
+                this.validate();
+                this.repaint();  
             } else {
                 if (!(spieler2 instanceof Computerspieler)) {
                     int eingabe = JOptionPane.showConfirmDialog(parent, 
@@ -910,7 +918,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         }
                         this.remove(cEast);
                         this.add(cEnde, BorderLayout.EAST);
-                        this.revalidate();
+                        this.validate();
+                        this.repaint();  
                     }
                 }
             }
@@ -933,7 +942,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             this.remove(cEast);
             this.add(cEnde, BorderLayout.EAST);
-            this.revalidate();
+            this.validate();
+            this.repaint();  
         }
         // Wenn das Spiel gespeichert werden soll
         if (e.getActionCommand().equals(commandSpeichern)) {
@@ -1038,6 +1048,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 }
             }
         }
-        this.revalidate();
+        this.validate();
+        this.repaint();  
     }
 }

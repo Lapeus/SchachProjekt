@@ -141,6 +141,12 @@ public class SpielLaden extends JPanel implements ActionListener {
             } else {
                 JOptionPane.showMessageDialog(parent, "Das ausgewählte Spiel "
                     + "kann nicht geladen werden");
+                List<String> spieleListe = parent.getSpieleListe();
+                String[] spieleArray = new String[spieleListe.size()];
+                for (int i = 0; i < spieleArray.length; i++) {
+                    spieleArray[i] = spieleListe.get(i);
+                }
+                spielAuswahl = new JComboBox<String>(spieleArray);
             }
             
         }
