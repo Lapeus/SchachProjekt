@@ -342,6 +342,21 @@ public class Spiel {
     }
     
     /**
+     * Bereitet das Spielvideo vor. Macht alle bisherigen Z&uuml;ge 
+     * r&uuml;ckg&auml;nig und gibt der aufrufenden Methode die ZugListe
+     * zur&uuml;ck, damit diese jeden Zug in einem gewissen Zeitintervall
+     * ziehen kann.
+     * @return Die Liste aller Z&uuml;ge
+     */
+    public List<Zug> spielvideo() {
+        List<Zug> zugListe = spielfeld.getSpieldaten().getZugListe();
+        for (int i = 0; i < zugListe.size(); i++) {
+            spielfeld.zugRueckgaengig();
+        }
+        return zugListe;
+    }
+    
+    /**
      * Gibt eine Zeichenkette mit allen wichtigen Daten des Spiels zur&uuml;ck.
      * Wird zum Speichern ben&ouml;tigt.
      * @return Eine Zeichenkette mit allen wichtigen Daten
