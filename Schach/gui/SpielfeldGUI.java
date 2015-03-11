@@ -643,7 +643,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Wenn spieler 2 ein Computergegner ist und dran ist
         if (istComputerSpielerUndIstAmZug()) {
             spielfeldAufbau();
-            ((Computerspieler) spieler2).setSpielfeld(spielfeld);
             start();
             ((Computerspieler) spieler2).ziehen();
             sekundenStopp = ((int) System.currentTimeMillis()
