@@ -125,12 +125,11 @@ public class Bauer extends Figur {
          * 2. Der eigene Bauer steht direkt daneben
          */
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
-        int lastIndex = getSpielfeld().getSpieldaten().getZugListe().size() - 1;
         // Wenn das nicht der erste Zug ist
         if (!getSpielfeld().getSpieldaten().getZugListe().isEmpty()) {
             // Letzter durchgefuehrter Zug
             Zug letzterZug = getSpielfeld().getSpieldaten()
-                .getZugListe().get(lastIndex);
+                .getLetzterZug();
             // Wenn der letzte Zug ein Sonderzug war, ist en-passant nicht mogl.
             /* Durch die erweiterte Methode getBedrohteFelder wurde es moeglich
              * dass ein Spieler in der Theorie doppelt zieht. Darauf muss hier

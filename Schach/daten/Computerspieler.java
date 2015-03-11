@@ -70,10 +70,7 @@ public class Computerspieler extends Spieler {
         
         
         // Wenn ein Bauer umgewandelt wird
-        int letzterZugIndex = spielfeld.getSpieldaten().getZugListe()
-            .size() - 1;
-        Zug letzterZug = spielfeld.getSpieldaten().getZugListe()
-            .get(letzterZugIndex);
+        Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
         if (letzterZug instanceof Umwandlungszug) {
             spielfeld.umwandeln(letzterZug.getFigur(), 900);
         }
@@ -114,10 +111,7 @@ public class Computerspieler extends Spieler {
                 // Mache den Zug
                 spielfeld.ziehe(figur, feld, 0);
                 // Wenn ein Bauer umgewandelt wird
-                int letzterZugIndex = spielfeld.getSpieldaten().getZugListe()
-                    .size() - 1;
-                Zug letzterZug = spielfeld.getSpieldaten().getZugListe()
-                    .get(letzterZugIndex);
+                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
                 if (letzterZug instanceof Umwandlungszug) {
                     spielfeld.umwandeln(letzterZug.getFigur(), 900);
                 }
@@ -206,10 +200,7 @@ public class Computerspieler extends Spieler {
             for (Feld feld : figur.getKorrektFelder()) {
                 spielfeld.ziehe(figur, feld, 0);
                 // Wenn ein Bauer umgewandelt wird
-                int letzterZugIndex = spielfeld.getSpieldaten().getZugListe()
-                    .size() - 1;
-                Zug letzterZug = spielfeld.getSpieldaten().getZugListe()
-                    .get(letzterZugIndex);
+                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
                 if (letzterZug instanceof Umwandlungszug) {
                     spielfeld.umwandeln(letzterZug.getFigur(), 900);
                 }
@@ -250,10 +241,7 @@ public class Computerspieler extends Spieler {
             for (Feld feld : figur.getKorrektFelder()) {
                 spielfeld.ziehe(figur, feld, 0);
                 // Wenn ein Bauer umgewandelt wird
-                int letzterZugIndex = spielfeld.getSpieldaten().getZugListe()
-                    .size() - 1;
-                Zug letzterZug = spielfeld.getSpieldaten().getZugListe()
-                    .get(letzterZugIndex);
+                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
                 if (letzterZug instanceof Umwandlungszug) {
                     spielfeld.umwandeln(letzterZug.getFigur(), 900);
                 }

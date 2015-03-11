@@ -393,8 +393,7 @@ public class Spielfeld {
      */
     public void zugRueckgaengig() {
         // Rufe den letzten durchgefuehrten Zug auf
-        Zug zug = spieldaten.getZugListe()
-            .get(spieldaten.getZugListe().size() - 1);
+        Zug zug = spieldaten.getLetzterZug();
         // Loesche ihn aus der Liste
         spieldaten.getZugListe().remove(zug);
         // Mache ihn rueckgaengig (ziehe Methode von hinten)
@@ -537,8 +536,7 @@ public class Spielfeld {
             neueFigur = new Dame(
                 figur.getPosition(), figur.getFarbe());
         } 
-        Umwandlungszug umwandlZug = (Umwandlungszug) spieldaten.getZugListe()
-            .get(spieldaten.getZugListe().size() - 1);
+        Umwandlungszug umwandlZug = (Umwandlungszug) spieldaten.getLetzterZug();
         umwandlZug.setNeueFigur(neueFigur);
         // Sie auf das neue Feld stellen
         neueFigur.getPosition().setFigur(neueFigur);
@@ -640,8 +638,7 @@ public class Spielfeld {
      */
     public List<Feld> getLetzteFelder() {
         List<Feld> letzteFelder = new ArrayList<Feld>();
-        Zug zug = spieldaten.getZugListe().get(
-            spieldaten.getZugListe().size() - 1);
+        Zug zug = spieldaten.getLetzterZug();
         if (zug instanceof EnPassantZug) {
             letzteFelder.add(zug.getStartfeld());
             letzteFelder.add(

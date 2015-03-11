@@ -67,10 +67,10 @@ public class Spieldaten {
         // Grundsaetzliche Annahme, die 50 Zuege Regel wuerde zutreffen
         boolean remis = true;
         int zaehl = 0; 
-        /* Solange noch nicht alle letzten 50 Zuege getestet wurden und noch
-         * keine Anforderung nicht erfuellt wurde
+        /* Solange noch nicht alle letzten 100 Halbzuege getestet wurden und 
+         * noch keine Anforderung nicht erfuellt wurde
          */
-        while (remis && zaehl < 50) {
+        while (remis && zaehl < 100) {
             // Der zaehlte Zug von hinten
             Zug zug = zugListe.get(zugListe.size() - zaehl - 1);
             // Wenn es ein EnPassantZug oder ein Umwandlungszug war
@@ -154,6 +154,14 @@ public class Spieldaten {
      */
     public List<Zug> getZugListe() {
         return zugListe;
+    }
+    
+    /**
+     * Gibt den letzten Zug zur&uuml;ck.
+     * @return Der letzte Zug
+     */
+    public Zug getLetzterZug() {
+        return zugListe.get(zugListe.size() - 1);
     }
     
     /**
