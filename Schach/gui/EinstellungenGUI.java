@@ -114,7 +114,54 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         JLabel einstellungen = new JLabel("Einstellungen");
         einstellungen.setFont(new Font("Arial", Font.BOLD, 20));
         cNorth.add(einstellungen);
-        add(cNorth, BorderLayout.NORTH);        
+        add(cNorth, BorderLayout.NORTH);  
+       
+        // Center
+        initCenter();
+        
+        // South
+        JPanel cSouth = new JPanel();
+        cSouth.setBackground(cBraunRot);
+        speichern = new JButton("Einstellungen Speichern");
+        speichern.setBackground(cHellesBeige);
+        speichern.addActionListener(this);
+        cSouth.add(speichern);        
+        zurueck = new JButton("Zurück");
+        zurueck.setBackground(cHellesBeige);
+        zurueck.setActionCommand("Eroeffnungsseite");
+        zurueck.addActionListener(new SeitenwechselListener(parent));
+        cSouth.add(zurueck); 
+        this.add(cSouth, BorderLayout.SOUTH);
+        
+    }
+    
+    /**
+     * Erstellt neue Buttons und gibt ihnen die uebergebenen ActionCommands.
+     * @param commmandJa ActionCommand fuer den Ja-RadioButton
+     * @param commandNein ActionCommand fuer den Nein-RadioButton
+     */
+    private void auswahlJaNein(String commmandJa,
+        String commandNein) {
+        List<JRadioButton> radioButtons = new ArrayList<JRadioButton>();
+        ja = new JRadioButton("Ja");
+        ja.addActionListener(this);
+        ja.setActionCommand(commmandJa);
+        ja.setBackground(cBraunRot);
+        nein = new JRadioButton("Nein");
+        nein.addActionListener(this);
+        nein.setActionCommand(commandNein);
+        nein.setBackground(cBraunRot);
+        bGAuswahl = new ButtonGroup();
+        bGAuswahl.add(ja);
+        bGAuswahl.add(nein);
+        radioButtons.add(ja);
+        radioButtons.add(nein);
+    }
+    
+    /**
+     * Erstellt das Auswahlmenü fuer die Einstellungen.
+     */
+    private void initCenter() {
         // Center
         Container cCenter = new JPanel();
         cCenter.setLayout(new GridBagLayout());
@@ -237,44 +284,27 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         gbc.gridx = 1;
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
-        cCenter.add(nein, gbc);        
-        // South
-        JPanel cSouth = new JPanel();
-        cSouth.setBackground(cBraunRot);
-        speichern = new JButton("Einstellungen Speichern");
-        speichern.setBackground(cHellesBeige);
-        speichern.addActionListener(this);
-        cSouth.add(speichern);        
-        zurueck = new JButton("Zurück");
-        zurueck.setBackground(cHellesBeige);
-        zurueck.setActionCommand("Eroeffnungsseite");
-        zurueck.addActionListener(new SeitenwechselListener(parent));
-        cSouth.add(zurueck); 
-        this.add(cSouth, BorderLayout.SOUTH);
+        cCenter.add(nein, gbc);
+        
+        // Label Spielfeld drehen
+        gbc.gridy = 7;
+        gbc.gridx = 0;
+        JLabel lblSpielfeldDrehen  
+            = new JLabel("Soll das Spielfeld gedreht werden ?");
+        cCenter.add(lblSpielfeldDrehen, gbc);
+        // Radio Buttons Statistik
+        auswahlJaNein("drehenJa", "derehenNein");
+        if (this.einstellungen.isSpielfeldDrehen()) {
+            ja.setSelected(true);
+        } else {
+            nein.setSelected(true);
+        }
+        gbc.gridx = 1;
+        cCenter.add(ja, gbc);
+        gbc.gridx = 3;
+        cCenter.add(nein, gbc);
+        
         this.add(cCenter, BorderLayout.CENTER);
-    }
-    
-    /**
-     * Erstellt neue Buttons und gibt ihnen die uebergebenen ActionCommands.
-     * @param commmandJa ActionCommand fuer den Ja-RadioButton
-     * @param commandNein ActionCommand fuer den Nein-RadioButton
-     */
-    private void auswahlJaNein(String commmandJa,
-        String commandNein) {
-        List<JRadioButton> radioButtons = new ArrayList<JRadioButton>();
-        ja = new JRadioButton("Ja");
-        ja.addActionListener(this);
-        ja.setActionCommand(commmandJa);
-        ja.setBackground(cBraunRot);
-        nein = new JRadioButton("Nein");
-        nein.addActionListener(this);
-        nein.setActionCommand(commandNein);
-        nein.setBackground(cBraunRot);
-        bGAuswahl = new ButtonGroup();
-        bGAuswahl.add(ja);
-        bGAuswahl.add(nein);
-        radioButtons.add(ja);
-        radioButtons.add(nein);
     }
     
     /**
@@ -287,6 +317,10 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
             einstellungen.setZugZeitBegrenzung(
                 Integer.parseInt(txtZugzeitbegrenzung.getText()));
             parent.setEinstellungen(einstellungen);
+        } else if (command.equals("drehenJa")) {
+            einstellungen.setSpielfeldDrehen(true);
+        } else if (command.equals("drehenNein")) {    
+            einstellungen.setSpielfeldDrehen(false);
         } else if (command.equals("moeglicheFelderJa")) {
             einstellungen.setMoeglicheFelderAnzeigen(true);
         } else if (command.equals("moeglicheFelderNein")) {
@@ -311,8 +345,6 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
             einstellungen.setInStatistikEinbeziehen(true);
         } else if (command.equals("statistikNein")) {
             einstellungen.setInStatistikEinbeziehen(false);
-        }
-        
-        
+        } 
     }
 }

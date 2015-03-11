@@ -6,16 +6,17 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import daten.Spiel;
 
@@ -36,6 +37,11 @@ public class SpielLaden extends JPanel implements ActionListener {
     private SpielGUI parent;
     
     /**
+     * Container fuer die Center-Objekte. 
+     */
+    private Container cCenter;
+    
+    /**
      * Label fuer die Information "Spiel Laden".
      */
     private JLabel lblSpielLaden = new JLabel("Spiel Laden");
@@ -51,9 +57,10 @@ public class SpielLaden extends JPanel implements ActionListener {
     private JButton btnZurueck = new JButton("zurück");
     
     /**
-     * Combobox um das zu ladende Spiel auszuwaehlen.
+     * Liste mit den zu ladenden Spielen.
      */
-    private JComboBox<String> spielAuswahl;
+    private JList<String> jSpieleListe;
+    
     /**
      * Konstante für den Farbton den Hintergrunds (Braun).
      */
@@ -93,36 +100,45 @@ public class SpielLaden extends JPanel implements ActionListener {
         this.add(cNorth, BorderLayout.NORTH);
         
         // Center
-        Container cCenter = new JPanel();
+        cCenter = new JPanel();
         cCenter.setBackground(cBraunRot);
         cCenter.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         
+        // AuswahlListe im JScrollPane eingebettet
+        DefaultListModel<String> listModel = new DefaultListModel<String>();
         List<String> spieleListe = parent.getSpieleListe();
-        String[] spieleArray = new String[spieleListe.size()];
-        for (int i = 0; i < spieleArray.length; i++) {
-            spieleArray[i] = spieleListe.get(i);
+        jSpieleListe = new JList<String>();
+        for (int i = 0; i < spieleListe.size(); i++) {
+            listModel.addElement((spieleListe.get(i)));
         }
-        spielAuswahl = new JComboBox<String>(spieleArray);
+        jSpieleListe = new JList<String>(listModel);
+        JScrollPane scrollPane = new JScrollPane(jSpieleListe);
+        
         
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        spielAuswahl.setBackground(cHellesBeige);
-        cCenter.add(spielAuswahl, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.insets = new Insets(15, 15, 15, 15);
-        btnSpielLaden.addActionListener(this);
-        btnSpielLaden.setBackground(cHellesBeige);
-        cCenter.add(btnSpielLaden, gbc);
+        jSpieleListe.setBackground(cHellesBeige);
+        cCenter.add(scrollPane, gbc);
+ 
         this.add(cCenter, BorderLayout.CENTER);
         
         // South
+        JPanel cSouth = new JPanel();
+        cSouth.setLayout(new FlowLayout());
+        cSouth.setBackground(cBraunRot);
+        
+        // Laden-Button
+        btnSpielLaden.addActionListener(this);
+        btnSpielLaden.setBackground(cHellesBeige);
+        cSouth.add(btnSpielLaden);
+        
+        // ZUrück-Button
         btnZurueck.addActionListener(new SeitenwechselListener(parent));
         btnZurueck.setActionCommand("Eroeffnungsseite");
         btnZurueck.setBackground(cHellesBeige);
-        this.add(btnZurueck, BorderLayout.SOUTH);
+        cSouth.add(btnZurueck);
+        
+        this.add(cSouth, BorderLayout.SOUTH);
         
     }
     
@@ -133,15 +149,35 @@ public class SpielLaden extends JPanel implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(btnSpielLaden)) {
-            String name = (String) spielAuswahl.getSelectedItem();
-            Spiel spiel = parent.getSpiel(name);
-            if (spiel != null) {
-                parent.setContentPane(new SpielfeldGUI(parent, 
-                    spiel));
+            String name = jSpieleListe.getSelectedValue();
+            System.out.println(jSpieleListe.getSelectedValue());
+            if (name != null) {
+                Spiel spiel = parent.getSpiel(name);
+                if (spiel != null) {
+                    parent.setContentPane(new SpielfeldGUI(parent, 
+                        spiel));
+                } else {
+                    JOptionPane.showMessageDialog(parent, "Das ausgewählte "
+                        + "Spiel kann nicht geladen werden");
+                    DefaultListModel<String> listModel 
+                        = new DefaultListModel<String>();
+                    List<String> spieleListe = parent.getSpieleListe();
+                    jSpieleListe = new JList<String>();
+                    for (int i = 0; i < spieleListe.size(); i++) {
+                        listModel.addElement((spieleListe.get(i)));
+                    }
+                    jSpieleListe = new JList<String>(listModel);
+                    jSpieleListe.setBackground(cHellesBeige);
+                    JScrollPane scrollPane = new JScrollPane(jSpieleListe);
+                    cCenter.removeAll();
+                    cCenter.add(scrollPane);
+                    this.revalidate();
+                }
             } else {
-                JOptionPane.showMessageDialog(parent, "Das ausgewählte Spiel "
-                    + "kann nicht geladen werden");
+                JOptionPane.showMessageDialog(parent, "Wählen sie ein Spiel "
+                    + "zum laden aus");
             }
+            
             
         }
     }

@@ -64,6 +64,11 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     private JButton bSpielen = new JButton("Spiel starten");
     
     /**
+     * Button um auf die Eroeffnungseite zu kommen.
+     */
+    private JButton btnZurueck = new JButton("Zurück");
+    
+    /**
      * Textfeld in den der Spielname eingegeben werden muss.
      */
     private JTextPane tSpielname = new JTextPane();
@@ -156,14 +161,6 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         // East (Spieler 2)
         this.add(auswahlPanel("East"), BorderLayout.EAST);
         
-        
-        // South ("Spiel starten"-Button)
-        Container cSouth = new Container();
-        cSouth.setLayout(new FlowLayout());
-        bSpielen.setBackground(cHellesBeige);
-        cSouth.add(bSpielen);
-        this.add(cSouth, BorderLayout.SOUTH);
-        
         // Center (Farbauswahl --> Radio Buttons)
         
         // Label Farbauswahl
@@ -202,10 +199,24 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         // Center fuellen
         cCenter.add(cCenterLabel);
         cCenter.add(cCenterMenu);
-       
         
         this.add(cCenter, BorderLayout.CENTER);
         
+        // South 
+        Container cSouth = new Container();
+        cSouth.setLayout(new FlowLayout());
+        
+        // Spiel Starten Button
+        bSpielen.setBackground(cHellesBeige);
+        cSouth.add(bSpielen);
+        
+        // Zurück-Button
+        btnZurueck.setBackground(cHellesBeige);
+        btnZurueck.addActionListener(new SeitenwechselListener(parent));
+        btnZurueck.setActionCommand("Eroeffnungsseite");
+        cSouth.add(btnZurueck);
+        
+        this.add(cSouth, BorderLayout.SOUTH);
     }
     
     /**
