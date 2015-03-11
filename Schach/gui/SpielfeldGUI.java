@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -74,6 +77,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Button um aufzugeben.
      */
     private JButton aufgeben = new JButton("Spiel Aufgeben");
+    
+    /**
+     * Button zum Spielwiederholung ansehen.
+     */
+    private JButton btnWiederholung = new JButton("Wiederholung ansehen");
     
     /**
      * JLabel zum Anzeigen des momentanen Spielers.
@@ -260,6 +268,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         for (Feld feld : felderListe) {
             feld.addMouseListener(this);
         }
+        if (spielfeld.getAktuellerSpieler()) {
+            momentanerSpieler.setText("Weiß");
+        } else {
+            momentanerSpieler.setText("Schwarz");  
+        }
         if (parent.getEinstellungen().isBedrohteFigurenAnzeigen()) {
             for (Feld bedroht : spielfeld.getBedrohteFelder()) {
                 bedroht.setBackground(new Color(100, 100, 100));
@@ -360,10 +373,19 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(aufgeben, gbc);
         
         // cEnde
+        cEnde.setLayout(new GridBagLayout());
         JButton startmenue = new JButton("Zurück zum Startmenü");
         startmenue.setActionCommand(commandStartmenue);
         startmenue.addActionListener(new SeitenwechselListener(parent));
-        cEnde.add(startmenue);
+        GridBagConstraints gbc2 = new GridBagConstraints();
+        gbc2.insets = new Insets(15, 15, 15, 15);
+        gbc2.gridx = 0;
+        gbc2.gridy = 0;
+        cEnde.add(startmenue, gbc2);
+        btnWiederholung.addActionListener(this);
+        gbc2.gridy = 1;
+        cEnde.add(btnWiederholung, gbc2);
+        
         
         
         // Zu Panel hinzufügen
@@ -670,9 +692,21 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 ergebnis = gewinner.getName() 
                     + " gewinnt nach " + zuege + " Zügen.";
             } else {
-                ergebnis = "Das Spiel endet mit einem Patt";
+                ergebnis = "Das Spiel endet in einem Patt";
             }
             // Und Ein Dialogfenster für den Gewinner angezeigt
+            try {
+                String fileSep = System.getProperty("file.separator");
+                AudioInputStream ais = AudioSystem.getAudioInputStream(
+                    new File("sounds" + fileSep 
+                        + "SchachMatt.wav"));
+                Clip clip = AudioSystem.getClip();
+                clip.open(ais);
+                clip.start();
+                
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             JOptionPane.showMessageDialog(parent
                 , ergebnis);
             // Das spiel ist vorbei also keine Züge mehr möglich
@@ -915,6 +949,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     int eingabe = JOptionPane.showConfirmDialog(parent, 
                         "Möchten Sie sich auf ein Unentschieden einigen?");
                     if (eingabe == 0) {
+                        
                         spiel.unentschieden();
                         for (Feld feld : felderListe) {
                             feld.removeMouseListener(this);
@@ -923,6 +958,33 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         this.add(cEnde, BorderLayout.EAST);
                         this.validate();
                         this.repaint();  
+                    } else {
+                        Spieler spieler;
+                        if (spielfeld.getAktuellerSpieler() == spieler1
+                            .getFarbe()) {
+                            spieler = spieler1;
+                        } else {
+                            spieler = spieler2;
+                        }
+                        JOptionPane.showMessageDialog(parent, 
+                            spieler.getName() + "hat das Remis abgelehnt");
+                    }
+                } else {
+                    if ((boolean) ((Computerspieler) spieler2)
+                        .unentschiedenAnnehmen()) {
+                        JOptionPane.showMessageDialog(parent, "Spiel endet "
+                            + "unentschieden.");
+                        spiel.unentschieden();
+                        for (Feld feld : felderListe) {
+                            feld.removeMouseListener(this);
+                        }
+                        this.remove(cEast);
+                        this.add(cEnde, BorderLayout.EAST);
+                        this.validate();
+                        this.repaint();
+                    } else {
+                        JOptionPane.showMessageDialog(parent, 
+                            spieler2.getName() + "hat das Remis abgelehnt");
                     }
                 }
             }
@@ -935,7 +997,20 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             Spieler verlierer = (Spieler) aufgeben.get(0);
             String zuege = aufgeben.get(1).toString();
             Spieler gewinner = (Spieler) aufgeben.get(2);
-            
+            try {
+                String fileSep = System.getProperty(
+                    "file.separator");
+                AudioInputStream ais = AudioSystem
+                    .getAudioInputStream(
+                    new File("sounds" + fileSep 
+                            + "Aufgeben.wav"));
+                Clip clip = AudioSystem.getClip();
+                clip.open(ais);
+                clip.start();
+                
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             JOptionPane.showMessageDialog(parent, verlierer.getName() 
                 + " gibt nach " + zuege + " Zügen auf! " + gewinner.getName() 
                 + " gewinnt!!!");
@@ -953,6 +1028,30 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             parent.spielSpeichern(spiel);
             JOptionPane.showMessageDialog(parent, "Spiel gespeichert",
                 "Speichern", JOptionPane.INFORMATION_MESSAGE);
+        }
+        if (e.getSource().equals(btnWiederholung)) {
+            spielfeldAufbau();
+            System.out.println("ist drin");
+            List<Zug> spielvideo = spiel.spielvideo();
+            for (Zug zug : spielvideo) {
+                System.out.println("jeder Zug");
+                // Ziehe jeden Zug
+                spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), 
+                    zug.getZugzeit());
+                // Wenn es ein Umwandlungszug war
+                if (zug instanceof Umwandlungszug) {
+                    // Wandel die Figur entsprechend um
+                    spielfeld.umwandeln(spielfeld.getSpieldaten()
+                        .getLetzterZug().getFigur(), 
+                        ((Umwandlungszug) zug).getNeueFigur().getWert());
+                }
+                spielfeldAufbau();
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException exc) {
+                    exc.printStackTrace();
+                }
+            }
         }
     }
     
