@@ -382,6 +382,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         gbc2.gridx = 0;
         gbc2.gridy = 0;
         cEnde.add(startmenue, gbc2);
+        btnWiederholung.addActionListener(this);
         gbc2.gridy = 1;
         cEnde.add(btnWiederholung, gbc2);
         
@@ -1029,7 +1030,28 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 "Speichern", JOptionPane.INFORMATION_MESSAGE);
         }
         if (e.getSource().equals(btnWiederholung)) {
-            List<Zug> spielvideo = spiel.s
+            spielfeldAufbau();
+            System.out.println("ist drin");
+            List<Zug> spielvideo = spiel.spielvideo();
+            for (Zug zug : spielvideo) {
+                System.out.println("jeder Zug");
+                // Ziehe jeden Zug
+                spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), 
+                    zug.getZugzeit());
+                // Wenn es ein Umwandlungszug war
+                if (zug instanceof Umwandlungszug) {
+                    // Wandel die Figur entsprechend um
+                    spielfeld.umwandeln(spielfeld.getSpieldaten()
+                        .getLetzterZug().getFigur(), 
+                        ((Umwandlungszug) zug).getNeueFigur().getWert());
+                }
+                spielfeldAufbau();
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException exc) {
+                    exc.printStackTrace();
+                }
+            }
         }
     }
     
