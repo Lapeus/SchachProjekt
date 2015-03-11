@@ -5,6 +5,8 @@ import java.util.List;
 
 import figuren.Figur;
 import gui.Feld;
+import zuege.EnPassantZug;
+import zuege.RochadenZug;
 import zuege.Zug;
 import zuege.Umwandlungszug;
 
@@ -401,6 +403,52 @@ public class Computerspieler extends Spieler {
         } while (alleFelder.isEmpty());
         // Ziehe dieses ausgewaehlte Feld
         spielfeld.ziehe(eigeneFiguren.get(zufall), alleFelder.get(zufall2), 1);
+    }
+    
+    /**
+     * Entscheidet, ob ein Unentschieden-Angebot vom Gegner angenommen werden 
+     * soll.
+     * @return Wahrheitswert
+     */
+    public boolean unentschiedenAnnehmen() {
+        boolean annehmen = false;
+        // Materialwert aus Sicht von weiss
+        int matWert = spielfeld.getMaterialwert(true) 
+            - spielfeld.getMaterialwert(false);
+        // Wenn der Computergegner mehr als 500 Punkte weniger hat
+        if ((getFarbe() && matWert < -500) || (!getFarbe() && matWert > 500)) {
+            annehmen = true;
+        }
+        
+        // Test auf 10 Zuege Regel (Variante der offiziellen 50 Zuege Regel
+        // Grundsaetzliche Annahme, die 10 Zuege Regel wuerde zutreffen
+        boolean remis = true;
+        int zaehl = 0; 
+        /* Solange noch nicht alle letzten 20 Halbzuege getestet wurden und 
+         * noch keine Anforderung nicht erfuellt wurde
+         */
+        while (remis && zaehl < 20) {
+            // Der zaehlte Zug von hinten
+            Zug zug = spielfeld.getSpieldaten().getZugListe().get(
+                spielfeld.getSpieldaten().getZugListe().size() - zaehl - 1);
+            // Wenn es ein EnPassantZug oder ein Umwandlungszug war
+            if (zug instanceof EnPassantZug || zug instanceof Umwandlungszug) {
+                // Wurde ein Bauer bewegt
+                remis = false;
+            // Wenn es kein RochadenZug war (also ein normaler)
+            } else if (!(zug instanceof RochadenZug)) {
+                // Wenn die Figur ein Bauer war oder eine Figur geschlagen wurde
+                if (zug.getFigur().getWert() == 100 || zug.isSchlagzug()) {
+                    remis = false;
+                }
+            }
+            zaehl++;
+        }
+        // Wenn die Regel zutrifft
+        if (remis) {
+            annehmen = true;
+        }
+        return annehmen;
     }
     
     /**
