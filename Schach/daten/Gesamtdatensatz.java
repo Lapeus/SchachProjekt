@@ -311,7 +311,7 @@ public class Gesamtdatensatz {
             // Ein Reader um die Datei zeilenweise auslesen zu koennen
             BufferedReader br = new BufferedReader(new FileReader(file));
             // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
-            String time = br.readLine();
+            br.readLine(); // Zeit lesen lassen
             Spieler spieler1 = getSpieler(br.readLine());
             boolean farbe1 = Boolean.parseBoolean(br.readLine());
             Spieler spieler2 = getSpieler(br.readLine());
@@ -458,6 +458,13 @@ public class Gesamtdatensatz {
         return spiel;
     }
     
+    /**
+     * L&auml;dt das Spiel mit dem angegebenen Namen anhand der gespeicherten
+     * Schachnotation.
+     * @param name Der Name des Spiels, wie er in dem Auswahlfenster angezeigt
+     * wird
+     * @return Das entsprechende Spiel
+     */
     public Spiel getSpiel2(String name) {
         String spielname = name.substring(0, name.length() - 20);
         // Die Quelldatei fuer das Spiel
@@ -475,7 +482,7 @@ public class Gesamtdatensatz {
             // Ein Reader um die Datei zeilenweise auslesen zu koennen
             BufferedReader br = new BufferedReader(new FileReader(file));
             // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
-            String time = br.readLine();
+            br.readLine(); // Zeit lesen lassen
             Spieler spieler1 = getSpieler(br.readLine());
             boolean farbe1 = Boolean.parseBoolean(br.readLine());
             Spieler spieler2 = getSpieler(br.readLine());
