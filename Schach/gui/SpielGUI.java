@@ -263,8 +263,10 @@ public class SpielGUI extends JFrame implements WindowListener {
      */
     public void windowClosing(WindowEvent e) {
         try {
+            String fileSep = System.getProperty("file.separator");
             AudioInputStream ais = AudioSystem.getAudioInputStream(
-                new File("test.wav"));
+                new File("sounds" + fileSep 
+                    + "Schließen.wav"));
             Clip clip = AudioSystem.getClip();
             clip.open(ais);
             clip.start();

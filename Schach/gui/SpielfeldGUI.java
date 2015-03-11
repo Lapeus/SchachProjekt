@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -670,9 +673,21 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 ergebnis = gewinner.getName() 
                     + " gewinnt nach " + zuege + " Zügen.";
             } else {
-                ergebnis = "Das Spiel endet mit einem Patt";
+                ergebnis = "Das Spiel endet in einem Patt";
             }
             // Und Ein Dialogfenster für den Gewinner angezeigt
+            try {
+                String fileSep = System.getProperty("file.separator");
+                AudioInputStream ais = AudioSystem.getAudioInputStream(
+                    new File("sounds" + fileSep 
+                        + "SchachMatt.wav"));
+                Clip clip = AudioSystem.getClip();
+                clip.open(ais);
+                clip.start();
+                
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             JOptionPane.showMessageDialog(parent
                 , ergebnis);
             // Das spiel ist vorbei also keine Züge mehr möglich
@@ -915,6 +930,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     int eingabe = JOptionPane.showConfirmDialog(parent, 
                         "Möchten Sie sich auf ein Unentschieden einigen?");
                     if (eingabe == 0) {
+                        
                         spiel.unentschieden();
                         for (Feld feld : felderListe) {
                             feld.removeMouseListener(this);
@@ -935,7 +951,20 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             Spieler verlierer = (Spieler) aufgeben.get(0);
             String zuege = aufgeben.get(1).toString();
             Spieler gewinner = (Spieler) aufgeben.get(2);
-            
+            try {
+                String fileSep = System.getProperty(
+                    "file.separator");
+                AudioInputStream ais = AudioSystem
+                    .getAudioInputStream(
+                    new File("sounds" + fileSep 
+                            + "Aufgeben.wav"));
+                Clip clip = AudioSystem.getClip();
+                clip.open(ais);
+                clip.start();
+                
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             JOptionPane.showMessageDialog(parent, verlierer.getName() 
                 + " gibt nach " + zuege + " Zügen auf! " + gewinner.getName() 
                 + " gewinnt!!!");
