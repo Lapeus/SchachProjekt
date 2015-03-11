@@ -181,28 +181,48 @@ public class Statistiken extends JPanel implements ActionListener {
                 + statistik.getAnzahlPattC() + lineSep;
             momentan += "Matt vs. Comp: " 
                 + statistik.getAnzahlMattC() + lineSep;
-            momentan += "Schnellster Sieg: " 
-                + statistik.getSchnellsterSieg() + " Sekunden" + lineSep;
-            momentan += "Kürzester Sieg: "
-                + statistik.getKuerzesterSieg() + " Zuege" + lineSep;
-            momentan += "Schnellstes Matt: " 
-                + statistik.getSchnellstesMatt() + " Sekunden" + lineSep;
-            momentan += "Kürzestes Matt:  "
-                + statistik.getKuerzestesMatt() + " Zuege" + lineSep;
-            momentan += "Durschnittliche Siegzeit: " 
-                + statistik.getZeitSiegDurchschnitt() + " Sekunden" 
-                + lineSep;
-            momentan += "Durschnittliche Mattzeit: " 
-                + statistik.getZeitMattDurchschnitt() + " Sekunden" 
-                + lineSep;
-            momentan += "Durschnittliche Siegzüge: " 
-                + statistik.getZuegeSiegDurchschnitt() + " Zuege" + lineSep;
-            momentan += "Durschnittliche Mattzüge: " 
-                + statistik.getZuegeMattDurchschnitt() + " Zuege" + lineSep;
-            momentan += "Durschnittlicher Materialwert Sieg: " 
-                + statistik.getMatWertSiegDurchschnitt() + lineSep;
-            momentan += "Durchschnittlicher Materialwert Matt: "
-                + statistik.getMatWertMattDurchschnitt();
+            if (statistik.getSchnellsterSieg() != -1) {
+                momentan += "Schnellster Sieg: " 
+                    + statistik.getSchnellsterSieg() + " Sekunden" + lineSep;
+            }
+            if (statistik.getKuerzesterSieg() != -1) {
+                momentan += "Kürzester Sieg: "
+                    + statistik.getKuerzesterSieg() + " Zuege" + lineSep;
+            }
+            if (statistik.getSchnellstesMatt() != -1) {
+                momentan += "Schnellstes Matt: " 
+                    + statistik.getSchnellstesMatt() + " Sekunden" + lineSep;
+            }
+            if (statistik.getKuerzestesMatt() != -1) {
+                momentan += "Kürzestes Matt:  "
+                    + statistik.getKuerzestesMatt() + " Zuege" + lineSep; 
+            }
+            if (statistik.getZeitSiegDurchschnitt() != -1) {
+                momentan += "Durschnittliche Siegzeit: " 
+                    + statistik.getZeitSiegDurchschnitt() + " Sekunden" 
+                    + lineSep;
+            }
+            if (statistik.getZeitMattDurchschnitt() != -1) {
+                momentan += "Durschnittliche Mattzeit: " 
+                    + statistik.getZeitMattDurchschnitt() + " Sekunden" 
+                    + lineSep;
+            }
+            if (statistik.getZuegeSiegDurchschnitt() != -1) {
+                momentan += "Durschnittliche Siegzüge: " 
+                    + statistik.getZuegeSiegDurchschnitt() + " Zuege" + lineSep;
+            }
+            if (statistik.getZuegeMattDurchschnitt() != -1) {
+                momentan += "Durschnittliche Mattzüge: " 
+                    + statistik.getZuegeMattDurchschnitt() + " Zuege" + lineSep;
+            }
+            if (statistik.getMatWertSiegDurchschnitt() != -1) {
+                momentan += "Durschnittlicher Materialwert Sieg: " 
+                    + statistik.getMatWertSiegDurchschnitt() + lineSep;
+            }
+            if (statistik.getMatWertMattDurchschnitt() != -1) {
+                momentan += "Durchschnittlicher Materialwert Matt: "
+                    + statistik.getMatWertMattDurchschnitt();
+            }
             daten.setText(momentan);
             cCenter.add(daten, BorderLayout.CENTER);
             this.revalidate();
