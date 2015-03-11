@@ -59,13 +59,13 @@ public class Computerspieler extends Spieler {
          */
        
         if (getName().equals("Karl Heinz")) {
-            zufall();
-        } else if (getName().equals("Rosalinde")) {
             nachRegeln();
-        } else if (getName().equals("Ursula")) {
+        } else if (getName().equals("Rosalinde")) {
             rekursKI(2);
-        } else if (getName().equals("Walter")) {
+        } else if (getName().equals("Ursula")) {
             rekursKI(3);
+        } else if (getName().equals("Walter")) {
+            rekursKI(4);
         }
         
         
