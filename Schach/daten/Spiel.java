@@ -106,9 +106,6 @@ public class Spiel {
      * Aufgeben
      */
     public List<Object> aufgeben(boolean spieler) {
-        // Aufgeben-Zug hinzuf&uuml;gen
-        Zug zug = new Zug();
-        spielfeld.getSpieldaten().getZugListe().add(zug);
         // ErgebnisListe erstellen
         List<Object> ergebnis = new ArrayList<Object>();
         Spieler gewinner;

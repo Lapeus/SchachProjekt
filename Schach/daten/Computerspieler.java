@@ -268,19 +268,20 @@ public class Computerspieler extends Spieler {
      */
     private int bewertungsfunktion() {
         int bewertung;
+        // Materialwert
         bewertung = spielfeld.getMaterialwert(true) 
             - spielfeld.getMaterialwert(false);
-        // Bauern kurz vor der Umwandlung und imSchachStehen
+        // Bauern kurz vor der Umwandlung
         int index = 1;
         while (spielfeld.getSchwarzeFiguren().get(index).getWert() == 100) {
             Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
             int y = bauer.getPosition().getYK();
             if (y <= 3) {
-                bewertung -= 15;
+                bewertung -= 20;
                 if (y <= 2) {
-                    bewertung -= 25;
+                    bewertung -= 40;
                     if (y == 1) {
-                        bewertung -= 30;
+                        bewertung -= 60;
                     }
                 }
             }
@@ -291,15 +292,39 @@ public class Computerspieler extends Spieler {
             Figur bauer = spielfeld.getWeisseFiguren().get(index);
             int y = bauer.getPosition().getYK();
             if (y <= 3) {
-                bewertung += 15;
+                bewertung += 20;
                 if (y <= 2) {
-                    bewertung += 25;
+                    bewertung += 40;
                     if (y == 1) {
-                        bewertung += 30;
+                        bewertung += 60;
                     }
                 }
             }
             index++;
+        }
+        // Das Feld des gegnerischen Koenigs
+        Feld koenig;
+        // Der Einfluss auf die Spielbewertung
+        int bonus;
+        if (getFarbe()) {
+            koenig = spielfeld.getSchwarzeFiguren().get(0).getPosition();
+            bonus = 1;
+        } else {
+            koenig = spielfeld.getWeisseFiguren().get(0).getPosition();
+            bonus = -1;
+        }
+        Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
+        Figur figur;
+        if (letzterZug instanceof RochadenZug) {
+            figur = ((RochadenZug) letzterZug).getTurm();
+        } else if (letzterZug instanceof EnPassantZug) {
+            figur = ((EnPassantZug) letzterZug).getAusfuehrer();
+        } else {
+            figur = letzterZug.getFigur();
+        }
+        // Wenn die zuletzt gezogene Figur dem Koenig Schach bietet
+        if (figur.bietetSchach(koenig)) {
+            bewertung += bonus;
         }
         return bewertung;
     }

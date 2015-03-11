@@ -148,6 +148,20 @@ public abstract class Figur {
     }
     
     /**
+     * Gibt an, ob die Figur dem K&ouml;nig auf dem angegebenen Feld Schach
+     * bietet.<br>
+     * Wird nur vom Computergegner bei der Bewertungsfunktion ben&ouml;tigt.
+     * @param koenig Das Feld mit dem gegnerischen Koenig
+     * @return Wahrheitswert, ob Schach geboten wird
+     */
+    public boolean bietetSchach(Feld koenig) {
+        boolean bietetSchach = false;
+        if (getMoeglicheFelder().contains(koenig)) {
+            bietetSchach = true;
+        }
+        return bietetSchach;
+    }
+    /**
      * Gibt an, ob das Feld am angegebenen Index leer ist.
      * @param index : Ganzzahliger Index (zwischen 0 und 63)
      * @return <b>true</b> wenn frei
