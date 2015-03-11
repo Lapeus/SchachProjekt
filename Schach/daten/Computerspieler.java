@@ -103,11 +103,9 @@ public class Computerspieler extends Spieler {
         // Der Zug der durchgefuehrt werden soll
         List<Figur> besteFiguren = new ArrayList<Figur>();
         List<Feld> besteFelder = new ArrayList<Feld>();
-        int zaehl = 0;
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         for (Figur figur : alleFiguren) {
             for (Feld feld : figur.getKorrektFelder()) {
-                zaehl++;
                 // Mache den Zug
                 spielfeld.ziehe(figur, feld, 0);
                 // Wenn ein Bauer umgewandelt wird
@@ -165,7 +163,6 @@ public class Computerspieler extends Spieler {
          * Algorithmus instabil, sodass der Computer nicht mit den gleichen
          * Schritten in jeder Partie Matt gesetzt werden kann.
          */
-        System.out.println(zaehl);
         // Wenn es noch einen Zug zu ziehen gibt
         if (!besteFiguren.isEmpty()) {
             // Ziehe den besten Zug

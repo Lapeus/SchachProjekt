@@ -295,17 +295,17 @@ public class Gesamtdatensatz {
      * @return Das Spiel mit dem angegebenen Namen
      */
     public Spiel getSpiel(String name) {
+        String spielname = name.substring(0, name.length() - 20);
         // Die Quelldatei fuer das Spiel
         File file = new File("settings" + System.getProperty(
             "file.separator") + "Spiele" + System.getProperty(
-                "file.separator") + name + ".txt");
+                "file.separator") + spielname + ".txt");
         // Das Spiel anlegen
         Spiel spiel;
-        name = name.substring(0, name.length() - 19);
         // Wenn es ein Autosave Spiel war, muss der urspruengliche Name 
         // rausgefiltert werden
-        if (name.contains("(autosave)")) {
-            name = name.substring(0, name.length() - 11);
+        if (spielname.contains("(autosave)")) {
+            spielname = spielname.substring(0, spielname.length() - 11);
         }
         try {
             // Ein Reader um die Datei zeilenweise auslesen zu koennen
@@ -431,6 +431,7 @@ public class Gesamtdatensatz {
             spielfeld.getSpieldaten().setGeladenZuegeWeiss(zuegeWeiss);
             spielfeld.getSpieldaten().setGeladenZuegeSchwarz(zuegeSchwarz);
             spielfeld.getSpieldaten().setGeladenNotation(notation);
+          
             // Den Reader schliessen
             br.close();
             
@@ -442,7 +443,95 @@ public class Gesamtdatensatz {
             spieler2.setFarbe(farbe2);
             
             // Das Spiel erstellen
-            spiel = new Spiel(name, spieler1, spieler2, spielfeld);
+            spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
+        } catch (IOException ioEx) {
+            // Wenn irgendwas schief geht
+            spiel = null;
+            // Wenn das Spiel null ist, gibt die GUI eine Fehlermeldung aus
+        }
+        
+        // Die Quelldatei loeschen
+        file.delete();
+        // Die Liste aktualisieren
+        gespeicherteSpiele.remove(name);
+        
+        return spiel;
+    }
+    
+    public Spiel getSpiel2(String name) {
+        String spielname = name.substring(0, name.length() - 20);
+        // Die Quelldatei fuer das Spiel
+        File file = new File("settings" + System.getProperty(
+            "file.separator") + "Spiele" + System.getProperty(
+                "file.separator") + spielname + ".txt");
+        // Das Spiel anlegen
+        Spiel spiel;
+        // Wenn es ein Autosave Spiel war, muss der urspruengliche Name 
+        // rausgefiltert werden
+        if (spielname.contains("(autosave)")) {
+            spielname = spielname.substring(0, spielname.length() - 11);
+        }
+        try {
+            // Ein Reader um die Datei zeilenweise auslesen zu koennen
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
+            String time = br.readLine();
+            Spieler spieler1 = getSpieler(br.readLine());
+            boolean farbe1 = Boolean.parseBoolean(br.readLine());
+            Spieler spieler2 = getSpieler(br.readLine());
+            boolean farbe2 = Boolean.parseBoolean(br.readLine());
+            // Neue FelderListe wird erstellt
+            List<Feld> felderListe = erstelleFelderListe();
+            // Neues Spielfeld erzeugen
+            boolean aktuellerSpieler = Boolean.parseBoolean(br.readLine());
+            Spielfeld spielfeld = new Spielfeld(felderListe, aktuellerSpieler);
+            spielfeld.setSpieldaten(new Spieldaten());
+            // Nacheinander werden jetzt die Listen ausgelesen
+            // Die weisse Figuren-Liste
+            fuelleFigurenListe(br, felderListe);
+            // Die schwarze Figuren-Liste
+            fuelleFigurenListe(br, felderListe);
+            // Die geschlagenen weissen Figuren
+            fuelleFigurenListe(br, felderListe);
+            // Die geschlagenen schwarzen Figuren
+            fuelleFigurenListe(br, felderListe);
+            
+            // Einstellungen laden
+            // Die ZugzeitBegrenzung
+            int zzb = Integer.parseInt(br.readLine());
+            // Die sechs booleans
+            boolean[] bool = new boolean[7];
+            for (int i = 0; i <= 6; i++) {
+                bool[i] = Boolean.parseBoolean(br.readLine());
+            }
+            einstellungen = new Einstellungen();
+            einstellungen.setZugZeitBegrenzung(zzb);
+            einstellungen.setMoeglicheFelderAnzeigen(bool[0]);
+            einstellungen.setBedrohteFigurenAnzeigen(bool[1]);
+            einstellungen.setRochadeMoeglich(bool[2]);
+            einstellungen.setEnPassantMoeglich(bool[3]);
+            einstellungen.setSchachWarnung(bool[4]);
+            einstellungen.setInStatistikEinbeziehen(bool[5]);
+            einstellungen.setSpielfeldDrehen(bool[6]);
+            
+            // Schachnotation wird zurueckuebersetzt
+            List<Zug> zugliste = ladeZugListe(br, felderListe);
+            for (Zug zug : zugliste) {
+                spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), zug.getZugzeit());
+            }
+
+            // Den Reader schliessen
+            br.close();
+            
+            // Dem Spielfeld die Einstellungen zuf&uuml;gen
+            spielfeld.setEinstellungen(einstellungen);
+            
+            // Den Spielern ihre Farben setzen
+            spieler1.setFarbe(farbe1);
+            spieler2.setFarbe(farbe2);
+            
+            // Das Spiel erstellen
+            spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
         } catch (IOException ioEx) {
             // Wenn irgendwas schief geht
             spiel = null;
@@ -473,7 +562,7 @@ public class Gesamtdatensatz {
             String line = br.readLine();
             Zug zug;
             // Solange noch eine Zeile zu laden ist
-            while (!line.equals("")) {
+            while (line != null && !line.equals("")) {
                 // Letztes Leerzeichen
                 int hinteresLeerzeichen = line.lastIndexOf(" ");
                 String vorne = line.substring(0, hinteresLeerzeichen);
@@ -543,6 +632,7 @@ public class Gesamtdatensatz {
                     /* Wenn hinter dem Trennungszeichen 3 Zeichen kommen, ist
                      * es ein Umwandlungszug
                      */
+                    System.out.println(vordererTeil);
                     if (vordererTeil.substring(stelleTrennung + 1)
                         .length() == 3) {
                         String umgewandelteFigur = 
@@ -557,6 +647,8 @@ public class Gesamtdatensatz {
                         } else {
                             neueFigur = new Dame(zielfeld, aktuelleFarbe);
                         }
+                        // Figur wurde schon gezogen
+                        neueFigur.setGezogen(true);
                         zug = new Umwandlungszug(startfeld, zielfeld, 
                             schlagzug, zugzeit, neueFigur);
                     } else {
@@ -575,6 +667,7 @@ public class Gesamtdatensatz {
         }
         return zugListe;
     }
+    
     /**
      * Erstellt eine neue felderListe mit 64 Feldern(Index 0-7, 0-7).
      * @return Die neu erstellte Felder-Liste

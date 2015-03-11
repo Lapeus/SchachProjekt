@@ -111,6 +111,7 @@ public class Spielfeld {
     public Spielfeld(List<Feld> felder, boolean aktuellerSpieler) {
         this.felder = felder;
         this.aktuellerSpieler = aktuellerSpieler;
+        init();
     }
     
     /**

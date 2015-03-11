@@ -156,6 +156,10 @@ public class Spieldaten {
         return zugListe;
     }
     
+    public void setZugListe(List<Zug> zugListe) {
+        this.zugListe = zugListe;
+    }
+    
     /**
      * Gibt den letzten Zug zur&uuml;ck.
      * @return Der letzte Zug

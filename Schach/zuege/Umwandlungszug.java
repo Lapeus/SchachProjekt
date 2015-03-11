@@ -57,19 +57,23 @@ public class Umwandlungszug extends Zug {
         String string;
         // Normale Notation
         string = super.toSchachNotation();
+        // Der Teil vor dem ersten Leerzeichen
+        String vordererTeil = string.substring(0, string.indexOf(" "));
         int wert = neueFigur.getWert();
         // Figurensymbol anhaengen
         if (wert == 275) {
-            string += "S";
+            vordererTeil += "S";
         } else if (wert == 325) {
-            string += "L";
+            vordererTeil += "L";
         } else if (wert == 465) {
-            string += "T";
+            vordererTeil += "T";
         } else {
-            string += "D";
+            vordererTeil += "D";
         }
+        // An den neuen vorderen Teil den ganzen Rest nach dem Leerzeichen
+        // anhaengen
+        string = vordererTeil + string.substring(string.indexOf(" "));
         return string;
-        
     }
     
     /**
