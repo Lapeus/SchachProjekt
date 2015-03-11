@@ -265,6 +265,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 bedroht.setBackground(new Color(100, 100, 100));
             }
         }
+        revalidate();
         init();
     }
     
