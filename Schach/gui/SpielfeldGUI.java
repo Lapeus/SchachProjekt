@@ -206,6 +206,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private boolean spielVorbei = false;
     
+    /**
+     * Thread für die Stopuhr.
+     */
+    private Thread th;
+    
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -301,13 +306,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(lGeschlageneB, gbc);
         
         // geschlagene Weiss
-        geschlageneWeisse.setLayout(new GridLayout(2, 8));
+        geschlageneWeisse.setLayout(new GridLayout(3, 0));
         gbc.gridy = 1;
         gbc.gridheight = 2;
         cEast.add(geschlageneWeisse, gbc);
         
         // geschlagene Schwarz
-        geschlageneSchwarze.setLayout(new GridLayout(2, 8));
+        geschlageneSchwarze.setLayout(new GridLayout(3, 0));
         gbc.gridy = 9;
         cEast.add(geschlageneSchwarze, gbc);
         
@@ -567,7 +572,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             try {
                 Image imageW = ImageIO.read(new File(name));
                 ImageIcon iconW  = new ImageIcon(
-                    imageW.getScaledInstance(60, 60, Image.SCALE_DEFAULT));
+                    imageW.getScaledInstance(45, 45, Image.SCALE_DEFAULT));
                 momentan.setIcon(iconW);
                 geschlageneWeisse.add(momentan);
             } catch (IOException exc) {
@@ -579,13 +584,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Wertet aus, ob der Spieler ein Computerspieler ist und ob dieser 
      * momentan am Zug ist.
-     * @param spieler der ueberprueft werden soll
      * @return true - ist ein Computerspieler false - ist kein Computerspieler
      */
-    private boolean istComputerSpielerUndIstAmZug(Spieler spieler) {
+    private boolean istComputerSpielerUndIstAmZug() {
         boolean istCompSpielerUndDran = false;
-        if (spieler instanceof Computerspieler
-            && spieler.getFarbe() == spielfeld.getAktuellerSpieler() 
+        if (spieler2 instanceof Computerspieler
+            && spieler2.getFarbe() == spielfeld.getAktuellerSpieler() 
             && !spielVorbei) {
             istCompSpielerUndDran = true;
         }
@@ -598,24 +602,18 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * ziehen.
      */
     private void wennComputerDannZiehen() {
-        // Wenn spieler 1 ein Computerspieler ist
-        if (istComputerSpielerUndIstAmZug(spieler1)) {
-            ((Computerspieler) spieler1).setSpielfeld(spielfeld);
-            ((Computerspieler) spieler1).ziehen();
-            mattOderSchach();
-            spielfeldAufbau();
-            for (Feld feld : spielfeld.getLetzteFelder()) {
-                feld.setBackground(rot);
-            }
         // Wenn spieler 2 ein Computergegner ist und dran ist
-        } else if (istComputerSpielerUndIstAmZug(spieler2)) {
+        if (istComputerSpielerUndIstAmZug()) {
+            spielfeldAufbau();
             ((Computerspieler) spieler2).setSpielfeld(spielfeld);
+            start();
             ((Computerspieler) spieler2).ziehen();
+            sekundenStopp = ((int) System.currentTimeMillis()
+                - sekundenStart) / 1000;
+            //spielfeld.getSpieldaten().getLetzerZug()
             mattOderSchach();
             spielfeldAufbau();
-            for (Feld feld : spielfeld.getLetzteFelder()) {
-                feld.setBackground(rot);
-            }
+            start();
         }
     }
     
@@ -784,7 +782,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 .contains(momentanesFeld)) {
                 // Hier zieht ein menschlicher Spieler
                 spielerzugGUI(momentanesFeld);
-                spielfeldAufbau();
                 /* Wenn ein Computerspieler mitspielt muss er hier den  Zug
                  * machen
                  */
@@ -795,12 +792,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 } else {
                     momentanerSpieler.setText("Schwarz");
                 }
-                // Wenn das Spiel vorbei ist wieder das Spielfeld aufbauen
+                // Wenn das Spiel nicht vorbei ist 
                 if (!spielVorbei) {
+                    // Spielfeld aufbauen
                     spielfeldAufbau();
+                    // autosave initiieren
                     parent.autoSave(spiel);
-                    if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
-                        aufgeben.doClick();
+                    // Letzten Zug Rot makieren 
+                    for (Feld feld : spielfeld.getLetzteFelder()) {
+                        feld.setBackground(rot);
                     }
                 } 
             /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
@@ -889,16 +889,29 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         // Wenn ein Spieler ein Remis anbietet
         if (e.getActionCommand().equals(commandRemi)) {
-            int eingabe = JOptionPane.showConfirmDialog(parent, "Möchten sie "
-                + "sich auf ein Unentschieden einigen?");
-            if (eingabe == 0) {
+            // Testen ob die 50-Züge-Regel verletzt wurde
+            if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
+                // Unentschieden einreichen
                 spiel.unentschieden();
-                for (Feld feld : felderListe) {
-                    feld.removeMouseListener(this);
-                }
+                JOptionPane.showMessageDialog(parent, "50 Züge Regel wurde "
+                    + "verletzt. Das Spiel endet in einem Unentschieden");
                 this.remove(cEast);
                 this.add(cEnde, BorderLayout.EAST);
                 this.revalidate();
+            } else {
+                if (!(spieler2 instanceof Computerspieler)) {
+                    int eingabe = JOptionPane.showConfirmDialog(parent, 
+                        "Möchten sie sich auf ein Unentschieden einigen?");
+                    if (eingabe == 0) {
+                        spiel.unentschieden();
+                        for (Feld feld : felderListe) {
+                            feld.removeMouseListener(this);
+                        }
+                        this.remove(cEast);
+                        this.add(cEnde, BorderLayout.EAST);
+                        this.revalidate();
+                    }
+                }
             }
         }
         // Wenn der momentane Spieler aufgibt
