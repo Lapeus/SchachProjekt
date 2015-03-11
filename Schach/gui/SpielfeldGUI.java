@@ -365,6 +365,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         this.add(cCenter, BorderLayout.CENTER);
         this.add(cEast, BorderLayout.EAST);
         
+        // Zugzeit fuer den ersten Zug starten
+        start();
+
         /* Wenn ein Computerspieler mitspielt und anfangen soll muss er hier 
          * den ersten Zug machen
          */
@@ -696,9 +699,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Neuer Spieler = keine Ausgewählte Figur
         ausgewaehlteFigur = null;
         spielfeld.getBedrohteFelder();
-        List<Zug> zugliste 
-            = spielfeld.getSpieldaten().getZugListe();
-        Zug letzterZug = zugliste.get(zugliste.size() - 1);
+        Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
         mattOderSchach();
         if (!spielVorbei && letzterZug instanceof Umwandlungszug)   {
             spielfeldAufbau();

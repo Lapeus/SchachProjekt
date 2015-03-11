@@ -59,24 +59,26 @@ public class Computerspieler extends Spieler {
          */
        
         if (getName().equals("Karl Heinz")) {
-            zufall();
-        } else if (getName().equals("Rosalinde")) {
             nachRegeln();
-        } else if (getName().equals("Ursula")) {
+        } else if (getName().equals("Rosalinde")) {
             rekursKI(2);
-        } else if (getName().equals("Walter")) {
+        } else if (getName().equals("Ursula")) {
             rekursKI(3);
+        } else if (getName().equals("Walter")) {
+            rekursKI(4);
         }
         
         
         // Wenn ein Bauer umgewandelt wird
-        int letzterZugIndex = spielfeld.getSpieldaten().getZugListe()
-            .size() - 1;
-        Zug letzterZug = spielfeld.getSpieldaten().getZugListe()
-            .get(letzterZugIndex);
+        Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
         if (letzterZug instanceof Umwandlungszug) {
             spielfeld.umwandeln(letzterZug.getFigur(), 900);
         }
+        
+        /* Fordert den Garbage-Collector auf, unbenutzte Objekte zu entfernen
+         * um fuer den noetigen freien Speicherplatz zu sorgen
+         */
+        Runtime.getRuntime().gc();
     }
     
     /**
@@ -109,10 +111,7 @@ public class Computerspieler extends Spieler {
                 // Mache den Zug
                 spielfeld.ziehe(figur, feld, 0);
                 // Wenn ein Bauer umgewandelt wird
-                int letzterZugIndex = spielfeld.getSpieldaten().getZugListe()
-                    .size() - 1;
-                Zug letzterZug = spielfeld.getSpieldaten().getZugListe()
-                    .get(letzterZugIndex);
+                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
                 if (letzterZug instanceof Umwandlungszug) {
                     spielfeld.umwandeln(letzterZug.getFigur(), 900);
                 }
@@ -201,10 +200,7 @@ public class Computerspieler extends Spieler {
             for (Feld feld : figur.getKorrektFelder()) {
                 spielfeld.ziehe(figur, feld, 0);
                 // Wenn ein Bauer umgewandelt wird
-                int letzterZugIndex = spielfeld.getSpieldaten().getZugListe()
-                    .size() - 1;
-                Zug letzterZug = spielfeld.getSpieldaten().getZugListe()
-                    .get(letzterZugIndex);
+                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
                 if (letzterZug instanceof Umwandlungszug) {
                     spielfeld.umwandeln(letzterZug.getFigur(), 900);
                 }
@@ -245,10 +241,7 @@ public class Computerspieler extends Spieler {
             for (Feld feld : figur.getKorrektFelder()) {
                 spielfeld.ziehe(figur, feld, 0);
                 // Wenn ein Bauer umgewandelt wird
-                int letzterZugIndex = spielfeld.getSpieldaten().getZugListe()
-                    .size() - 1;
-                Zug letzterZug = spielfeld.getSpieldaten().getZugListe()
-                    .get(letzterZugIndex);
+                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
                 if (letzterZug instanceof Umwandlungszug) {
                     spielfeld.umwandeln(letzterZug.getFigur(), 900);
                 }

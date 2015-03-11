@@ -393,8 +393,7 @@ public class Spielfeld {
      */
     public void zugRueckgaengig() {
         // Rufe den letzten durchgefuehrten Zug auf
-        Zug zug = spieldaten.getZugListe()
-            .get(spieldaten.getZugListe().size() - 1);
+        Zug zug = spieldaten.getLetzterZug();
         // Loesche ihn aus der Liste
         spieldaten.getZugListe().remove(zug);
         // Mache ihn rueckgaengig (ziehe Methode von hinten)
@@ -456,18 +455,21 @@ public class Spielfeld {
         // Sonst war es ein normaler Zug oder ein Umwandlungszug
         } else {
             Figur gezogeneFigur = zug.getFigur();
-            // Wenn es ein Umwandlungszug war und eine Figur umgewandelt wurde
+            // Wenn es ein Umwandlungszug war
             if (zug instanceof Umwandlungszug) {
                 Umwandlungszug umwandlZug = (Umwandlungszug) zug;
-                // Die Listen muessen aktualisiert werden
-                if (gezogeneFigur.getFarbe()) {
-                    // Die umgewandelte Figur muss weg
-                    weisseFiguren.remove(umwandlZug.getNeueFigur());
-                    weisseFiguren.add(gezogeneFigur);
-                } else {
-                    // Die umgewandelte Figur muss weg
-                    schwarzeFiguren.remove(umwandlZug.getNeueFigur());
-                    schwarzeFiguren.add(gezogeneFigur);
+                // Und wirklich eine Figur umgewandelt wurde
+                if (umwandlZug.getNeueFigur() != null) {
+                    // Die Listen muessen aktualisiert werden
+                    if (gezogeneFigur.getFarbe()) {
+                        // Die umgewandelte Figur muss weg
+                        weisseFiguren.remove(umwandlZug.getNeueFigur());
+                        weisseFiguren.add(gezogeneFigur);
+                    } else {
+                        // Die umgewandelte Figur muss weg
+                        schwarzeFiguren.remove(umwandlZug.getNeueFigur());
+                        schwarzeFiguren.add(gezogeneFigur);
+                    }
                 }
             }
             // Figur an die vorherige Stelle setzen
@@ -534,8 +536,7 @@ public class Spielfeld {
             neueFigur = new Dame(
                 figur.getPosition(), figur.getFarbe());
         } 
-        Umwandlungszug umwandlZug = (Umwandlungszug) spieldaten.getZugListe()
-            .get(spieldaten.getZugListe().size() - 1);
+        Umwandlungszug umwandlZug = (Umwandlungszug) spieldaten.getLetzterZug();
         umwandlZug.setNeueFigur(neueFigur);
         // Sie auf das neue Feld stellen
         neueFigur.getPosition().setFigur(neueFigur);
@@ -553,6 +554,8 @@ public class Spielfeld {
             schwarzeFiguren.remove(figur);
             schwarzeFiguren.add(neueFigur);
         }
+        System.out.println(weisseFiguren.size());
+        System.out.println("");
     }
     
     /**
@@ -635,8 +638,7 @@ public class Spielfeld {
      */
     public List<Feld> getLetzteFelder() {
         List<Feld> letzteFelder = new ArrayList<Feld>();
-        Zug zug = spieldaten.getZugListe().get(
-            spieldaten.getZugListe().size() - 1);
+        Zug zug = spieldaten.getLetzterZug();
         if (zug instanceof EnPassantZug) {
             letzteFelder.add(zug.getStartfeld());
             letzteFelder.add(
