@@ -4,8 +4,12 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.util.List;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -258,7 +262,17 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @param e WindowListenerEvent
      */
     public void windowClosing(WindowEvent e) {
-        int auswahl = JOptionPane.showConfirmDialog(this, "Wollen sie das Spiel"
+        try {
+            AudioInputStream ais = AudioSystem.getAudioInputStream(
+                new File("test.wav"));
+            Clip clip = AudioSystem.getClip();
+            clip.open(ais);
+            clip.start();
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        int auswahl = JOptionPane.showConfirmDialog(this, "Wollen Sie das Spiel"
             + " wirklich beenden", "Fenster schließen",
             JOptionPane.YES_NO_OPTION);
         // Wenn Ja angeklickt wird

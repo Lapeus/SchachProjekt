@@ -164,7 +164,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Konstante fuer den Farbton der Letzten Zug Felder (gruen).
      */
-    private final Color gruen = new Color(18, 198, 66);
+    private final Color gruen = new Color(6, 148, 6);
     
     /**
      * Action Command für den Rueckgaening-Button.
@@ -718,8 +718,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             String[] moeglicheFiguren = {"Dame", "Turm", "Läufer", 
                 "Springer"};
             String s = (String) JOptionPane.showInputDialog(parent,
-                "Wählen sie eine Figur aus die sie gegen den "
-                + "Bauern tauschen Wollen"
+                "Wählen Sie eine Figur aus, die Sie gegen den "
+                + "Bauern tauschen wollen"
                 , "Figurenwechsel", JOptionPane.
                 PLAIN_MESSAGE, null, moeglicheFiguren, "Dame");
             int wert;
@@ -913,7 +913,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             } else {
                 if (!(spieler2 instanceof Computerspieler)) {
                     int eingabe = JOptionPane.showConfirmDialog(parent, 
-                        "Möchten sie sich auf ein Unentschieden einigen?");
+                        "Möchten Sie sich auf ein Unentschieden einigen?");
                     if (eingabe == 0) {
                         spiel.unentschieden();
                         for (Feld feld : felderListe) {

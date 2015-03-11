@@ -156,6 +156,11 @@ public class Spieldaten {
         return zugListe;
     }
     
+    /**
+     * Setzt die Liste mit den durchgef&uuml;hrten Z&uuml;gen. Wird nur beim
+     * Laden von Gesamtdatensatz verwendet.
+     * @param zugListe Die Liste der bisherigen Z&uuml;ge
+     */
     public void setZugListe(List<Zug> zugListe) {
         this.zugListe = zugListe;
     }
