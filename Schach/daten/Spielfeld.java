@@ -456,18 +456,21 @@ public class Spielfeld {
         // Sonst war es ein normaler Zug oder ein Umwandlungszug
         } else {
             Figur gezogeneFigur = zug.getFigur();
-            // Wenn es ein Umwandlungszug war und eine Figur umgewandelt wurde
+            // Wenn es ein Umwandlungszug war
             if (zug instanceof Umwandlungszug) {
                 Umwandlungszug umwandlZug = (Umwandlungszug) zug;
-                // Die Listen muessen aktualisiert werden
-                if (gezogeneFigur.getFarbe()) {
-                    // Die umgewandelte Figur muss weg
-                    weisseFiguren.remove(umwandlZug.getNeueFigur());
-                    weisseFiguren.add(gezogeneFigur);
-                } else {
-                    // Die umgewandelte Figur muss weg
-                    schwarzeFiguren.remove(umwandlZug.getNeueFigur());
-                    schwarzeFiguren.add(gezogeneFigur);
+                // Und wirklich eine Figur umgewandelt wurde
+                if (umwandlZug.getNeueFigur() != null) {
+                    // Die Listen muessen aktualisiert werden
+                    if (gezogeneFigur.getFarbe()) {
+                        // Die umgewandelte Figur muss weg
+                        weisseFiguren.remove(umwandlZug.getNeueFigur());
+                        weisseFiguren.add(gezogeneFigur);
+                    } else {
+                        // Die umgewandelte Figur muss weg
+                        schwarzeFiguren.remove(umwandlZug.getNeueFigur());
+                        schwarzeFiguren.add(gezogeneFigur);
+                    }
                 }
             }
             // Figur an die vorherige Stelle setzen
@@ -553,6 +556,8 @@ public class Spielfeld {
             schwarzeFiguren.remove(figur);
             schwarzeFiguren.add(neueFigur);
         }
+        System.out.println(weisseFiguren.size());
+        System.out.println("");
     }
     
     /**

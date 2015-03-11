@@ -360,6 +360,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         this.add(cCenter, BorderLayout.CENTER);
         this.add(cEast, BorderLayout.EAST);
         
+        // Zugzeit fuer den ersten Zug starten
+        sekundenStart = (int) System.currentTimeMillis();
+
         /* Wenn ein Computerspieler mitspielt und anfangen soll muss er hier 
          * den ersten Zug machen
          */

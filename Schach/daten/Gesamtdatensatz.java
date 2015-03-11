@@ -297,7 +297,6 @@ public class Gesamtdatensatz {
             BufferedReader br = new BufferedReader(new FileReader(file));
             // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
             String time = br.readLine();
-            System.out.println(time);
             Spieler spieler1 = getSpieler(br.readLine());
             boolean farbe1 = Boolean.parseBoolean(br.readLine());
             Spieler spieler2 = getSpieler(br.readLine());

@@ -77,6 +77,11 @@ public class Computerspieler extends Spieler {
         if (letzterZug instanceof Umwandlungszug) {
             spielfeld.umwandeln(letzterZug.getFigur(), 900);
         }
+        
+        /* Fordert den Garbage-Collector auf, unbenutzte Objekte zu entfernen
+         * um fuer den noetigen freien Speicherplatz zu sorgen
+         */
+        Runtime.getRuntime().gc();
     }
     
     /**
