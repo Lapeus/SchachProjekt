@@ -262,24 +262,24 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @param e WindowListenerEvent
      */
     public void windowClosing(WindowEvent e) {
-        try {
-            String fileSep = System.getProperty("file.separator");
-            AudioInputStream ais = AudioSystem.getAudioInputStream(
-                new File("sounds" + fileSep 
-                    + "Schließen.wav"));
-            Clip clip = AudioSystem.getClip();
-            clip.open(ais);
-            clip.start();
-            
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         int auswahl = JOptionPane.showConfirmDialog(this, "Wollen Sie das Spiel"
             + " wirklich beenden", "Fenster schließen",
             JOptionPane.YES_NO_OPTION);
         // Wenn Ja angeklickt wird
         if (auswahl == 0) {
             gesamtdatenSpeichern();
+            try {
+                AudioInputStream ais = AudioSystem.getAudioInputStream(
+                    new File("sounds" + System.getProperty("file.separator") 
+                        + "schließen.wav"));
+                Clip clip = AudioSystem.getClip();
+                clip.open(ais);
+                clip.start();
+                this.dispose();
+                Thread.sleep(2000);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             System.exit(0);
         }
         // Wenn Nein angeklickt wird passiert nichts

@@ -79,6 +79,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private JButton aufgeben = new JButton("Spiel Aufgeben");
     
     /**
+     * Button zum Spielwiederholung ansehen.
+     */
+    private JButton btnWiederholung = new JButton("Wiederholung ansehen");
+    
+    /**
      * JLabel zum Anzeigen des momentanen Spielers.
      */
     private JLabel momentanerSpieler = new JLabel("Weiß");
@@ -263,6 +268,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         for (Feld feld : felderListe) {
             feld.addMouseListener(this);
         }
+        if (spielfeld.getAktuellerSpieler()) {
+            momentanerSpieler.setText("Weiß");
+        } else {
+            momentanerSpieler.setText("Schwarz");  
+        }
         if (parent.getEinstellungen().isBedrohteFigurenAnzeigen()) {
             for (Feld bedroht : spielfeld.getBedrohteFelder()) {
                 bedroht.setBackground(new Color(100, 100, 100));
@@ -363,10 +373,18 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(aufgeben, gbc);
         
         // cEnde
+        cEnde.setLayout(new GridBagLayout());
         JButton startmenue = new JButton("Zurück zum Startmenü");
         startmenue.setActionCommand(commandStartmenue);
         startmenue.addActionListener(new SeitenwechselListener(parent));
-        cEnde.add(startmenue);
+        GridBagConstraints gbc2 = new GridBagConstraints();
+        gbc2.insets = new Insets(15, 15, 15, 15);
+        gbc2.gridx = 0;
+        gbc2.gridy = 0;
+        cEnde.add(startmenue, gbc2);
+        gbc2.gridy = 1;
+        cEnde.add(btnWiederholung, gbc2);
+        
         
         
         // Zu Panel hinzufügen
@@ -939,6 +957,33 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         this.add(cEnde, BorderLayout.EAST);
                         this.validate();
                         this.repaint();  
+                    } else {
+                        Spieler spieler;
+                        if (spielfeld.getAktuellerSpieler() == spieler1
+                            .getFarbe()) {
+                            spieler = spieler1;
+                        } else {
+                            spieler = spieler2;
+                        }
+                        JOptionPane.showMessageDialog(parent, 
+                            spieler.getName() + "hat das Remis abgelehnt");
+                    }
+                } else {
+                    if ((boolean) ((Computerspieler) spieler2)
+                        .unentschiedenAnnehmen()) {
+                        JOptionPane.showMessageDialog(parent, "Spiel endet "
+                            + "unentschieden.");
+                        spiel.unentschieden();
+                        for (Feld feld : felderListe) {
+                            feld.removeMouseListener(this);
+                        }
+                        this.remove(cEast);
+                        this.add(cEnde, BorderLayout.EAST);
+                        this.validate();
+                        this.repaint();
+                    } else {
+                        JOptionPane.showMessageDialog(parent, 
+                            spieler2.getName() + "hat das Remis abgelehnt");
                     }
                 }
             }
@@ -982,6 +1027,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             parent.spielSpeichern(spiel);
             JOptionPane.showMessageDialog(parent, "Spiel gespeichert",
                 "Speichern", JOptionPane.INFORMATION_MESSAGE);
+        }
+        if (e.getSource().equals(btnWiederholung)) {
+            List<Zug> spielvideo = spiel.s
         }
     }
     
