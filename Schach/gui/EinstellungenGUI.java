@@ -294,11 +294,11 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         cCenter.add(lblSpielfeldDrehen, gbc);
         // Radio Buttons Statistik
         auswahlJaNein("drehenJa", "derehenNein");
-        /*if (this.einstellungen.) {
+        if (this.einstellungen.isSpielfeldDrehen()) {
             ja.setSelected(true);
         } else {
             nein.setSelected(true);
-        }*/
+        }
         gbc.gridx = 1;
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
@@ -317,10 +317,10 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
             einstellungen.setZugZeitBegrenzung(
                 Integer.parseInt(txtZugzeitbegrenzung.getText()));
             parent.setEinstellungen(einstellungen);
-        /*} else if (command.equals("drehenJa")) {
-            einstellungen.set
-        } else if (command.equals("drehenNein")) {
-        */    
+        } else if (command.equals("drehenJa")) {
+            einstellungen.setSpielfeldDrehen(true);
+        } else if (command.equals("drehenNein")) {    
+            einstellungen.setSpielfeldDrehen(false);
         } else if (command.equals("moeglicheFelderJa")) {
             einstellungen.setMoeglicheFelderAnzeigen(true);
         } else if (command.equals("moeglicheFelderNein")) {

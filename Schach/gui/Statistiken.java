@@ -4,6 +4,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -100,27 +101,40 @@ public class Statistiken extends JPanel implements ActionListener {
         cCenter.setLayout(new BorderLayout());
         cCenter.setBackground(cBraunRot);
         List<Spieler> spielerListe = parent.getSpielerListe();
-        String[] spielernamen = new String[spielerListe.size()];
-        for (int i = 0; i < spielernamen.length; i++) {
-            spielernamen[i] = spielerListe.get(i).getName();
+        String[] spielernamen = new String[spielerListe.size() + 1];
+        spielernamen[0] = "Wählen sie einen Spieler aus";
+        for (int i = 0; i < spielernamen.length - 1; i++) {
+            spielernamen[i + 1] = spielerListe.get(i).getName();
         }
         spielerAuswahl = new JComboBox<String>(spielernamen);
         spielerAuswahl.setBackground(cHellesBeige);
         spielerAuswahl.addActionListener(this);
         cCenter.add(spielerAuswahl, BorderLayout.NORTH);
         
+        this.add(cCenter, BorderLayout.CENTER);
+        
         // South
         JPanel cSouth = new JPanel();
+        cSouth.setLayout(new FlowLayout());
         cSouth.setBackground(cBraunRot);
+        
+        // Zurück-Button
         JButton zurueck = new JButton("zurück");
         zurueck.addActionListener(new SeitenwechselListener(parent));
         zurueck.setActionCommand("Eroeffnungsseite");
         zurueck.setBackground(cHellesBeige);
         cSouth.add(zurueck);
+        
+        // Zurücksetzen Button
+        JButton btnzuruecksetzen = new JButton("Spielerstatistik zurücksetzen");
+        btnzuruecksetzen.setActionCommand("zuruecksetzen");
+        btnzuruecksetzen.addActionListener(this);
+        btnzuruecksetzen.setBackground(cHellesBeige);
+        cSouth.add(btnzuruecksetzen);
+        
         this.add(cSouth, BorderLayout.SOUTH);
+   
         
-        
-        this.add(cCenter, BorderLayout.CENTER);
     }
     
     /**
@@ -143,49 +157,58 @@ public class Statistiken extends JPanel implements ActionListener {
      * @param e ausgeloestes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
-        daten.removeAll();
         String ausgewaehlt = (String) spielerAuswahl.getSelectedItem();
         Spieler spieler = istVorhanden(ausgewaehlt);
-        Statistik statistik = spieler.getStatistik();
-        String momentan;
-        String lineSep = System.getProperty("line.separator");
-        momentan = "Spiele: " 
-            + statistik.getAnzahlSpiele() + lineSep;
-        momentan += "Siege: " 
-            + statistik.getAnzahlSiege() + lineSep;
-        momentan += "Patt: " 
-            + statistik.getAnzahlPatt() + lineSep;
-        momentan += "Matt: " 
-            + statistik.getAnzahlMatt() + lineSep;
-        momentan += "Siege vs. Comp: "
-            + statistik.getAnzahlSiegeC() + lineSep;
-        momentan += "Patt vs. Comp: " 
-            + statistik.getAnzahlPattC() + lineSep;
-        momentan += "Matt vs. Comp: " 
-            + statistik.getAnzahlMattC() + lineSep;
-        momentan += "Schnellster Sieg: " 
-            + statistik.getSchnellsterSieg() + " Sekunden" + lineSep;
-        momentan += "Kürzester Sieg: "
-            + statistik.getKuerzesterSieg() + " Zuege" + lineSep;
-        momentan += "Schnellstes Matt: " 
-            + statistik.getSchnellstesMatt() + " Sekunden" + lineSep;
-        momentan += "Kürzestes Matt:  "
-            + statistik.getKuerzestesMatt() + " Zuege" + lineSep;
-        momentan += "Durschnittliche Siegzeit: " 
-            + statistik.getZeitSiegDurchschnitt() + " Sekunden" + lineSep;
-        momentan += "Durschnittliche Mattzeit: " 
-            + statistik.getZeitMattDurchschnitt() + " Sekunden" + lineSep;
-        momentan += "Durschnittliche Siegzüge: " 
-            + statistik.getZuegeSiegDurchschnitt() + " Zuege" + lineSep;
-        momentan += "Durschnittliche Mattzüge: " 
-            + statistik.getZuegeMattDurchschnitt() + " Zuege" + lineSep;
-        momentan += "Durschnittlicher Materialwert Sieg: " 
-            + statistik.getMatWertSiegDurchschnitt() + lineSep;
-        momentan += "Durchschnittlicher Materialwert Matt: "
-            + statistik.getMatWertMattDurchschnitt();
-        daten.setText(momentan);
-        cCenter.add(daten, BorderLayout.CENTER);
-        this.revalidate();
+        if (spieler != null) {
+            if (e.getActionCommand().equals("zuruecksetzen")) {
+                spieler.setStatistik(new Statistik());
+            } 
+            daten.removeAll();
+            Statistik statistik = spieler.getStatistik();
+            String momentan;
+            String lineSep = System.getProperty("line.separator");
+            momentan = "Spiele: " 
+                + statistik.getAnzahlSpiele() + lineSep;
+            momentan += "Siege: " 
+                + statistik.getAnzahlSiege() + lineSep;
+            momentan += "Patt: " 
+                + statistik.getAnzahlPatt() + lineSep;
+            momentan += "Matt: " 
+                + statistik.getAnzahlMatt() + lineSep;
+            momentan += "Siege vs. Comp: "
+                + statistik.getAnzahlSiegeC() + lineSep;
+            momentan += "Patt vs. Comp: " 
+                + statistik.getAnzahlPattC() + lineSep;
+            momentan += "Matt vs. Comp: " 
+                + statistik.getAnzahlMattC() + lineSep;
+            momentan += "Schnellster Sieg: " 
+                + statistik.getSchnellsterSieg() + " Sekunden" + lineSep;
+            momentan += "Kürzester Sieg: "
+                + statistik.getKuerzesterSieg() + " Zuege" + lineSep;
+            momentan += "Schnellstes Matt: " 
+                + statistik.getSchnellstesMatt() + " Sekunden" + lineSep;
+            momentan += "Kürzestes Matt:  "
+                + statistik.getKuerzestesMatt() + " Zuege" + lineSep;
+            momentan += "Durschnittliche Siegzeit: " 
+                + statistik.getZeitSiegDurchschnitt() + " Sekunden" 
+                + lineSep;
+            momentan += "Durschnittliche Mattzeit: " 
+                + statistik.getZeitMattDurchschnitt() + " Sekunden" 
+                + lineSep;
+            momentan += "Durschnittliche Siegzüge: " 
+                + statistik.getZuegeSiegDurchschnitt() + " Zuege" + lineSep;
+            momentan += "Durschnittliche Mattzüge: " 
+                + statistik.getZuegeMattDurchschnitt() + " Zuege" + lineSep;
+            momentan += "Durschnittlicher Materialwert Sieg: " 
+                + statistik.getMatWertSiegDurchschnitt() + lineSep;
+            momentan += "Durchschnittlicher Materialwert Matt: "
+                + statistik.getMatWertMattDurchschnitt();
+            daten.setText(momentan);
+            cCenter.add(daten, BorderLayout.CENTER);
+            this.revalidate();
+        }
+        
+        
     }
   
     

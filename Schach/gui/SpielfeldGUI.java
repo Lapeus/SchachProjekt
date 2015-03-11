@@ -162,6 +162,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private final Color rot = new Color(204, 0, 0);
     
     /**
+     * Konstante fuer den Farbton der Letzten Zug Felder (gruen).
+     */
+    private final Color gruen = new Color(18, 198, 66);
+    
+    /**
      * Action Command für den Rueckgaening-Button.
      */
     private final String commandRueck = "rueck";
@@ -205,11 +210,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Gibt an ob Spiel vorbei ist.
      */
     private boolean spielVorbei = false;
-    
-    /**
-     * Thread für die Stopuhr.
-     */
-    private Thread th;
     
     
     /**
@@ -260,7 +260,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         for (Feld feld : felderListe) {
             feld.addMouseListener(this);
         }
-        
+        if (parent.getEinstellungen().isBedrohteFigurenAnzeigen()) {
+            for (Feld bedroht : spielfeld.getBedrohteFelder()) {
+                bedroht.setBackground(new Color(100, 100, 100));
+            }
+        }
         init();
     }
     
@@ -411,13 +415,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }    
             counter -= 8;
         }
+        if (parent.getEinstellungen().isSpielfeldDrehen()) {
+            spielfeldDrehen();
+        }
         spielfeldUIUpdate();
     }
     /**
      * Updaten der Spielfeldoberfläche.
      */
     private void spielfeldUIUpdate() {
-        // spielfeldDrehen();
         if (spielfeld.getSpieldaten().getZugListe().isEmpty()) {
             rueckgaengig.setEnabled(false);
         } else {
@@ -802,17 +808,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 if (!spielVorbei) {
                     // Spielfeld aufbauen
                     spielfeldAufbau();
+                    // Letzten Zug anzeigen
+                    for (Feld feld : spielfeld.getLetzteFelder()) {
+                        feld.setBackground(gruen);
+                    }
                     // autosave initiieren
                     parent.autoSave(spiel);
-                    // Letzten Zug Rot makieren 
-                    for (Feld feld : spielfeld.getLetzteFelder()) {
-                        feld.setBackground(rot);
-                    }
                 } 
-            /* Wenn nochmal auf das gleiche Feld geklickt wird, wird die
-             * Auswahl aufgehoben.
-             */
-                //TODO Wenn gleiche Figur dann keine auswählen
             } 
         }
         // Wenn man ein leeres Feld anklickt
