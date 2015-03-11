@@ -67,24 +67,31 @@ public class Spieldaten {
         // Grundsaetzliche Annahme, die 50 Zuege Regel wuerde zutreffen
         boolean remis = true;
         int zaehl = 0; 
-        /* Solange noch nicht alle letzten 100 Halbzuege getestet wurden und 
-         * noch keine Anforderung nicht erfuellt wurde
-         */
-        while (remis && zaehl < 100) {
-            // Der zaehlte Zug von hinten
-            Zug zug = zugListe.get(zugListe.size() - zaehl - 1);
-            // Wenn es ein EnPassantZug oder ein Umwandlungszug war
-            if (zug instanceof EnPassantZug || zug instanceof Umwandlungszug) {
-                // Wurde ein Bauer bewegt
-                remis = false;
-            // Wenn es kein RochadenZug war (also ein normaler)
-            } else if (!(zug instanceof RochadenZug)) {
-                // Wenn die Figur ein Bauer war oder eine Figur geschlagen wurde
-                if (zug.getFigur().getWert() == 100 || zug.isSchlagzug()) {
+        // Wenn noch keine 100 Halbzuege gezogen wurden
+        if (zugListe.size() < 100) {
+            remis = false;
+        } else {
+            /* Solange noch nicht alle letzten 100 Halbzuege getestet wurden 
+             * und noch keine Anforderung nicht erfuellt wurde
+             */
+            while (remis && zaehl < 100) {
+                // Der zaehlte Zug von hinten
+                Zug zug = zugListe.get(zugListe.size() - zaehl - 1);
+                // Wenn es ein EnPassantZug oder ein Umwandlungszug war
+                if (zug instanceof EnPassantZug 
+                    || zug instanceof Umwandlungszug) {
+                    // Wurde ein Bauer bewegt
                     remis = false;
+                // Wenn es kein RochadenZug war (also ein normaler)
+                } else if (!(zug instanceof RochadenZug)) {
+                    // Wenn die Figur ein Bauer war oder eine Figur geschlagen 
+                    // wurde
+                    if (zug.getFigur().getWert() == 100 || zug.isSchlagzug()) {
+                        remis = false;
+                    }
                 }
+                zaehl++;
             }
-            zaehl++;
         }
         return remis;
     }

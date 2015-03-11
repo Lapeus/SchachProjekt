@@ -555,8 +555,6 @@ public class Spielfeld {
             schwarzeFiguren.remove(figur);
             schwarzeFiguren.add(neueFigur);
         }
-        System.out.println(weisseFiguren.size());
-        System.out.println("");
     }
     
     /**

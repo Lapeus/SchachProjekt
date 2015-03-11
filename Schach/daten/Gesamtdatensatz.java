@@ -378,6 +378,42 @@ public class Gesamtdatensatz {
             einstellungen.setSpielfeldDrehen(bool[6]);
             
             // Schachnotation laden
+            schachNotaLaden(br, spielfeld);
+          
+            // Den Reader schliessen
+            br.close();
+            
+            // Dem Spielfeld die Einstellungen zuf&uuml;gen
+            spielfeld.setEinstellungen(einstellungen);
+            
+            // Den Spielern ihre Farben setzen
+            spieler1.setFarbe(farbe1);
+            spieler2.setFarbe(farbe2);
+            
+            // Das Spiel erstellen
+            spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
+        } catch (IOException ioEx) {
+            // Wenn irgendwas schief geht
+            spiel = null;
+            // Wenn das Spiel null ist, gibt die GUI eine Fehlermeldung aus
+        }
+        
+        // Die Quelldatei loeschen
+        file.delete();
+        // Die Liste aktualisieren
+        gespeicherteSpiele.remove(name);
+        
+        return spiel;
+    }
+    
+    /**
+     * L&auml;dt die Schachnotation und f&uuml;gt die Daten dem Spielfeld zu.
+     * @param br Ein BufferedReader an der entsprechenden Stelle
+     * @param spielfeld Das Spielfeld, das geladen werden soll
+     */
+    private void schachNotaLaden(BufferedReader br, Spielfeld spielfeld) {
+        try {
+         // Schachnotation laden
             String notation = "";
             // Zugzeiten und Anzahl der Zuege fuer beide Spieler
             int zugZeitWeiss = 0;
@@ -431,31 +467,9 @@ public class Gesamtdatensatz {
             spielfeld.getSpieldaten().setGeladenZuegeWeiss(zuegeWeiss);
             spielfeld.getSpieldaten().setGeladenZuegeSchwarz(zuegeSchwarz);
             spielfeld.getSpieldaten().setGeladenNotation(notation);
-          
-            // Den Reader schliessen
-            br.close();
-            
-            // Dem Spielfeld die Einstellungen zuf&uuml;gen
-            spielfeld.setEinstellungen(einstellungen);
-            
-            // Den Spielern ihre Farben setzen
-            spieler1.setFarbe(farbe1);
-            spieler2.setFarbe(farbe2);
-            
-            // Das Spiel erstellen
-            spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
         } catch (IOException ioEx) {
-            // Wenn irgendwas schief geht
-            spiel = null;
-            // Wenn das Spiel null ist, gibt die GUI eine Fehlermeldung aus
+            ioEx.printStackTrace();
         }
-        
-        // Die Quelldatei loeschen
-        file.delete();
-        // Die Liste aktualisieren
-        gespeicherteSpiele.remove(name);
-        
-        return spiel;
     }
     
     /**
@@ -664,7 +678,6 @@ public class Gesamtdatensatz {
                         } else if (umgewandelteFigur.equals("T")) {
                             neueFigur = new Turm(zielfeld, aktuelleFarbe);
                         } else {
-                            System.out.println("Tadaaa");
                             neueFigur = new Dame(zielfeld, aktuelleFarbe);
                         }
                         zug = new Umwandlungszug(startfeld, zielfeld, 

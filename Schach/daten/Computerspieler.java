@@ -85,9 +85,12 @@ public class Computerspieler extends Spieler {
     
     /**
      * Ein rekursiver Computergegner, der theoretisch beliebig viele Stufen 
-     * untersuchen kann. Ermittelt den besten Zug und zieht ihn.
-     * Praktisch nur sinnvoll f&uuml;r die Stufen 2 und 3.
-     * @param maxStufe Die maximale Suchtiefe (sinnvollerweise 2 oder 3)
+     * untersuchen kann. <br> Ermittelt den besten Zug und zieht ihn.
+     * Praktisch nur sinnvoll f&uuml;r die Stufen 2 - 4. <br>
+     * Teile der verwendeten Methoden min und max basieren auf dem folgenden
+     * Prinzip {@link de.wikipedia.org/wiki/Alpha-Beta-Suche} 
+     * @param maxStufe Die maximale Suchtiefe (sinnvollerweise zwischen 2 und
+     * 4)
      */
     private void rekursKI(int maxStufe) {
         List<Figur> alleFiguren;
@@ -170,8 +173,6 @@ public class Computerspieler extends Spieler {
             // Ziehe den besten Zug
             spielfeld.ziehe(besteFiguren.get(zufallsIndex), 
                 besteFelder.get(zufallsIndex), 0);
-        } else {
-            System.out.println("Matt");
         }
     }
     
@@ -255,10 +256,7 @@ public class Computerspieler extends Spieler {
             }
         }
         return minWert;
-    }
-    
-    // Teile des oben genannten Algorithmus' nach 
-    // "de.wikipedia.org/wiki/Alpha-Beta-Suche" 
+    } 
     
     /**
      * Bewertet das Spielfeld nach verschiedenen Kriterien.
@@ -441,33 +439,40 @@ public class Computerspieler extends Spieler {
         int matWert = spielfeld.getMaterialwert(true) 
             - spielfeld.getMaterialwert(false);
         // Wenn der Computergegner mehr als 500 Punkte weniger hat
-        if ((getFarbe() && matWert < -500) || (!getFarbe() && matWert > 500)) {
+        if ((getFarbe() && matWert < -400) || (!getFarbe() && matWert > 400)) {
             annehmen = true;
         }
         
-        // Test auf 10 Zuege Regel (Variante der offiziellen 50 Zuege Regel
-        // Grundsaetzliche Annahme, die 10 Zuege Regel wuerde zutreffen
+        // Test auf 8 Zuege Regel (Variante der offiziellen 50 Zuege Regel
+        // Grundsaetzliche Annahme, die 8 Zuege Regel wuerde zutreffen
         boolean remis = true;
         int zaehl = 0; 
-        /* Solange noch nicht alle letzten 20 Halbzuege getestet wurden und 
-         * noch keine Anforderung nicht erfuellt wurde
-         */
-        while (remis && zaehl < 20) {
-            // Der zaehlte Zug von hinten
-            Zug zug = spielfeld.getSpieldaten().getZugListe().get(
-                spielfeld.getSpieldaten().getZugListe().size() - zaehl - 1);
-            // Wenn es ein EnPassantZug oder ein Umwandlungszug war
-            if (zug instanceof EnPassantZug || zug instanceof Umwandlungszug) {
-                // Wurde ein Bauer bewegt
-                remis = false;
-            // Wenn es kein RochadenZug war (also ein normaler)
-            } else if (!(zug instanceof RochadenZug)) {
-                // Wenn die Figur ein Bauer war oder eine Figur geschlagen wurde
-                if (zug.getFigur().getWert() == 100 || zug.isSchlagzug()) {
+        // Wenn noch keine 16 Halbzuege gezogen wurden
+        if (spielfeld.getSpieldaten().getZugListe().size() < 16) {
+            remis = false;
+        } else {
+            /* Solange noch nicht alle letzten 20 Halbzuege getestet wurden und 
+             * noch keine Anforderung nicht erfuellt wurde
+             */
+            while (remis && zaehl < 16) {
+                // Der zaehlte Zug von hinten
+                Zug zug = spielfeld.getSpieldaten().getZugListe().get(
+                    spielfeld.getSpieldaten().getZugListe().size() - zaehl - 1);
+                // Wenn es ein EnPassantZug oder ein Umwandlungszug war
+                if (zug instanceof EnPassantZug 
+                    || zug instanceof Umwandlungszug) {
+                    // Wurde ein Bauer bewegt
                     remis = false;
+                // Wenn es kein RochadenZug war (also ein normaler)
+                } else if (!(zug instanceof RochadenZug)) {
+                    // Wenn die Figur ein Bauer war oder eine Figur geschlagen 
+                    // wurde
+                    if (zug.getFigur().getWert() == 100 || zug.isSchlagzug()) {
+                        remis = false;
+                    }
                 }
+                zaehl++;
             }
-            zaehl++;
         }
         // Wenn die Regel zutrifft
         if (remis) {

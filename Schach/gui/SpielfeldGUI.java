@@ -644,13 +644,26 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         if (istComputerSpielerUndIstAmZug()) {
             spielfeldAufbau();
             start();
-            ((Computerspieler) spieler2).ziehen();
-            sekundenStopp = ((int) System.currentTimeMillis()
-                - sekundenStart) / 1000;
-            spielfeld.getSpieldaten().getLetzterZug().setZugzeit(sekundenStopp);
-            mattOderSchach();
-            spielfeldAufbau();
-            start();
+            // Testen ob die 50-Züge-Regel verletzt wurde
+            if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
+                // Unentschieden einreichen
+                spiel.unentschieden();
+                JOptionPane.showMessageDialog(parent, "50 Züge Regel wurde "
+                    + "verletzt. Das Spiel endet in einem Unentschieden");
+                this.remove(cEast);
+                this.add(cEnde, BorderLayout.EAST);
+                this.validate();
+                this.repaint();  
+            } else {
+                ((Computerspieler) spieler2).ziehen();
+                sekundenStopp = ((int) System.currentTimeMillis()
+                    - sekundenStart) / 1000;
+                spielfeld.getSpieldaten().getLetzterZug().setZugzeit(
+                    sekundenStopp);
+                mattOderSchach();
+                spielfeldAufbau();
+                start();
+            }
         }
     }
     
@@ -1035,10 +1048,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         if (e.getSource().equals(btnWiederholung)) {
             spielfeldAufbau();
-            System.out.println("ist drin");
             List<Zug> spielvideo = spiel.spielvideo();
             for (Zug zug : spielvideo) {
-                System.out.println("jeder Zug");
                 // Ziehe jeden Zug
                 spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), 
                     zug.getZugzeit());
