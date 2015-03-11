@@ -613,7 +613,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             ((Computerspieler) spieler2).ziehen();
             sekundenStopp = ((int) System.currentTimeMillis()
                 - sekundenStart) / 1000;
-            //spielfeld.getSpieldaten().getLetzerZug()
+            spielfeld.getSpieldaten().getLetzterZug().setZugzeit(sekundenStopp);
             mattOderSchach();
             spielfeldAufbau();
             start();
