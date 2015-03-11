@@ -45,28 +45,26 @@ public class Einstellungen {
     private boolean inStatistikEinbeziehen;
     
     /**
+     * Gibt an, ob das Spielfeld bei jedem Zug gedreht werden soll, sodass die
+     * eigenen Figuren immer am unteren Bildrand stehen.
+     */
+    private boolean spielfeldDrehen;
+    
+    /**
      * Erzeugt einen neuen Satz Einstellungen, der sp&auml;ter einem Spiel 
      * hinzugef&uuml;gt werden kann.<br>
      * Einziger Konstruktor dieser Klasse.
-     * @param zzB ZugZeitBegrenzung in ganzen Sekunden
-     * @param moeglFelder Ob m&ouml;gliche Felder angezeigt werden sollen
-     * @param bedroFelder Ob vom Gegner bedrohte Felder angezeigt werden sollen
-     * @param rochMoegl Ob eine Rochade m&ouml;glich ist
-     * @param enPassMoegl Ob En-Passant-Schlagen m&ouml;glich ist
-     * @param schachWarn Ob eine Warnung angezeigt werden soll, wenn man im
-     * Schach steht
-     * @param inStat Ob das Spiel mit in die Statistik einbezogen werden soll
+     * Attribute werden mit Standardwerten initialisiert.
      */
-    public Einstellungen(int zzB, boolean moeglFelder, boolean bedroFelder, 
-        boolean rochMoegl, boolean enPassMoegl, boolean schachWarn, 
-        boolean inStat) {
-        this.zugZeitBegrenzung = zzB;
-        this.moeglicheFelderAnzeigen = moeglFelder;
-        this.bedrohteFigurenAnzeigen = bedroFelder;
-        this.rochadeMoeglich = rochMoegl;
-        this.enPassantMoeglich = enPassMoegl;
-        this.schachWarnung = schachWarn;
-        this.inStatistikEinbeziehen = inStat;
+    public Einstellungen() {
+        this.zugZeitBegrenzung = 0;
+        this.moeglicheFelderAnzeigen = true;
+        this.bedrohteFigurenAnzeigen = false;
+        this.rochadeMoeglich = true;
+        this.enPassantMoeglich = false;
+        this.schachWarnung = true;
+        this.inStatistikEinbeziehen = true;
+        this.spielfeldDrehen = false;
     }
 
     /**
@@ -198,5 +196,21 @@ public class Einstellungen {
      */
     public void setInStatistikEinbeziehen(boolean inStatistikEinbeziehen) {
         this.inStatistikEinbeziehen = inStatistikEinbeziehen;
+    }
+
+    /**
+     * Gibt an, ob das Spielfeld bei jedem Zug gedreht werden soll.
+     * @return Wahrheitswert
+     */
+    public boolean isSpielfeldDrehen() {
+        return spielfeldDrehen;
+    }
+
+    /**
+     * Setzt, ob das Spielfeld bei jedem Zug gedreht werden soll.
+     * @param spielfeldDrehen Wahrheitswert
+     */
+    public void setSpielfeldDrehen(boolean spielfeldDrehen) {
+        this.spielfeldDrehen = spielfeldDrehen;
     }
 }

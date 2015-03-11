@@ -163,20 +163,26 @@ public class Gesamtdatensatz {
             // Die ZugzeitBegrenzung
             int zzb = Integer.parseInt(br.readLine());
             // Die sechs booleans
-            boolean[] bool = new boolean[6];
-            for (int i = 0; i <= 5; i++) {
+            boolean[] bool = new boolean[7];
+            for (int i = 0; i <= 6; i++) {
                 bool[i] = Boolean.parseBoolean(br.readLine());
             }
             br.close();
             // Einen neuen Einstellungssatz mit den gelesenen Daten erstellen
-            einstellungen = new Einstellungen(zzb, bool[0], bool[1], bool[2], 
-                bool[3], bool[4], bool[5]);
+            einstellungen = new Einstellungen();
+            einstellungen.setZugZeitBegrenzung(zzb);
+            einstellungen.setMoeglicheFelderAnzeigen(bool[0]);
+            einstellungen.setBedrohteFigurenAnzeigen(bool[1]);
+            einstellungen.setRochadeMoeglich(bool[2]);
+            einstellungen.setEnPassantMoeglich(bool[3]);
+            einstellungen.setSchachWarnung(bool[4]);
+            einstellungen.setInStatistikEinbeziehen(bool[5]);
+            einstellungen.setSpielfeldDrehen(bool[6]);
         } catch (IOException ioEx) {
             /* Wenn irgendwas beim Laden schief geht, werden die Standard-
              * Einstellungen wiederhergestellt.
              */
-            einstellungen = new Einstellungen(0, true, false, true, false, 
-                true, true);
+            einstellungen = new Einstellungen();
         }
         
         // Die Spieler laden
@@ -230,9 +236,18 @@ public class Gesamtdatensatz {
             "file.separator") + "Spiele");
         files = spieleOrdner.listFiles();
         for (File file : files) {
-            // Den Namen (Name der Datei ohne das .txt)
-            gespeicherteSpiele.add(file.getName().substring(
-                0, file.getName().length() - 4));
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String datum = br.readLine();
+                br.close();
+                // Den Namen (Name der Datei ohne das .txt)
+                String name = file.getName().substring(
+                    0, file.getName().length() - 4);
+                name += " " + datum;
+                gespeicherteSpiele.add(name);
+            } catch (IOException ioEx) {
+                gespeicherteSpiele.remove(file.getName());
+            }
         }
         
     }
@@ -250,8 +265,7 @@ public class Gesamtdatensatz {
          * Schachwarnung: True
          * Statistik: True
          */
-        einstellungen = new Einstellungen(0, true, false, true, false, 
-            true, true);
+        einstellungen = new Einstellungen();
         spielerListe.add(new Computerspieler("Walter"));
         spielerListe.add(new Computerspieler("Karl Heinz"));
         spielerListe.add(new Computerspieler("Rosalinde"));
@@ -286,7 +300,8 @@ public class Gesamtdatensatz {
             "file.separator") + "Spiele" + System.getProperty(
                 "file.separator") + name + ".txt");
         // Das Spiel anlegen
-        Spiel spiel = null;
+        Spiel spiel;
+        name = name.substring(0, name.length() - 19);
         // Wenn es ein Autosave Spiel war, muss der urspruengliche Name 
         // rausgefiltert werden
         if (name.contains("(autosave)")) {
@@ -348,12 +363,19 @@ public class Gesamtdatensatz {
             // Die ZugzeitBegrenzung
             int zzb = Integer.parseInt(br.readLine());
             // Die sechs booleans
-            boolean[] bool = new boolean[6];
-            for (int i = 0; i <= 5; i++) {
+            boolean[] bool = new boolean[7];
+            for (int i = 0; i <= 6; i++) {
                 bool[i] = Boolean.parseBoolean(br.readLine());
             }
-            einstellungen = new Einstellungen(zzb, bool[0], bool[1], bool[2], 
-                bool[3], bool[4], bool[5]);
+            einstellungen = new Einstellungen();
+            einstellungen.setZugZeitBegrenzung(zzb);
+            einstellungen.setMoeglicheFelderAnzeigen(bool[0]);
+            einstellungen.setBedrohteFigurenAnzeigen(bool[1]);
+            einstellungen.setRochadeMoeglich(bool[2]);
+            einstellungen.setEnPassantMoeglich(bool[3]);
+            einstellungen.setSchachWarnung(bool[4]);
+            einstellungen.setInStatistikEinbeziehen(bool[5]);
+            einstellungen.setSpielfeldDrehen(bool[6]);
             
             // Schachnotation laden
             String notation = "";
@@ -423,8 +445,8 @@ public class Gesamtdatensatz {
             spiel = new Spiel(name, spieler1, spieler2, spielfeld);
         } catch (IOException ioEx) {
             // Wenn irgendwas schief geht
-            // TODO Fehlermeldung ausgeben
-            System.out.println("Soll kein CheckstyleFehler kommen");
+            spiel = null;
+            // Wenn das Spiel null ist, gibt die GUI eine Fehlermeldung aus
         }
         
         // Die Quelldatei loeschen
