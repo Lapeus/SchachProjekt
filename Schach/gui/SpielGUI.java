@@ -228,9 +228,27 @@ public class SpielGUI extends JFrame implements WindowListener {
         gesamtdatensatz.speichern();
     }
     
-    
-    
-    
+    /**
+     * Methode zum Abspielen von Systemsounds.
+     * @param filename Name des Sound der abgespielt werden soll
+     */
+    public void soundAbspielen(String filename) {
+        try {
+            String fileSep = System.getProperty(
+                "file.separator");
+            AudioInputStream ais = AudioSystem
+                .getAudioInputStream(
+                new File("sounds" + fileSep 
+                        + filename));
+            Clip clip = AudioSystem.getClip();
+            clip.open(ais);
+            clip.start();
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+ 
     // Ende Methoden
     
     /**

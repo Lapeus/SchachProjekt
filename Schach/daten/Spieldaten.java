@@ -67,27 +67,35 @@ public class Spieldaten {
         // Grundsaetzliche Annahme, die 50 Zuege Regel wuerde zutreffen
         boolean remis = true;
         int zaehl = 0; 
-        /* Solange noch nicht alle letzten 100 Halbzuege getestet wurden und 
-         * noch keine Anforderung nicht erfuellt wurde
-         */
-        while (remis && zaehl < 100) {
-            // Der zaehlte Zug von hinten
-            Zug zug = zugListe.get(zugListe.size() - zaehl - 1);
-            // Wenn es ein EnPassantZug oder ein Umwandlungszug war
-            if (zug instanceof EnPassantZug || zug instanceof Umwandlungszug) {
-                // Wurde ein Bauer bewegt
-                remis = false;
-            // Wenn es kein RochadenZug war (also ein normaler)
-            } else if (!(zug instanceof RochadenZug)) {
-                // Wenn die Figur ein Bauer war oder eine Figur geschlagen wurde
-                if (zug.getFigur().getWert() == 100 || zug.isSchlagzug()) {
+        // Wenn noch keine 100 Halbzuege gezogen wurden
+        if (zugListe.size() < 100) {
+            remis = false;
+        } else {
+            /* Solange noch nicht alle letzten 100 Halbzuege getestet wurden 
+             * und noch keine Anforderung nicht erfuellt wurde
+             */
+            while (remis && zaehl < 100) {
+                // Der zaehlte Zug von hinten
+                Zug zug = zugListe.get(zugListe.size() - zaehl - 1);
+                // Wenn es ein EnPassantZug oder ein Umwandlungszug war
+                if (zug instanceof EnPassantZug 
+                    || zug instanceof Umwandlungszug) {
+                    // Wurde ein Bauer bewegt
                     remis = false;
+                // Wenn es kein RochadenZug war (also ein normaler)
+                } else if (!(zug instanceof RochadenZug)) {
+                    // Wenn die Figur ein Bauer war oder eine Figur geschlagen 
+                    // wurde
+                    if (zug.getFigur().getWert() == 100 || zug.isSchlagzug()) {
+                        remis = false;
+                    }
                 }
+                zaehl++;
             }
-            zaehl++;
         }
         return remis;
     }
+    
     /**
      * Gibt die gesamte Zugzeit des angegebenen Spielers zur&uuml;ck.
      * @param spieler Die Spielfarbe des Spielers, f&uuml;r den die Zugzeit
@@ -174,6 +182,15 @@ public class Spieldaten {
     }
     
     /**
+     * Setzt die bisherige Zeit von wei&szlig; im Falle eines gespeicherten 
+     * Spieles.
+     * @param geladenZeitWeiss Zeit in ganzen Sekunden;
+     */
+    public void setGeladenZeitWeiss(int geladenZeitWeiss) {
+        this.geladenZeitWeiss = geladenZeitWeiss;
+    }
+
+    /**
      * Setzt die bisherige Zeit von schwarz im Falle eines gespeicherten 
      * Spieles.
      * @param geladenZeitSchwarz Zeit in ganzen Sekunden;
@@ -181,14 +198,14 @@ public class Spieldaten {
     public void setGeladenZeitSchwarz(int geladenZeitSchwarz) {
         this.geladenZeitSchwarz = geladenZeitSchwarz;
     }
-    
+        
     /**
-     * Setzt die bisherige Zeit von wei&szlig; im Falle eines gespeicherten 
-     * Spieles.
-     * @param geladenZeitWeiss Zeit in ganzen Sekunden;
+     * Setzt die bisherige Zuganzahl von wei&szlig; im Falle eines 
+     * gespeicherten Spieles.
+     * @param geladenZuegeWeiss Anzahl der Z&uuml;ge;
      */
-    public void setGeladenZeitWeiss(int geladenZeitWeiss) {
-        this.geladenZeitWeiss = geladenZeitWeiss;
+    public void setGeladenZuegeWeiss(int geladenZuegeWeiss) {
+        this.geladenZuegeWeiss = geladenZuegeWeiss;
     }
     
     /**
@@ -198,15 +215,6 @@ public class Spieldaten {
      */
     public void setGeladenZuegeSchwarz(int geladenZuegeSchwarz) {
         this.geladenZuegeSchwarz = geladenZuegeSchwarz;
-    }
-
-    /**
-     * Setzt die bisherige Zuganzahl von wei&szlig; im Falle eines 
-     * gespeicherten Spieles.
-     * @param geladenZuegeWeiss Anzahl der Z&uuml;ge;
-     */
-    public void setGeladenZuegeWeiss(int geladenZuegeWeiss) {
-        this.geladenZuegeWeiss = geladenZuegeWeiss;
     }
     
     /**

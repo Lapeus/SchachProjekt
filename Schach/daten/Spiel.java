@@ -43,11 +43,11 @@ public class Spiel {
      * Legt ein neues Spiel an, welches gespielt und sp&auml;ter gespeichert
      * werden kann. <br>
      * Einziger Konstruktor dieser Klasse.
-     * @param spielname : Name des Spiels. Ben&ouml;tigt f&uuml;r die eindeutige
+     * @param spielname Name des Spiels. Ben&ouml;tigt f&uuml;r die eindeutige
      * Zuordnung beim Laden
-     * @param spieler1 : Der eine teilnehmende Spieler
-     * @param spieler2 : Der andere Spieler
-     * @param spielfeld : Das zugeh&ouml;rige Spielfeld
+     * @param spieler1 Der eine teilnehmende Spieler
+     * @param spieler2 Der andere Spieler
+     * @param spielfeld Das zugeh&ouml;rige Spielfeld
      */
     public Spiel(String spielname, Spieler spieler1, Spieler spieler2,
         Spielfeld spielfeld) {
@@ -106,9 +106,6 @@ public class Spiel {
      * Aufgeben
      */
     public List<Object> aufgeben(boolean spieler) {
-        // Aufgeben-Zug hinzuf&uuml;gen
-        Zug zug = new Zug();
-        spielfeld.getSpieldaten().getZugListe().add(zug);
         // ErgebnisListe erstellen
         List<Object> ergebnis = new ArrayList<Object>();
         Spieler gewinner;
@@ -349,7 +346,8 @@ public class Spiel {
      * @return Die Liste aller Z&uuml;ge
      */
     public List<Zug> spielvideo() {
-        List<Zug> zugListe = spielfeld.getSpieldaten().getZugListe();
+        List<Zug> zugListe = new ArrayList<Zug>();
+        zugListe.addAll(spielfeld.getSpieldaten().getZugListe());
         for (int i = 0; i < zugListe.size(); i++) {
             System.out.println(i);
             spielfeld.zugRueckgaengig();

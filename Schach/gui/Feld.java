@@ -38,8 +38,8 @@ public class Feld extends JLabel {
     /**
      * Erzeugt ein neues Feld.
      * Einziger Konstruktor der Klasse Feld.
-     * @param x : Die x-Koordinate (zwischen 0 und 7)
-     * @param y : Die y-Koordinate (zwischen 0 und 7)
+     * @param x Die x-Koordinate (zwischen 0 und 7)
+     * @param y Die y-Koordinate (zwischen 0 und 7)
      */
     public Feld(int x, int y) {
         super();
@@ -73,7 +73,7 @@ public class Feld extends JLabel {
     
     /**
      * Setzt die Figur, welche auf dem Feld stehen soll.
-     * @param figur : Eine Figur die auf diesem Feld stehen soll
+     * @param figur Eine Figur die auf diesem Feld stehen soll
      */
     public void setFigur(Figur figur) {
         this.figur = figur;

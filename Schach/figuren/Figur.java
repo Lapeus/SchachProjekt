@@ -50,29 +50,6 @@ public abstract class Figur {
      */
     private boolean bereitsGezogen;
     
-    
-    /**
-     * Berechnet alle Felder, auf die die Figur nach den
-     * Zugregeln ziehen kann.
-     * @return Liste von m&ouml;glichen Feldern
-     */
-    protected abstract List<Feld> getMoeglicheFelder();
-    /* Diese Methode sieht fuer Dame, Turm und Laeufer ziemlich aehnlich aus.
-     * Es werden wie bei allen Figuren alle Richtungen durchgegangen und dann
-     * mittels einer while-Schleife vervielfacht. Dabei ist die Abbruchbedingung
-     * das Erreichen einer Figur oder des Spielfeldrandes.
-     * 
-     * Die Methoden fuer Springer und Koenig aehneln sich ebenfalls, da hier 
-     * nur einmal in jede moegliche Richtung gezogen wird, sofern dieses Feld
-     * existiert und frei ist.
-     * 
-     * Die Methode fuer den Bauern ist etwas anders, da hier wichtig ist, ob
-     * es ein weisser oder ein schwarzer Bauer ist. Ausserdem muss unterschieden
-     * werden, ob ein Feld frei ist, oder ob eine gegnerische Figur dort steht.
-     * Bauern duerfen schliesslich nur schraeg gezogen werden, wenn sie dabei 
-     * eine Figur schlagen koennen.
-     */
-    
     /**
      * Pr&uuml;ft alle Felder die die Methode <i>getMoeglicheFelder</i> 
      * vorschl&auml;gt, ob nach dem Zug der eigene K&ouml;nig im Schach stehen
@@ -148,59 +125,26 @@ public abstract class Figur {
     }
     
     /**
-     * Gibt an, ob das Feld am angegebenen Index leer ist.
-     * @param index : Ganzzahliger Index (zwischen 0 und 63)
-     * @return <b>true</b> wenn frei
+     * Berechnet alle Felder, auf die die Figur nach den
+     * Zugregeln ziehen kann.
+     * @return Liste von m&ouml;glichen Feldern
      */
-    protected boolean istFrei(int index) {
-        boolean frei = false;
-        if (getFigurAt(index) == null) {
-            frei = true;
-        }
-        return frei;
-    }
-    
-    /**
-     * Gibt an, ob das Feld am angegebenen Index nicht von einer eigenen Figur
-     * besetzt ist.
-     * Wenn <b>true</b> zur&uuml;ck gegeben wird, bedeutet das, dass dieses
-     * Feld f&uuml;r einen Zug zur Verf&uuml;gung steht.
-     * @param index : Ganzzahliger Index (zwischen 0 und 63)
-     * @return <b>true</b> f&uuml;r leer oder gegnerische Figur
+    protected abstract List<Feld> getMoeglicheFelder();
+    /* Diese Methode sieht fuer Dame, Turm und Laeufer ziemlich aehnlich aus.
+     * Es werden wie bei allen Figuren alle Richtungen durchgegangen und dann
+     * mittels einer while-Schleife vervielfacht. Dabei ist die Abbruchbedingung
+     * das Erreichen einer Figur oder des Spielfeldrandes.
+     * 
+     * Die Methoden fuer Springer und Koenig aehneln sich ebenfalls, da hier 
+     * nur einmal in jede moegliche Richtung gezogen wird, sofern dieses Feld
+     * existiert und frei ist.
+     * 
+     * Die Methode fuer den Bauern ist etwas anders, da hier wichtig ist, ob
+     * es ein weisser oder ein schwarzer Bauer ist. Ausserdem muss unterschieden
+     * werden, ob ein Feld frei ist, oder ob eine gegnerische Figur dort steht.
+     * Bauern duerfen schliesslich nur schraeg gezogen werden, wenn sie dabei 
+     * eine Figur schlagen koennen.
      */
-    protected boolean istMoeglich(int index) {
-        boolean moeglich = false;
-        if (istFrei(index) || getFigurAt(index).getFarbe() != farbe) {
-            moeglich = true;
-        }
-        return moeglich;
-    }
-    
-    /**
-     * Gibt das Feld mit dem angegebenen Index zur&uuml;ck.
-     * @param index : Der ganzzahlige Index (Zwischen 0 und 63)
-     * @return Ein Objekt vom Typ Feld
-     */
-    protected Feld getFeld(int index) {
-        return spielfeld.getFelder().get(index);
-    }
-    
-    /**
-     * Gibt den Index des Felder zur&uuml;ck, auf dem die Figur steht.
-     * @return Der ganzzahlige Index (Zwischen 0 und 63)
-     */
-    protected int getFeldIndex() {
-        return position.getXK() + position.getYK() * 8;
-    }
-    
-    /**
-     * Gibt die Figur auf dem Feld des angegebenen Index' zur&uuml;ck.
-     * @param index : Der ganzzahlige Index (Zwischen 0 und 63)
-     * @return Eine Figur 
-     */
-    protected Figur getFigurAt(int index) {
-        return getFeld(index).getFigur();
-    }
     
     /**
      * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
@@ -218,6 +162,76 @@ public abstract class Figur {
     }
     
     /**
+     * Gibt an, ob die Figur dem K&ouml;nig auf dem angegebenen Feld Schach
+     * bietet.<br>
+     * Wird nur vom Computergegner bei der Bewertungsfunktion ben&ouml;tigt.
+     * @param koenig Das Feld mit dem gegnerischen Koenig
+     * @return Wahrheitswert, ob Schach geboten wird
+     */
+    public boolean bietetSchach(Feld koenig) {
+        boolean bietetSchach = false;
+        if (getMoeglicheFelder().contains(koenig)) {
+            bietetSchach = true;
+        }
+        return bietetSchach;
+    }
+    
+    /**
+     * Gibt an, ob das Feld am angegebenen Index leer ist.
+     * @param index Ganzzahliger Index (zwischen 0 und 63)
+     * @return <b>true</b> wenn frei
+     */
+    protected boolean istFrei(int index) {
+        boolean frei = false;
+        if (getFigurAt(index) == null) {
+            frei = true;
+        }
+        return frei;
+    }
+    
+    /**
+     * Gibt an, ob das Feld am angegebenen Index nicht von einer eigenen Figur
+     * besetzt ist.
+     * Wenn <b>true</b> zur&uuml;ck gegeben wird, bedeutet das, dass dieses
+     * Feld f&uuml;r einen Zug zur Verf&uuml;gung steht.
+     * @param index Ganzzahliger Index (zwischen 0 und 63)
+     * @return <b>true</b> f&uuml;r leer oder gegnerische Figur
+     */
+    protected boolean istMoeglich(int index) {
+        boolean moeglich = false;
+        if (istFrei(index) || getFigurAt(index).getFarbe() != farbe) {
+            moeglich = true;
+        }
+        return moeglich;
+    }
+    
+    /**
+     * Gibt das Feld mit dem angegebenen Index zur&uuml;ck.
+     * @param index Der ganzzahlige Index (Zwischen 0 und 63)
+     * @return Ein Objekt vom Typ Feld
+     */
+    protected Feld getFeld(int index) {
+        return spielfeld.getFelder().get(index);
+    }
+    
+    /**
+     * Gibt den Index des Felder zur&uuml;ck, auf dem die Figur steht.
+     * @return Der ganzzahlige Index (Zwischen 0 und 63)
+     */
+    protected int getFeldIndex() {
+        return position.getXK() + position.getYK() * 8;
+    }
+    
+    /**
+     * Gibt die Figur auf dem Feld des angegebenen Index' zur&uuml;ck.
+     * @param index Der ganzzahlige Index (Zwischen 0 und 63)
+     * @return Eine Figur 
+     */
+    protected Figur getFigurAt(int index) {
+        return getFeld(index).getFigur();
+    }
+    
+    /**
      * Gibt das Spielfeld zur&uuml;ck, auf dem die Figur steht.
      * @return Das Spielfeld
      */
@@ -227,7 +241,7 @@ public abstract class Figur {
     
     /**
      * Setzt das Spielfeld, auf dem die Figur steht.
-     * @param spielfeld : Das zu setzende Spielfeld
+     * @param spielfeld Das zu setzende Spielfeld
      */
     public void setSpielfeld(Spielfeld spielfeld) {
         this.spielfeld = spielfeld;
@@ -243,7 +257,7 @@ public abstract class Figur {
     
     /**
      * Setzt das Feld, auf dem die Figur steht.
-     * @param position : Das Feld, auf dem die Figur steht
+     * @param position Das Feld, auf dem die Figur steht
      */
     public void setPosition(Feld position) {
         this.position = position;
@@ -259,7 +273,7 @@ public abstract class Figur {
     
     /**
      * Setzt die Farbe der Figur.
-     * @param farbe : <b>true</b> f&uuml;r wei&szlig;, <b>false</b> 
+     * @param farbe <b>true</b> f&uuml;r wei&szlig;, <b>false</b> 
      * f&uuml;r schwarz
      */
     public void setFarbe(boolean farbe) {
@@ -292,7 +306,7 @@ public abstract class Figur {
     
     /**
      * Setzt die Variable, ob die Figur schon gezogen wurde.
-     * @param bereitsGezogen : Wahrheitswert
+     * @param bereitsGezogen Wahrheitswert
      */
     public void setGezogen(boolean bereitsGezogen) {
         this.bereitsGezogen = bereitsGezogen;

@@ -17,8 +17,8 @@ public class Turm extends Figur {
     /**
      * Erzeugt einen neuen Turm.
      * Einziger Konstruktor dieser Klasse.
-     * @param position : Das Feld auf dem die Figur stehen soll
-     * @param farbe : Die Spielfarbe der Figur (<b>true</b> f&uuml;r wei&szlig;
+     * @param position Das Feld auf dem die Figur stehen soll
+     * @param farbe Die Spielfarbe der Figur (<b>true</b> f&uuml;r wei&szlig;
      * , <b>false</b> f&uuml;r schwarz)
      */
     public Turm(Feld position, boolean farbe) {

@@ -84,227 +84,6 @@ public class Computerspieler extends Spieler {
     }
     
     /**
-     * Ein rekursiver Computergegner, der theoretisch beliebig viele Stufen 
-     * untersuchen kann. Ermittelt den besten Zug und zieht ihn.
-     * Praktisch nur sinnvoll f&uuml;r die Stufen 2 und 3.
-     * @param maxStufe Die maximale Suchtiefe (sinnvollerweise 2 oder 3)
-     */
-    private void rekursKI(int maxStufe) {
-        List<Figur> alleFiguren;
-        // Wenn momentan weiss dran ist
-        if (getFarbe()) {
-            alleFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
-        } else {
-            alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
-        }
-        // Maximale Bewertung; initialisiert mit niedrigstem Wert
-        int maxbewertung = 4000;
-        if (getFarbe()) {
-            maxbewertung = -4000;
-        }
-        // Der Zug der durchgefuehrt werden soll
-        List<Figur> besteFiguren = new ArrayList<Figur>();
-        List<Feld> besteFelder = new ArrayList<Feld>();
-        // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
-        for (Figur figur : alleFiguren) {
-            for (Feld feld : figur.getKorrektFelder()) {
-                // Mache den Zug
-                spielfeld.ziehe(figur, feld, 0);
-                // Wenn ein Bauer umgewandelt wird
-                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
-                if (letzterZug instanceof Umwandlungszug) {
-                    spielfeld.umwandeln(letzterZug.getFigur(), 900);
-                }
-                
-                // In Abhaengigkeit der Farbe
-                if (getFarbe()) {
-                    // Bekomme die Bewertung dafuer
-                    int bewertung = min(maxStufe - 1, -4000, 4000);
-                    // Wenn ein neuer MaxWert entsteht (weiss)
-                    if (bewertung > maxbewertung) {
-                        // Loesche bisherige Figuren und Felder
-                        besteFiguren.clear();
-                        besteFelder.clear();
-                        besteFiguren.add(figur);
-                        besteFelder.add(feld);
-                        maxbewertung = bewertung;
-                    // Wenn es eine Alternative mit gleicher Bewertung gibt
-                    } else if (bewertung == maxbewertung) {
-                        // Wird diese hinzugefuegt
-                        besteFiguren.add(figur);
-                        besteFelder.add(feld);
-                    }
-                } else {
-                    // Bekomme die Bewertung dafuer
-                    int bewertung = max(maxStufe - 1, -4000, 4000);
-                    // Wenn ein neuer MinWert entsteht (schwarz)
-                    if (bewertung < maxbewertung) {
-                        // Loesche bisherige Figuren und Felder
-                        besteFiguren.clear();
-                        besteFelder.clear();
-                        besteFiguren.add(figur);
-                        besteFelder.add(feld);
-                        maxbewertung = bewertung;
-                    // Wenn es eine Alternative mit gleicher Bewertung gibt
-                    } else if (bewertung == maxbewertung) {
-                        // Wird diese hinzugefuegt
-                        besteFiguren.add(figur);
-                        besteFelder.add(feld);
-                    }
-                }
-                // Mache den Zug rueckgaengig
-                spielfeld.zugRueckgaengig();
-            }
-        }
-        
-        // Ermittle eine der Alternativen
-        // Erzeugt eine Zufallszahl zwischen 0 und besteFiguren.size() - 1
-        int zufallsIndex = (int) (Math.random() * besteFiguren.size());
-        
-        /* Ist nicht ganz schoen, hilft aber an einigen Stellen und macht den
-         * Algorithmus instabil, sodass der Computer nicht mit den gleichen
-         * Schritten in jeder Partie Matt gesetzt werden kann.
-         */
-        // Wenn es noch einen Zug zu ziehen gibt
-        if (!besteFiguren.isEmpty()) {
-            // Ziehe den besten Zug
-            spielfeld.ziehe(besteFiguren.get(zufallsIndex), 
-                besteFelder.get(zufallsIndex), 0);
-        } else {
-            System.out.println("Matt");
-        }
-    }
-    
-    /**
-     * Berechnet den Maximalwert f&uuml;r die aktuelle Stufe.
-     * @param stufe Die aktuelle Stufe
-     * @param alpha Der Max-Wert
-     * @param beta Der Min-Wert
-     * @return Maximale Bewertung
-     */
-    private int max(int stufe, int alpha, int beta) {
-        if (stufe == 0) {
-            return bewertungsfunktion();
-        }
-        int maxWert = alpha;
-        List<Figur> alleFiguren = new ArrayList<Figur>();
-        // Wenn momentan weiss dran ist
-        if (spielfeld.getAktuellerSpieler()) {
-            alleFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
-        } else {
-            alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
-        }
-        // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
-        for (Figur figur : alleFiguren) {
-            for (Feld feld : figur.getKorrektFelder()) {
-                spielfeld.ziehe(figur, feld, 0);
-                // Wenn ein Bauer umgewandelt wird
-                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
-                if (letzterZug instanceof Umwandlungszug) {
-                    spielfeld.umwandeln(letzterZug.getFigur(), 900);
-                }
-                int wert = min(stufe - 1, maxWert, beta);
-                spielfeld.zugRueckgaengig();
-                if (wert > maxWert) {
-                    maxWert = wert;
-                    if (maxWert >= beta) {
-                        return maxWert;
-                    }
-                }
-            }
-        }
-        return maxWert;
-    }
-    
-    /**
-     * Berechnet den Minimalwert f&uuml;r die aktuelle Stufe.
-     * @param stufe Die aktuelle Stufe
-     * @param alpha Der Max-Wert
-     * @param beta Der Min-Wert
-     * @return Minimale Bewertung
-     */
-    private int min(int stufe, int alpha, int beta) {
-        if (stufe == 0) {
-            return bewertungsfunktion();
-        }
-        int minWert = beta;
-        List<Figur> alleFiguren = new ArrayList<Figur>();
-        // Wenn momentan weiss dran ist
-        if (spielfeld.getAktuellerSpieler()) {
-            alleFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
-        } else {
-            alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
-        }
-        // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
-        for (Figur figur : alleFiguren) {
-            for (Feld feld : figur.getKorrektFelder()) {
-                spielfeld.ziehe(figur, feld, 0);
-                // Wenn ein Bauer umgewandelt wird
-                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
-                if (letzterZug instanceof Umwandlungszug) {
-                    spielfeld.umwandeln(letzterZug.getFigur(), 900);
-                }
-                int wert = max(stufe - 1, alpha, minWert);
-                spielfeld.zugRueckgaengig();
-                if (wert < minWert) {
-                    minWert = wert;
-                    if (minWert <= alpha) {
-                        return minWert;
-                    }
-                }
-            }
-        }
-        return minWert;
-    }
-    
-    // Teile des oben genannten Algorithmus' nach 
-    // "de.wikipedia.org/wiki/Alpha-Beta-Suche" 
-    
-    /**
-     * Bewertet das Spielfeld nach verschiedenen Kriterien.
-     * @return Eine Bewertung in Form einer ganzen Zahl im Bereich von etwa
-     * -4000 bis +4000; <b> positiv </b> ist gut f&uuml;r wei&szlig;,
-     * <b> negativ </b> ist gut f&uuml;r schwarz.
-     */
-    private int bewertungsfunktion() {
-        int bewertung;
-        bewertung = spielfeld.getMaterialwert(true) 
-            - spielfeld.getMaterialwert(false);
-        // Bauern kurz vor der Umwandlung und imSchachStehen
-        int index = 1;
-        while (spielfeld.getSchwarzeFiguren().get(index).getWert() == 100) {
-            Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
-            int y = bauer.getPosition().getYK();
-            if (y <= 3) {
-                bewertung -= 15;
-                if (y <= 2) {
-                    bewertung -= 25;
-                    if (y == 1) {
-                        bewertung -= 30;
-                    }
-                }
-            }
-            index++;
-        }
-        index = 1;
-        while (spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
-            Figur bauer = spielfeld.getWeisseFiguren().get(index);
-            int y = bauer.getPosition().getYK();
-            if (y <= 3) {
-                bewertung += 15;
-                if (y <= 2) {
-                    bewertung += 25;
-                    if (y == 1) {
-                        bewertung += 30;
-                    }
-                }
-            }
-            index++;
-        }
-        return bewertung;
-    }
-    
-    /**
      * F&uuml;hrt einen Computerzug nach relativ simplen Zug-Regeln durch.
      */
     private void nachRegeln() {
@@ -406,6 +185,250 @@ public class Computerspieler extends Spieler {
     }
     
     /**
+     * Ein rekursiver Computergegner, der theoretisch beliebig viele Stufen 
+     * untersuchen kann. <br> Ermittelt den besten Zug und zieht ihn.
+     * Praktisch nur sinnvoll f&uuml;r die Stufen 2 - 4. <br>
+     * Teile der verwendeten Methoden min und max basieren auf dem folgenden
+     * Prinzip {@link de.wikipedia.org/wiki/Alpha-Beta-Suche} 
+     * @param maxStufe Die maximale Suchtiefe (sinnvollerweise zwischen 2 und
+     * 4)
+     */
+    private void rekursKI(int maxStufe) {
+        List<Figur> alleFiguren;
+        // Wenn momentan weiss dran ist
+        if (getFarbe()) {
+            alleFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
+        } else {
+            alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
+        }
+        // Maximale Bewertung; initialisiert mit niedrigstem Wert
+        int maxbewertung = 4000;
+        if (getFarbe()) {
+            maxbewertung = -4000;
+        }
+        // Der Zug der durchgefuehrt werden soll
+        List<Figur> besteFiguren = new ArrayList<Figur>();
+        List<Feld> besteFelder = new ArrayList<Feld>();
+        // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
+        for (Figur figur : alleFiguren) {
+            for (Feld feld : figur.getKorrektFelder()) {
+                // Mache den Zug
+                spielfeld.ziehe(figur, feld, 0);
+                // Wenn ein Bauer umgewandelt wird
+                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
+                if (letzterZug instanceof Umwandlungszug) {
+                    spielfeld.umwandeln(letzterZug.getFigur(), 900);
+                }
+                
+                // In Abhaengigkeit der Farbe
+                if (getFarbe()) {
+                    // Bekomme die Bewertung dafuer
+                    int bewertung = min(maxStufe - 1, -4000, 4000);
+                    // Wenn ein neuer MaxWert entsteht (weiss)
+                    if (bewertung > maxbewertung) {
+                        // Loesche bisherige Figuren und Felder
+                        besteFiguren.clear();
+                        besteFelder.clear();
+                        besteFiguren.add(figur);
+                        besteFelder.add(feld);
+                        maxbewertung = bewertung;
+                    // Wenn es eine Alternative mit gleicher Bewertung gibt
+                    } else if (bewertung == maxbewertung) {
+                        // Wird diese hinzugefuegt
+                        besteFiguren.add(figur);
+                        besteFelder.add(feld);
+                    }
+                } else {
+                    // Bekomme die Bewertung dafuer
+                    int bewertung = max(maxStufe - 1, -4000, 4000);
+                    // Wenn ein neuer MinWert entsteht (schwarz)
+                    if (bewertung < maxbewertung) {
+                        // Loesche bisherige Figuren und Felder
+                        besteFiguren.clear();
+                        besteFelder.clear();
+                        besteFiguren.add(figur);
+                        besteFelder.add(feld);
+                        maxbewertung = bewertung;
+                    // Wenn es eine Alternative mit gleicher Bewertung gibt
+                    } else if (bewertung == maxbewertung) {
+                        // Wird diese hinzugefuegt
+                        besteFiguren.add(figur);
+                        besteFelder.add(feld);
+                    }
+                }
+                // Mache den Zug rueckgaengig
+                spielfeld.zugRueckgaengig();
+            }
+        }
+        
+        // Ermittle eine der Alternativen
+        // Erzeugt eine Zufallszahl zwischen 0 und besteFiguren.size() - 1
+        int zufallsIndex = (int) (Math.random() * besteFiguren.size());
+        
+        /* Ist nicht ganz schoen, hilft aber an einigen Stellen und macht den
+         * Algorithmus instabil, sodass der Computer nicht mit den gleichen
+         * Schritten in jeder Partie Matt gesetzt werden kann.
+         */
+        // Wenn es noch einen Zug zu ziehen gibt
+        if (!besteFiguren.isEmpty()) {
+            // Ziehe den besten Zug
+            spielfeld.ziehe(besteFiguren.get(zufallsIndex), 
+                besteFelder.get(zufallsIndex), 0);
+        }
+    }
+    
+    /**
+     * Berechnet den Maximalwert f&uuml;r die aktuelle Stufe.
+     * @param stufe Die aktuelle Stufe
+     * @param alpha Der Max-Wert
+     * @param beta Der Min-Wert
+     * @return Maximale Bewertung
+     */
+    private int max(int stufe, int alpha, int beta) {
+        if (stufe == 0) {
+            return bewertungsfunktion();
+        }
+        int maxWert = alpha;
+        List<Figur> alleFiguren = new ArrayList<Figur>();
+        // Wenn momentan weiss dran ist
+        if (spielfeld.getAktuellerSpieler()) {
+            alleFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
+        } else {
+            alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
+        }
+        // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
+        for (Figur figur : alleFiguren) {
+            for (Feld feld : figur.getKorrektFelder()) {
+                spielfeld.ziehe(figur, feld, 0);
+                // Wenn ein Bauer umgewandelt wird
+                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
+                if (letzterZug instanceof Umwandlungszug) {
+                    spielfeld.umwandeln(letzterZug.getFigur(), 900);
+                }
+                int wert = min(stufe - 1, maxWert, beta);
+                spielfeld.zugRueckgaengig();
+                if (wert > maxWert) {
+                    maxWert = wert;
+                    if (maxWert >= beta) {
+                        return maxWert;
+                    }
+                }
+            }
+        }
+        return maxWert;
+    }
+    
+    /**
+     * Berechnet den Minimalwert f&uuml;r die aktuelle Stufe.
+     * @param stufe Die aktuelle Stufe
+     * @param alpha Der Max-Wert
+     * @param beta Der Min-Wert
+     * @return Minimale Bewertung
+     */
+    private int min(int stufe, int alpha, int beta) {
+        if (stufe == 0) {
+            return bewertungsfunktion();
+        }
+        int minWert = beta;
+        List<Figur> alleFiguren = new ArrayList<Figur>();
+        // Wenn momentan weiss dran ist
+        if (spielfeld.getAktuellerSpieler()) {
+            alleFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
+        } else {
+            alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
+        }
+        // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
+        for (Figur figur : alleFiguren) {
+            for (Feld feld : figur.getKorrektFelder()) {
+                spielfeld.ziehe(figur, feld, 0);
+                // Wenn ein Bauer umgewandelt wird
+                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
+                if (letzterZug instanceof Umwandlungszug) {
+                    spielfeld.umwandeln(letzterZug.getFigur(), 900);
+                }
+                int wert = max(stufe - 1, alpha, minWert);
+                spielfeld.zugRueckgaengig();
+                if (wert < minWert) {
+                    minWert = wert;
+                    if (minWert <= alpha) {
+                        return minWert;
+                    }
+                }
+            }
+        }
+        return minWert;
+    } 
+    
+    /**
+     * Bewertet das Spielfeld nach verschiedenen Kriterien.
+     * @return Eine Bewertung in Form einer ganzen Zahl im Bereich von etwa
+     * -4000 bis +4000; <b> positiv </b> ist gut f&uuml;r wei&szlig;,
+     * <b> negativ </b> ist gut f&uuml;r schwarz.
+     */
+    private int bewertungsfunktion() {
+        int bewertung;
+        // Materialwert
+        bewertung = spielfeld.getMaterialwert(true) 
+            - spielfeld.getMaterialwert(false);
+        // Bauern kurz vor der Umwandlung
+        int index = 1;
+        while (spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
+            Figur bauer = spielfeld.getWeisseFiguren().get(index);
+            int y = bauer.getPosition().getYK();
+            if (y <= 3) {
+                bewertung += 20;
+                if (y <= 2) {
+                    bewertung += 40;
+                    if (y == 1) {
+                        bewertung += 60;
+                    }
+                }
+            }
+            index++;
+        }
+        index = 1;
+        while (spielfeld.getSchwarzeFiguren().get(index).getWert() == 100) {
+            Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
+            int y = bauer.getPosition().getYK();
+            if (y <= 3) {
+                bewertung -= 20;
+                if (y <= 2) {
+                    bewertung -= 40;
+                    if (y == 1) {
+                        bewertung -= 60;
+                    }
+                }
+            }
+            index++;
+        }
+        // Das Feld des gegnerischen Koenigs
+        Feld koenig;
+        // Der Einfluss auf die Spielbewertung
+        int bonus;
+        if (getFarbe()) {
+            koenig = spielfeld.getSchwarzeFiguren().get(0).getPosition();
+            bonus = 1;
+        } else {
+            koenig = spielfeld.getWeisseFiguren().get(0).getPosition();
+            bonus = -1;
+        }
+        Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
+        Figur figur;
+        if (letzterZug instanceof RochadenZug) {
+            figur = ((RochadenZug) letzterZug).getTurm();
+        } else if (letzterZug instanceof EnPassantZug) {
+            figur = ((EnPassantZug) letzterZug).getAusfuehrer();
+        } else {
+            figur = letzterZug.getFigur();
+        }
+        // Wenn die zuletzt gezogene Figur dem Koenig Schach bietet
+        if (figur.bietetSchach(koenig)) {
+            bewertung += bonus;
+        }
+        return bewertung;
+    }
+    
+    /**
      * Entscheidet, ob ein Unentschieden-Angebot vom Gegner angenommen werden 
      * soll.
      * @return Wahrheitswert
@@ -416,33 +439,40 @@ public class Computerspieler extends Spieler {
         int matWert = spielfeld.getMaterialwert(true) 
             - spielfeld.getMaterialwert(false);
         // Wenn der Computergegner mehr als 500 Punkte weniger hat
-        if ((getFarbe() && matWert < -500) || (!getFarbe() && matWert > 500)) {
+        if ((getFarbe() && matWert < -400) || (!getFarbe() && matWert > 400)) {
             annehmen = true;
         }
         
-        // Test auf 10 Zuege Regel (Variante der offiziellen 50 Zuege Regel
-        // Grundsaetzliche Annahme, die 10 Zuege Regel wuerde zutreffen
+        // Test auf 8 Zuege Regel (Variante der offiziellen 50 Zuege Regel
+        // Grundsaetzliche Annahme, die 8 Zuege Regel wuerde zutreffen
         boolean remis = true;
         int zaehl = 0; 
-        /* Solange noch nicht alle letzten 20 Halbzuege getestet wurden und 
-         * noch keine Anforderung nicht erfuellt wurde
-         */
-        while (remis && zaehl < 20) {
-            // Der zaehlte Zug von hinten
-            Zug zug = spielfeld.getSpieldaten().getZugListe().get(
-                spielfeld.getSpieldaten().getZugListe().size() - zaehl - 1);
-            // Wenn es ein EnPassantZug oder ein Umwandlungszug war
-            if (zug instanceof EnPassantZug || zug instanceof Umwandlungszug) {
-                // Wurde ein Bauer bewegt
-                remis = false;
-            // Wenn es kein RochadenZug war (also ein normaler)
-            } else if (!(zug instanceof RochadenZug)) {
-                // Wenn die Figur ein Bauer war oder eine Figur geschlagen wurde
-                if (zug.getFigur().getWert() == 100 || zug.isSchlagzug()) {
+        // Wenn noch keine 16 Halbzuege gezogen wurden
+        if (spielfeld.getSpieldaten().getZugListe().size() < 16) {
+            remis = false;
+        } else {
+            /* Solange noch nicht alle letzten 20 Halbzuege getestet wurden und 
+             * noch keine Anforderung nicht erfuellt wurde
+             */
+            while (remis && zaehl < 16) {
+                // Der zaehlte Zug von hinten
+                Zug zug = spielfeld.getSpieldaten().getZugListe().get(
+                    spielfeld.getSpieldaten().getZugListe().size() - zaehl - 1);
+                // Wenn es ein EnPassantZug oder ein Umwandlungszug war
+                if (zug instanceof EnPassantZug 
+                    || zug instanceof Umwandlungszug) {
+                    // Wurde ein Bauer bewegt
                     remis = false;
+                // Wenn es kein RochadenZug war (also ein normaler)
+                } else if (!(zug instanceof RochadenZug)) {
+                    // Wenn die Figur ein Bauer war oder eine Figur geschlagen 
+                    // wurde
+                    if (zug.getFigur().getWert() == 100 || zug.isSchlagzug()) {
+                        remis = false;
+                    }
                 }
+                zaehl++;
             }
-            zaehl++;
         }
         // Wenn die Regel zutrifft
         if (remis) {

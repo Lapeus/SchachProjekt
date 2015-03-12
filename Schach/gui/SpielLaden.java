@@ -202,7 +202,7 @@ public class SpielLaden extends JPanel implements ActionListener {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                JOptionPane.showMessageDialog(parent, "Wählen sie ein Spiel "
+                JOptionPane.showMessageDialog(parent, "Wählen Sie ein Spiel "
                     + "zum laden aus");
             }
             

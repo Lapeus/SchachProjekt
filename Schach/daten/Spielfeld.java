@@ -42,28 +42,28 @@ public class Spielfeld {
     private List<Feld> felder = new ArrayList<Feld>();
     
     /**
-     * Eine Liste mit allen schwarzen Figuren, die sich noch im Spiel befinden,
-     * nach aufsteigendem Wert sortiert.
-     */
-    private List<Figur> schwarzeFiguren = new ArrayList<Figur>();
-    
-    /**
      * Eine Liste mit allen wei&szlig;en Figuren, die sich noch im Spiel 
      * befinden, nach aufsteigendem Wert sortiert.
      */
     private List<Figur> weisseFiguren = new ArrayList<Figur>();
     
     /**
-     * Eine Liste mit allen geschlagenen schwarzen Figuren, nach absteigendem
-     * Wert sortiert.
+     * Eine Liste mit allen schwarzen Figuren, die sich noch im Spiel befinden,
+     * nach aufsteigendem Wert sortiert.
      */
-    private List<Figur> geschlagenSchwarz = new ArrayList<Figur>();
+    private List<Figur> schwarzeFiguren = new ArrayList<Figur>();
     
     /**
      * Eine Liste mit allen geschlagenen wei&szlig;en Figuren, nach absteigendem
      * Wert sortiert.
      */
     private List<Figur> geschlagenWeiss = new ArrayList<Figur>();
+    
+    /**
+     * Eine Liste mit allen geschlagenen schwarzen Figuren, nach absteigendem
+     * Wert sortiert.
+     */
+    private List<Figur> geschlagenSchwarz = new ArrayList<Figur>();
     
     /**
      * Eine Liste mit den Feldern der bedrohten Figuren.
@@ -120,6 +120,15 @@ public class Spielfeld {
      * aufgerufen werden k&ouml;nnen muss.
      */
     public void init() {
+     // Acht weisse Bauern
+        for (int i = 1; i <= 8; i++) {
+            // Erstellen
+            Bauer bauer = new Bauer(felder.get(7 + i), true);
+            // Der Liste hinzufuegen
+            weisseFiguren.add(bauer);
+            // Dem Feld die Figur hinzufuegen
+            felder.get(7 + i).setFigur(bauer);
+        }
         // Acht schwarze Bauern
         for (int i = 1; i <= 8; i++) {
             // Erstellen
@@ -129,81 +138,78 @@ public class Spielfeld {
             // Dem Feld die Figur hinzufuegen
             felder.get(47 + i).setFigur(bauer);
         }
-        // Acht weisse Bauern
-        for (int i = 1; i <= 8; i++) {
-            // Erstellen
-            Bauer bauer = new Bauer(felder.get(7 + i), true);
-            // Der Liste hinzufuegen
-            weisseFiguren.add(bauer);
-            // Dem Feld die Figur hinzufuegen
-            felder.get(7 + i).setFigur(bauer);
-        }
-        // Zwei schwarze Springer erstellen
-        Springer springer = new Springer(felder.get(57), false);
-        schwarzeFiguren.add(springer);
-        felder.get(57).setFigur(springer);
-        springer = new Springer(felder.get(62), false);
-        schwarzeFiguren.add(springer);
-        felder.get(62).setFigur(springer);
         // Zwei weisse Springer erstellen
-        springer = new Springer(felder.get(1), true);
+        Springer springer = new Springer(felder.get(1), true);
         weisseFiguren.add(springer);
         felder.get(1).setFigur(springer);
         springer = new Springer(felder.get(6), true);
         weisseFiguren.add(springer);
         felder.get(6).setFigur(springer);
-        // Zwei schwarze Laeufer erstellen
-        Laeufer laeufer = new Laeufer(felder.get(58), false);
-        schwarzeFiguren.add(laeufer);
-        felder.get(58).setFigur(laeufer);
-        laeufer = new Laeufer(felder.get(61), false);
-        schwarzeFiguren.add(laeufer);
-        felder.get(61).setFigur(laeufer);
+        // Zwei schwarze Springer erstellen
+        springer = new Springer(felder.get(57), false);
+        schwarzeFiguren.add(springer);
+        felder.get(57).setFigur(springer);
+        springer = new Springer(felder.get(62), false);
+        schwarzeFiguren.add(springer);
+        felder.get(62).setFigur(springer);
+        
         // Zwei weisse Laeufer erstellen
-        laeufer = new Laeufer(felder.get(2), true);
+        Laeufer laeufer = new Laeufer(felder.get(2), true);
         weisseFiguren.add(laeufer);
         felder.get(2).setFigur(laeufer);
         laeufer = new Laeufer(felder.get(5), true);
         weisseFiguren.add(laeufer);
         felder.get(5).setFigur(laeufer);
-        // Zwei schwarze Tuerme erstellen
-        Turm turm = new Turm(felder.get(56), false);
-        schwarzeFiguren.add(turm);
-        felder.get(56).setFigur(turm);
-        turm = new Turm(felder.get(63), false);
-        schwarzeFiguren.add(turm);
-        felder.get(63).setFigur(turm);
+        // Zwei schwarze Laeufer erstellen
+        laeufer = new Laeufer(felder.get(58), false);
+        schwarzeFiguren.add(laeufer);
+        felder.get(58).setFigur(laeufer);
+        laeufer = new Laeufer(felder.get(61), false);
+        schwarzeFiguren.add(laeufer);
+        felder.get(61).setFigur(laeufer);
+        
         // Zwei weisse Tuerme erstellen
-        turm = new Turm(felder.get(0), true);
+        Turm turm = new Turm(felder.get(0), true);
         weisseFiguren.add(turm);
         felder.get(0).setFigur(turm);
         turm = new Turm(felder.get(7), true);
         weisseFiguren.add(turm);
         felder.get(7).setFigur(turm);
-        // Eine schwarze Dame erstellen
-        Dame dame = new Dame(felder.get(59), false);
-        schwarzeFiguren.add(dame);
-        felder.get(59).setFigur(dame);
+        // Zwei schwarze Tuerme erstellen
+        turm = new Turm(felder.get(56), false);
+        schwarzeFiguren.add(turm);
+        felder.get(56).setFigur(turm);
+        turm = new Turm(felder.get(63), false);
+        schwarzeFiguren.add(turm);
+        felder.get(63).setFigur(turm);
+        
         // Eine weisse Dame erstellen
-        dame = new Dame(felder.get(3), true);
+        Dame dame = new Dame(felder.get(3), true);
         weisseFiguren.add(dame);
         felder.get(3).setFigur(dame);
-        // Einen schwarzen Koenig erstellen
-        Koenig koenig = new Koenig(felder.get(60), false);
-        schwarzeFiguren.add(koenig);
-        felder.get(60).setFigur(koenig);
+        // Eine schwarze Dame erstellen
+        dame = new Dame(felder.get(59), false);
+        schwarzeFiguren.add(dame);
+        felder.get(59).setFigur(dame);
+        
         // Einen weissen Koenig erstellen
-        koenig = new Koenig(felder.get(4), true);
+        Koenig koenig = new Koenig(felder.get(4), true);
         weisseFiguren.add(koenig);
         felder.get(4).setFigur(koenig);
+        // Einen schwarzen Koenig erstellen
+        koenig = new Koenig(felder.get(60), false);
+        schwarzeFiguren.add(koenig);
+        felder.get(60).setFigur(koenig);
+        
         
         // Allen Feldern das Spielfeld zufuegen
-        for (Figur figur : schwarzeFiguren) {
-            figur.setSpielfeld(this);
-        }
         for (Figur figur : weisseFiguren) {
             figur.setSpielfeld(this);
         }
+        for (Figur figur : schwarzeFiguren) {
+            figur.setSpielfeld(this);
+        }
+        
     }
     
     /**
@@ -555,31 +561,6 @@ public class Spielfeld {
             schwarzeFiguren.remove(figur);
             schwarzeFiguren.add(neueFigur);
         }
-        System.out.println(weisseFiguren.size());
-        System.out.println("");
-    }
-    
-    /**
-     * Sortiert eine Liste von Figuren aufsteigend nach Wert. <br>
-     * Verwendet den rekursiven Bubble-Sort-Algorithmus.
-     * @param figuren Eine Liste von Figuren die sortiert werden soll
-     * @return Die sortierte Liste
-     */
-    private List<Figur> sortiereListe(List<Figur> figuren) {
-        // Temporaere Figur
-        Figur temp;
-        for (int i = 0; i < figuren.size() - 1; i++) {
-            // Wenn zwei Figuren in der falschen Reihenfolge sind
-            if (figuren.get(i).getWert() > figuren.get(i + 1).getWert()) {
-                // Werden sie getauscht
-                temp = figuren.get(i);
-                figuren.set(i, figuren.get(i + 1));
-                figuren.set(i + 1, temp);
-                // Rekursiver Aufruf
-                sortiereListe(figuren);
-            }
-        }
-        return figuren;
     }
     
     /**
@@ -655,176 +636,6 @@ public class Spielfeld {
         }
         return letzteFelder;
     }
-    /**
-     * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
-     * Wird beim Speichern ben&ouml;tigt.
-     * @return Eine mehrzeilige Zeichenkette
-     */
-    public String toString() {
-        String string;
-        String lineSep = System.getProperty("line.separator");
-        string = aktuellerSpieler + lineSep;
-        string += "Weisse Figuren" + lineSep;
-        for (Figur figur : weisseFiguren) {
-            string += figur.toString();
-        }
-        string += lineSep;
-        string += "Schwarze Figuren" + lineSep;
-        for (Figur figur : schwarzeFiguren) {
-            string += figur.toString();
-        }
-        string += lineSep;
-        string += "Geschlagene weisse Figuren" + lineSep;
-        for (Figur figur : geschlagenWeiss) {
-            string += figur.toString();
-        }
-        string += lineSep;
-        string += "Geschlagene schwarze Figuren" + lineSep;
-        for (Figur figur : geschlagenSchwarz) {
-            string += figur.toString();
-        }
-        string += lineSep;
-        string += einstellungen.toString() + lineSep;
-        string += spieldaten.toString();
-        return string;
-    }
-    /**
-     * Gibt die Spieldaten zur&uuml;ck.
-     * @return Die Spieldaten
-     */
-    public Spieldaten getSpieldaten() {
-        return spieldaten;
-    }
-
-    /**
-     * Setzt die Spieldaten.
-     * @param spieldaten Die Spieldaten
-     */
-    public void setSpieldaten(Spieldaten spieldaten) {
-        this.spieldaten = spieldaten;
-    }
-    
-    /**
-     * Gibt die Einstellungen des Spiels zur&uuml;ck.
-     * @return Die Einstellungen
-     */
-    public Einstellungen getEinstellungen() {
-        return einstellungen;
-    }
-
-    /**
-     * Setzt die Einstellungen des Spiels.
-     * @param einstellungen Die Einstellungen
-     */
-    public void setEinstellungen(Einstellungen einstellungen) {
-        this.einstellungen = einstellungen;
-    }
-    
-    /**
-     * Gibt die Liste der Felder zur&uuml;ck.
-     * @return Liste von Feldern
-     */
-    public List<Feld> getFelder() {
-        return felder;
-    }
-    
-    /**
-     * Gibt die schwarzen noch im Spiel befindlichen Figuren zur&uuml;ck.
-     * @return Liste von schwarzen Figuren
-     */
-    public List<Figur> getSchwarzeFiguren() {
-        return sortiereListe(schwarzeFiguren);
-    }
-    
-    /**
-     * Setzt die Liste der schwarzen Figuren. <br>
-     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
-     * @param schwarzeFiguren Die Liste der schwarzen Figuren
-     */
-    public void setSchwarzeFiguren(List<Figur> schwarzeFiguren) {
-        this.schwarzeFiguren = schwarzeFiguren;
-    }
-    
-    /**
-     * Gibt die wei&szlig;en noch im Spiel befindlichen Figuren zur&uuml;ck.
-     * @return Liste von wei&szlig;en Figuren
-     */
-    public List<Figur> getWeisseFiguren() {
-        return sortiereListe(weisseFiguren);
-    }
-    
-    /**
-     * Setzt die Liste der wei&szlig;en Figuren. <br>
-     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
-     * @param weisseFiguren Die Liste der wei&szlig;en Figuren
-     */
-    public void setWeisseFiguren(List<Figur> weisseFiguren) {
-        this.weisseFiguren = weisseFiguren;
-    }
-    
-    /**
-     * Gibt die geschlagenen schwarzen Figuren zur&uuml;ck.
-     * @return Liste von schwarzen Figuren
-     */
-    public List<Figur> getGeschlagenSchwarz() {
-        return geschlagenSchwarz;
-    }
-    
-    /**
-     * Setzt die Liste der geschlagenen schwarzen Figuren. <br>
-     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
-     * @param geschlagenSchwarz Die Liste der geschlagenen schwarzen Figuren
-     */
-    public void setGeschlagenSchwarz(List<Figur> geschlagenSchwarz) {
-        this.geschlagenSchwarz = geschlagenSchwarz;
-    }
-    
-    /**
-     * Gibt die geschlagenen wei&szlig;en Figuren zur&uuml;ck.
-     * @return Liste von wei&szlig;en Figuren
-     */
-    public List<Figur> getGeschlagenWeiss() {
-        return geschlagenWeiss;
-    }
-    
-    /**
-     * Setzt die Liste der geschlagenen wei&szlig;en Figuren. <br>
-     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
-     * @param geschlagenWeiss Die Liste der geschlagenen wei&szlig;en Figuren
-     */
-    public void setGeschlagenWeiss(List<Figur> geschlagenWeiss) {
-        this.geschlagenWeiss = geschlagenWeiss;
-    }
-    
-    /**
-     * Gibt die geschlagenen schwarzen Figuren nach aufsteigendem Wert 
-     * zur&uuml;ck.
-     * @return Liste von schwarzen Figuren
-     */
-    public List<Figur> getGeschlagenSchwarzSort() {
-        return sortiereListe(clone(geschlagenSchwarz));
-    }
-    
-    /**
-     * Gibt die geschlagenen wei&szlig;en Figuren nach aufsteigendem Wert
-     * zur&uuml;ck.
-     * @return Liste von wei&szlig;en Figuren
-     */
-    public List<Figur> getGeschlagenWeissSort() {
-        return sortiereListe(clone(geschlagenWeiss));
-    }
-    
-    /**
-     * Klont die angegebene Liste damit keine CurrentModificationException bei
-     * Schleifendurchl&auml;ufen auftritt.
-     * @param figuren Die zu klonende Figuren-Liste
-     * @return Der Klon der Figuren-Liste
-     */
-    public List<Figur> clone(List<Figur> figuren) {
-        List<Figur> figurenCopy = new ArrayList<Figur>();
-        figurenCopy.addAll(figuren);
-        return figurenCopy;
-    }
     
     /**
      * Gibt eine Liste von den aktuell bedrohten Feldern auf denen eine Figur
@@ -866,39 +677,6 @@ public class Spielfeld {
     }
     
     /**
-     * Gibt an, welcher Spieler am Zug ist und ob das Brett momentan von 
-     * Wei&szlig; oder von Schwarz aus gesehen wird.
-     * @return <b>true</b> f&uuml;r wei&szlig;, <b>false</b> f&uuml;r schwarz
-     */
-    public boolean getAktuellerSpieler() {
-        return aktuellerSpieler;
-    }
-
-    /**
-     * Gibt an, ob der aktuelle Spieler im Schach steht.<br>
-     * Wird nur f&uuml;r die Konversation zwischen Logik und GUI verwendet.
-     * @return Wahrheitswert
-     */
-    public boolean isSchach() {
-        List<Feld> bedrohteFelder = getBedrohteFelder();
-        for (Feld bedroht : bedrohteFelder) {
-            // Wenn es der Koenig ist, steht er nun im Schach
-            if (bedroht.getFigur().getWert() == 0) {
-                schach = true;
-            }
-        }
-        return schach;
-    }
-
-    /**
-     * Setzt, ob der aktuelle Spieler im Schach steht.
-     * @param schach Wahrheitswert
-     */
-    public void setSchach(boolean schach) {
-        this.schach = schach;
-    }
-
-    /**
      * Gibt eine Liste mit den Feldern zur&uuml;ck, auf denen gegnerische 
      * Figuren stehen und welche in diesem Zug vom aktiven Spieler geschlagen
      * werden k&ouml;nnen.<br>
@@ -935,6 +713,234 @@ public class Spielfeld {
             }
         }
         return schlagendeFelder;
+    }
+    
+    /**
+     * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
+     * Wird beim Speichern ben&ouml;tigt.
+     * @return Eine mehrzeilige Zeichenkette
+     */
+    public String toString() {
+        String string;
+        String lineSep = System.getProperty("line.separator");
+        string = aktuellerSpieler + lineSep;
+        string += "Weisse Figuren" + lineSep;
+        for (Figur figur : weisseFiguren) {
+            string += figur.toString();
+        }
+        string += lineSep;
+        string += "Schwarze Figuren" + lineSep;
+        for (Figur figur : schwarzeFiguren) {
+            string += figur.toString();
+        }
+        string += lineSep;
+        string += "Geschlagene weisse Figuren" + lineSep;
+        for (Figur figur : geschlagenWeiss) {
+            string += figur.toString();
+        }
+        string += lineSep;
+        string += "Geschlagene schwarze Figuren" + lineSep;
+        for (Figur figur : geschlagenSchwarz) {
+            string += figur.toString();
+        }
+        string += lineSep;
+        string += einstellungen.toString() + lineSep;
+        string += spieldaten.toString();
+        return string;
+    }
+    
+    /**
+     * Klont die angegebene Liste damit keine CurrentModificationException bei
+     * Schleifendurchl&auml;ufen auftritt.
+     * @param figuren Die zu klonende Figuren-Liste
+     * @return Der Klon der Figuren-Liste
+     */
+    public List<Figur> clone(List<Figur> figuren) {
+        List<Figur> figurenCopy = new ArrayList<Figur>();
+        figurenCopy.addAll(figuren);
+        return figurenCopy;
+    }
+    
+    /**
+     * Sortiert eine Liste von Figuren aufsteigend nach Wert. <br>
+     * Verwendet den rekursiven Bubble-Sort-Algorithmus.
+     * @param figuren Eine Liste von Figuren die sortiert werden soll
+     * @return Die sortierte Liste
+     */
+    private List<Figur> sortiereListe(List<Figur> figuren) {
+        // Temporaere Figur
+        Figur temp;
+        for (int i = 0; i < figuren.size() - 1; i++) {
+            // Wenn zwei Figuren in der falschen Reihenfolge sind
+            if (figuren.get(i).getWert() > figuren.get(i + 1).getWert()) {
+                // Werden sie getauscht
+                temp = figuren.get(i);
+                figuren.set(i, figuren.get(i + 1));
+                figuren.set(i + 1, temp);
+                // Rekursiver Aufruf
+                sortiereListe(figuren);
+            }
+        }
+        return figuren;
+    }
+    
+    /**
+     * Gibt die Spieldaten zur&uuml;ck.
+     * @return Die Spieldaten
+     */
+    public Spieldaten getSpieldaten() {
+        return spieldaten;
+    }
+
+    /**
+     * Setzt die Spieldaten.
+     * @param spieldaten Die Spieldaten
+     */
+    public void setSpieldaten(Spieldaten spieldaten) {
+        this.spieldaten = spieldaten;
+    }
+    
+    /**
+     * Gibt die Einstellungen des Spiels zur&uuml;ck.
+     * @return Die Einstellungen
+     */
+    public Einstellungen getEinstellungen() {
+        return einstellungen;
+    }
+
+    /**
+     * Setzt die Einstellungen des Spiels.
+     * @param einstellungen Die Einstellungen
+     */
+    public void setEinstellungen(Einstellungen einstellungen) {
+        this.einstellungen = einstellungen;
+    }
+    
+    /**
+     * Gibt die Liste der Felder zur&uuml;ck.
+     * @return Liste von Feldern
+     */
+    public List<Feld> getFelder() {
+        return felder;
+    }
+    
+    /**
+     * Gibt die wei&szlig;en noch im Spiel befindlichen Figuren zur&uuml;ck.
+     * @return Liste von wei&szlig;en Figuren
+     */
+    public List<Figur> getWeisseFiguren() {
+        return sortiereListe(weisseFiguren);
+    }
+    
+    /**
+     * Setzt die Liste der wei&szlig;en Figuren. <br>
+     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
+     * @param weisseFiguren Die Liste der wei&szlig;en Figuren
+     */
+    public void setWeisseFiguren(List<Figur> weisseFiguren) {
+        this.weisseFiguren = weisseFiguren;
+    }
+    
+    /**
+     * Gibt die schwarzen noch im Spiel befindlichen Figuren zur&uuml;ck.
+     * @return Liste von schwarzen Figuren
+     */
+    public List<Figur> getSchwarzeFiguren() {
+        return sortiereListe(schwarzeFiguren);
+    }
+    
+    /**
+     * Setzt die Liste der schwarzen Figuren. <br>
+     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
+     * @param schwarzeFiguren Die Liste der schwarzen Figuren
+     */
+    public void setSchwarzeFiguren(List<Figur> schwarzeFiguren) {
+        this.schwarzeFiguren = schwarzeFiguren;
+    }
+    
+    /**
+     * Gibt die geschlagenen wei&szlig;en Figuren zur&uuml;ck.
+     * @return Liste von wei&szlig;en Figuren
+     */
+    public List<Figur> getGeschlagenWeiss() {
+        return geschlagenWeiss;
+    }
+    
+    /**
+     * Setzt die Liste der geschlagenen wei&szlig;en Figuren. <br>
+     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
+     * @param geschlagenWeiss Die Liste der geschlagenen wei&szlig;en Figuren
+     */
+    public void setGeschlagenWeiss(List<Figur> geschlagenWeiss) {
+        this.geschlagenWeiss = geschlagenWeiss;
+    }
+    
+    /**
+     * Gibt die geschlagenen schwarzen Figuren zur&uuml;ck.
+     * @return Liste von schwarzen Figuren
+     */
+    public List<Figur> getGeschlagenSchwarz() {
+        return geschlagenSchwarz;
+    }
+    
+    /**
+     * Setzt die Liste der geschlagenen schwarzen Figuren. <br>
+     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
+     * @param geschlagenSchwarz Die Liste der geschlagenen schwarzen Figuren
+     */
+    public void setGeschlagenSchwarz(List<Figur> geschlagenSchwarz) {
+        this.geschlagenSchwarz = geschlagenSchwarz;
+    }
+    
+    /**
+     * Gibt die geschlagenen wei&szlig;en Figuren nach aufsteigendem Wert
+     * zur&uuml;ck.
+     * @return Liste von wei&szlig;en Figuren
+     */
+    public List<Figur> getGeschlagenWeissSort() {
+        return sortiereListe(clone(geschlagenWeiss));
+    }
+    
+    /**
+     * Gibt die geschlagenen schwarzen Figuren nach aufsteigendem Wert 
+     * zur&uuml;ck.
+     * @return Liste von schwarzen Figuren
+     */
+    public List<Figur> getGeschlagenSchwarzSort() {
+        return sortiereListe(clone(geschlagenSchwarz));
+    }
+    
+    /**
+     * Gibt an, welcher Spieler am Zug ist und ob das Brett momentan von 
+     * Wei&szlig; oder von Schwarz aus gesehen wird.
+     * @return <b>true</b> f&uuml;r wei&szlig;, <b>false</b> f&uuml;r schwarz
+     */
+    public boolean getAktuellerSpieler() {
+        return aktuellerSpieler;
+    }
+
+    /**
+     * Gibt an, ob der aktuelle Spieler im Schach steht.<br>
+     * Wird nur f&uuml;r die Konversation zwischen Logik und GUI verwendet.
+     * @return Wahrheitswert
+     */
+    public boolean isSchach() {
+        List<Feld> bedrohteFelder = getBedrohteFelder();
+        for (Feld bedroht : bedrohteFelder) {
+            // Wenn es der Koenig ist, steht er nun im Schach
+            if (bedroht.getFigur().getWert() == 0) {
+                schach = true;
+            }
+        }
+        return schach;
+    }
+
+    /**
+     * Setzt, ob der aktuelle Spieler im Schach steht.
+     * @param schach Wahrheitswert
+     */
+    public void setSchach(boolean schach) {
+        this.schach = schach;
     }
     
 }
