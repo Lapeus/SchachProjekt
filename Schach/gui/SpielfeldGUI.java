@@ -228,6 +228,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private List<Zug> spielvideo = null;
     
+    /**
+     * Wenn das Spiel zu ende ist dann muss der Timer das wissen.
+     */
+    private boolean wiederholung = false; 
+    
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -398,14 +403,19 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Zugzeit fuer den ersten Zug starten
         start();
 
+        // SpielfeldGUI erstellen
+        spielfeldAufbau();
+        
         /* Wenn ein Computerspieler mitspielt und anfangen soll muss er hier 
          * den ersten Zug machen
          */
         wennComputerDannZiehen();
-        
-        // SpielfeldGUI erstellen
-        spielfeldAufbau();
-
+        // Den Zug des Computers makieren
+        if (istComputerSpielerUndIstAmZug()) {
+            for (Feld feld : spielfeld.getLetzteFelder()) {
+                feld.setBackground(gruen);
+            }
+        }
     }
     /**
      * Dient zum Updaten der SpielfeldGUI nach jeder Veränderung. 
@@ -663,6 +673,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 spielfeldAufbau();
                 start();
             }
+            for (Feld feld : spielfeld.getLetzteFelder()) {
+                feld.setBackground(gruen);
+            }
         }
     }
     
@@ -719,7 +732,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             for (Feld feld : felderListe) {
                 feld.removeMouseListener(this);
             }
-            // Den letzten Zug kenntlich machen
+            // Spielende Screen
             this.remove(cEast);
             cEndeErstellen();
             this.add(cEnde, BorderLayout.EAST);
@@ -848,12 +861,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 }
                 // Wenn das Spiel nicht vorbei ist 
                 if (!spielVorbei) {
-                    // Spielfeld aufbauen
-                    spielfeldAufbau();
-                    // Letzten Zug anzeigen
-                    for (Feld feld : spielfeld.getLetzteFelder()) {
-                        feld.setBackground(gruen);
-                    }
                     // autosave initiieren
                     parent.autoSave(spiel);
                 } 
@@ -1019,6 +1026,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 "Speichern", JOptionPane.INFORMATION_MESSAGE);
         }
         if (e.getSource().equals(btnWiederholung)) {
+            wiederholung = true;
+            start();
             if (zaehler == -1) {
                 spielvideo = spiel.spielvideo();
             } else {
@@ -1038,6 +1047,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             zaehler++;
             if (zaehler == spielvideo.size()) {
                 btnWiederholung.setEnabled(false);
+                wiederholung = false;
             }
         }
     }
@@ -1112,6 +1122,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if (begrenzung > 0 && sekundenStopp / 1000 >= begrenzung) {
                 aufgeben.doClick();
             }
+            if (btnWiederholung.isEnabled()) {
+                if (wiederholung && sekundenStopp >= 3000) {
+                    btnWiederholung.doClick();
+                    spielfeldAufbau();
+                    start();
+                }
+            }
+            
         }
     }
     

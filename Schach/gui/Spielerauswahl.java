@@ -109,7 +109,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
      * ButtonGroup aus der im ActionListener die Farbauswahl für Spieler 1 
      * ausgelsen wird.
      */
-    private ButtonGroup bGFarbauswahl;
+    private ButtonGroup bGFarbauswahl; 
 
     // Ende Attribute
     
@@ -148,6 +148,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         lSpielname.setMinimumSize(new Dimension(150, 50));
         cNorth.add(lSpielname, gbc);
         tSpielname.setBackground(cHellesBeige);
+        tSpielname.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space ");
         gbc.gridy = 1;
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -273,9 +274,11 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         
         if (seite.equals("West")) {
             nameWEST.setBackground(cHellesBeige);
+            nameWEST.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space ");
             eingabePanel.add(nameWEST);
         } else {
             nameEAST.setBackground(cHellesBeige);
+            nameEAST.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space ");
             eingabePanel.add(nameEAST);
         }
         eingabePanel.setBackground(cBraunRot);
@@ -332,82 +335,25 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         String nameEast = (String) boxEAST.getSelectedItem();
         // Wenn der "Spiel starten"-Button gedrueckt wird
         if (arg0.getActionCommand().equals("Spiel starten")) {
-            /* Wenn zwei Spielernamen und ein Spielname vorhanden sind
-             * !Zwei gleiche Spielnamen
-             * !Zwei gleiche Spielernamen
-             * !Spiel existisiert bereits
-             */  
-            if (!((nameWEST.getText().equals("")) 
-                || nameEAST.getText().equals("")
-                || nameWEST.getText().equals(nameEAST.getText())
-                || tSpielname.getText().equals("")
-                || spielIstBereitsVorhanden(tSpielname.getText()))) {
-                // Wenn Spieler1 ein neuer Spieler ist
-                if (nameWest.equals("neuer Spieler")) { 
-                    // Wenn kein spieler mit diesem namen vorhanden ist
-                    if (istBereitsVorhanden(nameWEST.getText()) == null) {
-                        spieler1 = new Spieler(nameWEST.getText());
-                        parent.addSpieler(spieler1);
-                    } else {
-                        JOptionPane.showMessageDialog(parent, "Der Spieler " 
-                            + nameWEST.getText() + " existiert bereits!", 
-                            "Fehlerhafte Eingabe", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                // Wenn Spieler2 ein neuer Spieler ist
-                if (nameEast.equals("neuer Spieler")) {
-                    if (istBereitsVorhanden(nameEAST.getText()) == null) {
-                        spieler2 = new Spieler(nameEAST.getText());
-                        parent.addSpieler(spieler2);
-                    } else {
-                        JOptionPane.showMessageDialog(parent, "Der Spieler " 
-                            + nameEAST.getText() + " existiert bereits!", 
-                            "Fehlerhafte Eingabe", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            
-                // Wenn Spieler1 ein bereits vorhandener Spieler ist
-                if (istBereitsVorhanden(nameWest) != null) {
-                    spieler1 = istBereitsVorhanden(nameWest);
-                }
-                // Wenn Spieler2 ein bereits vorhandener Spieler ist
-                if (istBereitsVorhanden(nameEast) != null) {
-                    spieler2 = istBereitsVorhanden(nameEast);
-                }
-               
-                
-                // Wenn Spieler 1 die Farbe weiss ausgewählt hat
-                if (spieler1 != null && spieler2 != null) {
-                    if (bGFarbauswahl.getSelection().
-                        getActionCommand().equals("weiss")) {
-                        spieler1.setFarbe(true);
-                        spieler2.setFarbe(false);
-                    // Wenn Spieler 1 die Farbe schwarz ausgewählt hat
-                    } else {
-                        spieler1.setFarbe(false);
-                        spieler2.setFarbe(true);
-                    }
-                    /* Die Pane für das Hauptfenster auf eine neue SpielfeldGUI
-                     * setzten und die oben gefilterten Parameter für 
-                     * spielernamen und Spielnamen übergben
-                    */
-                    parent.setContentPane(new SpielfeldGUI(parent,
-                        tSpielname.getText(), spieler1, spieler2));
-                    parent.revalidate();
-                }  
-            } else {
-                JOptionPane.showMessageDialog(parent, "Geben sie bitte gültige"
-                    + " Namen für die das Spiel und die Spieler ein bzw. wählen"
-                    + " sie bereits vorhandenen Spielerprofile aus",
-                    "Fehlerhafte Eingabe", JOptionPane.WARNING_MESSAGE);
+            // Wenn alle Felder korrekt ausgefüllt sind
+            if (wennFelderKorrekt(nameWest, nameEast)) {
+                // Dann wird mit diesen ein neues Spiel erstellt
+                spielErstellen(nameWest, nameEast);
             }
         } 
+        // Wenn eine neue Spielerauswahl für den Spieler1 getroffen wurde
         if (arg0.getSource().equals(boxWEST)) {
+            // Wenn es nicht der neue Spieler reiter ist
             if (!nameWest.equals("neuer Spieler")) {
+                // Das Namensfeld auf diesen Spielernamen setzten 
                 nameWEST.setText(nameWest);
+                // Und verhindern, dass der name geändert werden kann
                 nameWEST.setEditable(false);
+            // Wenn es der neue Spieler reiter ist 
             } else {
+                // Dann jeden Text löschen
                 nameWEST.setText("");
+                // dafür sorgen, dass man einen namne eingeben kann
                 nameWEST.setEditable(true);
             }
         }
@@ -421,4 +367,141 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             }
         }
     }
+    
+    /**
+     * Prueft ob alle Felder Korrekte eingaben enthalten.
+     * @param nameWest name im westlichen Textfeld(Spieler 1)
+     * @param nameEast name im oestlichen Textfeld(Spieler 2)
+     * @return true wenn alle Felder Korrekt sind
+     */
+    private boolean wennFelderKorrekt(String nameWest, String nameEast) {
+        boolean korrekt = true;
+        String fehlermeldung = "";
+        String spieler1 = nameWEST.getText();
+        String spieler2 = nameEAST.getText();
+        if (nameWest.equals("") || !enthaehltKorrekteZeichen(spieler1)) {
+            fehlermeldung = "Geben sie einen korrekten Namen für Spieler1 an!";
+        } else if (nameEast.equals("") 
+            || !enthaehltKorrekteZeichen(spieler2)) {
+            fehlermeldung = "Geben sie einen korrekten Namen für Spieler2 an!";
+        } else if (nameWEST.getText().equals(nameEAST.getText())) {
+            fehlermeldung = "Beide Spieler haben den gleichen Namen!";
+        } else if (tSpielname.getText().equals("") 
+            || !enthaehltKorrekteZeichen(tSpielname.getText())) {
+            fehlermeldung = "Geben sie einen korrekten Spielnamen ein!";
+        } else if (spielIstBereitsVorhanden(tSpielname.getText())) {
+            fehlermeldung = "Es existiert bereits ein Spiel mit diesem namen!";
+        }
+        if (!(fehlermeldung.equals(""))) {
+            korrekt = false;
+            parent.soundAbspielen("FehlerhafteEingabe.wav");
+            JOptionPane.showMessageDialog(parent, fehlermeldung);
+        }
+        return korrekt;
+    }
+    
+    /**
+     * Ueberprueft ob eine Zeichenkette nur die zeichen 0..9/a..z/A..Z enthaelt.
+     * @param zeichenKette zu ueberpruefende Zeichenkette
+     * @return true wenn alle Zeichen gueltig sind sonst false
+     */
+    private boolean enthaehltKorrekteZeichen(String zeichenKette) {
+        // man geht von einer korrekten Zeichenkette aus
+        boolean korrekt = true;
+        // für jeden Charakter
+        if (!zeichenKette.equals("")) {
+            for (int i = 0; i < zeichenKette.length(); i++) {
+                char zeichen = zeichenKette.charAt(i);
+                int nummer = zeichen;
+                // Wenn es kein Zeichen zwischen 0..9/a..z/A..Z ist
+                if (!((nummer >= 48 && nummer <= 71) 
+                    || (nummer >= 65 && nummer <= 90)
+                    || (nummer >= 97 && nummer <= 122)
+                    || nummer == 32)) {
+                    System.out.println("false");
+                    // dann ist die Zeichenkette Fehlerhaft
+                    korrekt = false;
+                }
+            }
+        } else {
+            korrekt = false;
+        }
+        return korrekt;
+    }
+    
+    /**
+     * Erstellt wenn alle Daten korrekt eingegeben wein neues Spiel mit den 
+     * zwei gefiltertetn Spielern und der Spielerfarbe.
+     * @param nameWest name im westlichen Textfeld(Spieler 1)
+     * @param nameEast name im oestlichen Textfeld(Spieler 2)
+     */
+    private void spielErstellen(String nameWest, String nameEast) {
+     // Wenn Spieler1 ein neuer Spieler ist
+        if (nameWest.equals("neuer Spieler")) { 
+            // Wenn der Spieler noch nicht vorhanden ist
+            if (istBereitsVorhanden(nameWEST.getText()) == null) {
+                // Wird der Erste Spieler als Spieler mit dem namen erstellt
+                spieler1 = new Spieler(nameWEST.getText());
+                // Und der SpielerListe zugefügt
+                parent.addSpieler(spieler1);
+            } else {
+                // Wird eine Fehlermeldung ausgegeben
+                parent.soundAbspielen("FehlerhafteEingabe.wav");
+                JOptionPane.showMessageDialog(parent, "Der Spieler " 
+                    + nameWEST.getText() + " existiert bereits!", 
+                    "Fehlerhafte Eingabe", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        // Wenn Spieler2 ein neuer Spieler ist
+        if (nameEast.equals("neuer Spieler")) {
+            // Wenn der Spieler noch nicht vorhanden ist
+            if (istBereitsVorhanden(nameEAST.getText()) == null) {
+                // Wird der Zweite Spieler als Spieler mit dem namen erstellt
+                spieler2 = new Spieler(nameEAST.getText());
+                // Und der SpielerListe zugefügt
+                parent.addSpieler(spieler2);
+            // Wenn der Spieler schon vorhanden ist    
+            } else {
+                // Wird eine Fehlermeldung ausgegeben
+                parent.soundAbspielen("FehlerhafteEingabe.wav");
+                JOptionPane.showMessageDialog(parent, "Der Spieler " 
+                    + nameEAST.getText() + " existiert bereits!", 
+                    "Fehlerhafte Eingabe", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    
+        // Wenn Spieler1 ein bereits vorhandener Spieler ist
+        if (istBereitsVorhanden(nameWest) != null) {
+            // Wird Spieler1 auf diesen gesetzt
+            spieler1 = istBereitsVorhanden(nameWest);
+        }
+        // Wenn Spieler2 ein bereits vorhandener Spieler ist
+        if (istBereitsVorhanden(nameEast) != null) {
+            // Wird Spieler2 auf diesen gesetzt
+            spieler2 = istBereitsVorhanden(nameEast);
+        }
+       
+        
+        // Wenn zwei Spieler vrohanden sind
+        if (spieler1 != null && spieler2 != null) {
+            // Wenn Spieler 1 die Farbe weiss ausgewählt hat
+            if (bGFarbauswahl.getSelection().
+                getActionCommand().equals("weiss")) {
+                spieler1.setFarbe(true);
+                spieler2.setFarbe(false);
+            // Wenn Spieler 1 die Farbe schwarz ausgewählt hat
+            } else {
+                spieler1.setFarbe(false);
+                spieler2.setFarbe(true);
+            }
+            /* Die Pane für das Hauptfenster auf eine neue SpielfeldGUI
+             * setzten und die oben gefilterten Parameter für 
+             * spielernamen und Spielnamen übergben
+            */
+            parent.setContentPane(new SpielfeldGUI(parent,
+                tSpielname.getText(), spieler1, spieler2));
+            parent.revalidate();
+        } 
+    }
+    
 }
