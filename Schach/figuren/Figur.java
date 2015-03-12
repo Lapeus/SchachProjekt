@@ -178,7 +178,7 @@ public abstract class Figur {
     
     /**
      * Gibt an, ob das Feld am angegebenen Index leer ist.
-     * @param index : Ganzzahliger Index (zwischen 0 und 63)
+     * @param index Ganzzahliger Index (zwischen 0 und 63)
      * @return <b>true</b> wenn frei
      */
     protected boolean istFrei(int index) {
@@ -194,7 +194,7 @@ public abstract class Figur {
      * besetzt ist.
      * Wenn <b>true</b> zur&uuml;ck gegeben wird, bedeutet das, dass dieses
      * Feld f&uuml;r einen Zug zur Verf&uuml;gung steht.
-     * @param index : Ganzzahliger Index (zwischen 0 und 63)
+     * @param index Ganzzahliger Index (zwischen 0 und 63)
      * @return <b>true</b> f&uuml;r leer oder gegnerische Figur
      */
     protected boolean istMoeglich(int index) {
@@ -207,7 +207,7 @@ public abstract class Figur {
     
     /**
      * Gibt das Feld mit dem angegebenen Index zur&uuml;ck.
-     * @param index : Der ganzzahlige Index (Zwischen 0 und 63)
+     * @param index Der ganzzahlige Index (Zwischen 0 und 63)
      * @return Ein Objekt vom Typ Feld
      */
     protected Feld getFeld(int index) {
@@ -224,7 +224,7 @@ public abstract class Figur {
     
     /**
      * Gibt die Figur auf dem Feld des angegebenen Index' zur&uuml;ck.
-     * @param index : Der ganzzahlige Index (Zwischen 0 und 63)
+     * @param index Der ganzzahlige Index (Zwischen 0 und 63)
      * @return Eine Figur 
      */
     protected Figur getFigurAt(int index) {
@@ -241,7 +241,7 @@ public abstract class Figur {
     
     /**
      * Setzt das Spielfeld, auf dem die Figur steht.
-     * @param spielfeld : Das zu setzende Spielfeld
+     * @param spielfeld Das zu setzende Spielfeld
      */
     public void setSpielfeld(Spielfeld spielfeld) {
         this.spielfeld = spielfeld;
@@ -257,7 +257,7 @@ public abstract class Figur {
     
     /**
      * Setzt das Feld, auf dem die Figur steht.
-     * @param position : Das Feld, auf dem die Figur steht
+     * @param position Das Feld, auf dem die Figur steht
      */
     public void setPosition(Feld position) {
         this.position = position;
@@ -273,7 +273,7 @@ public abstract class Figur {
     
     /**
      * Setzt die Farbe der Figur.
-     * @param farbe : <b>true</b> f&uuml;r wei&szlig;, <b>false</b> 
+     * @param farbe <b>true</b> f&uuml;r wei&szlig;, <b>false</b> 
      * f&uuml;r schwarz
      */
     public void setFarbe(boolean farbe) {
@@ -306,7 +306,7 @@ public abstract class Figur {
     
     /**
      * Setzt die Variable, ob die Figur schon gezogen wurde.
-     * @param bereitsGezogen : Wahrheitswert
+     * @param bereitsGezogen Wahrheitswert
      */
     public void setGezogen(boolean bereitsGezogen) {
         this.bereitsGezogen = bereitsGezogen;

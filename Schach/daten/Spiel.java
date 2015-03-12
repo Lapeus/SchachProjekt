@@ -43,11 +43,11 @@ public class Spiel {
      * Legt ein neues Spiel an, welches gespielt und sp&auml;ter gespeichert
      * werden kann. <br>
      * Einziger Konstruktor dieser Klasse.
-     * @param spielname : Name des Spiels. Ben&ouml;tigt f&uuml;r die eindeutige
+     * @param spielname Name des Spiels. Ben&ouml;tigt f&uuml;r die eindeutige
      * Zuordnung beim Laden
-     * @param spieler1 : Der eine teilnehmende Spieler
-     * @param spieler2 : Der andere Spieler
-     * @param spielfeld : Das zugeh&ouml;rige Spielfeld
+     * @param spieler1 Der eine teilnehmende Spieler
+     * @param spieler2 Der andere Spieler
+     * @param spielfeld Das zugeh&ouml;rige Spielfeld
      */
     public Spiel(String spielname, Spieler spieler1, Spieler spieler2,
         Spielfeld spielfeld) {
