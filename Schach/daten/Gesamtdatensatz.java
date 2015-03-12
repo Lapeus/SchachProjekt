@@ -476,8 +476,8 @@ public class Gesamtdatensatz {
                  */
                 line = br.readLine();
             }
-        } catch (IOException ioEx) {
-            ioEx.printStackTrace();
+        } catch (Exception ex) {
+            figuren = null;
         }
         
         return figuren;
@@ -571,6 +571,9 @@ public class Gesamtdatensatz {
      * @return Das entsprechende Spiel
      */
     public Spiel getSpiel2(String name) {
+        if (name.length() < 21) {
+            return null;
+        }
         String spielname = name.substring(0, name.length() - 20);
         // Die Quelldatei fuer das Spiel
         File file = new File("settings" + System.getProperty(
@@ -657,7 +660,7 @@ public class Gesamtdatensatz {
             
             // Das Spiel erstellen
             spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
-        } catch (IOException ioEx) {
+        } catch (Exception ex) {
             // Wenn irgendwas schief geht
             spiel = null;
             // Wenn das Spiel null ist, gibt die GUI eine Fehlermeldung aus

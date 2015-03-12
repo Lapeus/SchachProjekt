@@ -153,7 +153,7 @@ public class Computerspieler extends Spieler {
                     ziehendeFigur = figur;
                     minWert = figur.getWert();
                 }
-            }
+            } 
             spielfeld.ziehe(ziehendeFigur, maxFeldSchlag, 0);
         }
         
@@ -170,18 +170,25 @@ public class Computerspieler extends Spieler {
         } else {
             eigeneFiguren = spielfeld.getSchwarzeFiguren();
         }
-        List<Feld> alleFelder;
+        List<Feld> alleFelder = new ArrayList<Feld>();
         int zufall, zufall2;
-        do {
-            // Erzeugt eine Zufallszahl zwischen 0 und eigeneFiguren.size() - 1
-            zufall = (int) (Math.random() * eigeneFiguren.size());
-            // Alle moeglichen Felder
-            alleFelder = eigeneFiguren.get(zufall).getKorrektFelder();
-            // Erzeugt eine Zufallszahl zwischen 0 und alleFelder.size() - 1
-            zufall2 = (int) (Math.random() * alleFelder.size());
-        } while (alleFelder.isEmpty());
-        // Ziehe dieses ausgewaehlte Feld
-        spielfeld.ziehe(eigeneFiguren.get(zufall), alleFelder.get(zufall2), 1);
+        for (Figur figur : eigeneFiguren) {
+            alleFelder.addAll(figur.getKorrektFelder());
+        }
+        if (!alleFelder.isEmpty()) {
+            do {
+                // Erzeugt eine Zufallszahl zwischen 0 und 
+                // eigeneFiguren.size() - 1
+                zufall = (int) (Math.random() * eigeneFiguren.size());
+                // Alle moeglichen Felder
+                alleFelder = eigeneFiguren.get(zufall).getKorrektFelder();
+                // Erzeugt eine Zufallszahl zwischen 0 und alleFelder.size() - 1
+                zufall2 = (int) (Math.random() * alleFelder.size());
+            } while (alleFelder.isEmpty());
+            // Ziehe dieses ausgewaehlte Feld
+            spielfeld.ziehe(eigeneFiguren.get(zufall), 
+                alleFelder.get(zufall2), 1);   
+        }
     }
     
     /**
@@ -372,7 +379,8 @@ public class Computerspieler extends Spieler {
             - spielfeld.getMaterialwert(false);
         // Bauern kurz vor der Umwandlung
         int index = 1;
-        while (spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
+        while (index < spielfeld.getWeisseFiguren().size() 
+            && spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
             Figur bauer = spielfeld.getWeisseFiguren().get(index);
             int y = bauer.getPosition().getYK();
             if (y <= 3) {
@@ -387,7 +395,8 @@ public class Computerspieler extends Spieler {
             index++;
         }
         index = 1;
-        while (spielfeld.getSchwarzeFiguren().get(index).getWert() == 100) {
+        while (index < spielfeld.getSchwarzeFiguren().size() 
+            && spielfeld.getSchwarzeFiguren().get(index).getWert() == 100) {
             Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
             int y = bauer.getPosition().getYK();
             if (y <= 3) {
