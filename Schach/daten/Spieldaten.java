@@ -133,7 +133,7 @@ public class Spieldaten {
         int anzahl;
         if (spieler) {
             // Aufgerundete Anzahl, weil weiss anfaengt
-            anzahl = zugListe.size() / 2 + 1;
+            anzahl = (int) Math.ceil((double) zugListe.size() / 2);
             anzahl += geladenZuegeWeiss;
         } else {
             // Abgerundete Anzahl, weil schwarz nach zieht
