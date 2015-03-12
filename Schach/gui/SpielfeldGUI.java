@@ -695,18 +695,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 ergebnis = "Das Spiel endet in einem Patt";
             }
             // Und Ein Dialogfenster für den Gewinner angezeigt
-            try {
-                String fileSep = System.getProperty("file.separator");
-                AudioInputStream ais = AudioSystem.getAudioInputStream(
-                    new File("sounds" + fileSep 
-                        + "SchachMatt.wav"));
-                Clip clip = AudioSystem.getClip();
-                clip.open(ais);
-                clip.start();
-                
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            soundAbspielen("SchachMatt.wav");
             JOptionPane.showMessageDialog(parent
                 , ergebnis);
             // Das spiel ist vorbei also keine Züge mehr möglich
@@ -997,20 +986,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             Spieler verlierer = (Spieler) aufgeben.get(0);
             String zuege = aufgeben.get(1).toString();
             Spieler gewinner = (Spieler) aufgeben.get(2);
-            try {
-                String fileSep = System.getProperty(
-                    "file.separator");
-                AudioInputStream ais = AudioSystem
-                    .getAudioInputStream(
-                    new File("sounds" + fileSep 
-                            + "Aufgeben.wav"));
-                Clip clip = AudioSystem.getClip();
-                clip.open(ais);
-                clip.start();
-                
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            soundAbspielen("Aufgeben.wav");
             JOptionPane.showMessageDialog(parent, verlierer.getName() 
                 + " gibt nach " + zuege + " Zügen auf! " + gewinner.getName() 
                 + " gewinnt!!!");
@@ -1152,5 +1128,26 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         this.validate();
         this.repaint();  
+    }
+    
+    /**
+     * Methode zum Abspielen von Systemsounds.
+     * @param filename Name des Sound der abgespielt werden soll
+     */
+    private void soundAbspielen(String filename) {
+        try {
+            String fileSep = System.getProperty(
+                "file.separator");
+            AudioInputStream ais = AudioSystem
+                .getAudioInputStream(
+                new File("sounds" + fileSep 
+                        + filename));
+            Clip clip = AudioSystem.getClip();
+            clip.open(ais);
+            clip.start();
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
