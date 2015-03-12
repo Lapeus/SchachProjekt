@@ -271,21 +271,6 @@ public class Computerspieler extends Spieler {
             - spielfeld.getMaterialwert(false);
         // Bauern kurz vor der Umwandlung
         int index = 1;
-        while (spielfeld.getSchwarzeFiguren().get(index).getWert() == 100) {
-            Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
-            int y = bauer.getPosition().getYK();
-            if (y <= 3) {
-                bewertung -= 20;
-                if (y <= 2) {
-                    bewertung -= 40;
-                    if (y == 1) {
-                        bewertung -= 60;
-                    }
-                }
-            }
-            index++;
-        }
-        index = 1;
         while (spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
             Figur bauer = spielfeld.getWeisseFiguren().get(index);
             int y = bauer.getPosition().getYK();
@@ -295,6 +280,21 @@ public class Computerspieler extends Spieler {
                     bewertung += 40;
                     if (y == 1) {
                         bewertung += 60;
+                    }
+                }
+            }
+            index++;
+        }
+        index = 1;
+        while (spielfeld.getSchwarzeFiguren().get(index).getWert() == 100) {
+            Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
+            int y = bauer.getPosition().getYK();
+            if (y <= 3) {
+                bewertung -= 20;
+                if (y <= 2) {
+                    bewertung -= 40;
+                    if (y == 1) {
+                        bewertung -= 60;
                     }
                 }
             }

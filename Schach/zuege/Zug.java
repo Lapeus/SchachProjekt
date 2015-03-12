@@ -148,6 +148,8 @@ public class Zug {
     
     /**
      * Gibt die gezogene Figur zur&uuml;ck.
+     * Wenn beim Laden keine Figur &uuml;bergeben werden konnte, wird die Figur
+     * auf dem Startfeld genommen.
      * @return Die Figur
      */
     public Figur getFigur() {

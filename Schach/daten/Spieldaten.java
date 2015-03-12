@@ -181,6 +181,15 @@ public class Spieldaten {
     }
     
     /**
+     * Setzt die bisherige Zeit von wei&szlig; im Falle eines gespeicherten 
+     * Spieles.
+     * @param geladenZeitWeiss Zeit in ganzen Sekunden;
+     */
+    public void setGeladenZeitWeiss(int geladenZeitWeiss) {
+        this.geladenZeitWeiss = geladenZeitWeiss;
+    }
+
+    /**
      * Setzt die bisherige Zeit von schwarz im Falle eines gespeicherten 
      * Spieles.
      * @param geladenZeitSchwarz Zeit in ganzen Sekunden;
@@ -188,14 +197,14 @@ public class Spieldaten {
     public void setGeladenZeitSchwarz(int geladenZeitSchwarz) {
         this.geladenZeitSchwarz = geladenZeitSchwarz;
     }
-    
+        
     /**
-     * Setzt die bisherige Zeit von wei&szlig; im Falle eines gespeicherten 
-     * Spieles.
-     * @param geladenZeitWeiss Zeit in ganzen Sekunden;
+     * Setzt die bisherige Zuganzahl von wei&szlig; im Falle eines 
+     * gespeicherten Spieles.
+     * @param geladenZuegeWeiss Anzahl der Z&uuml;ge;
      */
-    public void setGeladenZeitWeiss(int geladenZeitWeiss) {
-        this.geladenZeitWeiss = geladenZeitWeiss;
+    public void setGeladenZuegeWeiss(int geladenZuegeWeiss) {
+        this.geladenZuegeWeiss = geladenZuegeWeiss;
     }
     
     /**
@@ -205,15 +214,6 @@ public class Spieldaten {
      */
     public void setGeladenZuegeSchwarz(int geladenZuegeSchwarz) {
         this.geladenZuegeSchwarz = geladenZuegeSchwarz;
-    }
-
-    /**
-     * Setzt die bisherige Zuganzahl von wei&szlig; im Falle eines 
-     * gespeicherten Spieles.
-     * @param geladenZuegeWeiss Anzahl der Z&uuml;ge;
-     */
-    public void setGeladenZuegeWeiss(int geladenZuegeWeiss) {
-        this.geladenZuegeWeiss = geladenZuegeWeiss;
     }
     
     /**

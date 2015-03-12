@@ -77,19 +77,6 @@ public class Umwandlungszug extends Zug {
     }
     
     /**
-     * {@inheritDoc}
-     */
-    public Figur getFigur() {
-        // Wenn es keine gezogene Figur gibt, weil dieser Zug beim Laden 
-        // erstellt wurde
-        if (super.getFigur() == null) {
-            // Wird die Figur auf dem Startfeld zurueckgegeben
-            return getStartfeld().getFigur();
-        } else {
-            return super.getFigur();
-        }
-    }
-    /**
      * Gibt die umgewandelte Figur zur&uuml;ck.
      * @return Die neue Figur
      */
