@@ -564,29 +564,6 @@ public class Spielfeld {
     }
     
     /**
-     * Sortiert eine Liste von Figuren aufsteigend nach Wert. <br>
-     * Verwendet den rekursiven Bubble-Sort-Algorithmus.
-     * @param figuren Eine Liste von Figuren die sortiert werden soll
-     * @return Die sortierte Liste
-     */
-    private List<Figur> sortiereListe(List<Figur> figuren) {
-        // Temporaere Figur
-        Figur temp;
-        for (int i = 0; i < figuren.size() - 1; i++) {
-            // Wenn zwei Figuren in der falschen Reihenfolge sind
-            if (figuren.get(i).getWert() > figuren.get(i + 1).getWert()) {
-                // Werden sie getauscht
-                temp = figuren.get(i);
-                figuren.set(i, figuren.get(i + 1));
-                figuren.set(i + 1, temp);
-                // Rekursiver Aufruf
-                sortiereListe(figuren);
-            }
-        }
-        return figuren;
-    }
-    
-    /**
      * Pr&uuml;ft ob der aktuelle Spieler noch ziehen kann. <br>
      * Die Pr&uuml;fung auf Matt oder Patt erfolgt an anderer Stelle.
      * @return <b>true</b> wenn er nicht mehr ziehen kann, <b>false</b> wenn er
@@ -659,6 +636,85 @@ public class Spielfeld {
         }
         return letzteFelder;
     }
+    
+    /**
+     * Gibt eine Liste von den aktuell bedrohten Feldern auf denen eine Figur
+     * steht zur&uuml;ck. <br>
+     * Wenn die entsprechende Option aktiviert ist, werden diese dem Spieler als
+     * Hilfestellung angezeigt.
+     * @return Liste der besetzten, bedrohten Felder
+     */
+    public List<Feld> getBedrohteFelder() {
+        /* Zusatz: Vorbereitung fuer die grafische Hilfestellung "Es werden
+         * alle in diesem Zug bedrohten Figuren angezeigt."
+         */
+        // Liste mit den bedrohten Figuren leeren
+        bedrohteFelder.clear();
+        // Liste mit den gegnerischen Figuren
+        List<Figur> gegnerFiguren;
+        // Wenn weiss als naechstes dran ist
+        if (aktuellerSpieler) {
+            gegnerFiguren = clone(schwarzeFiguren);
+        // Wenn schwarz als naechstes dran ist
+        } else {
+            gegnerFiguren = clone(weisseFiguren);
+        }
+        // Fuer alle gegnerischen Figuren
+        for (Figur gegner : gegnerFiguren) {
+            // Liste mit den korrekten Feldern dieser Figur
+            List<Feld> felder = gegner.getKorrektFelder();
+            // Fuer jedes dieser Felder
+            for (Feld feld : felder) {
+                // Wenn auf dem Feld eine Figur steht
+                if (feld.getFigur() != null) {
+                    // Ist das meine und somit bedroht
+                    bedrohteFelder.add(feld);
+                }
+            }
+        }
+      
+        return bedrohteFelder;
+    }
+    
+    /**
+     * Gibt eine Liste mit den Feldern zur&uuml;ck, auf denen gegnerische 
+     * Figuren stehen und welche in diesem Zug vom aktiven Spieler geschlagen
+     * werden k&ouml;nnen.<br>
+     * Wenn die entsprechende Option aktiviert ist, werden diese Felder dem
+     * Spieler als grafische Hilfestellung angezeigt.
+     * @return Eine Liste mit den Feldern auf denen zu schlagende Figuren stehen
+     */
+    public List<Feld> getSchlagendeFelder() {
+        /* Zusatz: Vorbereitung fuer die grafische Hilfestellung "Es werden
+         * alle in diesem Zug zu schlagende Figuren angezeigt."
+         */
+        // Liste mit zu schlagenden Figuren leeren
+        schlagendeFelder.clear();
+        // Liste mit den eigenen Figuren
+        List<Figur> eigeneFiguren;
+        // Wenn weiss als naechstes dran ist
+        if (aktuellerSpieler) {
+            eigeneFiguren = clone(weisseFiguren);
+        // Wenn schwarz als naechstes dran ist
+        } else {
+            eigeneFiguren = clone(schwarzeFiguren);
+        }
+        // Fuer alle eigenen Figuren
+        for (Figur eigen : eigeneFiguren) {
+            // Liste mit den korrekten Feldern dieser Figur
+            List<Feld> felder = eigen.getKorrektFelder();
+            // Fuer jedes dieser Felder
+            for (Feld feld : felder) {
+                // Wenn auf dem Feld eine Figur steht
+                if (feld.getFigur() != null) {
+                    // Ist das eine gegnerische und somit schlagbar
+                    schlagendeFelder.add(feld);
+                }
+            }
+        }
+        return schlagendeFelder;
+    }
+    
     /**
      * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
      * Wird beim Speichern ben&ouml;tigt.
@@ -692,6 +748,42 @@ public class Spielfeld {
         string += spieldaten.toString();
         return string;
     }
+    
+    /**
+     * Klont die angegebene Liste damit keine CurrentModificationException bei
+     * Schleifendurchl&auml;ufen auftritt.
+     * @param figuren Die zu klonende Figuren-Liste
+     * @return Der Klon der Figuren-Liste
+     */
+    public List<Figur> clone(List<Figur> figuren) {
+        List<Figur> figurenCopy = new ArrayList<Figur>();
+        figurenCopy.addAll(figuren);
+        return figurenCopy;
+    }
+    
+    /**
+     * Sortiert eine Liste von Figuren aufsteigend nach Wert. <br>
+     * Verwendet den rekursiven Bubble-Sort-Algorithmus.
+     * @param figuren Eine Liste von Figuren die sortiert werden soll
+     * @return Die sortierte Liste
+     */
+    private List<Figur> sortiereListe(List<Figur> figuren) {
+        // Temporaere Figur
+        Figur temp;
+        for (int i = 0; i < figuren.size() - 1; i++) {
+            // Wenn zwei Figuren in der falschen Reihenfolge sind
+            if (figuren.get(i).getWert() > figuren.get(i + 1).getWert()) {
+                // Werden sie getauscht
+                temp = figuren.get(i);
+                figuren.set(i, figuren.get(i + 1));
+                figuren.set(i + 1, temp);
+                // Rekursiver Aufruf
+                sortiereListe(figuren);
+            }
+        }
+        return figuren;
+    }
+    
     /**
      * Gibt die Spieldaten zur&uuml;ck.
      * @return Die Spieldaten
@@ -819,57 +911,6 @@ public class Spielfeld {
     }
     
     /**
-     * Klont die angegebene Liste damit keine CurrentModificationException bei
-     * Schleifendurchl&auml;ufen auftritt.
-     * @param figuren Die zu klonende Figuren-Liste
-     * @return Der Klon der Figuren-Liste
-     */
-    public List<Figur> clone(List<Figur> figuren) {
-        List<Figur> figurenCopy = new ArrayList<Figur>();
-        figurenCopy.addAll(figuren);
-        return figurenCopy;
-    }
-    
-    /**
-     * Gibt eine Liste von den aktuell bedrohten Feldern auf denen eine Figur
-     * steht zur&uuml;ck. <br>
-     * Wenn die entsprechende Option aktiviert ist, werden diese dem Spieler als
-     * Hilfestellung angezeigt.
-     * @return Liste der besetzten, bedrohten Felder
-     */
-    public List<Feld> getBedrohteFelder() {
-        /* Zusatz: Vorbereitung fuer die grafische Hilfestellung "Es werden
-         * alle in diesem Zug bedrohten Figuren angezeigt."
-         */
-        // Liste mit den bedrohten Figuren leeren
-        bedrohteFelder.clear();
-        // Liste mit den gegnerischen Figuren
-        List<Figur> gegnerFiguren;
-        // Wenn weiss als naechstes dran ist
-        if (aktuellerSpieler) {
-            gegnerFiguren = clone(schwarzeFiguren);
-        // Wenn schwarz als naechstes dran ist
-        } else {
-            gegnerFiguren = clone(weisseFiguren);
-        }
-        // Fuer alle gegnerischen Figuren
-        for (Figur gegner : gegnerFiguren) {
-            // Liste mit den korrekten Feldern dieser Figur
-            List<Feld> felder = gegner.getKorrektFelder();
-            // Fuer jedes dieser Felder
-            for (Feld feld : felder) {
-                // Wenn auf dem Feld eine Figur steht
-                if (feld.getFigur() != null) {
-                    // Ist das meine und somit bedroht
-                    bedrohteFelder.add(feld);
-                }
-            }
-        }
-      
-        return bedrohteFelder;
-    }
-    
-    /**
      * Gibt an, welcher Spieler am Zug ist und ob das Brett momentan von 
      * Wei&szlig; oder von Schwarz aus gesehen wird.
      * @return <b>true</b> f&uuml;r wei&szlig;, <b>false</b> f&uuml;r schwarz
@@ -900,45 +941,6 @@ public class Spielfeld {
      */
     public void setSchach(boolean schach) {
         this.schach = schach;
-    }
-
-    /**
-     * Gibt eine Liste mit den Feldern zur&uuml;ck, auf denen gegnerische 
-     * Figuren stehen und welche in diesem Zug vom aktiven Spieler geschlagen
-     * werden k&ouml;nnen.<br>
-     * Wenn die entsprechende Option aktiviert ist, werden diese Felder dem
-     * Spieler als grafische Hilfestellung angezeigt.
-     * @return Eine Liste mit den Feldern auf denen zu schlagende Figuren stehen
-     */
-    public List<Feld> getSchlagendeFelder() {
-        /* Zusatz: Vorbereitung fuer die grafische Hilfestellung "Es werden
-         * alle in diesem Zug zu schlagende Figuren angezeigt."
-         */
-        // Liste mit zu schlagenden Figuren leeren
-        schlagendeFelder.clear();
-        // Liste mit den eigenen Figuren
-        List<Figur> eigeneFiguren;
-        // Wenn weiss als naechstes dran ist
-        if (aktuellerSpieler) {
-            eigeneFiguren = clone(weisseFiguren);
-        // Wenn schwarz als naechstes dran ist
-        } else {
-            eigeneFiguren = clone(schwarzeFiguren);
-        }
-        // Fuer alle eigenen Figuren
-        for (Figur eigen : eigeneFiguren) {
-            // Liste mit den korrekten Feldern dieser Figur
-            List<Feld> felder = eigen.getKorrektFelder();
-            // Fuer jedes dieser Felder
-            for (Feld feld : felder) {
-                // Wenn auf dem Feld eine Figur steht
-                if (feld.getFigur() != null) {
-                    // Ist das eine gegnerische und somit schlagbar
-                    schlagendeFelder.add(feld);
-                }
-            }
-        }
-        return schlagendeFelder;
     }
     
 }

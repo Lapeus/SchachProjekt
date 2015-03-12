@@ -95,6 +95,7 @@ public class Spieldaten {
         }
         return remis;
     }
+    
     /**
      * Gibt die gesamte Zugzeit des angegebenen Spielers zur&uuml;ck.
      * @param spieler Die Spielfarbe des Spielers, f&uuml;r den die Zugzeit

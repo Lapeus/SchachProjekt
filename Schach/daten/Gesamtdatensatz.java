@@ -271,7 +271,6 @@ public class Gesamtdatensatz {
         spielerListe.add(new Computerspieler("Rosalinde"));
         spielerListe.add(new Computerspieler("Ursula"));
         
-        
     }
     
     /**
@@ -404,6 +403,98 @@ public class Gesamtdatensatz {
         gespeicherteSpiele.remove(name);
         
         return spiel;
+    }
+    
+    /**
+     * Erstellt eine neue felderListe mit 64 Feldern(Index 0-7, 0-7).
+     * @return Die neu erstellte Felder-Liste
+     */
+    private List<Feld> erstelleFelderListe() {
+        List<Feld> felderListe = new ArrayList<Feld>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Feld temp = new Feld(j, i);
+                felderListe.add(temp);
+            }    
+        }
+        return felderListe;
+    }
+    
+    /**
+     * Liest mithilfe des angegebenen BufferedReaders eine Liste von Figuren
+     * aus der Textdatei.
+     * @param br Ein BufferedReader der entsprechenden Textdatei
+     * @param felderListe Die Felder-Liste um die Figuren richtig setzen zu
+     * k&ouml;nnen
+     * @return Eine Liste mit Figuren
+     */
+    private List<Figur> fuelleFigurenListe(BufferedReader br, 
+        List<Feld> felderListe) {
+        List<Figur> figuren = new ArrayList<Figur>();
+        // Solange keine Leerzeile erreicht ist
+        try {
+            // Die Ueberschrift lesen aber nicht speichern
+            br.readLine();
+            // Die erste korrekte Zeile
+            String line = br.readLine();
+            // Solange die erste Zeile nicht leer ist
+            while (!line.equals("")) {
+                // Die Position
+                String position = line;
+                // Aus der Position das Feld bestimmen
+                Feld feld = positionToFeld(position, felderListe); 
+                // Farbe der Figur
+                boolean farbe = Boolean.parseBoolean(br.readLine());
+                // Wert der Figur
+                int wert = Integer.parseInt(br.readLine());
+                // Ob sie schon gezogen wurde
+                boolean gezogen = Boolean.parseBoolean(br.readLine());
+                // Neue Figur anlegen
+                Figur figur;
+                // Je nach Wert die Figur entsprechend erstellen
+                if (wert == 0) {
+                    figur = new Koenig(feld, farbe);
+                } else if (wert == 100) {
+                    figur = new Bauer(feld, farbe);
+                } else if (wert == 275) {
+                    figur = new Springer(feld, farbe);
+                } else if (wert == 325) {
+                    figur = new Laeufer(feld, farbe);
+                } else if (wert == 465) {
+                    figur = new Turm(feld, farbe);
+                } else {
+                    figur = new Dame(feld, farbe);
+                }
+             
+                figur.setGezogen(gezogen);
+                // Die Figur der Liste zufuegen
+                figuren.add(figur);
+                // Naechste Zeile einlesen
+                /* Entweder ist das die erste Zeile der neuen Figur oder die 
+                 * Leerzeile die der while-Schleife signalisiert, dass die Liste
+                 * zu Ende ist und abgebrochen werden soll.
+                 */
+                line = br.readLine();
+            }
+        } catch (IOException ioEx) {
+            ioEx.printStackTrace();
+        }
+        
+        return figuren;
+        
+    } 
+    
+    /**
+     * Wandelt die gespeicherte zweistellige Position in das entsprechende
+     * Feld um und gibt es zur&uuml;ck.
+     * @param position Die zweistelligen Koordinaten des Feldes
+     * @param felderListe Die Liste der Felder auf die zugegriffen werden soll
+     * @return Das gesuchte Feld
+     */
+    private Feld positionToFeld(String position, List<Feld> felderListe) {
+        int x = Integer.parseInt(position.substring(0, 1));
+        int y = Integer.parseInt(position.substring(1));
+        return felderListe.get(x + 8 * y);
     }
     
     /**
@@ -698,183 +789,7 @@ public class Gesamtdatensatz {
         }
         return zugListe;
     }
-    
-    /**
-     * Erstellt eine neue felderListe mit 64 Feldern(Index 0-7, 0-7).
-     * @return Die neu erstellte Felder-Liste
-     */
-    
-    private List<Feld> erstelleFelderListe() {
-        List<Feld> felderListe = new ArrayList<Feld>();
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                Feld temp = new Feld(j, i);
-                felderListe.add(temp);
-            }    
-        }
-        return felderListe;
-    }
-    
-    /**
-     * Wandelt die gespeicherte zweistellige Position in das entsprechende
-     * Feld um und gibt es zur&uuml;ck.
-     * @param position Die zweistelligen Koordinaten des Feldes
-     * @param felderListe Die Liste der Felder auf die zugegriffen werden soll
-     * @return Das gesuchte Feld
-     */
-    private Feld positionToFeld(String position, List<Feld> felderListe) {
-        int x = Integer.parseInt(position.substring(0, 1));
-        int y = Integer.parseInt(position.substring(1));
-        return felderListe.get(x + 8 * y);
-    }
-    
-    /**
-     * Liest mithilfe des angegebenen BufferedReaders eine Liste von Figuren
-     * aus der Textdatei.
-     * @param br Ein BufferedReader der entsprechenden Textdatei
-     * @param felderListe Die Felder-Liste um die Figuren richtig setzen zu
-     * k&ouml;nnen
-     * @return Eine Liste mit Figuren
-     */
-    private List<Figur> fuelleFigurenListe(BufferedReader br, 
-        List<Feld> felderListe) {
-        List<Figur> figuren = new ArrayList<Figur>();
-        // Solange keine Leerzeile erreicht ist
-        try {
-            // Die Ueberschrift lesen aber nicht speichern
-            br.readLine();
-            // Die erste korrekte Zeile
-            String line = br.readLine();
-            // Solange die erste Zeile nicht leer ist
-            while (!line.equals("")) {
-                // Die Position
-                String position = line;
-                // Aus der Position das Feld bestimmen
-                Feld feld = positionToFeld(position, felderListe); 
-                // Farbe der Figur
-                boolean farbe = Boolean.parseBoolean(br.readLine());
-                // Wert der Figur
-                int wert = Integer.parseInt(br.readLine());
-                // Ob sie schon gezogen wurde
-                boolean gezogen = Boolean.parseBoolean(br.readLine());
-                // Neue Figur anlegen
-                Figur figur;
-                // Je nach Wert die Figur entsprechend erstellen
-                if (wert == 0) {
-                    figur = new Koenig(feld, farbe);
-                } else if (wert == 100) {
-                    figur = new Bauer(feld, farbe);
-                } else if (wert == 275) {
-                    figur = new Springer(feld, farbe);
-                } else if (wert == 325) {
-                    figur = new Laeufer(feld, farbe);
-                } else if (wert == 465) {
-                    figur = new Turm(feld, farbe);
-                } else {
-                    figur = new Dame(feld, farbe);
-                }
-             
-                figur.setGezogen(gezogen);
-                // Die Figur der Liste zufuegen
-                figuren.add(figur);
-                // Naechste Zeile einlesen
-                /* Entweder ist das die erste Zeile der neuen Figur oder die 
-                 * Leerzeile die der while-Schleife signalisiert, dass die Liste
-                 * zu Ende ist und abgebrochen werden soll.
-                 */
-                line = br.readLine();
-            }
-        } catch (IOException ioEx) {
-            ioEx.printStackTrace();
-        }
         
-        return figuren;
-        
-    }    
-        
-    /**
-     * Gibt die Liste der Spieler nach absteigendem Score sortiert wieder.
-     * @return Eine Liste mit den gerankten Spielern
-     */
-    public List<Spieler> getRanking() {
-        List<Spieler> sortedList = new ArrayList<Spieler>();
-        for (Spieler spieler : spielerListe) {
-            sortedList.add(spieler);
-        }
-        return sortiereListe(sortedList);
-    }
-    
-    /**
-     * Sortiert die angegebene Liste von Spielern nach Score.<br>
-     * Verwendet den rekursiven Bubble-Sort-Algorithmus.
-     * @param spieler Die zu sortierende Liste von Spielern
-     * @return Die sortierte Liste
-     */
-    private List<Spieler> sortiereListe(List<Spieler> spieler) {
-        // Temporaerer Spieler
-        Spieler temp;
-        for (int i = 0; i < spieler.size() - 1; i++) {
-            // Wenn zwei Spieler in der falschen Reihenfolge stehen
-            if (spieler.get(i).getStatistik().getScore() 
-                < spieler.get(i + 1).getStatistik().getScore()) {
-                // Werden sie getauscht
-                temp = spieler.get(i);
-                spieler.set(i, spieler.get(i + 1));
-                spieler.set(i + 1, temp);
-                // Rekursiver Aufruf
-                sortiereListe(spieler);
-            }
-        }
-        return spieler;
-    }
-    
-    /**
-     * Gibt die Liste der Spieler zur&uuml;ck.
-     * @return Liste der Spieler
-     */
-    public List<Spieler> getSpielerListe() {
-        List<Spieler> spielerSorted = new ArrayList<Spieler>();
-        // Alle Spieler kopieren
-        spielerSorted.addAll(spielerListe);
-        // Alle menschlichen Spieler entfernen
-        spielerSorted.removeAll(getMenschlicheSpieler());
-        // Und hinten wieder anhaengen
-        spielerSorted.addAll(getMenschlicheSpieler());
-        return spielerSorted;
-    }
-    
-    /**
-     * Gibt eine Liste der menschlichen Spieler zur&uuml;ck.
-     * Wird ben&ouml;tigt, damit keine zwei Computerspieler gegen einander 
-     * spielen k&ouml;nnen.
-     * @return Eine Liste der menschlichen Spieler
-     */
-    public List<Spieler> getMenschlicheSpieler() {
-        List<Spieler> menschSpieler = new ArrayList<Spieler>();
-        for (Spieler spieler : spielerListe) {
-            if (!(spieler instanceof Computerspieler)) {
-                menschSpieler.add(spieler);
-            }
-        }
-        return menschSpieler;
-    }
-    
-    /**
-     * Gibt die Liste der Namen der Spiele zur&uuml;ck.
-     * @return Liste der Namen der Spiele
-     */
-    public List<String> getSpieleListe() {
-        return gespeicherteSpiele;
-    }
-    
-    /**
-     * F&uuml;gt einen Spieler hinzu.
-     * @param spieler Der Spieler der zugef&uuml;gt werden soll.
-     */
-    public void addSpieler(Spieler spieler) {
-        spielerListe.add(spieler);
-    }
-    
     /**
      * Speichert das angegebene Spiel in den Text-Dateien.
      * @param spiel Das Spiel, welches gespeichert werden soll
@@ -949,6 +864,90 @@ public class Gesamtdatensatz {
             }
         }
     }
+    
+    /**
+     * Gibt die Liste der Spieler nach absteigendem Score sortiert wieder.
+     * @return Eine Liste mit den gerankten Spielern
+     */
+    public List<Spieler> getRanking() {
+        List<Spieler> sortedList = new ArrayList<Spieler>();
+        for (Spieler spieler : spielerListe) {
+            sortedList.add(spieler);
+        }
+        return sortiereListe(sortedList);
+    }
+    
+    /**
+     * Sortiert die angegebene Liste von Spielern nach Score.<br>
+     * Verwendet den rekursiven Bubble-Sort-Algorithmus.
+     * @param spieler Die zu sortierende Liste von Spielern
+     * @return Die sortierte Liste
+     */
+    private List<Spieler> sortiereListe(List<Spieler> spieler) {
+        // Temporaerer Spieler
+        Spieler temp;
+        for (int i = 0; i < spieler.size() - 1; i++) {
+            // Wenn zwei Spieler in der falschen Reihenfolge stehen
+            if (spieler.get(i).getStatistik().getScore() 
+                < spieler.get(i + 1).getStatistik().getScore()) {
+                // Werden sie getauscht
+                temp = spieler.get(i);
+                spieler.set(i, spieler.get(i + 1));
+                spieler.set(i + 1, temp);
+                // Rekursiver Aufruf
+                sortiereListe(spieler);
+            }
+        }
+        return spieler;
+    }
+    
+    /**
+     * Gibt die Liste der Spieler zur&uuml;ck.
+     * @return Liste der Spieler
+     */
+    public List<Spieler> getSpielerListe() {
+        List<Spieler> spielerSorted = new ArrayList<Spieler>();
+        // Alle Spieler kopieren
+        spielerSorted.addAll(spielerListe);
+        // Alle menschlichen Spieler entfernen
+        spielerSorted.removeAll(getMenschlicheSpieler());
+        // Und hinten wieder anhaengen
+        spielerSorted.addAll(getMenschlicheSpieler());
+        return spielerSorted;
+    }
+    
+    /**
+     * Gibt eine Liste der menschlichen Spieler zur&uuml;ck.
+     * Wird ben&ouml;tigt, damit keine zwei Computerspieler gegen einander 
+     * spielen k&ouml;nnen.
+     * @return Eine Liste der menschlichen Spieler
+     */
+    public List<Spieler> getMenschlicheSpieler() {
+        List<Spieler> menschSpieler = new ArrayList<Spieler>();
+        for (Spieler spieler : spielerListe) {
+            if (!(spieler instanceof Computerspieler)) {
+                menschSpieler.add(spieler);
+            }
+        }
+        return menschSpieler;
+    }
+    
+    /**
+     * F&uuml;gt einen Spieler hinzu.
+     * @param spieler Der Spieler der zugef&uuml;gt werden soll.
+     */
+    public void addSpieler(Spieler spieler) {
+        spielerListe.add(spieler);
+    }
+    
+    /**
+     * Gibt die Liste der Namen der Spiele zur&uuml;ck.
+     * @return Liste der Namen der Spiele
+     */
+    public List<String> getSpieleListe() {
+        return gespeicherteSpiele;
+    }
+    
     /**
      * Gibt die Standardeinstellungen zur&uum;ck.
      * @return Der Standardeinstellungssatz

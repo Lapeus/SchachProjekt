@@ -45,16 +45,6 @@ public class Zug {
     private boolean ersterZug;
     
     /**
-     * Leerer Konstrukor um Sonderz&uuml;ge mit anderen Attributen anlegen zu
-     * k&ouml;nnen. <br>
-     * @see RochadenZug
-     * @see EnPassantZug
-     */
-    public Zug() {
-
-    }
-    
-    /**
      * Erstellt einen neuen Zug.<br>
      * Hauptkonstruktor dieser Klasse.
      * @param startfeld Das Feld auf dem die Figur vor dem Zug stand
@@ -72,6 +62,16 @@ public class Zug {
         this.schlagzug = schlagzug;
         this.zugzeit = zugzeit;
         this.ersterZug = ersterZug;
+    }
+    
+    /**
+     * Leerer Konstrukor um Sonderz&uuml;ge mit anderen Attributen anlegen zu
+     * k&ouml;nnen. <br>
+     * @see RochadenZug
+     * @see EnPassantZug
+     */
+    public Zug() {
+
     }
     
     /**

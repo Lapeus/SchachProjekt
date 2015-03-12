@@ -50,29 +50,6 @@ public abstract class Figur {
      */
     private boolean bereitsGezogen;
     
-    
-    /**
-     * Berechnet alle Felder, auf die die Figur nach den
-     * Zugregeln ziehen kann.
-     * @return Liste von m&ouml;glichen Feldern
-     */
-    protected abstract List<Feld> getMoeglicheFelder();
-    /* Diese Methode sieht fuer Dame, Turm und Laeufer ziemlich aehnlich aus.
-     * Es werden wie bei allen Figuren alle Richtungen durchgegangen und dann
-     * mittels einer while-Schleife vervielfacht. Dabei ist die Abbruchbedingung
-     * das Erreichen einer Figur oder des Spielfeldrandes.
-     * 
-     * Die Methoden fuer Springer und Koenig aehneln sich ebenfalls, da hier 
-     * nur einmal in jede moegliche Richtung gezogen wird, sofern dieses Feld
-     * existiert und frei ist.
-     * 
-     * Die Methode fuer den Bauern ist etwas anders, da hier wichtig ist, ob
-     * es ein weisser oder ein schwarzer Bauer ist. Ausserdem muss unterschieden
-     * werden, ob ein Feld frei ist, oder ob eine gegnerische Figur dort steht.
-     * Bauern duerfen schliesslich nur schraeg gezogen werden, wenn sie dabei 
-     * eine Figur schlagen koennen.
-     */
-    
     /**
      * Pr&uuml;ft alle Felder die die Methode <i>getMoeglicheFelder</i> 
      * vorschl&auml;gt, ob nach dem Zug der eigene K&ouml;nig im Schach stehen
@@ -148,6 +125,43 @@ public abstract class Figur {
     }
     
     /**
+     * Berechnet alle Felder, auf die die Figur nach den
+     * Zugregeln ziehen kann.
+     * @return Liste von m&ouml;glichen Feldern
+     */
+    protected abstract List<Feld> getMoeglicheFelder();
+    /* Diese Methode sieht fuer Dame, Turm und Laeufer ziemlich aehnlich aus.
+     * Es werden wie bei allen Figuren alle Richtungen durchgegangen und dann
+     * mittels einer while-Schleife vervielfacht. Dabei ist die Abbruchbedingung
+     * das Erreichen einer Figur oder des Spielfeldrandes.
+     * 
+     * Die Methoden fuer Springer und Koenig aehneln sich ebenfalls, da hier 
+     * nur einmal in jede moegliche Richtung gezogen wird, sofern dieses Feld
+     * existiert und frei ist.
+     * 
+     * Die Methode fuer den Bauern ist etwas anders, da hier wichtig ist, ob
+     * es ein weisser oder ein schwarzer Bauer ist. Ausserdem muss unterschieden
+     * werden, ob ein Feld frei ist, oder ob eine gegnerische Figur dort steht.
+     * Bauern duerfen schliesslich nur schraeg gezogen werden, wenn sie dabei 
+     * eine Figur schlagen koennen.
+     */
+    
+    /**
+     * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
+     * Wird beim Speichern ben&ouml;tigt.
+     * @return Eine mehrzeilige Zeichenkette
+     */
+    public String toString() {
+        String string;
+        String lineSep = System.getProperty("line.separator");
+        string = position.getXK() + "" + position.getYK() + lineSep;
+        string += farbe + lineSep;
+        string += wert + lineSep;
+        string += bereitsGezogen + lineSep;
+        return string;
+    }
+    
+    /**
      * Gibt an, ob die Figur dem K&ouml;nig auf dem angegebenen Feld Schach
      * bietet.<br>
      * Wird nur vom Computergegner bei der Bewertungsfunktion ben&ouml;tigt.
@@ -161,6 +175,7 @@ public abstract class Figur {
         }
         return bietetSchach;
     }
+    
     /**
      * Gibt an, ob das Feld am angegebenen Index leer ist.
      * @param index : Ganzzahliger Index (zwischen 0 und 63)
@@ -214,21 +229,6 @@ public abstract class Figur {
      */
     protected Figur getFigurAt(int index) {
         return getFeld(index).getFigur();
-    }
-    
-    /**
-     * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
-     * Wird beim Speichern ben&ouml;tigt.
-     * @return Eine mehrzeilige Zeichenkette
-     */
-    public String toString() {
-        String string;
-        String lineSep = System.getProperty("line.separator");
-        string = position.getXK() + "" + position.getYK() + lineSep;
-        string += farbe + lineSep;
-        string += wert + lineSep;
-        string += bereitsGezogen + lineSep;
-        return string;
     }
     
     /**
