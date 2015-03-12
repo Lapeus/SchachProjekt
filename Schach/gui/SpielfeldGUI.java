@@ -228,6 +228,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private List<Zug> spielvideo = null;
     
+    /**
+     * Wenn das Spiel zu ende ist dann muss der Timer das wissen.
+     */
+    private boolean wiederholung = false; 
+    
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -1019,6 +1024,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 "Speichern", JOptionPane.INFORMATION_MESSAGE);
         }
         if (e.getSource().equals(btnWiederholung)) {
+            wiederholung = true;
+            start();
             if (zaehler == -1) {
                 spielvideo = spiel.spielvideo();
             } else {
@@ -1038,6 +1045,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             zaehler++;
             if (zaehler == spielvideo.size()) {
                 btnWiederholung.setEnabled(false);
+                wiederholung = false;
             }
         }
     }
@@ -1112,6 +1120,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if (begrenzung > 0 && sekundenStopp / 1000 >= begrenzung) {
                 aufgeben.doClick();
             }
+            if (btnWiederholung.isEnabled()) {
+                if (wiederholung && sekundenStopp >= 3000) {
+                    btnWiederholung.doClick();
+                    spielfeldAufbau();
+                    start();
+                }
+            }
+            
         }
     }
     
