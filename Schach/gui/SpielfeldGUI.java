@@ -30,6 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import daten.Computerspieler;
 import daten.Spiel;
@@ -1008,26 +1009,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         if (e.getSource().equals(btnWiederholung)) {
             spielfeldAufbau();
             System.out.println("ist drin");
-            List<Zug> spielvideo = spiel.spielvideo();
-            for (Zug zug : spielvideo) {
-                System.out.println("jeder Zug");
-                // Ziehe jeden Zug
-                spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), 
-                    zug.getZugzeit());
-                // Wenn es ein Umwandlungszug war
-                if (zug instanceof Umwandlungszug) {
-                    // Wandel die Figur entsprechend um
-                    spielfeld.umwandeln(spielfeld.getSpieldaten()
-                        .getLetzterZug().getFigur(), 
-                        ((Umwandlungszug) zug).getNeueFigur().getWert());
-                }
-                spielfeldAufbau();
-                try {
-                    Thread.sleep(1500);
-                } catch (InterruptedException exc) {
-                    exc.printStackTrace();
-                }
-            }
+            wiederholungAnzeigen();
         }
     }
     
@@ -1149,5 +1131,68 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    /**
+     * Test.
+     */
+    private void wiederholungAnzeigen() {
+        List<Zug> spielvideo = spiel.spielvideo();
+        for (Zug zug : spielvideo) {
+            System.out.println("jeder Zug");
+            // Ziehe jeden Zug
+            spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), 
+                zug.getZugzeit());
+            // Wenn es ein Umwandlungszug war
+            if (zug instanceof Umwandlungszug) {
+                // Wandel die Figur entsprechend um
+                spielfeld.umwandeln(spielfeld.getSpieldaten()
+                    .getLetzterZug().getFigur(), 
+                    ((Umwandlungszug) zug).getNeueFigur().getWert());
+            }
+            spielvideoAufbau();
+        }
+    }
+    
+    private void spielvideoAufbau() {
+        SwingUtilities.invokeLater(new Runnable() {
+            
+            public void run() {
+             // boolean für abwechselnd schwarz/weiß
+                boolean abwechslung = false;
+                // zähler für richtge Position in der Felderliste
+                int counter = 56;
+                // Für jede Zeile
+                for (int i = 0; i < 8; i++) {
+                    // in der neuen Reihe kommt die gleiche Farbe wie ende letzer Reihe
+                    abwechslung = !abwechslung;
+                    // Für jede Spalte
+                    for (int j = 0; j < 8; j++) {
+                        /* passendes Feld aus Spielfeld lesen und Hintergrund sichtbar 
+                         * machen. Dann den Zähler für die Position in der Liste 
+                         * vermindern
+                         */ 
+                        Feld temp = spielfeld.getFelder().get(counter + j);
+                        temp.setOpaque(true);
+                        // Wenn die Farbe "schwarz"(Braun) ist dann Feld braun machen
+                        if (!abwechslung) {
+                            temp.setBackground(braun);
+                            abwechslung = true;
+                        // Wenn die Farbe "weiß"(Beige) ist dann Feld beige machen    
+                        } else {
+                            temp.setBackground(weiss);
+                            abwechslung = false;
+                        }
+                        // Dem cCenter Panel das fertige Feld hinzufügen
+                        cCenter.add(temp);
+                    }    
+                    counter -= 8;
+                }
+                if (parent.getEinstellungen().isSpielfeldDrehen()) {
+                    spielfeldDrehen();
+                }
+                spielfeldUIUpdate();
+            }
+        });
     }
 }
