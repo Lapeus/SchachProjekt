@@ -182,7 +182,8 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         txtZugzeitbegrenzung = new JTextPane();
         txtZugzeitbegrenzung.setText(zugzeit);
         txtZugzeitbegrenzung.setBackground(cHellesBeige);
-        // TODO Getter auf null überprüfen sonst 0 (infinty) 
+        txtZugzeitbegrenzung.setToolTipText("0 = keine Begrenzung, sonst "
+            + "(1..9) + (0..9)*");
         cCenter.add(txtZugzeitbegrenzung, gbc);        
         // Label Mögliche Felder anzeigen
         gbc.gridwidth = 1;
@@ -309,16 +310,46 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     }
     
     /**
+     * Gibt zurueck ob eine eingegbene Zahl im Zugzeotbegrenzungsfenster einer 
+     * Korrekten Notation entspricht.
+     * @return true wenn ja false wenn nein
+     */
+    private boolean korrekteZahl() {
+        boolean korrekt = true;
+        String zahl = txtZugzeitbegrenzung.getText();
+        if (!zahl.equals("0")) {
+            if (!(zahl.equals("")) && (zahl.charAt(0) >= 49 && zahl
+                .charAt(0) <= 58)) {
+                for (int i = 1; i < zahl.length(); i++) {
+                    if (!(zahl.charAt(i) >= 48 && zahl.charAt(i) <= 57)) {
+                        korrekt = false;
+                    }
+                }
+            } else {
+                korrekt = false;
+            }
+        }
+        return korrekt;
+        
+    }
+    
+    /**
      * Action Performed für den Speichern Button.
      * @param e ausgeloestes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (e.getSource().equals(speichern)) {
-            einstellungen.setZugZeitBegrenzung(
-                Integer.parseInt(txtZugzeitbegrenzung.getText()));
-            parent.setEinstellungen(einstellungen);
-            JOptionPane.showMessageDialog(parent, "Einstellungen gespeichert!");
+            if (korrekteZahl()) {
+                einstellungen.setZugZeitBegrenzung(
+                    Integer.parseInt(txtZugzeitbegrenzung.getText()));
+                parent.setEinstellungen(einstellungen);
+                JOptionPane.showMessageDialog(parent,
+                    "Einstellungen gespeichert!");
+            } else {
+                JOptionPane.showMessageDialog(parent, "Geben sie eine gültige "
+                    + "Zugzeitbegrenzung ein");
+            }
         } else if (command.equals("drehenJa")) {
             einstellungen.setSpielfeldDrehen(true);
         } else if (command.equals("drehenNein")) {    
