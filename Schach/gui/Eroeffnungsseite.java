@@ -124,6 +124,11 @@ public class Eroeffnungsseite extends Panel {
         cCenter.setLayout(new GridLayout(0, 1, 0, 40));
         spielen.setBackground(cHellesBeige);
         spielLaden.setBackground(cHellesBeige);
+        // Wenn es kein zu ladendes Spiel gibt
+        if (parent.getSpieleListe().isEmpty()) {
+            spielLaden.setEnabled(false);
+            spielLaden.setToolTipText("Keine gespeicherten Spiele vorhanden!");
+        }
         einstellungen.setBackground(cHellesBeige);
         highscore.setBackground(cHellesBeige);
         statistiken.setBackground(cHellesBeige);
@@ -132,6 +137,7 @@ public class Eroeffnungsseite extends Panel {
         cCenter.add(einstellungen);
         cCenter.add(highscore);
         cCenter.add(statistiken);
+
         this.add(cCenter, BorderLayout.CENTER);
         
         // East 

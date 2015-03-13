@@ -474,24 +474,25 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             Feld momentan = schwarz.getPosition();
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
+            String lineSep = System.getProperty("file.separator");
             String name = "";
             if (schwarz.getWert() == 900) {
-                name = "queenb.gif";
+                name = "pictures" + lineSep + "queenb.gif";
             }
             if (schwarz.getWert() == 100) {
-                name = "pawnb.gif";
+                name = "pictures" + lineSep + "pawnb.gif";
             }
             if (schwarz.getWert() == 0) {
-                name = "kingb.gif";
+                name = "pictures" + lineSep + "kingb.gif";
             }
             if (schwarz.getWert() == 325) {
-                name = "bishopb.gif";
+                name = "pictures" + lineSep + "bishopb.gif";
             }
             if (schwarz.getWert() == 275) {
-                name = "knightb.gif";
+                name = "pictures" + lineSep + "knightb.gif";
             }
             if (schwarz.getWert() == 465) {
-                name = "rookb.gif";
+                name = "pictures" + lineSep + "rookb.gif";
             }
             try {
                 Image test = ImageIO.read(new File(name));
@@ -506,24 +507,25 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             Feld momentan = weiss.getPosition();
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
+            String lineSep = System.getProperty("file.separator");
             String name = "";
             if (weiss.getWert() == 900) {
-                name = "queenw.gif";
+                name = "pictures" + lineSep + "queenw.gif";
             }
             if (weiss.getWert() == 100) {
-                name = "pawnw.gif";
+                name = "pictures" + lineSep +  "pawnw.gif";
             }
             if (weiss.getWert() == 0) {
-                name = "kingw.gif";
+                name = "pictures" + lineSep + "kingw.gif";
             }
             if (weiss.getWert() == 325) {
-                name = "bishopw.gif";
+                name = "pictures" + lineSep + "bishopw.gif";
             }
             if (weiss.getWert() == 275) {
-                name = "knightw.gif";
+                name = "pictures" + lineSep + "knightw.gif";
             }
             if (weiss.getWert() == 465) {
-                name = "rookw.gif";
+                name = "pictures" + lineSep + "rookw.gif";
             }
             try {
                 Image test = ImageIO.read(new File(name));
@@ -561,24 +563,25 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             JLabel momentan = new JLabel();
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
+            String lineSep = System.getProperty("file.separator");
             String name = "";
             if (schwarz.getWert() == 900) {
-                name = "queenb.gif";
+                name = "pictures" + lineSep + "queenb.gif";
             }
             if (schwarz.getWert() == 100) {
-                name = "pawnb.gif";
+                name = "pictures" + lineSep + "pawnb.gif";
             }
             if (schwarz.getWert() == 0) {
-                name = "kingb.gif";
+                name = "pictures" + lineSep + "kingb.gif";
             }
             if (schwarz.getWert() == 325) {
-                name = "bishopb.gif";
+                name = "pictures" + lineSep + "bishopb.gif";
             }
             if (schwarz.getWert() == 275) {
-                name = "knightb.gif";
+                name = "pictures" + lineSep + "knightb.gif";
             }
             if (schwarz.getWert() == 465) {
-                name = "rookb.gif";
+                name = "pictures" + lineSep + "rookb.gif";
             }
             try {
                 Image imageB = ImageIO.read(new File(name));
@@ -596,24 +599,25 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             JLabel momentan = new JLabel();
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
+            String lineSep = System.getProperty("file.separator");
             String name = "";
             if (weiss.getWert() == 900) {
-                name = "queenw.gif";
+                name = "pictures" + lineSep + "queenw.gif";
             }
             if (weiss.getWert() == 100) {
-                name = "pawnw.gif";
+                name = "pictures" + lineSep + "pawnw.gif";
             }
             if (weiss.getWert() == 0) {
-                name = "kingw.gif";
+                name = "pictures" + lineSep + "kingw.gif";
             }
             if (weiss.getWert() == 325) {
-                name = "bishopw.gif";
+                name = "pictures" + lineSep + "bishopw.gif";
             }
             if (weiss.getWert() == 275) {
-                name = "knightw.gif";
+                name = "pictures" + lineSep + "knightw.gif";
             }
             if (weiss.getWert() == 465) {
-                name = "rookw.gif";
+                name = "pictures" + lineSep + "rookw.gif";
             }
             try {
                 Image imageW = ImageIO.read(new File(name));
@@ -695,6 +699,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             spielfeldAufbau();
             parent.soundAbspielen("FehlerhafteEingabe.wav");
             // Schachmeldung ausgeben
+            for (Feld feld : spielfeld.getLetzteFelder()) {
+                feld.setBackground(gruen);
+            }
             JOptionPane.showMessageDialog(parent, 
                 "Sie stehen im Schach!", "Schachwarnung!",
                 JOptionPane.WARNING_MESSAGE);
@@ -1075,12 +1082,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         while (uhrAktiv) {
             zugzeit.setForeground(Color.BLACK);
             ausgabe = new StringBuffer();
-            // Alle 10 millisekunden wird geupdated
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             // Vergangene Ziet in Millisekuden
             sekundenStopp = (int) System.currentTimeMillis()
                     - sekundenStart;
@@ -1125,11 +1126,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if (btnWiederholung.isEnabled()) {
                 if (wiederholung && sekundenStopp >= 3000) {
                     btnWiederholung.doClick();
-                    spielfeldAufbau();
                     start();
                 }
             }
-            
         }
     }
     
@@ -1163,6 +1162,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Spielende Ansicht.
      */
     private void cEndeErstellen()  {
+        // Alle Autosave Dateien des Spiels löschen
+        parent.autoSaveLoeschen();
         // cEnde
         System.out.println(spielfeld.getSpieldaten().toString());
         cEnde.setLayout(new GridBagLayout());
