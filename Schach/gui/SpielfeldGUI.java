@@ -656,6 +656,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
                 // Unentschieden einreichen
                 spiel.unentschieden();
+                parent.soundAbspielen("Hinweis.wav");
                 JOptionPane.showMessageDialog(parent, "50 Züge Regel wurde "
                     + "erfüllt. Das Spiel endet in einem Unentschieden");
                 this.remove(cEast);
@@ -769,6 +770,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         mattOderSchach();
         if (!spielVorbei && letzterZug instanceof Umwandlungszug)   {
             spielfeldAufbau();
+            parent.soundAbspielen("Hinweis.wav");
             String[] moeglicheFiguren = {"Dame", "Turm", "Läufer", 
                 "Springer"};
             String s = (String) JOptionPane.showInputDialog(parent,
@@ -943,6 +945,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
                 // Unentschieden einreichen
                 spiel.unentschieden();
+                parent.soundAbspielen("Hinweis.wav");
                 JOptionPane.showMessageDialog(parent, "50 Züge Regel wurde "
                     + "erfüllt. Das Spiel endet in einem Unentschieden");
                 this.remove(cEast);
@@ -952,6 +955,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 this.repaint();  
             } else {
                 if (!(spieler2 instanceof Computerspieler)) {
+                    parent.soundAbspielen("Hinweis.wav");
                     int eingabe = JOptionPane.showConfirmDialog(parent, 
                         "Möchten Sie sich auf ein Unentschieden einigen?");
                     if (eingabe == 0) {
@@ -973,12 +977,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         } else {
                             spieler = spieler2;
                         }
+                        parent.soundAbspielen("Aufgeben.wav");
                         JOptionPane.showMessageDialog(parent, 
                             spieler.getName() + "hat das Remis abgelehnt");
                     }
                 } else {
                     if ((boolean) ((Computerspieler) spieler2)
                         .unentschiedenAnnehmen()) {
+                        parent.soundAbspielen("Hinweis.wav");
                         JOptionPane.showMessageDialog(parent, "Spiel endet "
                             + "unentschieden.");
                         spiel.unentschieden();
@@ -991,6 +997,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         this.validate();
                         this.repaint();
                     } else {
+                        parent.soundAbspielen("Aufgeben.wav");
                         JOptionPane.showMessageDialog(parent, 
                             spieler2.getName() + "hat das Remis abgelehnt");
                     }
@@ -1022,6 +1029,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Wenn das Spiel gespeichert werden soll
         if (e.getActionCommand().equals(commandSpeichern)) {
             parent.spielSpeichern(spiel);
+            parent.soundAbspielen("Hinweis.wav");
             JOptionPane.showMessageDialog(parent, "Spiel gespeichert",
                 "Speichern", JOptionPane.INFORMATION_MESSAGE);
         }

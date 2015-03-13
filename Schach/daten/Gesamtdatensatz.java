@@ -266,10 +266,10 @@ public class Gesamtdatensatz {
          * Statistik: True
          */
         einstellungen = new Einstellungen();
-        spielerListe.add(new Computerspieler("Walter"));
         spielerListe.add(new Computerspieler("Karl Heinz"));
         spielerListe.add(new Computerspieler("Rosalinde"));
         spielerListe.add(new Computerspieler("Ursula"));
+        spielerListe.add(new Computerspieler("Walter"));
         
     }
     
