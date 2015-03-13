@@ -418,7 +418,6 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                     || (nummer >= 65 && nummer <= 90)
                     || (nummer >= 97 && nummer <= 122)
                     || nummer == 32)) {
-                    System.out.println("false");
                     // dann ist die Zeichenkette Fehlerhaft
                     korrekt = false;
                 }
@@ -482,7 +481,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         }
        
         
-        // Wenn zwei Spieler vrohanden sind
+        // Wenn zwei Spieler vorhanden sind
         if (spieler1 != null && spieler2 != null) {
             // Wenn Spieler 1 die Farbe weiss ausgewählt hat
             if (bGFarbauswahl.getSelection().

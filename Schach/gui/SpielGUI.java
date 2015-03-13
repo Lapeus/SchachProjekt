@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -48,13 +49,14 @@ public class SpielGUI extends JFrame implements WindowListener {
      */
     public SpielGUI() {
         super("Schachspiel");
-        seitenAuswahl("Eroeffnungsseite");
         //pack();
         setVisible(true);
+        this.setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.addWindowListener(this);
         gesamtdatenLaden();
         gesamtdatenSpeichern();
+        seitenAuswahl("Eroeffnungsseite");
     }
     
     // Anfang Methoden

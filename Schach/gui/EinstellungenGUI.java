@@ -16,6 +16,7 @@ import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextPane;
@@ -317,6 +318,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
             einstellungen.setZugZeitBegrenzung(
                 Integer.parseInt(txtZugzeitbegrenzung.getText()));
             parent.setEinstellungen(einstellungen);
+            JOptionPane.showMessageDialog(parent, "Einstellungen gespeichert!");
         } else if (command.equals("drehenJa")) {
             einstellungen.setSpielfeldDrehen(true);
         } else if (command.equals("drehenNein")) {    
