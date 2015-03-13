@@ -530,7 +530,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 int height = parent.getHeight() / 9;
                 Image imageB = ImageIO.read(new File(name));
                 ImageIcon iconB  = new ImageIcon(imageB
-                    .getScaledInstance(width, height, Image.SCALE_DEFAULT));
+                    .getScaledInstance(width, height, Image.SCALE_SMOOTH));
                 momentan.setIcon(iconB);
             } catch (IOException exc) {
                 exc.printStackTrace();
@@ -566,7 +566,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 int height = parent.getHeight() / 9;
                 Image imageW = ImageIO.read(new File(name));
                 ImageIcon iconW  = new ImageIcon(imageW
-                    .getScaledInstance(width, height, Image.SCALE_DEFAULT));
+                    .getScaledInstance(width, height, Image.SCALE_SMOOTH));
                 momentan.setIcon(iconW);
             } catch (Exception exc) {
                 exc.printStackTrace();

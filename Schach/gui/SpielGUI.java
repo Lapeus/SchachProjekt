@@ -52,6 +52,8 @@ public class SpielGUI extends JFrame implements WindowListener {
         //pack();
         setVisible(true);
         this.setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        System.out.println(d.getHeight() + " " + d.getWidth());
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.addWindowListener(this);
         gesamtdatenLaden();
