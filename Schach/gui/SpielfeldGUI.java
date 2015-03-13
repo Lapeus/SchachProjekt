@@ -231,7 +231,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Wenn das Spiel zu ende ist dann muss der Timer das wissen.
      */
-    private boolean wiederholung = false; 
+    private boolean wiederholung = false;
+    
+    /**
+     * Thread fuer die Stoppuhr.
+     */
+    private Thread th = new Thread(this);
     
     
     /**
@@ -402,6 +407,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         // Zugzeit fuer den ersten Zug starten
         start();
+        // Thread starten
+        th.start(); 
 
         // SpielfeldGUI erstellen
         spielfeldAufbau();
@@ -719,7 +726,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         if (spielfeld.schachMatt()) {
             spielfeldAufbau();
             // wird die Stoppuhr angehalten
-            uhrAktiv = false;
+            // uhrAktiv = false;
             // das Spiel ausgewertet
             List<Object> auswertung = spiel.auswertung();
             Spieler gewinner = (Spieler) auswertung.get(0);
@@ -999,14 +1006,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         this.repaint();
                     } else {
                         JOptionPane.showMessageDialog(parent, 
-                            spieler2.getName() + "hat das Remis abgelehnt");
+                            spieler2.getName() + " hat das Remis abgelehnt");
                     }
                 }
             }
         }
         // Wenn der momentane Spieler aufgibt
         if (e.getActionCommand().equals(commandAufgeben)) {
-            uhrAktiv = false;
+            //uhrAktiv = false;
             List<Object> aufgeben = spiel
                 .aufgeben(spielfeld.getAktuellerSpieler());
             Spieler verlierer = (Spieler) aufgeben.get(0);
@@ -1063,15 +1070,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Startet eine neue Zeitnahmesession für die Zugzeit der Spieler.
      */
     private void start() {
+        System.out.println(Thread.activeCount());
         // Alte Zeit beenden
         uhrAktiv = false;
+        System.out.println(Thread.activeCount());
         // Neue Zeit anfangen
         uhrAktiv = true;
-        // Thread anlegen
-        Thread th = new Thread(this); 
+        // Thread anlegen 
         sekundenStart = (int) System.currentTimeMillis();
-        // Thread starten
-        th.start(); 
     }
     
     /**
@@ -1082,7 +1088,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         while (uhrAktiv) {
             zugzeit.setForeground(Color.BLACK);
             ausgabe = new StringBuffer();
-            // Vergangene Ziet in Millisekuden
+            try {
+                Thread.sleep(10);
+            } catch (Exception exc) {
+                exc.printStackTrace();
+            }
+            // Vergangene Zeit in Millisekuden
             sekundenStopp = (int) System.currentTimeMillis()
                     - sekundenStart;
             // Formatierungshilfe für Zeiten
@@ -1124,10 +1135,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 aufgeben.doClick();
             }
             if (btnWiederholung.isEnabled()) {
-                if (wiederholung && sekundenStopp >= 3000) {
+                if (wiederholung && sekundenStopp >= 2000) {
                     btnWiederholung.doClick();
                     start();
                 }
+            } else {
+                uhrAktiv = false;
             }
         }
     }
@@ -1162,6 +1175,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Spielende Ansicht.
      */
     private void cEndeErstellen()  {
+        System.out.println(Thread.activeCount());
         // Alle Autosave Dateien des Spiels löschen
         parent.autoSaveLoeschen();
         // cEnde

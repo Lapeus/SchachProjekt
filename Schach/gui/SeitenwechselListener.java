@@ -55,7 +55,6 @@ public class SeitenwechselListener implements ActionListener {
             parent.seitenAuswahl("SpielfeldGUI");
         } 
         if (command == "spielende") {
-            // TODO schoener bitte
             parent.autoSaveLoeschen();
             parent.seitenAuswahl("Eroeffnungsseite");
         }
