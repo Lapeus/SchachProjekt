@@ -294,7 +294,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
             = new JLabel("Soll das Spielfeld gedreht werden ?");
         cCenter.add(lblSpielfeldDrehen, gbc);
         // Radio Buttons Statistik
-        auswahlJaNein("drehenJa", "derehenNein");
+        auswahlJaNein("drehenJa", "drehenNein");
         if (this.einstellungen.isSpielfeldDrehen()) {
             ja.setSelected(true);
         } else {

@@ -396,11 +396,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         gbc.gridy = 6;
         cEast.add(aufgeben, gbc);
         
-        
-        
-        
-        
-        
         // Zu Panel hinzufügen
         this.add(cCenter, BorderLayout.CENTER);
         this.add(cEast, BorderLayout.EAST);
