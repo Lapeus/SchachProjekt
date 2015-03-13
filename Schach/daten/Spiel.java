@@ -349,7 +349,6 @@ public class Spiel {
         List<Zug> zugListe = new ArrayList<Zug>();
         zugListe.addAll(spielfeld.getSpieldaten().getZugListe());
         for (int i = 0; i < zugListe.size(); i++) {
-            System.out.println(i);
             spielfeld.zugRueckgaengig();
         }
         return zugListe;

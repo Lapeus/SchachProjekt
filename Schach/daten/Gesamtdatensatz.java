@@ -702,8 +702,12 @@ public class Gesamtdatensatz {
                 
                 Feld startfeld;
                 Feld zielfeld;
+                // Das erste Leerzeichen
+                int stelleLeerzeichen = line.indexOf(" ");
+                // Der reine Zug
+                String vordererTeil = line.substring(0, stelleLeerzeichen);
                 // Wenn es eine kleine Rochade ist
-                if (line.equals("0-0")) {
+                if (vordererTeil.equals("0-0")) {
                     if (aktuelleFarbe) {
                         startfeld = felderListe.get(4);
                         zielfeld = felderListe.get(6);
@@ -713,7 +717,7 @@ public class Gesamtdatensatz {
                     }
                     zug = new Zug(startfeld, zielfeld, false, zugzeit);
                 // Wenn es eine grosse Rochade ist
-                } else if (line.equals("0-0-0")) {
+                } else if (vordererTeil.equals("0-0-0")) {
                     if (aktuelleFarbe) {
                         startfeld = felderListe.get(4);
                         zielfeld = felderListe.get(2);
@@ -724,10 +728,6 @@ public class Gesamtdatensatz {
                     zug = new Zug(startfeld, zielfeld, false, zugzeit);
                 // Wenn es ein normaler Zug ist
                 } else {
-                    // Das erste Leerzeichen
-                    int stelleLeerzeichen = line.indexOf(" ");
-                    // Der reine Zug
-                    String vordererTeil = line.substring(0, stelleLeerzeichen);
                     // Das Trennungszeichen (x oder -)
                     int stelleTrennung = line.indexOf("-");
                     // Es ist grundsaetzlich kein Schlagzug

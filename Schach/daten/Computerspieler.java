@@ -303,9 +303,12 @@ public class Computerspieler extends Spieler {
         } else {
             alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
         }
+        // Testet, ob ueberhaupt ein Zug gemacht wurde
+        int zaehl = 0;
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         for (Figur figur : alleFiguren) {
             for (Feld feld : figur.getKorrektFelder()) {
+                zaehl++;
                 spielfeld.ziehe(figur, feld, 0);
                 // Wenn ein Bauer umgewandelt wird
                 Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
@@ -319,6 +322,26 @@ public class Computerspieler extends Spieler {
                     if (maxWert >= beta) {
                         return maxWert;
                     }
+                }
+            }
+        }
+        // Wenn keine Figur gezogen werden konnte, war es eine Matt oder Patt
+        // Situation
+        if (zaehl == 0) {
+            // Wenn er jetzt im Schach steht, ist es Matt
+            if (spielfeld.isSchach()) {
+                // Schach-Marker, der bei isSchach() gesetzt wird, loeschen
+                spielfeld.setSchach(false);
+            } else {
+                /* Es ist eine Patt-Situation eingetreten. Nun soll getestet 
+                 * werden, ob der aktuelle Spieler deutlich fuehrt, denn wenn
+                 * dem so ist, waere ein Patt aus seiner Sicht nicht 
+                 * erstrebenswert.
+                 */
+                // Wenn der Spieler aktuell deutlich fuehrt
+                if (bewertungsfunktion() > 600) {
+                    // Wird der niedrigste moegliche Wert gesetzt
+                    maxWert = -4500;
                 }
             }
         }
@@ -344,6 +367,8 @@ public class Computerspieler extends Spieler {
         } else {
             alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
         }
+        // Testet ob ueberhaupt eine Figur gezogen wurde
+        int zaehl = 0;
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         for (Figur figur : alleFiguren) {
             for (Feld feld : figur.getKorrektFelder()) {
@@ -363,13 +388,36 @@ public class Computerspieler extends Spieler {
                 }
             }
         }
+        // Wenn keine Figur gezogen werden konnte, war es eine Matt oder Patt
+        // Situation
+        if (zaehl == 0) {
+            // Wenn er jetzt im Schach steht, ist es Matt
+            if (spielfeld.isSchach()) {
+                // Schach-Marker, der bei isSchach() gesetzt wird, loeschen
+                spielfeld.setSchach(false);
+            } else {
+                /* Es ist eine Patt-Situation eingetreten. Nun soll getestet 
+                 * werden, ob der aktuelle Spieler deutlich fuehrt, denn wenn
+                 * dem so ist, waere ein Patt aus seiner Sicht nicht 
+                 * erstrebenswert.
+                 */
+                // Wenn der Spieler aktuell deutlich fuehrt
+                // (Minimieren fuer schwarz -> je kleiner desto besser
+                if (bewertungsfunktion() < 600) {
+                    /* Wird der hoechst moegliche Wert gesetzt, der beim 
+                     * Minimieren natuerlich der schlechteste ist
+                     */
+                    minWert = 4500;
+                }
+            }
+        }
         return minWert;
     } 
     
     /**
      * Bewertet das Spielfeld nach verschiedenen Kriterien.
      * @return Eine Bewertung in Form einer ganzen Zahl im Bereich von etwa
-     * -4000 bis +4000; <b> positiv </b> ist gut f&uuml;r wei&szlig;,
+     * -4500 bis +4500; <b> positiv </b> ist gut f&uuml;r wei&szlig;,
      * <b> negativ </b> ist gut f&uuml;r schwarz.
      */
     private int bewertungsfunktion() {
@@ -447,8 +495,8 @@ public class Computerspieler extends Spieler {
         // Materialwert aus Sicht von weiss
         int matWert = spielfeld.getMaterialwert(true) 
             - spielfeld.getMaterialwert(false);
-        // Wenn der Computergegner mehr als 500 Punkte weniger hat
-        if ((getFarbe() && matWert < -400) || (!getFarbe() && matWert > 400)) {
+        // Wenn der Computergegner mehr als 600 Punkte weniger hat
+        if ((getFarbe() && matWert < -600) || (!getFarbe() && matWert > 600)) {
             annehmen = true;
         }
         
@@ -460,7 +508,7 @@ public class Computerspieler extends Spieler {
         if (spielfeld.getSpieldaten().getZugListe().size() < 16) {
             remis = false;
         } else {
-            /* Solange noch nicht alle letzten 20 Halbzuege getestet wurden und 
+            /* Solange noch nicht alle letzten 16 Halbzuege getestet wurden und 
              * noch keine Anforderung nicht erfuellt wurde
              */
             while (remis && zaehl < 16) {
