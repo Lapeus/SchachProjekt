@@ -23,13 +23,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 
 import daten.Computerspieler;
@@ -138,6 +139,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * vorher schon eine Figur ausgewählt hat.
      */
     private Figur ausgewaehlteFigur;
+    
+    /**
+     * Zugliste fuer den Engamescreen.
+     */
+    private JList<String> zugListe;
     
     /**
      * JPanel für das Spielfeld. Wird in der <i>spielfeldUpdate</i> Methode 
@@ -791,7 +797,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private void spielerzugGUI(Feld momentanesFeld) {
         // Hier ist der jetzige Zug beendet also auch die Zugzeit
-        sekundenStopp = ((int) System.currentTimeMillis()
+        sekundenStopp = (System.currentTimeMillis()
             - sekundenStart) / 1000;
         // Ein Zug wird ausgeführt und die Zugzeit uebergeben
         spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
@@ -1083,6 +1089,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // Ziehe jeden Zug
                 spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), 
                     zug.getZugzeit());
+                zugListe.setSelectedIndex(zaehler);
                 // Wenn es ein Umwandlungszug war
                 if (zug instanceof Umwandlungszug) {
                     // Wandel die Figur entsprechend um
@@ -1232,13 +1239,20 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         gbc2.gridy = 1;
         cEnde.add(btnWiederholung, gbc2);
         // Zugliste
-        JTextPane zugliste = new JTextPane();
-        zugliste.setEditable(false);
-        zugliste.setBackground(cEast.getBackground());
-        zugliste.setText(spielfeld.getSpieldaten().toString());
-        JScrollPane sPane = new JScrollPane(zugliste);
+        DefaultListModel<String> listModel = new DefaultListModel<String>();
+        String[] zuege = spielfeld.getSpieldaten().toString()
+            .split(System.getProperty("line.separator"));
+        for (String string : zuege) {
+            listModel.addElement(string);
+        }
+        zugListe = new JList<String>(listModel);
+        zugListe.setBackground(cHellesBeige);
+        JScrollPane sPane = new JScrollPane(zugListe);
+        sPane.setBackground(cHellesBeige);
         gbc2.gridy = 2;
+        gbc2.fill = GridBagConstraints.HORIZONTAL;
         cEnde.add(sPane, gbc2);
+        cEnde.revalidate();
     }
     
     /**
