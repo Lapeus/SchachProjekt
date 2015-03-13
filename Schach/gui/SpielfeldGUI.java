@@ -13,6 +13,8 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -21,13 +23,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 
 import daten.Computerspieler;
@@ -45,7 +48,7 @@ import zuege.Umwandlungszug;
  * @author Marvin Wolf 
  */
 public class SpielfeldGUI extends JPanel implements MouseListener, 
-    ActionListener, Runnable {
+    ActionListener, Runnable, ComponentListener {
     
     /**
      * Serial Key zur Identifizierung.
@@ -138,6 +141,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private Figur ausgewaehlteFigur;
     
     /**
+     * Zugliste fuer den Engamescreen.
+     */
+    private JList<String> zugListe;
+    
+    /**
      * JPanel für das Spielfeld. Wird in der <i>spielfeldUpdate</i> Methode 
      * benötigt.  
      */
@@ -174,6 +182,16 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private final Color gruen = new Color(6, 148, 6);
     
     /**
+     * Konstante fuer den Farbton des Hintergrundes (Braun).
+     */
+    private final Color cBraunRot = new Color(164, 43, 24); 
+    
+    /**
+     * Konstante fuer den Farbton der Buttons (Beige).
+     */
+    private final Color cHellesBeige = new Color(255, 248, 151);
+    
+    /**
      * Action Command für den Rueckgaening-Button.
      */
     private final String commandRueck = "rueck";
@@ -201,12 +219,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Startzeit für die Zugzeit-Stoppuhr (Ueber Systemzeit). 
      */
-    private int sekundenStart;
+    private long sekundenStart;
     
     /**
      * Endzeit für die Zugzeit-Stoppuhr (Endezeit - Startzeit). 
      */
-    private int sekundenStopp;
+    private long sekundenStopp;
     
     /**
      * Gibt an ob die Uhr aktiv ist.
@@ -323,11 +341,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         parent.setLocationRelativeTo(null);
         
         // CENTER
+        cCenter.addComponentListener(this);
         this.setLayout(new BorderLayout());
         cCenter.setBackground(new Color(0, 0, 0));
         cCenter.setLayout(new GridLayout(8, 8, 1, 1));
         
         // EAST
+        cEast.setBackground(cBraunRot);
         GridBagConstraints gbc = new GridBagConstraints();
         cEast.setLayout(new GridBagLayout());
         
@@ -348,26 +368,31 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(lGeschlageneB, gbc);
         
         // geschlagene Weiss
+        geschlageneWeisse.setBackground(cBraunRot);
         geschlageneWeisse.setLayout(new GridLayout(3, 0));
         gbc.gridy = 1;
         gbc.gridheight = 2;
         cEast.add(geschlageneWeisse, gbc);
         
         // geschlagene Schwarz
+        geschlageneSchwarze.setBackground(cBraunRot);
         geschlageneSchwarze.setLayout(new GridLayout(3, 0));
         gbc.gridy = 9;
         cEast.add(geschlageneSchwarze, gbc);
         
         // Label momentanerSpieler
+        momentanerSpieler.setBackground(cHellesBeige);
         gbc.gridheight = 1;
         gbc.gridy = 3;
         cEast.add(momentanerSpieler, gbc);
         
         // Label Stoppuhr
+        zugzeit.setBackground(cHellesBeige);
         gbc.gridy = 7;
         cEast.add(zugzeit, gbc);
         
         // Button rueck
+        rueckgaengig.setBackground(cHellesBeige);
         rueckgaengig.addActionListener(this);
         rueckgaengig.setActionCommand(commandRueck);
         gbc.gridy = 4;
@@ -375,6 +400,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(rueckgaengig, gbc);
         
         // Button speichern
+        speichern.setBackground(cHellesBeige);
         speichern.addActionListener(this);
         speichern.setActionCommand(commandSpeichern);
         gbc.gridx = 2;
@@ -382,6 +408,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(speichern, gbc);
         
         // Button unentschieden
+        btnUnentschieden.setBackground(cHellesBeige);
         btnUnentschieden.addActionListener(this);
         btnUnentschieden.setActionCommand(commandRemi);
         gbc.gridx = 1;
@@ -390,6 +417,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         
         // Button aufgeben
+        aufgeben.setBackground(cHellesBeige);
         aufgeben.addActionListener(this);
         aufgeben.setActionCommand(commandAufgeben);
         gbc.gridx = 2;
@@ -407,7 +435,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
 
         // SpielfeldGUI erstellen
         spielfeldAufbau();
-        
+ 
         /* Wenn ein Computerspieler mitspielt und anfangen soll muss er hier 
          * den ersten Zug machen
          */
@@ -453,7 +481,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }    
             counter -= 8;
         }
-        if (parent.getEinstellungen().isSpielfeldDrehen()) {
+        if (spielfeld.getEinstellungen().isSpielfeldDrehen()) {
             spielfeldDrehen();
         }
         spielfeldUIUpdate();
@@ -462,6 +490,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Updaten der Spielfeldoberfläche.
      */
     private void spielfeldUIUpdate() {
+        this.revalidate();
         if (spielfeld.getSpieldaten().getZugListe().isEmpty()) {
             rueckgaengig.setEnabled(false);
         } else {
@@ -497,9 +526,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 name = "pictures" + lineSep + "rookb.gif";
             }
             try {
-                Image test = ImageIO.read(new File(name));
-                ImageIcon test2  = new ImageIcon(test);
-                momentan.setIcon(test2);
+                int width = parent.getWidth() / 10;
+                int height = parent.getHeight() / 9;
+                Image imageB = ImageIO.read(new File(name));
+                ImageIcon iconB  = new ImageIcon(imageB
+                    .getScaledInstance(width, height, Image.SCALE_DEFAULT));
+                momentan.setIcon(iconB);
             } catch (IOException exc) {
                 exc.printStackTrace();
             }
@@ -530,10 +562,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 name = "pictures" + lineSep + "rookw.gif";
             }
             try {
-                Image test = ImageIO.read(new File(name));
-                ImageIcon test2  = new ImageIcon(test);
-                momentan.setIcon(test2);
-            } catch (IOException exc) {
+                int width = parent.getWidth() / 10;
+                int height = parent.getHeight() / 9;
+                Image imageW = ImageIO.read(new File(name));
+                ImageIcon iconW  = new ImageIcon(imageW
+                    .getScaledInstance(width, height, Image.SCALE_DEFAULT));
+                momentan.setIcon(iconW);
+            } catch (Exception exc) {
                 exc.printStackTrace();
             }
         }
@@ -672,10 +707,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 this.repaint();  
             } else {
                 ((Computerspieler) spieler2).ziehen();
-                sekundenStopp = ((int) System.currentTimeMillis()
+                sekundenStopp = (System.currentTimeMillis()
                     - sekundenStart) / 1000;
                 spielfeld.getSpieldaten().getLetzterZug().setZugzeit(
-                    sekundenStopp);
+                    (int) sekundenStopp);
                 mattOderSchach();
                 spielfeldAufbau();
                 start();
@@ -762,11 +797,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private void spielerzugGUI(Feld momentanesFeld) {
         // Hier ist der jetzige Zug beendet also auch die Zugzeit
-        sekundenStopp = ((int) System.currentTimeMillis()
+        sekundenStopp = (System.currentTimeMillis()
             - sekundenStart) / 1000;
         // Ein Zug wird ausgeführt und die Zugzeit uebergeben
         spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
-            sekundenStopp);
+            (int) sekundenStopp);
         spielfeldAufbau();
         this.validate();
         this.repaint();  
@@ -833,7 +868,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     .contains(ausgewaehlteFigur)) {
                 // Wird diese als neue Ausgewählte Figur gespeichert
                 momentanesFeld.setBackground(rot);
-                if (parent.getEinstellungen().isMoeglicheFelderAnzeigen()) {
+                if (spielfeld.getEinstellungen().isMoeglicheFelderAnzeigen()) {
                     for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
                         makieren.setBackground(rot);
                     }
@@ -846,7 +881,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 && spielfeld.getSchwarzeFiguren()
                     .contains(ausgewaehlteFigur)) {
                 momentanesFeld.setBackground(rot);
-                if (parent.getEinstellungen().isMoeglicheFelderAnzeigen()) {
+                if (spielfeld.getEinstellungen().isMoeglicheFelderAnzeigen()) {
                     for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
                         makieren.setBackground(rot);
                     }
@@ -882,7 +917,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             ausgewaehlteFigur = null;
         }
         // Färbt die bedrohten Felder Grau
-        if (parent.getEinstellungen().isBedrohteFigurenAnzeigen()) {
+        if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen()) {
             for (Feld bedroht : spielfeld.getBedrohteFelder()) {
                 bedroht.setBackground(new Color(100, 100, 100));
             }
@@ -953,6 +988,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Testen ob die 50-Züge-Regel verletzt wurde
             if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
                 // Unentschieden einreichen
+                spielVorbei = true;
                 spiel.unentschieden();
                 parent.soundAbspielen("Hinweis.wav");
                 JOptionPane.showMessageDialog(parent, "50 Züge Regel wurde "
@@ -968,7 +1004,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     int eingabe = JOptionPane.showConfirmDialog(parent, 
                         "Möchten Sie sich auf ein Unentschieden einigen?");
                     if (eingabe == 0) {
-                        
+                        spielVorbei = true;
                         spiel.unentschieden();
                         for (Feld feld : felderListe) {
                             feld.removeMouseListener(this);
@@ -982,13 +1018,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         Spieler spieler;
                         if (spielfeld.getAktuellerSpieler() == spieler1
                             .getFarbe()) {
-                            spieler = spieler1;
-                        } else {
                             spieler = spieler2;
+                        } else {
+                            spieler = spieler1;
                         }
                         parent.soundAbspielen("Aufgeben.wav");
                         JOptionPane.showMessageDialog(parent, 
-                            spieler.getName() + "hat das Remis abgelehnt");
+                            spieler.getName() + " hat das Remis abgelehnt");
                     }
                 } else {
                     if ((boolean) ((Computerspieler) spieler2)
@@ -996,6 +1032,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         parent.soundAbspielen("Hinweis.wav");
                         JOptionPane.showMessageDialog(parent, "Spiel endet "
                             + "unentschieden.");
+                        spielVorbei = true;
                         spiel.unentschieden();
                         for (Feld feld : felderListe) {
                             feld.removeMouseListener(this);
@@ -1015,7 +1052,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         // Wenn der momentane Spieler aufgibt
         if (e.getActionCommand().equals(commandAufgeben)) {
-            //uhrAktiv = false;
+            spielVorbei = true;
             List<Object> aufgeben = spiel
                 .aufgeben(spielfeld.getAktuellerSpieler());
             Spieler verlierer = (Spieler) aufgeben.get(0);
@@ -1052,6 +1089,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // Ziehe jeden Zug
                 spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), 
                     zug.getZugzeit());
+                zugListe.setSelectedIndex(zaehler);
                 // Wenn es ein Umwandlungszug war
                 if (zug instanceof Umwandlungszug) {
                     // Wandel die Figur entsprechend um
@@ -1073,14 +1111,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Startet eine neue Zeitnahmesession für die Zugzeit der Spieler.
      */
     private void start() {
-        System.out.println(Thread.activeCount());
         // Alte Zeit beenden
         uhrAktiv = false;
-        System.out.println(Thread.activeCount());
         // Neue Zeit anfangen
         uhrAktiv = true;
         // Thread anlegen 
-        sekundenStart = (int) System.currentTimeMillis();
+        sekundenStart = System.currentTimeMillis();
     }
     
     /**
@@ -1097,7 +1133,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 exc.printStackTrace();
             }
             // Vergangene Zeit in Millisekuden
-            sekundenStopp = (int) System.currentTimeMillis()
+            sekundenStopp = System.currentTimeMillis()
                     - sekundenStart;
             // Formatierungshilfe für Zeiten
             Calendar dauer;
@@ -1133,10 +1169,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Auf das Zugzeit-Label schreiben
             zugzeit.setText(ausgabe.toString());
             // Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button
-            int begrenzung = parent.getEinstellungen().getZugZeitBegrenzung();
-            if (begrenzung > 0 && sekundenStopp / 1000 >= begrenzung) {
-                aufgeben.doClick();
+            if (!spielVorbei) {
+                int begrenzung = spielfeld.getEinstellungen()
+                    .getZugZeitBegrenzung();
+                if (begrenzung > 0 && sekundenStopp / 1000 >= begrenzung) {
+                    aufgeben.doClick();
+                }
             }
+            
             if (btnWiederholung.isEnabled()) {
                 if (wiederholung && sekundenStopp >= 2000) {
                     btnWiederholung.doClick();
@@ -1178,32 +1218,70 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Spielende Ansicht.
      */
     private void cEndeErstellen()  {
-        System.out.println(Thread.activeCount());
         // Alle Autosave Dateien des Spiels löschen
         parent.autoSaveLoeschen();
         // cEnde
-        System.out.println(spielfeld.getSpieldaten().toString());
         cEnde.setLayout(new GridBagLayout());
+        cEnde.setBackground(cBraunRot);
         JButton startmenue = new JButton("Zurück zum Startmenü");
         startmenue.setActionCommand(commandStartmenue);
         startmenue.addActionListener(new SeitenwechselListener(parent));
         GridBagConstraints gbc2 = new GridBagConstraints();
         // Startmenue Button
+        startmenue.setBackground(cHellesBeige);
         gbc2.insets = new Insets(15, 15, 15, 15);
         gbc2.gridx = 0;
         gbc2.gridy = 0;
         cEnde.add(startmenue, gbc2);
         // Wiederholung-Anzeigen-Button
+        btnWiederholung.setBackground(cHellesBeige);
         btnWiederholung.addActionListener(this);
         gbc2.gridy = 1;
         cEnde.add(btnWiederholung, gbc2);
         // Zugliste
-        JTextPane zugliste = new JTextPane();
-        zugliste.setEditable(false);
-        zugliste.setBackground(cEast.getBackground());
-        zugliste.setText(spielfeld.getSpieldaten().toString());
-        JScrollPane sPane = new JScrollPane(zugliste);
+        DefaultListModel<String> listModel = new DefaultListModel<String>();
+        String[] zuege = spielfeld.getSpieldaten().toString()
+            .split(System.getProperty("line.separator"));
+        for (String string : zuege) {
+            listModel.addElement(string);
+        }
+        zugListe = new JList<String>(listModel);
+        zugListe.setBackground(cHellesBeige);
+        JScrollPane sPane = new JScrollPane(zugListe);
+        sPane.setBackground(cHellesBeige);
         gbc2.gridy = 2;
+        gbc2.fill = GridBagConstraints.HORIZONTAL;
         cEnde.add(sPane, gbc2);
+        cEnde.revalidate();
+    }
+    
+    /**
+     * Component Listener Methode.
+     * @param e durch Component ausgeloestes Event
+     */
+    public void componentHidden(ComponentEvent e) {
+    }
+    
+    /**
+     * Component Listener Methode.
+     * @param e durch Component ausgeloestes Event
+     */
+    public void componentMoved(ComponentEvent e) {
+    }
+    
+    /**
+     * Sorgt dafuer, dass nach einem resize die Spielfiguren in der richtigen 
+     * Groesse angezeigt werden.
+     * @param e durch resizen ausgeloestes Event
+     */
+    public void componentResized(ComponentEvent e) {
+        spielfeldAufbau();
+    }
+    
+    /**
+     * Component Listener Methode.
+     * @param e durch resizen ausgeloestes Event
+     */
+    public void componentShown(ComponentEvent e) {
     }
 }

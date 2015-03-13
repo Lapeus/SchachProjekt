@@ -86,7 +86,7 @@ public class Highscore extends JPanel {
         String lineSep =  System.getProperty("line.separator");
         for (Spieler spieler : ranking) {
             ergebnis += counter + ". " + spieler.getName() + " " 
-                + spieler.getStatistik().getScore() + lineSep; 
+                + spieler.getStatistik().getScore() + " Punkte" + lineSep; 
             counter++;
         }
         highscorePane.setText(ergebnis);
