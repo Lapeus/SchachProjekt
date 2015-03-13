@@ -8,12 +8,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.List;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -161,18 +157,7 @@ public class SpielLaden extends JPanel implements ActionListener {
                     parent.setContentPane(new SpielfeldGUI(parent, 
                         spiel));
                 } else {
-                    try {
-                        String fileSep = System.getProperty("file.separator");
-                        AudioInputStream ais = AudioSystem.getAudioInputStream(
-                            new File("sounds" + fileSep 
-                                + "FehlerBeimLaden.wav"));
-                        Clip clip = AudioSystem.getClip();
-                        clip.open(ais);
-                        clip.start();
-                        
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+                    parent.soundAbspielen("FehlerBeimLaden.wav");
                     JOptionPane.showMessageDialog(parent, "Das ausgewählte "
                         + "Spiel kann nicht geladen werden");
                     DefaultListModel<String> listModel 
@@ -190,18 +175,7 @@ public class SpielLaden extends JPanel implements ActionListener {
                     this.revalidate();
                 }
             } else {
-                try {
-                    String fileSep = System.getProperty("file.separator");
-                    AudioInputStream ais = AudioSystem.getAudioInputStream(
-                        new File("sounds" + fileSep 
-                            + "FehlerBeimLaden.wav"));
-                    Clip clip = AudioSystem.getClip();
-                    clip.open(ais);
-                    clip.start();
-                    
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                parent.soundAbspielen("Hinweis.wav");
                 JOptionPane.showMessageDialog(parent, "Wählen Sie ein Spiel "
                     + "zum laden aus");
             }

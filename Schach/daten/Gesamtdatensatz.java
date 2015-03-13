@@ -266,10 +266,10 @@ public class Gesamtdatensatz {
          * Statistik: True
          */
         einstellungen = new Einstellungen();
-        spielerListe.add(new Computerspieler("Walter"));
         spielerListe.add(new Computerspieler("Karl Heinz"));
         spielerListe.add(new Computerspieler("Rosalinde"));
         spielerListe.add(new Computerspieler("Ursula"));
+        spielerListe.add(new Computerspieler("Walter"));
         
     }
     
@@ -861,11 +861,24 @@ public class Gesamtdatensatz {
         File ordner = new File("settings" + System.getProperty(
             "file.separator") + "Spiele");
         File[] files = ordner.listFiles();
+        // Alle Dateien im Ordner durchgehen
         for (File file : files) {
-            if (file.getName().contains("autosave")) {
+            // Wenn eine Datei im Titel (autosave) enthaelt
+            if (file.getName().contains("(autosave)")) {
+                // Wird die Datei geloescht
                 file.delete();
             }
         }
+        // Neue Liste um keine CurrentModificationException zu bekommen
+        List<String> zuEntfernendeSpiele = new ArrayList<String>();
+        // Alle zu entfernenden Spiele bestimmen
+        for (String spielname : gespeicherteSpiele) {
+            if (spielname.contains("(autosave)")) {
+                zuEntfernendeSpiele.add(spielname);
+            }
+        }
+        // Alle entsprechenden Spiele aus der Liste loeschen
+        gespeicherteSpiele.removeAll(zuEntfernendeSpiele);
     }
     
     /**

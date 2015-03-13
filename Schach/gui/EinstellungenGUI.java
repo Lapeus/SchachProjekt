@@ -344,6 +344,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
                 einstellungen.setZugZeitBegrenzung(
                     Integer.parseInt(txtZugzeitbegrenzung.getText()));
                 parent.setEinstellungen(einstellungen);
+                parent.soundAbspielen("Hinweis.wav");
                 JOptionPane.showMessageDialog(parent,
                     "Einstellungen gespeichert!");
             } else {
