@@ -59,7 +59,6 @@ public class Computerspieler extends Spieler {
          *    Spiel beider Seiten in n Zuegen die beste Spielsituation hervor-
          *    ruft. Dieser Zug wird anschliessend gezogen.
          */
-       
         if (getName().equals("Karl Heinz")) {
             nachRegeln();
         } else if (getName().equals("Rosalinde")) {
@@ -69,7 +68,6 @@ public class Computerspieler extends Spieler {
         } else if (getName().equals("Walter")) {
             rekursKI(4);
         }
-        
         
         // Wenn ein Bauer umgewandelt wird
         Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
