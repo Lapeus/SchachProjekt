@@ -98,7 +98,7 @@ public class Highscore extends JPanel {
         // South 
         JPanel cSouth = new JPanel();
         cSouth.setBackground(cBraunRot);
-        JButton zurueck = new JButton("zurück");
+        JButton zurueck = new JButton("<html>Zur&uuml;ck");
         zurueck.addActionListener(new SeitenwechselListener(parent));
         zurueck.setActionCommand("Eroeffnungsseite");
         zurueck.setBackground(cHellesBeige);

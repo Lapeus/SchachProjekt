@@ -1,4 +1,4 @@
-//TODO Rücksetzen Button
+//TODO Ruecksetzen Button
 
 package gui;
 
@@ -102,7 +102,7 @@ public class Statistiken extends JPanel implements ActionListener {
         cCenter.setBackground(cBraunRot);
         List<Spieler> spielerListe = parent.getSpielerListe();
         String[] spielernamen = new String[spielerListe.size() + 1];
-        spielernamen[0] = "Wählen sie einen Spieler aus";
+        spielernamen[0] = "Waehlen sie einen Spieler aus";
         for (int i = 0; i < spielernamen.length - 1; i++) {
             spielernamen[i + 1] = spielerListe.get(i).getName();
         }
@@ -118,15 +118,16 @@ public class Statistiken extends JPanel implements ActionListener {
         cSouth.setLayout(new FlowLayout());
         cSouth.setBackground(cBraunRot);
         
-        // Zurück-Button
-        JButton zurueck = new JButton("zurück");
+        // Zurueck-Button
+        JButton zurueck = new JButton("zurueck");
         zurueck.addActionListener(new SeitenwechselListener(parent));
         zurueck.setActionCommand("Eroeffnungsseite");
         zurueck.setBackground(cHellesBeige);
         cSouth.add(zurueck);
         
-        // Zurücksetzen Button
-        JButton btnzuruecksetzen = new JButton("Spielerstatistik zurücksetzen");
+        // Zuruecksetzen Button
+        JButton btnzuruecksetzen 
+            = new JButton("Spielerstatistik zuruecksetzen");
         btnzuruecksetzen.setActionCommand("zuruecksetzen");
         btnzuruecksetzen.addActionListener(this);
         btnzuruecksetzen.setBackground(cHellesBeige);
@@ -186,7 +187,7 @@ public class Statistiken extends JPanel implements ActionListener {
                     + statistik.getSchnellsterSieg() + " Sekunden" + lineSep;
             }
             if (statistik.getKuerzesterSieg() != -1) {
-                momentan += "Kürzester Sieg: "
+                momentan += "Kuerzester Sieg: "
                     + statistik.getKuerzesterSieg() + " Zuege" + lineSep;
             }
             if (statistik.getSchnellstesMatt() != -1) {
@@ -194,7 +195,7 @@ public class Statistiken extends JPanel implements ActionListener {
                     + statistik.getSchnellstesMatt() + " Sekunden" + lineSep;
             }
             if (statistik.getKuerzestesMatt() != -1) {
-                momentan += "Kürzestes Matt:  "
+                momentan += "Kuerzestes Matt:  "
                     + statistik.getKuerzestesMatt() + " Zuege" + lineSep; 
             }
             if (statistik.getZeitSiegDurchschnitt() != -1) {
@@ -208,11 +209,11 @@ public class Statistiken extends JPanel implements ActionListener {
                     + lineSep;
             }
             if (statistik.getZuegeSiegDurchschnitt() != -1) {
-                momentan += "Durschnittliche Siegzüge: " 
+                momentan += "Durschnittliche Siegzuege: " 
                     + statistik.getZuegeSiegDurchschnitt() + " Zuege" + lineSep;
             }
             if (statistik.getZuegeMattDurchschnitt() != -1) {
-                momentan += "Durschnittliche Mattzüge: " 
+                momentan += "Durschnittliche Mattzuege: " 
                     + statistik.getZuegeMattDurchschnitt() + " Zuege" + lineSep;
             }
             if (statistik.getMatWertSiegDurchschnitt() != -1) {

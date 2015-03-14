@@ -28,7 +28,7 @@ public class SeitenwechselListener implements ActionListener {
     
     /**
      * Action Performed, welche das wechseln der Seite an die Eltern-SpielGUI 
-     * Übergeben.
+     * uebergeben.
      * @param e Ausgeloestes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Der Bauplan für die Spielfigur K&ouml;nig. <br>
+ * Der Bauplan fuer die Spielfigur K&ouml;nig. <br>
  * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
  * @author Christian Ackermann
@@ -122,7 +122,7 @@ public class Koenig extends Figur {
             moeglicheFelder.add(getFeld(getFeldIndex() + 2));
         }
         
-        // große Rochade
+        // grosse Rochade
         if (!getGezogen() && rochadeMoeglich(false)) {
             // Fuege das Feld zwei links vom Koenig hinzu
             moeglicheFelder.add(getFeld(getFeldIndex() - 2));
@@ -168,7 +168,7 @@ public class Koenig extends Figur {
             pruefFelder.add(getFeld(getFeldIndex() + 1));
             pruefFelder.add(getFeld(getFeldIndex() + 2));
         } else {
-            // Bei der großen Rochade die beiden links davon
+            // Bei der grossen Rochade die beiden links davon
             pruefFelder.add(getFeld(getFeldIndex() - 1));
             pruefFelder.add(getFeld(getFeldIndex() - 2));
         }

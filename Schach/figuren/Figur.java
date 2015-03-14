@@ -10,7 +10,7 @@ import daten.Spielfeld;
 /**
  * Eine Klasse die alle Spielfiguren verwaltet.
  * Die abstrakte Klasse <i>Figur</i> stellt den Bauplan 
- * für s&auml;mtliche Figuren bereit.
+ * fuer s&auml;mtliche Figuren bereit.
  * @author Christian Ackermann
  */
 public abstract class Figur {
@@ -29,13 +29,13 @@ public abstract class Figur {
     
     /**
      * Die Farbe der Figur. <br>
-     * <b>True</b> steht für wei&szlig;, <b>False</b> steht für schwarz.
+     * <b>True</b> steht fuer wei&szlig;, <b>False</b> steht fuer schwarz.
      */
     private boolean farbe;
     
     /**
      * Der materielle Wert der Figur. <br>
-     * Wird haupts&auml;chlich für die Bewertungsfunktion des Computergegners
+     * Wird haupts&auml;chlich fuer die Bewertungsfunktion des Computergegners
      * ben&ouml;tigt und basiert auf stochastischen Erhebungen. 
      * Dient zum anderen der einfachen Identifikation der Figur ohne Verwendung
      * des <b>instanceof</b> Operators.

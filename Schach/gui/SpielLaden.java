@@ -54,7 +54,7 @@ public class SpielLaden extends JPanel implements ActionListener {
     /**
      * Button um auf das Startpanel zurueckzukehren.
      */
-    private JButton btnZurueck = new JButton("zurück");
+    private JButton btnZurueck = new JButton("zurueck");
     
     /**
      * Liste mit den zu ladenden Spielen.
@@ -62,12 +62,12 @@ public class SpielLaden extends JPanel implements ActionListener {
     private JList<String> jSpieleListe;
     
     /**
-     * Konstante für den Farbton den Hintergrunds (Braun).
+     * Konstante fuer den Farbton den Hintergrunds (Braun).
      */
     private static Color cBraunRot = new Color(164, 43, 24); 
     
     /**
-     * Konstante für den Farbton der Auswahlfelder (Beige).
+     * Konstante fuer den Farbton der Auswahlfelder (Beige).
      */
     private static Color cHellesBeige = new Color(255, 248, 151);
     
@@ -132,7 +132,7 @@ public class SpielLaden extends JPanel implements ActionListener {
         btnSpielLaden.setBackground(cHellesBeige);
         cSouth.add(btnSpielLaden);
         
-        // ZUrück-Button
+        // ZUrueck-Button
         btnZurueck.addActionListener(new SeitenwechselListener(parent));
         btnZurueck.setActionCommand("Eroeffnungsseite");
         btnZurueck.setBackground(cHellesBeige);
@@ -157,7 +157,7 @@ public class SpielLaden extends JPanel implements ActionListener {
                         spiel));
                 } else {
                     parent.soundAbspielen("FehlerBeimLaden.wav");
-                    JOptionPane.showMessageDialog(parent, "Das ausgewählte "
+                    JOptionPane.showMessageDialog(parent, "Das ausgewaehlte "
                         + "Spiel kann nicht geladen werden");
                     DefaultListModel<String> listModel 
                         = new DefaultListModel<String>();
@@ -175,7 +175,7 @@ public class SpielLaden extends JPanel implements ActionListener {
                 }
             } else {
                 parent.soundAbspielen("Hinweis.wav");
-                JOptionPane.showMessageDialog(parent, "Wählen Sie ein Spiel "
+                JOptionPane.showMessageDialog(parent, "Waehlen Sie ein Spiel "
                     + "zum laden aus");
             }
             

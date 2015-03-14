@@ -24,7 +24,7 @@ import javax.swing.JTextPane;
 
 import daten.Spieler;
 /**
- * Klasse für ein Spielerauswahl-Panel. 
+ * Klasse fuer ein Spielerauswahl-Panel. 
  * Implementiert einen eigenen ActionListener der "Spiel starten"-Button Klicks 
  * verarbeitet
  * @author Marvin Wolf
@@ -33,17 +33,17 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     // Anfang Attribute
     
     /**
-     * SerialKey zur späteren Identifizierung.
+     * SerialKey zur spaeteren Identifizierung.
      */
     private static final long serialVersionUID = -6920443370361911344L;
     
     /**
-     * Konstante für den Farbton den Hintergrunds (Braun).
+     * Konstante fuer den Farbton den Hintergrunds (Braun).
      */
     private static Color cBraunRot = new Color(164, 43, 24); 
     
     /**
-     * Konstante für den Farbton der Auswahlfelder (Beige).
+     * Konstante fuer den Farbton der Auswahlfelder (Beige).
      */
     private static Color cHellesBeige = new Color(255, 248, 151);
     
@@ -54,7 +54,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     private SpielGUI parent;
     
     /**
-     * Label für den Spielnamen.
+     * Label fuer den Spielnamen.
      */
     private JLabel lSpielname = new JLabel("Spielname");
     
@@ -66,7 +66,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     /**
      * Button um auf die Eroeffnungseite zu kommen.
      */
-    private JButton btnZurueck = new JButton("Zurück");
+    private JButton btnZurueck = new JButton("<html>Zur&uuml;ck");
     
     /**
      * Textfeld in den der Spielname eingegeben werden muss.
@@ -75,13 +75,13 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     
     /**
      * Spieler der mit dem Namen aus dem Textfeld nameWest erstellt und 
-     * später an die SpielfeldGUI übergeben wird.
+     * spaeter an die SpielfeldGUI uebergeben wird.
      */
     private Spieler spieler1;
     
     /**
      * Spieler der mit dem Namen aus dem Textfeld nameEast erstellt und 
-     * später an die SpielfeldGUI übergeben wird.
+     * spaeter an die SpielfeldGUI uebergeben wird.
      */
     private Spieler spieler2;
     
@@ -96,17 +96,17 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     private JTextField nameEAST = new JTextField("");
     
     /**
-     * Combobox zur Auswahl von bereits erstellten Spielern für Spieler 1.
+     * Combobox zur Auswahl von bereits erstellten Spielern fuer Spieler 1.
      */
     private JComboBox<String> boxWEST;
     
     /**
-     * Combobox zur Auswahl von bereits erstellten Spielern für Spieler 2.
+     * Combobox zur Auswahl von bereits erstellten Spielern fuer Spieler 2.
      */
     private JComboBox<String> boxEAST;
     
     /**
-     * ButtonGroup aus der im ActionListener die Farbauswahl für Spieler 1 
+     * ButtonGroup aus der im ActionListener die Farbauswahl fuer Spieler 1 
      * ausgelsen wird.
      */
     private ButtonGroup bGFarbauswahl; 
@@ -117,7 +117,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     
     /**
      * Einziger Konstruktor von der Klasse Sielerauswahl. Erstellt ein neues 
-     * Panel für die Auswahl von zwei Spielern für eine Partie Schach.
+     * Panel fuer die Auswahl von zwei Spielern fuer eine Partie Schach.
      * 
      * @param parent Die ElternGUI auf der das Panel angezeigt werden soll
      */
@@ -130,7 +130,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     //Methoden Anfang
     
     /**
-     * Methode wird vom Konstruktor aufgerufen und modelliert das Panel für die
+     * Methode wird vom Konstruktor aufgerufen und modelliert das Panel fuer die
      * Spielerauswahl.
      */
     private void init() {
@@ -171,7 +171,8 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         
         Container cCenterLabel = new Container();
         cCenterLabel.setLayout(new FlowLayout());
-        JLabel lFarbwahl = new JLabel("Farbe für Spieler 1 wählen");
+        JLabel lFarbwahl 
+            = new JLabel("<html>Farbe f&uuml;r Spieler 1 w&auml;hlen");
         
         cCenterLabel.add(lFarbwahl);
         
@@ -185,7 +186,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         schwarz.setBackground(cBraunRot);
         schwarz.addActionListener(this);
         
-        JRadioButton weiss = new JRadioButton("weiss");
+        JRadioButton weiss = new JRadioButton("<html>wei&szlig");
         weiss.setActionCommand("weiss");
         weiss.setSelected(true);
         weiss.setBackground(cBraunRot);
@@ -211,7 +212,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         bSpielen.setBackground(cHellesBeige);
         cSouth.add(bSpielen);
         
-        // Zurück-Button
+        // Zurueck-Button
         btnZurueck.setBackground(cHellesBeige);
         btnZurueck.addActionListener(new SeitenwechselListener(parent));
         btnZurueck.setActionCommand("Eroeffnungsseite");
@@ -221,12 +222,12 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     }
     
     /**
-     * Gibt ein Panel mit den Feldern für die Eingabe eines Spielers aus.
+     * Gibt ein Panel mit den Feldern fuer die Eingabe eines Spielers aus.
      * Wird fuer jeden Spieler einmal aufgerufen.
      * 
-     * @param seite Die Seite ("West" oder "East") muss übergeben werden 
+     * @param seite Die Seite ("West" oder "East") muss uebergeben werden 
      * 
-     * @return Gibt ein Panel zurück das Felder zur Eingabe von Spielernamen 
+     * @return Gibt ein Panel zurueck das Felder zur Eingabe von Spielernamen 
      * enthaelt
      */
     private JPanel auswahlPanel(String seite) {
@@ -322,10 +323,10 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     // ActionListener
 
     /**
-     * ActionPerformed für den Fall, dass der "Spiel starten"-Button gedrückt 
+     * ActionPerformed fuer den Fall, dass der "Spiel starten"-Button gedrueckt 
      * wird.
-     * Wenn der "Spiel starten"-Button gedrückt wird muss geschaut werden, ob
-     * ob die benötigten Felder für die Erstellung eines neuen Spiels 
+     * Wenn der "Spiel starten"-Button gedrueckt wird muss geschaut werden, ob
+     * ob die benoetigten Felder fuer die Erstellung eines neuen Spiels 
      * ausgefuellt sind.
      * 
      * @param arg0 Ausgeloestes Event
@@ -335,25 +336,25 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         String nameEast = (String) boxEAST.getSelectedItem();
         // Wenn der "Spiel starten"-Button gedrueckt wird
         if (arg0.getActionCommand().equals("Spiel starten")) {
-            // Wenn alle Felder korrekt ausgefüllt sind
+            // Wenn alle Felder korrekt ausgefuellt sind
             if (wennFelderKorrekt(nameWest, nameEast)) {
                 // Dann wird mit diesen ein neues Spiel erstellt
                 spielErstellen(nameWest, nameEast);
             }
         } 
-        // Wenn eine neue Spielerauswahl für den Spieler1 getroffen wurde
+        // Wenn eine neue Spielerauswahl fuer den Spieler1 getroffen wurde
         if (arg0.getSource().equals(boxWEST)) {
             // Wenn es nicht der neue Spieler reiter ist
             if (!nameWest.equals("neuer Spieler")) {
                 // Das Namensfeld auf diesen Spielernamen setzten 
                 nameWEST.setText(nameWest);
-                // Und verhindern, dass der name geändert werden kann
+                // Und verhindern, dass der name geaendert werden kann
                 nameWEST.setEditable(false);
             // Wenn es der neue Spieler reiter ist 
             } else {
-                // Dann jeden Text löschen
+                // Dann jeden Text loeschen
                 nameWEST.setText("");
-                // dafür sorgen, dass man einen namne eingeben kann
+                // dafuer sorgen, dass man einen namne eingeben kann
                 nameWEST.setEditable(true);
             }
         }
@@ -380,10 +381,10 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         String spieler1 = nameWEST.getText();
         String spieler2 = nameEAST.getText();
         if (nameWest.equals("") || !enthaehltKorrekteZeichen(spieler1)) {
-            fehlermeldung = "Geben Sie einen korrekten Namen für Spieler1 an!";
+            fehlermeldung = "Geben Sie einen korrekten Namen fuer Spieler1 an!";
         } else if (nameEast.equals("") 
             || !enthaehltKorrekteZeichen(spieler2)) {
-            fehlermeldung = "Geben Sie einen korrekten Namen für Spieler2 an!";
+            fehlermeldung = "Geben Sie einen korrekten Namen fuer Spieler2 an!";
         } else if (nameWEST.getText().equals(nameEAST.getText())) {
             fehlermeldung = "Beide Spieler haben den gleichen Namen!";
         } else if (tSpielname.getText().equals("") 
@@ -408,7 +409,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     private boolean enthaehltKorrekteZeichen(String zeichenKette) {
         // man geht von einer korrekten Zeichenkette aus
         boolean korrekt = true;
-        // für jeden Charakter
+        // fuer jeden Charakter
         if (!zeichenKette.equals("")) {
             for (int i = 0; i < zeichenKette.length(); i++) {
                 char zeichen = zeichenKette.charAt(i);
@@ -441,7 +442,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             if (istBereitsVorhanden(nameWEST.getText()) == null) {
                 // Wird der Erste Spieler als Spieler mit dem namen erstellt
                 spieler1 = new Spieler(nameWEST.getText());
-                // Und der SpielerListe zugefügt
+                // Und der SpielerListe zugefuegt
                 parent.addSpieler(spieler1);
             } else {
                 // Wird eine Fehlermeldung ausgegeben
@@ -457,7 +458,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             if (istBereitsVorhanden(nameEAST.getText()) == null) {
                 // Wird der Zweite Spieler als Spieler mit dem namen erstellt
                 spieler2 = new Spieler(nameEAST.getText());
-                // Und der SpielerListe zugefügt
+                // Und der SpielerListe zugefuegt
                 parent.addSpieler(spieler2);
             // Wenn der Spieler schon vorhanden ist    
             } else {
@@ -483,19 +484,19 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         
         // Wenn zwei Spieler vorhanden sind
         if (spieler1 != null && spieler2 != null) {
-            // Wenn Spieler 1 die Farbe weiss ausgewählt hat
+            // Wenn Spieler 1 die Farbe weiss ausgewaehlt hat
             if (bGFarbauswahl.getSelection().
                 getActionCommand().equals("weiss")) {
                 spieler1.setFarbe(true);
                 spieler2.setFarbe(false);
-            // Wenn Spieler 1 die Farbe schwarz ausgewählt hat
+            // Wenn Spieler 1 die Farbe schwarz ausgewaehlt hat
             } else {
                 spieler1.setFarbe(false);
                 spieler2.setFarbe(true);
             }
-            /* Die Pane für das Hauptfenster auf eine neue SpielfeldGUI
-             * setzten und die oben gefilterten Parameter für 
-             * spielernamen und Spielnamen übergben
+            /* Die Pane fuer das Hauptfenster auf eine neue SpielfeldGUI
+             * setzten und die oben gefilterten Parameter fuer 
+             * spielernamen und Spielnamen uebergben
             */
             parent.setContentPane(new SpielfeldGUI(parent,
                 tSpielname.getText(), spieler1, spieler2));

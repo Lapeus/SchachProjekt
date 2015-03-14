@@ -62,7 +62,7 @@ public class Eroeffnungsseite extends Panel {
     /**
      * JLabel um Fenster als Menue zu kennzeichen.
      */
-    private JLabel menue = new JLabel("Menü");
+    private JLabel menue = new JLabel("<html>Men&uuml;</html>");
     
     /**
      * Konstante fuer den Farbton des Hintergrundes (Braun).

@@ -127,7 +127,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         speichern.setBackground(cHellesBeige);
         speichern.addActionListener(this);
         cSouth.add(speichern);        
-        zurueck = new JButton("Zurück");
+        zurueck = new JButton("<html>Zur&uuml;ck");
         zurueck.setBackground(cHellesBeige);
         zurueck.setActionCommand("Eroeffnungsseite");
         zurueck.addActionListener(new SeitenwechselListener(parent));
@@ -160,7 +160,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     }
     
     /**
-     * Erstellt das Auswahlmenü fuer die Einstellungen.
+     * Erstellt das Auswahlmenue fuer die Einstellungen.
      */
     private void initCenter() {
         // Center
@@ -185,13 +185,14 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         txtZugzeitbegrenzung.setToolTipText("0 = keine Begrenzung, sonst "
             + "(1..9) + (0..9)*");
         cCenter.add(txtZugzeitbegrenzung, gbc);        
-        // Label Mögliche Felder anzeigen
+        // Label Moegliche Felder anzeigen
         gbc.gridwidth = 1;
         gbc.gridx = 0;
         gbc.gridy = 1;
-        JLabel lblMoeglicheFelder = new JLabel("Mögliche Felder anzeigen? ");
+        JLabel lblMoeglicheFelder 
+            = new JLabel("<html>M&ouml;gliche Felder anzeigen? ");
         cCenter.add(lblMoeglicheFelder, gbc);
-        // RadioButtons Mögliche Felder anzeigen
+        // RadioButtons Moegliche Felder anzeigen
         auswahlJaNein("moeglicheFelderJa", "moeglicheFelderNein");
         if (this.einstellungen.isMoeglicheFelderAnzeigen()) {
             ja.setSelected(true);
@@ -334,7 +335,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     }
     
     /**
-     * Action Performed für den Speichern Button.
+     * Action Performed fuer den Speichern Button.
      * @param e ausgeloestes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
@@ -348,7 +349,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
                 JOptionPane.showMessageDialog(parent,
                     "Einstellungen gespeichert!");
             } else {
-                JOptionPane.showMessageDialog(parent, "Geben sie eine gültige "
+                JOptionPane.showMessageDialog(parent, "Geben sie eine gueltige "
                     + "Zugzeitbegrenzung ein");
             }
         } else if (command.equals("drehenJa")) {
