@@ -86,6 +86,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private JButton btnWiederholung = new JButton("Wiederholung ansehen");
     
     /**
+     * Button zum pausieren/weiterfuehren der Wiederholung.
+     */
+    private JButton btnStopp = new JButton("Stopp");
+    
+    /**
      * JLabel zum Anzeigen des momentanen Spielers.
      */
     private JLabel momentanerSpieler = new JLabel("Weiß");
@@ -252,6 +257,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private boolean wiederholung = false;
     
     /**
+     * Wenn der der Benutzer das Spielvideo unterbrehcen will wird diese
+     * auf false gesetzt.
+     */
+    private boolean wiederholen = true;
+    
+    /**
      * Thread fuer die Stoppuhr.
      */
     private Thread th = new Thread(this);
@@ -354,6 +365,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         // geschlageneLabelW
         JLabel lGeschlageneW = new JLabel("Geschlagene Weiße Figuren:");
+        lGeschlageneW.setForeground(new Color(0, 0, 0));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 4;
@@ -364,6 +376,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         //geschlageneLabelB
         JLabel lGeschlageneB = new JLabel("Geschlagene Schwarze Figuren:");
+        lGeschlageneB.setForeground(new Color(0, 0, 0));
         gbc.gridy = 8;
         cEast.add(lGeschlageneB, gbc);
         
@@ -381,6 +394,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(geschlageneSchwarze, gbc);
         
         // Label momentanerSpieler
+        momentanerSpieler.setForeground(new Color(0, 0, 0));
         momentanerSpieler.setBackground(cHellesBeige);
         gbc.gridheight = 1;
         gbc.gridy = 3;
@@ -985,70 +999,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         // Wenn ein Spieler ein Remis anbietet
         if (e.getActionCommand().equals(commandRemi)) {
-            // Testen ob die 50-Züge-Regel verletzt wurde
-            if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
-                // Unentschieden einreichen
-                spielVorbei = true;
-                spiel.unentschieden();
-                parent.soundAbspielen("Hinweis.wav");
-                JOptionPane.showMessageDialog(parent, "50 Züge Regel wurde "
-                    + "erfüllt. Das Spiel endet in einem Unentschieden");
-                this.remove(cEast);
-                cEndeErstellen();
-                this.add(cEnde, BorderLayout.EAST);
-                this.validate();
-                this.repaint();  
-            } else {
-                if (!(spieler2 instanceof Computerspieler)) {
-                    parent.soundAbspielen("Hinweis.wav");
-                    int eingabe = JOptionPane.showConfirmDialog(parent, 
-                        "Möchten Sie sich auf ein Unentschieden einigen?");
-                    if (eingabe == 0) {
-                        spielVorbei = true;
-                        spiel.unentschieden();
-                        for (Feld feld : felderListe) {
-                            feld.removeMouseListener(this);
-                        }
-                        this.remove(cEast);
-                        cEndeErstellen();
-                        this.add(cEnde, BorderLayout.EAST);
-                        this.validate();
-                        this.repaint();  
-                    } else {
-                        Spieler spieler;
-                        if (spielfeld.getAktuellerSpieler() == spieler1
-                            .getFarbe()) {
-                            spieler = spieler2;
-                        } else {
-                            spieler = spieler1;
-                        }
-                        parent.soundAbspielen("Aufgeben.wav");
-                        JOptionPane.showMessageDialog(parent, 
-                            spieler.getName() + " hat das Remis abgelehnt");
-                    }
-                } else {
-                    if ((boolean) ((Computerspieler) spieler2)
-                        .unentschiedenAnnehmen()) {
-                        parent.soundAbspielen("Hinweis.wav");
-                        JOptionPane.showMessageDialog(parent, "Spiel endet "
-                            + "unentschieden.");
-                        spielVorbei = true;
-                        spiel.unentschieden();
-                        for (Feld feld : felderListe) {
-                            feld.removeMouseListener(this);
-                        }
-                        this.remove(cEast);
-                        cEndeErstellen();
-                        this.add(cEnde, BorderLayout.EAST);
-                        this.validate();
-                        this.repaint();
-                    } else {
-                        parent.soundAbspielen("Aufgeben.wav");
-                        JOptionPane.showMessageDialog(parent, 
-                            spieler2.getName() + " hat das Remis abgelehnt");
-                    }
-                }
-            }
+            remiAuswertung();
         }
         // Wenn der momentane Spieler aufgibt
         if (e.getActionCommand().equals(commandAufgeben)) {
@@ -1080,6 +1031,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 "Speichern", JOptionPane.INFORMATION_MESSAGE);
         }
         if (e.getSource().equals(btnWiederholung)) {
+            btnWiederholung.setFocusable(false);
+            btnStopp.setVisible(true);
             wiederholung = true;
             start();
             if (zaehler == -1) {
@@ -1102,7 +1055,95 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             zaehler++;
             if (zaehler == spielvideo.size()) {
                 btnWiederholung.setEnabled(false);
+                btnStopp.setVisible(false);
                 wiederholung = false;
+            }
+        }
+        if (e.getSource().equals(btnStopp)) {
+            wiederholen = !(wiederholen);
+            if (wiederholen) {
+                btnStopp.setText("Stopp");
+                start();
+            } else {
+                btnStopp.setText("Start");
+            }
+        }
+        // Wenn das SpielGUI-Panel verlassen wird
+        if (e.getActionCommand().equals(commandStartmenue)) {
+            // Muss der Thread gestoppt werden
+            uhrAktiv = false;
+            // Und auf die Eröffnungseite gewechselt werden
+            parent.seitenAuswahl("Eroeffnungsseite");
+        }
+    }
+    
+    /**
+     * Wenn der Remis-Button gedrueckt wird wird hier die Auswertung der Remis-
+     * Anfrage bearbeitet.
+     */
+    private void remiAuswertung() {
+     // Testen ob die 50-Züge-Regel verletzt wurde
+        if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
+            // Unentschieden einreichen
+            spielVorbei = true;
+            spiel.unentschieden();
+            parent.soundAbspielen("Hinweis.wav");
+            JOptionPane.showMessageDialog(parent, "50 Züge Regel wurde "
+                + "erfüllt. Das Spiel endet in einem Unentschieden");
+            this.remove(cEast);
+            cEndeErstellen();
+            this.add(cEnde, BorderLayout.EAST);
+            this.validate();
+            this.repaint();  
+        } else {
+            if (!(spieler2 instanceof Computerspieler)) {
+                parent.soundAbspielen("Hinweis.wav");
+                int eingabe = JOptionPane.showConfirmDialog(parent, 
+                    "Möchten Sie sich auf ein Unentschieden einigen?");
+                if (eingabe == 0) {
+                    spielVorbei = true;
+                    spiel.unentschieden();
+                    for (Feld feld : felderListe) {
+                        feld.removeMouseListener(this);
+                    }
+                    this.remove(cEast);
+                    cEndeErstellen();
+                    this.add(cEnde, BorderLayout.EAST);
+                    this.validate();
+                    this.repaint();  
+                } else {
+                    Spieler spieler;
+                    if (spielfeld.getAktuellerSpieler() == spieler1
+                        .getFarbe()) {
+                        spieler = spieler2;
+                    } else {
+                        spieler = spieler1;
+                    }
+                    parent.soundAbspielen("Aufgeben.wav");
+                    JOptionPane.showMessageDialog(parent, 
+                        spieler.getName() + " hat das Remis abgelehnt");
+                }
+            } else {
+                if ((boolean) ((Computerspieler) spieler2)
+                    .unentschiedenAnnehmen()) {
+                    parent.soundAbspielen("Hinweis.wav");
+                    JOptionPane.showMessageDialog(parent, "Spiel endet "
+                        + "unentschieden.");
+                    spielVorbei = true;
+                    spiel.unentschieden();
+                    for (Feld feld : felderListe) {
+                        feld.removeMouseListener(this);
+                    }
+                    this.remove(cEast);
+                    cEndeErstellen();
+                    this.add(cEnde, BorderLayout.EAST);
+                    this.validate();
+                    this.repaint();
+                } else {
+                    parent.soundAbspielen("Aufgeben.wav");
+                    JOptionPane.showMessageDialog(parent, 
+                        spieler2.getName() + " hat das Remis abgelehnt");
+                }
             }
         }
     }
@@ -1111,8 +1152,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Startet eine neue Zeitnahmesession für die Zugzeit der Spieler.
      */
     private void start() {
-        // Alte Zeit beenden
-        uhrAktiv = false;
         // Neue Zeit anfangen
         uhrAktiv = true;
         // Thread anlegen 
@@ -1176,15 +1215,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     aufgeben.doClick();
                 }
             }
-            
             if (btnWiederholung.isEnabled()) {
-                if (wiederholung && sekundenStopp >= 2000) {
+                if (wiederholung && wiederholen && sekundenStopp >= 2000) {
                     btnWiederholung.doClick();
                     start();
                 }
             } else {
                 uhrAktiv = false;
             }
+            
         }
     }
     
@@ -1220,24 +1259,35 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private void cEndeErstellen()  {
         // Alle Autosave Dateien des Spiels löschen
         parent.autoSaveLoeschen();
+        
         // cEnde
         cEnde.setLayout(new GridBagLayout());
         cEnde.setBackground(cBraunRot);
+        GridBagConstraints gbc2 = new GridBagConstraints();
+        
+        // Startmenue Button
         JButton startmenue = new JButton("Zurück zum Startmenü");
         startmenue.setActionCommand(commandStartmenue);
-        startmenue.addActionListener(new SeitenwechselListener(parent));
-        GridBagConstraints gbc2 = new GridBagConstraints();
-        // Startmenue Button
+        startmenue.addActionListener(this);
         startmenue.setBackground(cHellesBeige);
         gbc2.insets = new Insets(15, 15, 15, 15);
         gbc2.gridx = 0;
         gbc2.gridy = 0;
         cEnde.add(startmenue, gbc2);
+        
         // Wiederholung-Anzeigen-Button
         btnWiederholung.setBackground(cHellesBeige);
         btnWiederholung.addActionListener(this);
         gbc2.gridy = 1;
         cEnde.add(btnWiederholung, gbc2);
+        
+        // Pause-Button für die Wiederholung
+        btnStopp.setBackground(cHellesBeige);
+        btnStopp.addActionListener(this);
+        btnStopp.setVisible(false);
+        gbc2.gridy = 2;
+        cEnde.add(btnStopp, gbc2);
+        
         // Zugliste
         DefaultListModel<String> listModel = new DefaultListModel<String>();
         String[] zuege = spielfeld.getSpieldaten().toString()
@@ -1249,7 +1299,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         zugListe.setBackground(cHellesBeige);
         JScrollPane sPane = new JScrollPane(zugListe);
         sPane.setBackground(cHellesBeige);
-        gbc2.gridy = 2;
+        gbc2.gridy = 3;
         gbc2.fill = GridBagConstraints.HORIZONTAL;
         cEnde.add(sPane, gbc2);
         cEnde.revalidate();
