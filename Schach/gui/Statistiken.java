@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 import daten.Spieler;
 import daten.Statistik;
@@ -55,7 +55,7 @@ public class Statistiken extends JPanel implements ActionListener {
      * TextArea in der die Statistik von dem ausgewaehlten Spieler angezeigt 
      * wird.
      */
-    private JTextArea daten = new JTextArea();
+    private JTextPane daten = new JTextPane();
     
     /**
      * Konstante fuer den Farbton des Hintergrundes (Braun).
@@ -89,13 +89,19 @@ public class Statistiken extends JPanel implements ActionListener {
         this.setBackground(cBraunRot);
         
         // NORTH
-        JLabel statistiken = new JLabel("Statistiken");
-        statistiken.setFont(new Font("Arial", Font.BOLD, 20));
+        cNorth.setLayout(new BorderLayout());
         cNorth.setBackground(cBraunRot);
-        cNorth.add(statistiken);
-        this.add(cNorth, BorderLayout.NORTH);
         
-        //Center
+        // Label Statistik
+        JPanel uNorth = new JPanel();
+        uNorth.setLayout(new FlowLayout());
+        JLabel statistiken = new JLabel("Statistiken: ");
+        statistiken.setFont(new Font("Arial", Font.BOLD, 20));
+        uNorth.add(statistiken);
+        uNorth.setBackground(cBraunRot);
+        cNorth.add(uNorth, BorderLayout.NORTH);
+        
+        // Spielerauswahlmenue
         daten.setEditable(false);
         daten.setBackground(cBraunRot);
         cCenter.setLayout(new BorderLayout());
@@ -109,9 +115,9 @@ public class Statistiken extends JPanel implements ActionListener {
         spielerAuswahl = new JComboBox<String>(spielernamen);
         spielerAuswahl.setBackground(cHellesBeige);
         spielerAuswahl.addActionListener(this);
-        cCenter.add(spielerAuswahl, BorderLayout.NORTH);
+        cNorth.add(spielerAuswahl, BorderLayout.CENTER);
         
-        this.add(cCenter, BorderLayout.CENTER);
+        this.add(cNorth, BorderLayout.NORTH);
         
         // South
         JPanel cSouth = new JPanel();
@@ -164,7 +170,7 @@ public class Statistiken extends JPanel implements ActionListener {
             if (e.getActionCommand().equals("zuruecksetzen")) {
                 spieler.setStatistik(new Statistik());
             } 
-            daten.removeAll();
+            //daten.removeAll();
             Statistik statistik = spieler.getStatistik();
             String momentan;
             String lineSep = System.getProperty("line.separator");
@@ -224,13 +230,13 @@ public class Statistiken extends JPanel implements ActionListener {
                 momentan += "Durchschnittlicher Materialwert Matt: "
                     + statistik.getMatWertMattDurchschnitt();
             }
+            daten.setBackground(cHellesBeige);
             daten.setText(momentan);
-            cCenter.add(daten, BorderLayout.CENTER);
+            cCenter.add(daten, BorderLayout.NORTH);
+            this.add(cCenter, BorderLayout.CENTER);
             this.revalidate();
         }
         
         
     }
-  
-    
 }

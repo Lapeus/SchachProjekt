@@ -10,7 +10,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 import daten.Spieler;
 
@@ -38,7 +38,7 @@ public class Highscore extends JPanel {
     /**
      * Textarea fuer die HighscoreListe.
      */
-    private JTextArea highscorePane = new JTextArea();
+    private JTextPane highscorePane = new JTextPane();
     
     /**
      * Konstante fuer den Farbton des Hintergrundes (Braun).
@@ -90,7 +90,7 @@ public class Highscore extends JPanel {
             counter++;
         }
         highscorePane.setText(ergebnis);
-        highscorePane.setBackground(cBraunRot);
+        highscorePane.setBackground(cHellesBeige);
         highscorePane.setEditable(false);
         cCenter.add(highscorePane);
         this.add(cCenter, BorderLayout.CENTER);
