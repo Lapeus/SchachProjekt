@@ -150,7 +150,6 @@ public class SpielLaden extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(btnSpielLaden)) {
             String name = jSpieleListe.getSelectedValue();
-            System.out.println(jSpieleListe.getSelectedValue());
             if (name != null) {
                 Spiel spiel = parent.getSpiel(name);
                 if (spiel != null) {

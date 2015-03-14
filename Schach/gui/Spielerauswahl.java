@@ -380,17 +380,17 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         String spieler1 = nameWEST.getText();
         String spieler2 = nameEAST.getText();
         if (nameWest.equals("") || !enthaehltKorrekteZeichen(spieler1)) {
-            fehlermeldung = "Geben sie einen korrekten Namen für Spieler1 an!";
+            fehlermeldung = "Geben Sie einen korrekten Namen für Spieler1 an!";
         } else if (nameEast.equals("") 
             || !enthaehltKorrekteZeichen(spieler2)) {
-            fehlermeldung = "Geben sie einen korrekten Namen für Spieler2 an!";
+            fehlermeldung = "Geben Sie einen korrekten Namen für Spieler2 an!";
         } else if (nameWEST.getText().equals(nameEAST.getText())) {
             fehlermeldung = "Beide Spieler haben den gleichen Namen!";
         } else if (tSpielname.getText().equals("") 
             || !enthaehltKorrekteZeichen(tSpielname.getText())) {
             fehlermeldung = "Geben sie einen korrekten Spielnamen ein!";
         } else if (spielIstBereitsVorhanden(tSpielname.getText())) {
-            fehlermeldung = "Es existiert bereits ein Spiel mit diesem namen!";
+            fehlermeldung = "Es existiert bereits ein Spiel mit diesem Namen!";
         }
         if (!(fehlermeldung.equals(""))) {
             korrekt = false;

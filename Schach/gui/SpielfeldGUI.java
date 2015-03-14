@@ -713,7 +713,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 spiel.unentschieden();
                 parent.soundAbspielen("Hinweis.wav");
                 JOptionPane.showMessageDialog(parent, "50 Züge Regel wurde "
-                    + "erfüllt. Das Spiel endet in einem Unentschieden");
+                    + "erfüllt. Das Spiel endet mit einem Unentschieden");
                 this.remove(cEast);
                 cEndeErstellen();
                 this.add(cEnde, BorderLayout.EAST);
