@@ -89,6 +89,8 @@ public class Highscore extends JPanel {
                 + spieler.getStatistik().getScore() + " Punkte" + lineSep; 
             counter++;
         }
+        ergebnis = ergebnis.substring(0, ergebnis.length() - lineSep.length());
+        highscorePane.setFont(new Font("Arial", Font.BOLD, 15));
         highscorePane.setText(ergebnis);
         highscorePane.setBackground(cHellesBeige);
         highscorePane.setEditable(false);
