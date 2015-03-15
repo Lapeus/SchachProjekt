@@ -79,7 +79,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Button um aufzugeben.
      */
-    private JButton aufgeben = new JButton("Spiel Aufgeben");
+    private JButton aufgeben = new JButton("Spiel aufgeben");
     
     /**
      * Button zum Spielwiederholung ansehen.
@@ -981,7 +981,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             String[] moeglicheFiguren = {"Dame", "Turm", "Laeufer", 
                 "Springer"};
             String s = (String) JOptionPane.showInputDialog(parent,
-                "Waehlen Sie eine Figur aus, die Sie gegen den "
+                "<html>W&auml;hlen Sie eine Figur aus, die Sie gegen den "
                 + "Bauern tauschen wollen"
                 , "Figurenwechsel", JOptionPane.
                 PLAIN_MESSAGE, null, moeglicheFiguren, "Dame");
@@ -1020,8 +1020,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             String ergebnis; 
             String zuege = auswertung.get(2).toString();
             if ((boolean) auswertung.get(1)) {
-                ergebnis = gewinner.getName() 
-                    + " gewinnt nach " + zuege + " Zuegen.";
+                ergebnis = "<html>" + gewinner.getName() 
+                    + " gewinnt nach " + zuege + " Z&uuml;gen.";
             } else {
                 ergebnis = "Das Spiel endet in einem Patt";
             }
@@ -1053,7 +1053,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private void schachWarnung() {
         // Wenn kein Computerspieler dran ist und das Spiel nocht vorbei ist
-        if (istComputerSpielerUndIstAmZug()
+        if (!istComputerSpielerUndIstAmZug()
             && !spielVorbei) {
             spielfeldAufbau();
             parent.soundAbspielen("FehlerhafteEingabe.wav");
@@ -1149,9 +1149,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             String zuege = aufgeben.get(1).toString();
             Spieler gewinner = (Spieler) aufgeben.get(2);
             parent.soundAbspielen("Aufgeben.wav");
-            JOptionPane.showMessageDialog(parent, verlierer.getName() 
-                + " gibt nach " + zuege + " Zuegen auf! " + gewinner.getName() 
-                + " gewinnt!!!");
+            JOptionPane.showMessageDialog(parent, "<html>" 
+                + verlierer.getName() + " gibt nach " + zuege 
+                + " Z&uuml;gen auf! " + gewinner.getName() + " gewinnt!!!");
             // Das spiel ist vorbei also keine Zuege mehr moeglich
             for (Feld feld : felderListe) {
                 feld.removeMouseListener(this);
@@ -1257,7 +1257,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if (!(spieler2 instanceof Computerspieler)) {
                 parent.soundAbspielen("Hinweis.wav");
                 int eingabe = JOptionPane.showConfirmDialog(parent, 
-                    "Moechten Sie sich auf ein Unentschieden einigen?");
+                    "<html>M&ouml;chten Sie sich auf ein Unentschieden "
+                    + "einigen?");
                 if (eingabe == 0) {
                     spielVorbei = true;
                     spiel.unentschieden();

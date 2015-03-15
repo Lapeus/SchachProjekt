@@ -381,10 +381,12 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         String spieler1 = nameWEST.getText();
         String spieler2 = nameEAST.getText();
         if (nameWest.equals("") || !enthaehltKorrekteZeichen(spieler1)) {
-            fehlermeldung = "Geben Sie einen korrekten Namen fuer Spieler1 an!";
+            fehlermeldung = "<html>Geben Sie einen korrekten Namen f&uuml;r "
+                + "Spieler1 an!";
         } else if (nameEast.equals("") 
             || !enthaehltKorrekteZeichen(spieler2)) {
-            fehlermeldung = "Geben Sie einen korrekten Namen fuer Spieler2 an!";
+            fehlermeldung = "<html>Geben Sie einen korrekten Namen f&uuml;r "
+                + "Spieler2 an!";
         } else if (nameWEST.getText().equals(nameEAST.getText())) {
             fehlermeldung = "Beide Spieler haben den gleichen Namen!";
         } else if (tSpielname.getText().equals("") 
