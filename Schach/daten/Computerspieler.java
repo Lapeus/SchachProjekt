@@ -59,7 +59,6 @@ public class Computerspieler extends Spieler {
          *    Spiel beider Seiten in n Zuegen die beste Spielsituation hervor-
          *    ruft. Dieser Zug wird anschliessend gezogen.
          */
-       
         if (getName().equals("Karl Heinz")) {
             nachRegeln();
         } else if (getName().equals("Rosalinde")) {
@@ -69,7 +68,6 @@ public class Computerspieler extends Spieler {
         } else if (getName().equals("Walter")) {
             rekursKI(4);
         }
-        
         
         // Wenn ein Bauer umgewandelt wird
         Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
@@ -471,11 +469,12 @@ public class Computerspieler extends Spieler {
         }
         Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
         Figur figur;
+        // Wenn es ein RochadenZug war
         if (letzterZug instanceof RochadenZug) {
+            // Ist es der Turm, der entscheidend ist
             figur = ((RochadenZug) letzterZug).getTurm();
-        } else if (letzterZug instanceof EnPassantZug) {
-            figur = ((EnPassantZug) letzterZug).getAusfuehrer();
         } else {
+            // Sonst die aktive Figur
             figur = letzterZug.getFigur();
         }
         // Wenn die zuletzt gezogene Figur dem Koenig Schach bietet

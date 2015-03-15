@@ -344,8 +344,8 @@ public class Spielfeld {
              */
             spieldaten.getZugListe().remove(zug);
             RochadenZug rochzug = new RochadenZug(zug.getFigur(), 
-                zug.getStartfeld(), turm, felder.get(indexStart)
-                , zug.getZugzeit());
+                zug.getStartfeld(), zug.getZielfeld(), turm, 
+                felder.get(indexStart), zug.getZugzeit());
             spieldaten.getZugListe().add(rochzug);   
         }
     }
@@ -390,7 +390,8 @@ public class Spielfeld {
              */
             spieldaten.getZugListe().remove(zug);
             EnPassantZug enpasszug = new EnPassantZug(zug.getFigur(), 
-                zug.getStartfeld(), andererBauer, zug.getZugzeit());
+                zug.getStartfeld(), zug.getZielfeld(), andererBauer, 
+                zug.getZugzeit());
             spieldaten.getZugListe().add(enpasszug);
         }
     }
@@ -413,7 +414,7 @@ public class Spielfeld {
             // Umwandlung des Zugs
             RochadenZug rochzug = (RochadenZug) zug;
             // Das Zielfeld des Koenigs leeren
-            rochzug.getKoenig().getPosition().setFigur(null);
+            rochzug.getZielfeld().setFigur(null);
             // Die Position des Koenigs auf das Startfeld setzen
             rochzug.getKoenig().setPosition(rochzug.getStartfeldK());
             // Dem Startfeld den Koenig zuweisen
@@ -435,7 +436,7 @@ public class Spielfeld {
             // Umwandlung des Zugs
             EnPassantZug enpasszug = (EnPassantZug) zug;
             // Ausfuerender Bauer
-            Figur bauer = enpasszug.getAusfuehrer();
+            Figur bauer = enpasszug.getFigur();
             // Geschlagenener Bauer
             Figur geschlagBauer = enpasszug.getGeschlagenen();
             // Ausfuehrender Bauer zuruecksetzen
@@ -621,14 +622,14 @@ public class Spielfeld {
     public List<Feld> getLetzteFelder() {
         List<Feld> letzteFelder = new ArrayList<Feld>();
         Zug zug = spieldaten.getLetzterZug();
-        if (zug instanceof EnPassantZug) {
-            letzteFelder.add(zug.getStartfeld());
-            letzteFelder.add(
-                ((EnPassantZug) zug).getAusfuehrer().getPosition());
-        } else if (zug instanceof RochadenZug) {
+        if (zug instanceof RochadenZug) {
+            // Das Startfeld des Koenigs
             letzteFelder.add(((RochadenZug) zug).getStartfeldK());
-            letzteFelder.add(((RochadenZug) zug).getKoenig().getPosition());
+            // Das Zielfeld des Koenigs
+            letzteFelder.add(zug.getZielfeld());
+            // Das Startfeld des Turms
             letzteFelder.add(((RochadenZug) zug).getStartfeldT());
+            // Das Zielfeld des Turms
             letzteFelder.add(((RochadenZug) zug).getTurm().getPosition());
         } else {
             letzteFelder.add(zug.getStartfeld());

@@ -21,6 +21,11 @@ public class RochadenZug extends Zug {
     private Feld startfeldK;
     
     /**
+     * Das Zielfeld des K&ouml;nigs.
+     */
+    private Feld zielfeldK;
+    
+    /**
      * Der an der Rochade beteiligte Turm.
      */
     private Figur turm;
@@ -35,14 +40,16 @@ public class RochadenZug extends Zug {
      * Einziger Konstruktor dieser Klasse.
      * @param koenig Der beteiligte K&ouml;nig
      * @param startfeldK Das Startfeld des K&ouml;nigs
+     * @param zielfeldK Das Zielfeld des K&ouml;nigs
      * @param turm Der beteiligte Turm
      * @param startfeldT Das Startfeld des Turms
      * @param zugzeit Die Dauer des Zuges in ganzen Sekunden
      */
-    public RochadenZug(Figur koenig, Feld startfeldK, Figur turm, 
-        Feld startfeldT, int zugzeit) {
+    public RochadenZug(Figur koenig, Feld startfeldK, Feld zielfeldK, 
+        Figur turm, Feld startfeldT, int zugzeit) {
         this.koenig = koenig;
         this.startfeldK = startfeldK;
+        this.zielfeldK = zielfeldK;
         this.turm = turm;
         this.startfeldT = startfeldT;
         setZugzeit(zugzeit);
@@ -68,6 +75,13 @@ public class RochadenZug extends Zug {
     }
     
     /**
+     * Gibt den K&ouml;nig als aktive Figur dieses Zuges zur&uuml;ck.
+     * @return Der K&ouml;nig
+     */
+    public Figur getFigur() {
+        return koenig;
+    }
+    /**
      * Gibt den beteiligten K&ouml;nig zur&uuml;ck.
      * @return Der beteiligte K&ouml;nig
      */
@@ -84,6 +98,15 @@ public class RochadenZug extends Zug {
     }
     
     /**
+     * Gibt das Zielfeld des K&ouml;nigs zur&uuml;ck.
+     * @return Das Zielfeld des K&ouml;nigs
+     */
+    public Feld getZielfeld() {
+        return zielfeldK;
+    }
+    
+    
+    /**
      * Gibt den beteiligten Turm zur&uuml;ck.
      * @return Der beteiligte Turm
      */
@@ -98,6 +121,5 @@ public class RochadenZug extends Zug {
     public Feld getStartfeldT() {
         return startfeldT;
     }
-    
-    
+
 }

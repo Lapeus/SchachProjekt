@@ -33,7 +33,20 @@ public class Bauer extends Figur {
     }
 
     /**
-     * {@inheritDoc}
+     * Berechnet alle m&ouml;glichen Felder, auf die der Bauer nach den 
+     * momentan eingestellten Zugregeln ziehen kann. Daf&uuml;r sind 
+     * grunds&auml;tzlich vier verschiedene M&ouml;glichkeiten zu pr&uuml;fen:
+     * <ul>
+     * <li> Ist das Feld direkt vor dem Bauern frei?</li>
+     * <li> Sind die zwei Felder vor dem Bauern frei und hat dieser noch
+     * nicht gezogen? </li>
+     * <li> Steht diagonal vorne eine gegnerische Figur? </li>
+     * <li> Ist das Schlagen en-passant aktiviert und in diesem Fall 
+     * m&ouml;glich? </li>
+     * </ul>
+     * Ist die jeweilige Bedingung erf&uuml;llt, wird das entsprechende Feld
+     * der Liste zugef&uuml;gt die am Ende zur&uuml;ck gegeben wird.
+     * @return Die Liste der m&ouml;glichen Felder
      */
     protected List<Feld> getMoeglicheFelder() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();

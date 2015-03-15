@@ -8,9 +8,14 @@ import java.util.List;
 import daten.Spielfeld;
 
 /**
- * Eine Klasse die alle Spielfiguren verwaltet.
  * Die abstrakte Klasse <i>Figur</i> stellt den Bauplan 
- * fuer s&auml;mtliche Figuren bereit.
+ * für s&auml;mtliche Figuren bereit. <br>
+ * Neben der abstrakten Methode <i>getMoeglicheFelder()</i>, die f&uuml;r 
+ * jede Figur anders aussieht, verf&uuml;gt diese Klasse &uuml;ber mehrere
+ * Hilfsmethoden sowie einem Test der m&ouml;glichen Felder, ob der eigene
+ * K&ouml;nig danach im Schach steht. Des Weiteren gibt es eine 
+ * toString()-Methode, welche alle wichtigen Daten einer Figur in einen 
+ * mehrzeiligen String schreibt und anschlie&szlig;end zur&uuml;ck gibt.
  * @author Christian Ackermann
  */
 public abstract class Figur {
@@ -29,14 +34,15 @@ public abstract class Figur {
     
     /**
      * Die Farbe der Figur. <br>
-     * <b>True</b> steht fuer wei&szlig;, <b>False</b> steht fuer schwarz.
+     * <b>True</b> steht f&uuml;r wei&szlig;, <b>False</b> steht f&uuml;r 
+     * schwarz.
      */
     private boolean farbe;
     
     /**
      * Der materielle Wert der Figur. <br>
-     * Wird haupts&auml;chlich fuer die Bewertungsfunktion des Computergegners
-     * ben&ouml;tigt und basiert auf stochastischen Erhebungen. 
+     * Wird haupts&auml;chlich f&uuml;r die Bewertungsfunktion des 
+     * Computergegners ben&ouml;tigt und basiert auf stochastischen Erhebungen. 
      * Dient zum anderen der einfachen Identifikation der Figur ohne Verwendung
      * des <b>instanceof</b> Operators.
      * Die Werte sind aus den gegebenen Internetquellen &uuml;bernommen.
@@ -51,9 +57,17 @@ public abstract class Figur {
     private boolean bereitsGezogen;
     
     /**
-     * Pr&uuml;ft alle Felder die die Methode <i>getMoeglicheFelder</i> 
+     * Pr&uuml;ft alle Felder, die die Methode <i>getMoeglicheFelder</i> 
      * vorschl&auml;gt, ob nach dem Zug der eigene K&ouml;nig im Schach stehen
-     * w&uuml;rde.
+     * w&uuml;rde. <br>
+     * Daf&uuml;r wird jeder m&ouml;gliche Zug gezogen und die daraus 
+     * resultierende Figurenkonstellation dahingehend getestet, ob nun der 
+     * K&ouml;nig im Schach steht. Dies wird getestet, indem man f&uuml;r alle
+     * gegnerischen Figuren die Methode <b>getMoeglicheFelder()</b> aufruft und 
+     * pr&uuml;ft, ob das Feld des eigenen K&ouml;nigs zu dieser Liste 
+     * geh&ouml;rt. Denn wenn eine gegnerische Figur im n&auml;chsten Zug das
+     * Feld des K&ouml;nigs erreichen k&ouml;nnte und ihn damit schlagen 
+     * k&ouml;nnte, st&auml;nde er jetzt im Schach.
      * @return Liste der tats&auml;chlich ziehbaren Felder
      */
     public List<Feld> getKorrektFelder() {
@@ -126,7 +140,8 @@ public abstract class Figur {
     
     /**
      * Berechnet alle Felder, auf die die Figur nach den
-     * Zugregeln ziehen kann.
+     * Zugregeln ziehen kann. Die genaue Ermittlung sieht f&uuml;r jede Figur
+     * anders aus, weshalb diese Methode auch abstrakt ist.
      * @return Liste von m&ouml;glichen Feldern
      */
     protected abstract List<Feld> getMoeglicheFelder();
@@ -148,7 +163,14 @@ public abstract class Figur {
     
     /**
      * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
-     * Wird beim Speichern ben&ouml;tigt.
+     * Wird beim Speichern ben&ouml;tigt. Der Reihenfolge nach werden 
+     * gespeichert: 
+     * <ul>
+     * <li>Die Position der Figur als zweistellige Zahl</li>
+     * <li>Die Farbe der Figur als boolean</li>
+     * <li>Der Wert der Figur als ganze Zahl</li>
+     * <li>Ob die Figur bereits gezogen wurde (boolean)</li>
+     * </ul>
      * @return Eine mehrzeilige Zeichenkette
      */
     public String toString() {
@@ -165,6 +187,9 @@ public abstract class Figur {
      * Gibt an, ob die Figur dem K&ouml;nig auf dem angegebenen Feld Schach
      * bietet.<br>
      * Wird nur vom Computergegner bei der Bewertungsfunktion ben&ouml;tigt.
+     * Hierf&uuml;r werden die m&ouml;glichen Felder der Figur ermittelt und
+     * anschlie&szlig;end darauf getestet, ob sich das angegebene Feld darunter
+     * befindet.
      * @param koenig Das Feld mit dem gegnerischen Koenig
      * @return Wahrheitswert, ob Schach geboten wird
      */
@@ -177,7 +202,7 @@ public abstract class Figur {
     }
     
     /**
-     * Gibt an, ob das Feld am angegebenen Index leer ist.
+     * Gibt an, ob das Feld am angegebenen Index frei ist.
      * @param index Ganzzahliger Index (zwischen 0 und 63)
      * @return <b>true</b> wenn frei
      */

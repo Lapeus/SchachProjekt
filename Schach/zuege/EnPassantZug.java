@@ -16,9 +16,14 @@ public class EnPassantZug extends Zug {
     private Figur ausfuehrenderBauer;
     
     /**
-     * Das Startfeld des ziehenden Bauers.
+     * Das Startfeld des ziehenden Bauern.
      */
     private Feld startfeld;
+    
+    /**
+     * Das Zielfeld des ziehenden Bauern.
+     */
+    private Feld zielfeld;
     
     /**
      * Der geschlagene Bauer.
@@ -29,14 +34,16 @@ public class EnPassantZug extends Zug {
      * Erstellt einen neuen En-Passant-Zug. <br>
      * Einziger Konstruktor dieser Klasse.
      * @param ausfuehrenderBauer Der ziehende Bauer
-     * @param startfeld Das Startfeld des ziehenden Bauers
+     * @param startfeld Das Startfeld des ziehenden Bauern
+     * @param zielfeld Das Zielfeld des ziehenden Bauern
      * @param geschlagenerBauer Der geschlagene Bauer
      * @param zugzeit Die Dauer des Zuges in ganzen Sekunden
      */
-    public EnPassantZug(Figur ausfuehrenderBauer, Feld startfeld
-        , Figur geschlagenerBauer, int zugzeit) {
+    public EnPassantZug(Figur ausfuehrenderBauer, Feld startfeld, 
+        Feld zielfeld, Figur geschlagenerBauer, int zugzeit) {
         this.ausfuehrenderBauer = ausfuehrenderBauer;
         this.startfeld = startfeld;
+        this.zielfeld = zielfeld;
         this.geschlagenderBauer = geschlagenerBauer;
         setZugzeit(zugzeit);
     }
@@ -46,7 +53,6 @@ public class EnPassantZug extends Zug {
      */
     public String toSchachNotation() {
         String string = "";
-        Feld schlagfeld = geschlagenderBauer.getPosition();
         // Spaltenbezeichnung
         String[] spalten = {"a", "b", "c", "d", "e", "f", "g", "h"};
         // Das Startfeld
@@ -54,15 +60,7 @@ public class EnPassantZug extends Zug {
         // Ein Bauer wird geschlagen
         string += "x";
         // Das Zielfeld
-        // Wenn der geschlagene Bauer weiss ist
-        if (geschlagenderBauer.getFarbe()) {
-            // Ist das Zielfeld Y-1 plus die Index-Korrektur von 1
-            string += spalten[schlagfeld.getXK()] + (schlagfeld.getYK());
-        // Wenn der geschlagene Bauer schwarz ist
-        } else {
-            // Ist das Zielfeld Y+1 plus die Index-Korrektur von 1
-            string += spalten[schlagfeld.getXK()] + (schlagfeld.getYK() + 2);
-        }
+        string += spalten[zielfeld.getXK()] + (zielfeld.getYK() + 1);
         string += " e.p.";
         // Die Zugzeit 
         string += " " + getZugzeit() + " sek";
@@ -74,7 +72,7 @@ public class EnPassantZug extends Zug {
      * Gibt den ziehenden Bauern zur&uuml;ck.
      * @return Der ziehende Bauer
      */
-    public Figur getAusfuehrer() {
+    public Figur getFigur() {
         return ausfuehrenderBauer;
     }
     
@@ -86,6 +84,14 @@ public class EnPassantZug extends Zug {
         return startfeld;
     }
     
+    /**
+     * Gibt das Zielfeld des ziehenden Bauern zur&uuml;ck.
+     * @return Das Zielfeld des ziehenden Bauern
+     */
+    public Feld getZielfeld() {
+        return zielfeld;
+    }
+
     /**
      * Gibt den geschlagenen Bauern zur&uuml;ck.
      * @return Der geschlagene Bauer
