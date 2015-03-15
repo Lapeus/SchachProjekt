@@ -449,7 +449,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         start();
         // Thread starten
         th.start(); 
-
+        
+        
+        
         // SpielfeldGUI erstellen
         spielfeldAufbau();
  
@@ -575,6 +577,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         if (spielfeld.getEinstellungen().isSpielfeldDrehen() && !wiederholung 
             && !(spieler2 instanceof Computerspieler)) {
+            spielfeldDrehen();
+        }
+        /* Spielfeld drehen wenn Spieler 1 schwarz ist und ein Computergegner
+        dran ist */
+        if (!(spieler1.getFarbe())
+                && spieler2 instanceof Computerspieler) {
             spielfeldDrehen();
         }
         spielfeldUIUpdate();
