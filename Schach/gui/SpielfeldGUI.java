@@ -579,6 +579,33 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         spielfeldUIUpdate();
     }
+    
+    /**
+     * Dreht das Spielfeld, sodass es immer vom aktuellen Spieler aus gesehen 
+     * wird.
+     */
+    private void spielfeldDrehen() {
+        // Entfernt alle Felder
+        cCenter.removeAll();
+        // Wenn weiss dran ist
+        if (spielfeld.getAktuellerSpieler()) {
+            for (int i = 7; i >= 0; i--) {
+                for (int j = 0; j < 8; j++) {
+                    cCenter.add(felderListe.get(j + i * 8));
+                }
+            }
+        // Wenn schwarz dran ist
+        } else {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    cCenter.add(felderListe.get(j + i * 8));
+                }
+            }
+        }
+        this.validate();
+        this.repaint();  
+    }
+    
     /**
      * Sorgt daf&uuml;r, dass jede Figur ihr passendes Figurenbild erh&auml;lt.
      * Zudem wird hier gesteuert ob der rueckg&auml;ngig-Button klickbar(Zug
@@ -1064,8 +1091,19 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Action Performed fuer alle Buttons (R&uuml;ckg&auml;ngig, ).
-     * 
+     * Action Performed fuer alle Buttons (R&uuml;ckg&auml;ngig, Remis, 
+     * Aufgeben, Speichern, Wiederholung).
+     * Wenn der Zur&uuml;ck-Button gedr&uuml;ckt wurde, dann m&uuml;ssen bei 
+     * einem Computergegner immer 2 Z&uuml;ge r&uuml;ckg&auml;ngig gemacht 
+     * werden, sonst nur einer. Zudem wird die zugzeit zur&uuml;ckgesetzt. 
+     * Wenn der Remis-Button gedr&uuml;ckt wurde wird die 
+     * {@link #remisAuswertung()}-Methode aufgerufen.
+     * Wenn der Aufgeben-Button gedr&uuml;ckt wurde dann wird das Spiel beendet,
+     * ausgewertet und eine Nachricht f&uuml;r den Gewinner wird angezeigt.
+     * Wenn der Speichern-Button gedr&uuml;ckt wurde dann wird das Spiel 
+     * gespeichert und ein JOptionPane zeigt die erfolgreiche Speicherung an.
+     * Wenn der Wiederholungs-Button gedr&uuml;ckt wurde dann wird eine
+     * Wiederholung des letzten Spiels gestartet.
      * @param e Ausgeloestes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
@@ -1123,45 +1161,60 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             JOptionPane.showMessageDialog(parent, "Spiel gespeichert",
                 "Speichern", JOptionPane.INFORMATION_MESSAGE);
         }
+        // Wenn der Wiederholen-Button gedrueckt wird
         if (e.getSource().equals(btnWiederholung)) {
-            btnWiederholung.setFocusable(false);
+            // Wird das Steuerelement fuer Start/Stopp angezeigt
             btnStopp.setVisible(true);
+            // Die Wiederholung startet
             wiederholung = true;
             start();
+            // Wenn dies der erste Klick ist
             if (zaehler == -1) {
+                // Muss die Liste aller zuege des Spiels geladen werden
                 spielvideo = spiel.spielvideo();
                 spielfeldAufbau();
+            // Bei allen weiteren Klicks    
             } else {
+                // Wird der naechste Zug aus der Zugliste ausgewaehlt
                 Zug zug = spielvideo.get(zaehler);
-                // Ziehe jeden Zug
+                // Und ausgefuehrt
                 spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), 
                     zug.getZugzeit());
                 zugListe.setSelectedIndex(zaehler);
                 // Wenn es ein Umwandlungszug war
                 if (zug instanceof Umwandlungszug) {
-                    // Wandel die Figur entsprechend um
+                    // Muss nachtraeglich noch die figur umgewandelt werden
                     spielfeld.umwandeln(spielfeld.getSpieldaten()
                         .getLetzterZug().getFigur(), 
                         ((Umwandlungszug) zug).getNeueFigur().getWert());
                 }
                 spielfeldAufbau();
+                // Start und Ziel feld werden a gruen makiert
                 zug.getStartfeld().setBackground(gruen);
                 zug.getZielfeld().setBackground(gruen);
             }
-            
+            // naechster Zug
             zaehler++;
+            // Wenn alle Zuege ausgefuehrt wurden
             if (zaehler == spielvideo.size()) {
+                // Wird der WiedeholungsButton ausgegraut
                 btnWiederholung.setEnabled(false);
+                // und Die Steuerelemente versteckt
                 btnStopp.setVisible(false);
+                // Die Wiederholung beendet
                 wiederholung = false;
             }
         }
+        // Wenn der Stopp-Button gedrueckt wurde
         if (e.getSource().equals(btnStopp)) {
+            // boolean fuer Labelaenderung
             wiederholen = !(wiederholen);
             if (wiederholen) {
+                // Wenn gerade widerholt wird kann man stoppen
                 btnStopp.setText("Stopp");
                 start();
             } else {
+                // Wenn die Widerholung gestoppt ist kann man sie starten
                 btnStopp.setText("Start");
             }
         }
@@ -1256,7 +1309,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Runnable Methode zum erstellen der Zugzeit des momentanen Spielers.
+     * Runnable Methode zum erstellen und &uuml;berwachen der Zugzeit und zum
+     * ausf&uuml;hren der Wiederholungsfunktion.
+     * Solange der Thread aktiv ist (wird noch von einer Funktion gebraucht)
+     * wird alle 10ms die Uhrzeit auf dem daf&uuml;r passendem Label 
+     * aktualisiert und gepr&uuml;ft ob die maximale Zugzeit &uuml;berschritten
+     * worden ist. 
+     * Wenn der Wiederholungs-Boolean true ist dann wird alle 2s der 
+     * Wiederholungs-Button geklickt um so ein Spielvideo zu erzeugen.   
      */
     public void run() {
         StringBuffer ausgabe;
@@ -1304,50 +1364,31 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             // Auf das Zugzeit-Label schreiben
             zugzeit.setText(ausgabe.toString());
-            // Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button
             if (!spielVorbei) {
                 int begrenzung = spielfeld.getEinstellungen()
                     .getZugZeitBegrenzung();
+                // Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button
                 if (begrenzung > 0 && sekundenStopp / 1000 >= begrenzung) {
                     aufgeben.doClick();
                 }
             }
+            // Wenn ein Spielvideo angeziegt werden soll
             if (btnWiederholung.isEnabled()) {
+                /* Wenn wiederholt werden soll und nicht stopp ist und 2 oder 
+                 * mehr Sekunden vergangen sind 
+                */
                 if (wiederholung && wiederholen && sekundenStopp >= 2000) {
+                    // Dann soll der naechste zug ausgefuert werden
                     btnWiederholung.doClick();
                     start();
                 }
+            // Wenn die Wiederholung vorbei ist    
             } else {
+                // Thread beenden
                 uhrAktiv = false;
             }
             
         }
-    }
-    
-    /**
-     * Dreht das Spielfeld, sodass es immer vom aktuellen Spieler aus gesehen 
-     * wird.
-     */
-    private void spielfeldDrehen() {
-        // Entfernt alle Felder
-        cCenter.removeAll();
-        // Wenn weiss dran ist
-        if (spielfeld.getAktuellerSpieler()) {
-            for (int i = 7; i >= 0; i--) {
-                for (int j = 0; j < 8; j++) {
-                    cCenter.add(felderListe.get(j + i * 8));
-                }
-            }
-        // Wenn schwarz dran ist
-        } else {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    cCenter.add(felderListe.get(j + i * 8));
-                }
-            }
-        }
-        this.validate();
-        this.repaint();  
     }
     
     /**
