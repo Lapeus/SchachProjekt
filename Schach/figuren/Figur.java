@@ -34,14 +34,15 @@ public abstract class Figur {
     
     /**
      * Die Farbe der Figur. <br>
-     * <b>True</b> steht für wei&szlig;, <b>False</b> steht für schwarz.
+     * <b>True</b> steht f&uuml;r wei&szlig;, <b>False</b> steht f&uuml;r 
+     * schwarz.
      */
     private boolean farbe;
     
     /**
      * Der materielle Wert der Figur. <br>
-     * Wird haupts&auml;chlich für die Bewertungsfunktion des Computergegners
-     * ben&ouml;tigt und basiert auf stochastischen Erhebungen. 
+     * Wird haupts&auml;chlich f&uuml;r die Bewertungsfunktion des 
+     * Computergegners ben&ouml;tigt und basiert auf stochastischen Erhebungen. 
      * Dient zum anderen der einfachen Identifikation der Figur ohne Verwendung
      * des <b>instanceof</b> Operators.
      * Die Werte sind aus den gegebenen Internetquellen &uuml;bernommen.

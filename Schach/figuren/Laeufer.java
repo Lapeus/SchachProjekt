@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Der Bauplan für die Spielfigur L&auml;ufer. <br>
+ * Der Bauplan fuer die Spielfigur L&auml;ufer. <br>
  * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
  * @author Christian Ackermann

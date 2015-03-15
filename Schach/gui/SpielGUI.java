@@ -207,7 +207,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
-     * Löscht die automtische speicherung des momentanen Spiels.
+     * Loescht die automtische speicherung des momentanen Spiels.
      */
     public void autoSaveLoeschen() {
         gesamtdatensatz.autosaveLoeschen();
@@ -254,7 +254,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     // Ende Methoden
     
     /**
-     * Sorgt für die Erstellung einer SpielGUI beim start des Programms.
+     * Sorgt fuer die Erstellung einer SpielGUI beim start des Programms.
      * @param args Systemrelevantes Stringarray
      */
     public static void main(String[] args) {
@@ -284,7 +284,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     public void windowClosing(WindowEvent e) {
         soundAbspielen("Hinweis.wav");
         int auswahl = JOptionPane.showConfirmDialog(this, "Wollen Sie das Spiel"
-            + " wirklich beenden", "Fenster schließen",
+            + " wirklich beenden", "Fenster schliessen",
             JOptionPane.YES_NO_OPTION);
         // Wenn Ja angeklickt wird
         if (auswahl == 0) {
@@ -292,7 +292,7 @@ public class SpielGUI extends JFrame implements WindowListener {
             try {
                 AudioInputStream ais = AudioSystem.getAudioInputStream(
                     new File("sounds" + System.getProperty("file.separator") 
-                        + "schließen.wav"));
+                        + "schliessen.wav"));
                 Clip clip = AudioSystem.getClip();
                 clip.open(ais);
                 clip.start();

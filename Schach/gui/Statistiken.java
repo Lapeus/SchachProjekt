@@ -1,4 +1,4 @@
-//TODO Rücksetzen Button
+//TODO Ruecksetzen Button
 
 package gui;
 
@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 import daten.Spieler;
 import daten.Statistik;
@@ -55,7 +55,7 @@ public class Statistiken extends JPanel implements ActionListener {
      * TextArea in der die Statistik von dem ausgewaehlten Spieler angezeigt 
      * wird.
      */
-    private JTextArea daten = new JTextArea();
+    private JTextPane daten = new JTextPane();
     
     /**
      * Konstante fuer den Farbton des Hintergrundes (Braun).
@@ -89,44 +89,51 @@ public class Statistiken extends JPanel implements ActionListener {
         this.setBackground(cBraunRot);
         
         // NORTH
-        JLabel statistiken = new JLabel("Statistiken");
-        statistiken.setFont(new Font("Arial", Font.BOLD, 20));
+        cNorth.setLayout(new BorderLayout());
         cNorth.setBackground(cBraunRot);
-        cNorth.add(statistiken);
-        this.add(cNorth, BorderLayout.NORTH);
         
-        //Center
+        // Label Statistik
+        JPanel uNorth = new JPanel();
+        uNorth.setLayout(new FlowLayout());
+        JLabel statistiken = new JLabel("Statistiken: ");
+        statistiken.setFont(new Font("Arial", Font.BOLD, 20));
+        uNorth.add(statistiken);
+        uNorth.setBackground(cBraunRot);
+        cNorth.add(uNorth, BorderLayout.NORTH);
+        
+        // Spielerauswahlmenue
         daten.setEditable(false);
         daten.setBackground(cBraunRot);
         cCenter.setLayout(new BorderLayout());
         cCenter.setBackground(cBraunRot);
         List<Spieler> spielerListe = parent.getSpielerListe();
         String[] spielernamen = new String[spielerListe.size() + 1];
-        spielernamen[0] = "Wählen sie einen Spieler aus";
+        spielernamen[0] = "Waehlen sie einen Spieler aus";
         for (int i = 0; i < spielernamen.length - 1; i++) {
             spielernamen[i + 1] = spielerListe.get(i).getName();
         }
         spielerAuswahl = new JComboBox<String>(spielernamen);
         spielerAuswahl.setBackground(cHellesBeige);
         spielerAuswahl.addActionListener(this);
-        cCenter.add(spielerAuswahl, BorderLayout.NORTH);
+        cNorth.add(spielerAuswahl, BorderLayout.CENTER);
         
-        this.add(cCenter, BorderLayout.CENTER);
+        this.add(cNorth, BorderLayout.NORTH);
         
         // South
         JPanel cSouth = new JPanel();
         cSouth.setLayout(new FlowLayout());
         cSouth.setBackground(cBraunRot);
         
-        // Zurück-Button
-        JButton zurueck = new JButton("zurück");
+        // Zurueck-Button
+        JButton zurueck = new JButton("zurueck");
         zurueck.addActionListener(new SeitenwechselListener(parent));
         zurueck.setActionCommand("Eroeffnungsseite");
         zurueck.setBackground(cHellesBeige);
         cSouth.add(zurueck);
         
-        // Zurücksetzen Button
-        JButton btnzuruecksetzen = new JButton("Spielerstatistik zurücksetzen");
+        // Zuruecksetzen Button
+        JButton btnzuruecksetzen 
+            = new JButton("Spielerstatistik zuruecksetzen");
         btnzuruecksetzen.setActionCommand("zuruecksetzen");
         btnzuruecksetzen.addActionListener(this);
         btnzuruecksetzen.setBackground(cHellesBeige);
@@ -163,7 +170,7 @@ public class Statistiken extends JPanel implements ActionListener {
             if (e.getActionCommand().equals("zuruecksetzen")) {
                 spieler.setStatistik(new Statistik());
             } 
-            daten.removeAll();
+            //daten.removeAll();
             Statistik statistik = spieler.getStatistik();
             String momentan;
             String lineSep = System.getProperty("line.separator");
@@ -186,7 +193,7 @@ public class Statistiken extends JPanel implements ActionListener {
                     + statistik.getSchnellsterSieg() + " Sekunden" + lineSep;
             }
             if (statistik.getKuerzesterSieg() != -1) {
-                momentan += "Kürzester Sieg: "
+                momentan += "Kuerzester Sieg: "
                     + statistik.getKuerzesterSieg() + " Zuege" + lineSep;
             }
             if (statistik.getSchnellstesMatt() != -1) {
@@ -194,7 +201,7 @@ public class Statistiken extends JPanel implements ActionListener {
                     + statistik.getSchnellstesMatt() + " Sekunden" + lineSep;
             }
             if (statistik.getKuerzestesMatt() != -1) {
-                momentan += "Kürzestes Matt:  "
+                momentan += "Kuerzestes Matt:  "
                     + statistik.getKuerzestesMatt() + " Zuege" + lineSep; 
             }
             if (statistik.getZeitSiegDurchschnitt() != -1) {
@@ -208,11 +215,11 @@ public class Statistiken extends JPanel implements ActionListener {
                     + lineSep;
             }
             if (statistik.getZuegeSiegDurchschnitt() != -1) {
-                momentan += "Durschnittliche Siegzüge: " 
+                momentan += "Durschnittliche Siegzuege: " 
                     + statistik.getZuegeSiegDurchschnitt() + " Zuege" + lineSep;
             }
             if (statistik.getZuegeMattDurchschnitt() != -1) {
-                momentan += "Durschnittliche Mattzüge: " 
+                momentan += "Durschnittliche Mattzuege: " 
                     + statistik.getZuegeMattDurchschnitt() + " Zuege" + lineSep;
             }
             if (statistik.getMatWertSiegDurchschnitt() != -1) {
@@ -223,13 +230,13 @@ public class Statistiken extends JPanel implements ActionListener {
                 momentan += "Durchschnittlicher Materialwert Matt: "
                     + statistik.getMatWertMattDurchschnitt();
             }
+            daten.setBackground(cHellesBeige);
             daten.setText(momentan);
-            cCenter.add(daten, BorderLayout.CENTER);
+            cCenter.add(daten, BorderLayout.NORTH);
+            this.add(cCenter, BorderLayout.CENTER);
             this.revalidate();
         }
         
         
     }
-  
-    
 }

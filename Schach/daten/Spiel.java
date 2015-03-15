@@ -10,7 +10,7 @@ import zuege.Zug;
 /**
  * Verwaltet alle wichtigen Daten f&uuml;r ein Spiel. <br>
  * Ein Spiel besteht aus einem Namen, den beteiligten Spielern, dem 
- * zugehörigen Spielfeld, sowie s&auml;mtlichen ben&ouml;tigten Daten und 
+ * zugehoerigen Spielfeld, sowie s&auml;mtlichen ben&ouml;tigten Daten und 
  * Einstellungen.
  * @author Christian Ackermann
  */

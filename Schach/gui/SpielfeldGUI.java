@@ -44,7 +44,7 @@ import zuege.Umwandlungszug;
 
 /**
  * Eine Klasse die von <b>JPanel</b> und einen eigenen <b>MouseListener</b>
- * implementiert und für die Darstellung des Spielfeldfenster zustädnig ist.
+ * implementiert und fuer die Darstellung des Spielfeldfenster zustaednig ist.
  * @author Marvin Wolf 
  */
 public class SpielfeldGUI extends JPanel implements MouseListener, 
@@ -68,7 +68,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Button um einen Zug Rueckgaenig zu machen.
      */
-    private JButton rueckgaengig = new JButton("Zug Rückgängig");
+    private JButton rueckgaengig 
+        = new JButton("<html>Zug R&uuml;ckg&auml;ngig");
     
     /**
      * Button um ein unetschieden anzubieten.
@@ -93,7 +94,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * JLabel zum Anzeigen des momentanen Spielers.
      */
-    private JLabel momentanerSpieler = new JLabel("Weiß");
+    private JLabel momentanerSpieler = new JLabel("<html>Wei&szlig;");
     
     /**
      * JLabel zum Anzeigen der Zugzeit des momentanen Spielers.
@@ -101,47 +102,47 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private JLabel zugzeit = new JLabel("  ");
     
     /**
-     * JPanel für die Geschlagenen schwarzen Figuren.
+     * JPanel fuer die Geschlagenen schwarzen Figuren.
      */
     private JPanel geschlageneSchwarze = new JPanel(); 
     
     /**
-     * JPanel für die Geschlagenen schwarzen Figuren.
+     * JPanel fuer die Geschlagenen schwarzen Figuren.
      */
     private JPanel geschlageneWeisse = new JPanel();
     
     /**
-     * Spieler1, welcher von der <b>Spielerauswahl</b> Seite übergeben wird.
+     * Spieler1, welcher von der <b>Spielerauswahl</b> Seite uebergeben wird.
      */
     private Spieler spieler1;
     
     /**
-     * Spieler2, welcher von der <b>Spielerauswahl</b> Seite übergeben wird.
+     * Spieler2, welcher von der <b>Spielerauswahl</b> Seite uebergeben wird.
      */
     private Spieler spieler2;
     
     /**
-     * Liste die 64 Schachfelder enthält.
+     * Liste die 64 Schachfelder enthaelt.
      */
     private List<Feld> felderListe;
     
     /**
-     * Objekt der Klasse <b>Spielfeld</b>, welches für Figurenpositionen 
-     * benötigt wird.
+     * Objekt der Klasse <b>Spielfeld</b>, welches fuer Figurenpositionen 
+     * benoetigt wird.
      */
     private Spielfeld spielfeld;
     
     
     /**
      * Objekt der Klasse <b>Spiel</b>, welche das Spiel speichert zu dem dieses 
-     * Spielfeld gehört.
+     * Spielfeld gehoert.
      */
     private Spiel spiel;
     
     /**
-     * Enhält eventuell momentan ausgewählte Figur. <br>
-     * Wird benötigt um Zug auszuführen, da man ja nur ziehen kann wenn man
-     * vorher schon eine Figur ausgewählt hat.
+     * Enhaelt eventuell momentan ausgewaehlte Figur. <br>
+     * Wird benoetigt um Zug auszufuehren, da man ja nur ziehen kann wenn man
+     * vorher schon eine Figur ausgewaehlt hat.
      */
     private Figur ausgewaehlteFigur;
     
@@ -151,13 +152,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private JList<String> zugListe;
     
     /**
-     * JPanel für das Spielfeld. Wird in der <i>spielfeldUpdate</i> Methode 
-     * benötigt.  
+     * JPanel fuer das Spielfeld. Wird in der <i>spielfeldUpdate</i> Methode 
+     * benoetigt.  
      */
     private Container cCenter = new JPanel();
     
     /**
-     * Kontainer für die Anzeigen und Button neben dem Spielfeld.
+     * Kontainer fuer die Anzeigen und Button neben dem Spielfeld.
      */
     private JPanel cEast = new JPanel();
     
@@ -167,17 +168,17 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private JPanel cEnde = new JPanel();
     
     /**
-     * Konstante für den Farbton der "schwarzen" Felder (braun).
+     * Konstante fuer den Farbton der "schwarzen" Felder (braun).
      */
     private final Color braun = new Color(181, 81, 16);
     
     /**
-     * Konstante für den Farbton der "weißen" Felder (helles Beige).
+     * Konstante fuer den Farbton der "weissen" Felder (helles Beige).
      */
     private final Color weiss = new Color(255, 248, 151);
     
     /**
-     * Konstante für den Farbton der makierten Felder (rot).
+     * Konstante fuer den Farbton der makierten Felder (rot).
      */
     private final Color rot = new Color(204, 0, 0);
     
@@ -197,7 +198,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private final Color cHellesBeige = new Color(255, 248, 151);
     
     /**
-     * Action Command für den Rueckgaening-Button.
+     * Action Command fuer den Rueckgaening-Button.
      */
     private final String commandRueck = "rueck";
     
@@ -214,7 +215,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Action Command fuer Remi-Button.
      */
-    private final String commandRemi = "remis";
+    private final String commandRemis = "remis";
     
     /**
      * Action Command fuer den Startmenue-Button.
@@ -222,12 +223,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private final String commandStartmenue = "spielende";
     
     /**
-     * Startzeit für die Zugzeit-Stoppuhr (Ueber Systemzeit). 
+     * Startzeit fuer die Zugzeit-Stoppuhr (Ueber Systemzeit). 
      */
     private long sekundenStart;
     
     /**
-     * Endzeit für die Zugzeit-Stoppuhr (Endezeit - Startzeit). 
+     * Endzeit fuer die Zugzeit-Stoppuhr (Endezeit - Startzeit). 
      */
     private long sekundenStopp;
     
@@ -272,10 +273,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Erzeugt eine SpielfeldGUI.
      * Wird von der Spielerauswahl-Seite aufgerufen und erstellt eine Spielfeld
      * GUI fuer ein neues Spiel.
-     * @param parent Das Objekt der dazugehörigen <b>SpielGUI</b>
+     * @param parent Das Objekt der dazugehoerigen <b>SpielGUI</b>
      * @param spieler1 Ein Objekt der Klasse <b>Spieler</b>
      * @param spieler2 Ein weiteres Objekt der Klasse <b>Spieler</b>
-     * @param spielname Name des Spiels muss übergeben werden
+     * @param spielname Name des Spiels muss uebergeben werden
      */
     public SpielfeldGUI(SpielGUI parent, String spielname,
         Spieler spieler1, Spieler spieler2) {
@@ -284,7 +285,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         this.spieler1 = spieler1;
         this.spieler2 = spieler2;
         
-        // FelderListe füllen
+        // FelderListe fuellen
         felderListe = new ArrayList<Feld>();
         fuelleFelderListe();
         
@@ -308,7 +309,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Erzeugt eine neue SpielfeldGUI.
      * Wird von der SpielLaden-Seite Aufgerufen und erzuegt eine SpielfeldGUI 
      * fuer ein bereits gespeichertes Spiel.
-     * @param parent Das Objekt der dazugehörigen <b>SpielGUI</b>
+     * @param parent Das Objekt der dazugehoerigen <b>SpielGUI</b>
      * @param spiel Ein Objekt von typ Spiel, welches bereits Paramenter hat
      */
     public SpielfeldGUI(SpielGUI parent, Spiel spiel) {
@@ -322,7 +323,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             feld.addMouseListener(this);
         }
         if (spielfeld.getAktuellerSpieler()) {
-            momentanerSpieler.setText("Weiß");
+            momentanerSpieler.setText("<html>Wei&szlig;");
         } else {
             momentanerSpieler.setText("Schwarz");  
         }
@@ -339,7 +340,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Initialisierungmethode eines Spielfelds.
      * Wird vom Konstruktor aufgerufen. <br>
      * Ruft auf: <br>
-     * 1. Füllung der felderListe <br>
+     * 1. Fuellung der felderListe <br>
      * 2. Erzeugt ein <b>Spielfeld</b> mit dieser felderListe <br>
      * 3. Erzeugt ein <b>Spiel</b> mit Spielname, spieler1, spieler2 und
      *  dem spielfeld
@@ -364,7 +365,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         
         // geschlageneLabelW
-        JLabel lGeschlageneW = new JLabel("Geschlagene Weiße Figuren:");
+        JLabel lGeschlageneW 
+            = new JLabel("<html>Geschlagene Wei&szlig;e Figuren:");
         lGeschlageneW.setForeground(new Color(0, 0, 0));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -406,6 +408,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(zugzeit, gbc);
         
         // Button rueck
+        rueckgaengig.setForeground(new Color(0, 0, 0));
         rueckgaengig.setBackground(cHellesBeige);
         rueckgaengig.addActionListener(this);
         rueckgaengig.setActionCommand(commandRueck);
@@ -424,7 +427,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Button unentschieden
         btnUnentschieden.setBackground(cHellesBeige);
         btnUnentschieden.addActionListener(this);
-        btnUnentschieden.setActionCommand(commandRemi);
+        btnUnentschieden.setActionCommand(commandRemis);
         gbc.gridx = 1;
         gbc.gridy = 6;
         cEast.add(btnUnentschieden, gbc);
@@ -438,7 +441,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         gbc.gridy = 6;
         cEast.add(aufgeben, gbc);
         
-        // Zu Panel hinzufügen
+        // Zu Panel hinzufuegen
         this.add(cCenter, BorderLayout.CENTER);
         this.add(cEast, BorderLayout.EAST);
         
@@ -461,22 +464,97 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
         }
     }
+    
     /**
-     * Dient zum Updaten der SpielfeldGUI nach jeder Veränderung. 
+     * Ansicht, welche nach Spielende aufgerufen wird.
+     * Bietet einen Button zum zur&uuml;ckkehren auf die 
+     * {@link Eroeffnungsseite}. Zudem wird eine Option zum Wiederholen des
+     * gerade gespielten Spiels angeboten und dessem Zugliste wird angezeigt.
+     * Es werden alle Autosavedaten des Spiels gel&ouml;scht. 
      */
-    private void spielfeldAufbau() {
-        // boolean für abwechselnd schwarz/weiß
+    private void cEndeErstellen()  {
+        // Alle Autosave Dateien des Spiels loeschen
+        parent.autoSaveLoeschen();
+        
+        // cEnde
+        cEnde.setLayout(new GridBagLayout());
+        cEnde.setBackground(cBraunRot);
+        GridBagConstraints gbc2 = new GridBagConstraints();
+        
+        // Startmenue Button
+        JButton startmenue = new JButton("Zurueck zum Startmenue");
+        startmenue.setActionCommand(commandStartmenue);
+        startmenue.addActionListener(this);
+        startmenue.setBackground(cHellesBeige);
+        gbc2.insets = new Insets(15, 15, 15, 15);
+        gbc2.gridx = 0;
+        gbc2.gridy = 0;
+        cEnde.add(startmenue, gbc2);
+        
+        // Wiederholung-Anzeigen-Button
+        btnWiederholung.setBackground(cHellesBeige);
+        btnWiederholung.addActionListener(this);
+        gbc2.gridy = 1;
+        cEnde.add(btnWiederholung, gbc2);
+        
+        // Pause-Button fuer die Wiederholung
+        btnStopp.setBackground(cHellesBeige);
+        btnStopp.addActionListener(this);
+        btnStopp.setVisible(false);
+        gbc2.gridy = 2;
+        cEnde.add(btnStopp, gbc2);
+        
+        // Zugliste
+        DefaultListModel<String> listModel = new DefaultListModel<String>();
+        String[] zuege = spielfeld.getSpieldaten().toString()
+            .split(System.getProperty("line.separator"));
+        for (String string : zuege) {
+            listModel.addElement(string);
+        }
+        zugListe = new JList<String>(listModel);
+        zugListe.setBackground(cHellesBeige);
+        JScrollPane sPane = new JScrollPane(zugListe);
+        sPane.setBackground(cHellesBeige);
+        gbc2.gridy = 3;
+        gbc2.fill = GridBagConstraints.HORIZONTAL;
+        cEnde.add(sPane, gbc2);
+        cEnde.revalidate();
+    }
+    
+    /**
+     * Fuellt die felderListe mit 64 Feldern(Index 0-7, 0-7).
+     * Fuegt zudem jedem Feld einen MouseListener hinzu (this)
+     */
+    private void fuelleFelderListe() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Feld temp = new Feld(j, i);
+                temp.addMouseListener(this);
+                felderListe.add(temp);
+            }    
+        }
+    }
+    
+    
+    /**
+     * Dient zum Erstellen der SpielfeldGUI, d.h. das Spielfeld wird mit den 
+     * Feldern der {@link #felderListe} gefüllt und die Labels bekommen ihre
+     * Farbe. Dann wird die Methode {@link #spielfeldUIUpdate()} aufgerufen, 
+     * welche für die Darstellung der Figuren sorgt.
+     */
+    private void spielfeldAufbau() {        
+        // boolean fuer abwechselnd schwarz/weiss
         boolean abwechslung = false;
-        // zähler für richtge Position in der Felderliste
+        // zaehler fuer richtge Position in der Felderliste
         int counter = 56;
-        // Für jede Zeile
+        // Fuer jede Zeile
         for (int i = 0; i < 8; i++) {
             // in der neuen Reihe kommt die gleiche Farbe wie ende letzer Reihe
             abwechslung = !abwechslung;
-            // Für jede Spalte
+            // Fuer jede Spalte
             for (int j = 0; j < 8; j++) {
                 /* passendes Feld aus Spielfeld lesen und Hintergrund sichtbar 
-                 * machen. Dann den Zähler für die Position in der Liste 
+                 * machen. Dann den Zaehler fuer die Position in der Liste 
                  * vermindern
                  */ 
                 Feld temp = spielfeld.getFelder().get(counter + j);
@@ -485,32 +563,64 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 if (!abwechslung) {
                     temp.setBackground(braun);
                     abwechslung = true;
-                // Wenn die Farbe "weiß"(Beige) ist dann Feld beige machen    
+                // Wenn die Farbe "weiss"(Beige) ist dann Feld beige machen    
                 } else {
                     temp.setBackground(weiss);
                     abwechslung = false;
                 }
-                // Dem cCenter Panel das fertige Feld hinzufügen
+                // Dem cCenter Panel das fertige Feld hinzufuegen
                 cCenter.add(temp);
             }    
             counter -= 8;
         }
-        if (spielfeld.getEinstellungen().isSpielfeldDrehen()) {
+        if (spielfeld.getEinstellungen().isSpielfeldDrehen() && !wiederholung 
+            && !(spieler2 instanceof Computerspieler)) {
             spielfeldDrehen();
         }
         spielfeldUIUpdate();
     }
+    
     /**
-     * Updaten der Spielfeldoberfläche.
+     * Dreht das Spielfeld, sodass es immer vom aktuellen Spieler aus gesehen 
+     * wird.
+     */
+    private void spielfeldDrehen() {
+        // Entfernt alle Felder
+        cCenter.removeAll();
+        // Wenn weiss dran ist
+        if (spielfeld.getAktuellerSpieler()) {
+            for (int i = 7; i >= 0; i--) {
+                for (int j = 0; j < 8; j++) {
+                    cCenter.add(felderListe.get(j + i * 8));
+                }
+            }
+        // Wenn schwarz dran ist
+        } else {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    cCenter.add(felderListe.get(j + i * 8));
+                }
+            }
+        }
+        this.validate();
+        this.repaint();  
+    }
+    
+    /**
+     * Sorgt daf&uuml;r, dass jede Figur ihr passendes Figurenbild erh&auml;lt.
+     * Zudem wird hier gesteuert ob der rueckg&auml;ngig-Button klickbar(Zug
+     * vorhanden) oder nicht(kein Zug vorhande) ist. Die 
+     * Figurenbildergr&ouml;&szlig;en an die Gr&ouml;&szlig;e des Fensters
+     * angepasst werden. Dann wird noch die {@link #geschlageneFigureUpdate()} 
+     * Methode aufgerufen.
      */
     private void spielfeldUIUpdate() {
-        this.revalidate();
         if (spielfeld.getSpieldaten().getZugListe().isEmpty()) {
             rueckgaengig.setEnabled(false);
         } else {
             rueckgaengig.setEnabled(true);
         }
-        // Alle Bilder löschen damit keine Bilder doppelt bleiben
+        // Alle Bilder loeschen damit keine Bilder doppelt bleiben
         for (Feld feld : felderListe) {
             feld.setIcon(null);
         }
@@ -550,7 +660,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 exc.printStackTrace();
             }
         }
-        // - weiße Figurenbilder
+        // - weisse Figurenbilder
         for (Figur weiss  : spielfeld.getWeisseFiguren()) {
             Feld momentan = weiss.getPosition();
             momentan.setVerticalAlignment(SwingConstants.CENTER);
@@ -587,26 +697,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
         }
         geschlageneFigureUpdate();
-        this.validate();
-        this.repaint();  
-    }
-    
-    /**
-     * Füllt die felderListe mit 64 Feldern(Index 0-7, 0-7).
-     * Fügt zudem jedem Feld einen MouseListener hinzu (this)
-     */
-    private void fuelleFelderListe() {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                Feld temp = new Feld(j, i);
-                temp.addMouseListener(this);
-                felderListe.add(temp);
-            }    
-        }
+        this.revalidate();  
     }
     
     /**
      * Updated die Anzeigen der geschlagenen Figuren.
+     * Geht die geschlagenenFigurenListen der jeweiligen Farbe durch und 
+     * zeigt diese in dem jewiligen Conatiner an.
      */
     private void geschlageneFigureUpdate() {
         geschlageneSchwarze.removeAll();
@@ -699,170 +796,76 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Ermittelt ob ein Computerspieler dran ist und laesst ihn wenn dies so ist
-     * ziehen.
+     * Wenn der Computergegner dran ist werden die Verhhaltensm&ouml;glichkeiten
+     * abgefragt und ausgef&uuml;hrt.
+     * Wenn die 50-Z&uuml;ge Regel erf&uuml;llt ist dann wird der Computer ein
+     * Unentschieden erzwingen.
+     * Wenn der Computer ziehen soll dann wird eine neue Zugzeit gestartet der 
+     * Zug ausgef&uuml;hrt und dann die Zeit gestoppt und dem Zug 
+     * nachtr&auml;glich &uuml;bergeben. Dabei wird mit der 
+     * {@link #mattOderSchach()}-Methode nach jedem Zug auf Schach oder Matt des
+     * folgenden Spielers kontrolliert. 
+     * Dann werden Start- und Zielfeld des letzten Zugs eines Computers 
+     * gr&uuml;n makiert.
+     * 
      */
     private void wennComputerDannZiehen() {
         // Wenn spieler 2 ein Computergegner ist und dran ist
         if (istComputerSpielerUndIstAmZug()) {
-            spielfeldAufbau();
-            start();
-            // Testen ob die 50-Züge-Regel verletzt wurde
+            // Testen ob die 50-Zuege-Regel verletzt wurde
             if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
                 // Unentschieden einreichen
                 spiel.unentschieden();
                 parent.soundAbspielen("Hinweis.wav");
-                JOptionPane.showMessageDialog(parent, "50 Züge Regel wurde "
-                    + "erfüllt. Das Spiel endet mit einem Unentschieden");
+                JOptionPane.showMessageDialog(parent, "50 Zuege Regel wurde "
+                    + "erfuellt. Das Spiel endet mit einem Unentschieden");
                 this.remove(cEast);
                 cEndeErstellen();
                 this.add(cEnde, BorderLayout.EAST);
                 this.validate();
                 this.repaint();  
             } else {
+                // Zugzeit neu starten
+                start();
+                // Zug ausfuehren
                 ((Computerspieler) spieler2).ziehen();
+                // zugzeit stoppen 
                 sekundenStopp = (System.currentTimeMillis()
                     - sekundenStart) / 1000;
+                // und nachtraeglcih uebergeben
                 spielfeld.getSpieldaten().getLetzterZug().setZugzeit(
                     (int) sekundenStopp);
+                // auf Matt und Schach Pruefen
                 mattOderSchach();
                 spielfeldAufbau();
                 start();
-            }
-            for (Feld feld : spielfeld.getLetzteFelder()) {
-                feld.setBackground(gruen);
+                // Letzten Zug gruen makieren
+                for (Feld feld : spielfeld.getLetzteFelder()) {
+                    feld.setBackground(gruen);
+                }
             }
         }
     }
     
+
     /**
-     * Gibt eine Schachwarnung aus, wenn der aktuelle Spieler ein menschlicher 
-     * Spieler ist. Computerspieler benoetigen diese Warung aus offensichtilchen
-     * Gruenden nicht.
-     */
-    private void schachWarnung() {
-        // Wenn kein Computerspieler dran ist und das Spiel nocht vorbei ist
-        if (!((spieler1 instanceof Computerspieler && spieler1.getFarbe() 
-            == spielfeld.getAktuellerSpieler() && !spielVorbei)
-            ||
-            spieler2 instanceof Computerspieler 
-            && spieler2.getFarbe() == spielfeld.getAktuellerSpieler()
-            && !spielVorbei)) {
-            spielfeldAufbau();
-            parent.soundAbspielen("FehlerhafteEingabe.wav");
-            // Schachmeldung ausgeben
-            for (Feld feld : spielfeld.getLetzteFelder()) {
-                feld.setBackground(gruen);
-            }
-            JOptionPane.showMessageDialog(parent, 
-                "Sie stehen im Schach!", "Schachwarnung!",
-                JOptionPane.WARNING_MESSAGE);
-        }
-        // Schach wieder aufheben, da nun ein Zug aus dem Schach gezwungen ist
-        spielfeld.setSchach(false);
-    }
-    
-    /**
-     * Prueft nach einem Zug, ob der neue aktuelle Spieler matt ist oder im 
-     * schach steht.
-     */
-    private void mattOderSchach() {
-        // Wenn das Spiel vorbei ist
-        if (spielfeld.schachMatt()) {
-            spielfeldAufbau();
-            // wird die Stoppuhr angehalten
-            // uhrAktiv = false;
-            // das Spiel ausgewertet
-            List<Object> auswertung = spiel.auswertung();
-            Spieler gewinner = (Spieler) auswertung.get(0);
-            String ergebnis; 
-            String zuege = auswertung.get(2).toString();
-            if ((boolean) auswertung.get(1)) {
-                ergebnis = gewinner.getName() 
-                    + " gewinnt nach " + zuege + " Zügen.";
-            } else {
-                ergebnis = "Das Spiel endet in einem Patt";
-            }
-            // Und Ein Dialogfenster für den Gewinner angezeigt
-            parent.soundAbspielen("SchachMatt.wav");
-            JOptionPane.showMessageDialog(parent
-                , ergebnis);
-            // Das spiel ist vorbei also keine Züge mehr möglich
-            for (Feld feld : felderListe) {
-                feld.removeMouseListener(this);
-            }
-            // Spielende Screen
-            this.remove(cEast);
-            cEndeErstellen();
-            this.add(cEnde, BorderLayout.EAST);
-            this.validate();
-            this.repaint();  
-            spielVorbei = true;
-        // Wenn der momentane Spieler im Schach steht
-        } else if (spielfeld.isSchach()) {
-            schachWarnung();
-        }
-    }
-    
-    
-    /**
-     * Hier werden die Züge veranlasst und auf der Gui geupdated.
-     * @param momentanesFeld Das momentan ausgewählte Feld
-     */
-    private void spielerzugGUI(Feld momentanesFeld) {
-        // Hier ist der jetzige Zug beendet also auch die Zugzeit
-        sekundenStopp = (System.currentTimeMillis()
-            - sekundenStart) / 1000;
-        // Ein Zug wird ausgeführt und die Zugzeit uebergeben
-        spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
-            (int) sekundenStopp);
-        spielfeldAufbau();
-        this.validate();
-        this.repaint();  
-        // Start der neuen Zugzeit
-        start();
-        // Neuer Spieler = keine Ausgewählte Figur
-        ausgewaehlteFigur = null;
-        spielfeld.getBedrohteFelder();
-        Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
-        mattOderSchach();
-        if (!spielVorbei && letzterZug instanceof Umwandlungszug)   {
-            spielfeldAufbau();
-            parent.soundAbspielen("Hinweis.wav");
-            String[] moeglicheFiguren = {"Dame", "Turm", "Läufer", 
-                "Springer"};
-            String s = (String) JOptionPane.showInputDialog(parent,
-                "Wählen Sie eine Figur aus, die Sie gegen den "
-                + "Bauern tauschen wollen"
-                , "Figurenwechsel", JOptionPane.
-                PLAIN_MESSAGE, null, moeglicheFiguren, "Dame");
-            int wert;
-            if (s.equals("Dame")) {
-                wert = 900;
-            } else if (s.equals("Turm")) {
-                wert = 465;
-            } else if (s.equals("Läufer")) {
-                wert = 325;
-            } else {
-                wert = 275;
-            }
-            spielfeld.umwandeln(letzterZug.getFigur(), wert);
-        }
-    }
-     
-    /**
-     * MouseEvent-Methode mouseClicked.
+     * Immer wenn ein Spieldfeld angeklickt wird wird diese Methode aufgerufen
+     * und verarbeitet dann den Klick.
+     * Wenn noch keins ausgew&auml;hlt wurde oder die Auswahl gewechselt wurde
+     * wird ein neues ausgew&auml;hlt und wenn aktiviert die moeglichen Felder
+     * angezeigt.
+     * Wenn  
      * @param arg0 MouseEvent erzeugt von den Feldern des Spielfelds
      */
     public void mouseClicked(MouseEvent arg0) {
         spielfeldAufbau();
         // Felder Bewegen
         Feld momentanesFeld = (Feld) arg0.getSource();
-        /* (Wenn eine korrekte Figur ausgewählt wird und es noch keine 
+        /* (Wenn eine korrekte Figur ausgewaehlt wird und es noch keine 
          * ausgewaehlte Figur gibt.)
          * ODER
          * (Wenn man dann auf eine seiner eigenen Figuren Klickt, wechselt 
-         * die GUI  auf die möglichen Felder dieser Figur.)
+         * die GUI  auf die moeglichen Felder dieser Figur.)
          */
         if ((momentanesFeld.getFigur() != null 
             && (momentanesFeld.getFigur().getFarbe() 
@@ -871,16 +874,17 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             || 
             (ausgewaehlteFigur != null && momentanesFeld.getFigur() != null 
             && momentanesFeld.getFigur().getFarbe() 
-            == ausgewaehlteFigur.getFarbe())) {
-            // Wird diese als neue Ausgewählte Figur gespeichert
+            == ausgewaehlteFigur.getFarbe()
+            && !(momentanesFeld.getFigur().equals(ausgewaehlteFigur)))) {
+            // Wird diese als neue Ausgewaehlte Figur gespeichert
             ausgewaehlteFigur = momentanesFeld.getFigur();
-            /* Wenn der Spieler Weiß dran ist und dies angeklickte Figur 
-             * eine weiße ist.
+            /* Wenn der Spieler Weiss dran ist und dies angeklickte Figur 
+             * eine weisse ist.
              */
             if (spielfeld.getAktuellerSpieler() 
                 && spielfeld.getWeisseFiguren()
                     .contains(ausgewaehlteFigur)) {
-                // Wird diese als neue Ausgewählte Figur gespeichert
+                // Wird diese als neue Ausgewaehlte Figur gespeichert
                 momentanesFeld.setBackground(rot);
                 if (spielfeld.getEinstellungen().isMoeglicheFelderAnzeigen()) {
                     for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
@@ -901,8 +905,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     }
                 }
             }
-        // Wenn es bereits eine ausgewaehlte Figur gibt
-        } else if (ausgewaehlteFigur != null) {
+        // Wenn es bereits eine ausgewaehlte Figur gibt 
+        } else if (ausgewaehlteFigur != null 
+            && ausgewaehlteFigur.getKorrektFelder().contains(momentanesFeld)) {
             /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
              dieser ist */
             if (ausgewaehlteFigur.getKorrektFelder()
@@ -915,7 +920,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 wennComputerDannZiehen();
                 // Je nach aktuellem Spieler wird das Label gesetzt
                 if (spielfeld.getAktuellerSpieler()) {
-                    momentanerSpieler.setText("Weiß");
+                    momentanerSpieler.setText("<html>Wei&szlig;");
                 } else {
                     momentanerSpieler.setText("Schwarz");
                 }
@@ -924,13 +929,16 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     // autosave initiieren
                     parent.autoSave(spiel);
                 } 
-            } 
-        }
-        // Wenn man ein leeres Feld anklickt
-        if (momentanesFeld.getFigur() == null) {
+            }
+        // Wenn man die selbe Figur anklickt    
+        } else if (momentanesFeld.getFigur() == null) {
             ausgewaehlteFigur = null;
-        }
-        // Färbt die bedrohten Felder Grau
+        } else if (ausgewaehlteFigur != null
+            && momentanesFeld.getFigur().equals(ausgewaehlteFigur)) {
+            ausgewaehlteFigur = null; 
+        } 
+        
+        // Faerbt die bedrohten Felder Grau
         if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen()) {
             for (Feld bedroht : spielfeld.getBedrohteFelder()) {
                 bedroht.setBackground(new Color(100, 100, 100));
@@ -938,6 +946,119 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         this.validate();
         this.repaint();  
+    }
+    
+
+    /**
+     * Hier werden die Zuege veranlasst und auf der Gui geupdated.
+     * @param momentanesFeld Das momentan ausgewaehlte Feld
+     */
+    private void spielerzugGUI(Feld momentanesFeld) {
+        // Hier ist der jetzige Zug beendet also auch die Zugzeit
+        sekundenStopp = (System.currentTimeMillis()
+            - sekundenStart) / 1000;
+        // Ein Zug wird ausgefuehrt und die Zugzeit uebergeben
+        spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
+            (int) sekundenStopp);
+        spielfeldAufbau();
+        revalidate();  
+        // Neuer Spieler = keine Ausgewaehlte Figur
+        ausgewaehlteFigur = null;
+        spielfeld.getBedrohteFelder();
+        Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
+        mattOderSchach();
+        if (!spielVorbei && letzterZug instanceof Umwandlungszug)   {
+            spielfeldAufbau();
+            parent.soundAbspielen("Hinweis.wav");
+            String[] moeglicheFiguren = {"Dame", "Turm", "Laeufer", 
+                "Springer"};
+            String s = (String) JOptionPane.showInputDialog(parent,
+                "Waehlen Sie eine Figur aus, die Sie gegen den "
+                + "Bauern tauschen wollen"
+                , "Figurenwechsel", JOptionPane.
+                PLAIN_MESSAGE, null, moeglicheFiguren, "Dame");
+            int wert;
+            if (s.equals("Dame")) {
+                wert = 900;
+            } else if (s.equals("Turm")) {
+                wert = 465;
+            } else if (s.equals("Laeufer")) {
+                wert = 325;
+            } else {
+                wert = 275;
+            }
+            spielfeld.umwandeln(letzterZug.getFigur(), wert);
+        }
+        // Start der neuen Zugzeit
+        start();
+    }
+    
+
+    /**
+     * Pr&uuml;ft nach einem Zug, ob der neue aktuelle Spieler Matt oder im 
+     * Schach steht. Wenn der aktuelle Spieler im Matt steht dann wird die 
+     * Spielauswertung ausgef&uuml;hrt und dem Benutzer/n wird ein JOptionPane
+     * mit der Auswertung angezeigt. Hierbei wird zwischen Matt und Patt
+     * unterschieden. Wenn der aktuelle Spieler im Schach steht dann wird die 
+     * Methode {@link #schachWarnung()}
+     */
+    private void mattOderSchach() {
+        // Wenn das Spiel vorbei ist
+        if (spielfeld.schachMatt()) {
+            spielfeldAufbau();
+            // das Spiel ausgewertet
+            List<Object> auswertung = spiel.auswertung();
+            Spieler gewinner = (Spieler) auswertung.get(0);
+            String ergebnis; 
+            String zuege = auswertung.get(2).toString();
+            if ((boolean) auswertung.get(1)) {
+                ergebnis = gewinner.getName() 
+                    + " gewinnt nach " + zuege + " Zuegen.";
+            } else {
+                ergebnis = "Das Spiel endet in einem Patt";
+            }
+            // Und Ein Dialogfenster fuer den Gewinner angezeigt
+            parent.soundAbspielen("SchachMatt.wav");
+            JOptionPane.showMessageDialog(parent
+                , ergebnis);
+            // Das spiel ist vorbei also keine Zuege mehr moeglich
+            for (Feld feld : felderListe) {
+                feld.removeMouseListener(this);
+            }
+            // Spielende Screen
+            this.remove(cEast);
+            cEndeErstellen();
+            this.add(cEnde, BorderLayout.EAST);
+            this.validate();
+            this.repaint();  
+            spielVorbei = true;
+        // Wenn der momentane Spieler im Schach steht
+        } else if (spielfeld.isSchach()) {
+            schachWarnung();
+        }
+    }
+    
+    /**
+     * Gibt eine Schachwarnung aus, wenn der aktuelle Spieler ein menschlicher 
+     * Spieler ist. Computerspieler ben&ouml;tigen diese Warung aus 
+     * offensichtilchen Gru&uuml;den nicht.
+     */
+    private void schachWarnung() {
+        // Wenn kein Computerspieler dran ist und das Spiel nocht vorbei ist
+        if (istComputerSpielerUndIstAmZug()
+            && !spielVorbei) {
+            spielfeldAufbau();
+            parent.soundAbspielen("FehlerhafteEingabe.wav");
+            // Schachmeldung ausgeben
+            for (Feld feld : spielfeld.getLetzteFelder()) {
+                feld.setBackground(gruen);
+            }
+            JOptionPane.showMessageDialog(parent, 
+                "Sie stehen im Schach!", "Schachwarnung!",
+                JOptionPane.WARNING_MESSAGE);
+        }
+        // Schach wieder aufheben, da nun ein Zug aus dem Schach gezwungen ist
+        spielfeld.setSchach(false);
     }
    
     
@@ -970,24 +1091,34 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Action Performed fuer alle Buttons.
-     * 
+     * Action Performed fuer alle Buttons (R&uuml;ckg&auml;ngig, Remis, 
+     * Aufgeben, Speichern, Wiederholung).
+     * Wenn der Zur&uuml;ck-Button gedr&uuml;ckt wurde, dann m&uuml;ssen bei 
+     * einem Computergegner immer 2 Z&uuml;ge r&uuml;ckg&auml;ngig gemacht 
+     * werden, sonst nur einer. Zudem wird die zugzeit zur&uuml;ckgesetzt. 
+     * Wenn der Remis-Button gedr&uuml;ckt wurde wird die 
+     * {@link #remisAuswertung()}-Methode aufgerufen.
+     * Wenn der Aufgeben-Button gedr&uuml;ckt wurde dann wird das Spiel beendet,
+     * ausgewertet und eine Nachricht f&uuml;r den Gewinner wird angezeigt.
+     * Wenn der Speichern-Button gedr&uuml;ckt wurde dann wird das Spiel 
+     * gespeichert und ein JOptionPane zeigt die erfolgreiche Speicherung an.
+     * Wenn der Wiederholungs-Button gedr&uuml;ckt wurde dann wird eine
+     * Wiederholung des letzten Spiels gestartet.
      * @param e Ausgeloestes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
-        // Wenn der momentante Spieler einen Zug rückgängig macht
+        // Wenn der momentante Spieler einen Zug rueckgaengig macht
         if (e.getActionCommand().equals(commandRueck)) {
             /* Wenn es einen Computerspieler gibt dann muss dessen Zug auch 
              * rueckgaenig gemacht werden.
             */
-            if (spieler1 instanceof Computerspieler 
-                || spieler2 instanceof Computerspieler) {
+            if (spieler2 instanceof Computerspieler) {
                 spielfeld.zugRueckgaengig();
             }
             spielfeld.zugRueckgaengig();
             // Labels wieder richtig setzen
             if (spielfeld.getAktuellerSpieler()) {
-                momentanerSpieler.setText("Weiß");
+                momentanerSpieler.setText("<html>Wei&szlig;");
             } else {
                 momentanerSpieler.setText("Schwarz");  
             }
@@ -998,8 +1129,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             this.repaint();  
         }
         // Wenn ein Spieler ein Remis anbietet
-        if (e.getActionCommand().equals(commandRemi)) {
-            remiAuswertung();
+        if (e.getActionCommand().equals(commandRemis)) {
+            remisAuswertung();
         }
         // Wenn der momentane Spieler aufgibt
         if (e.getActionCommand().equals(commandAufgeben)) {
@@ -1011,9 +1142,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             Spieler gewinner = (Spieler) aufgeben.get(2);
             parent.soundAbspielen("Aufgeben.wav");
             JOptionPane.showMessageDialog(parent, verlierer.getName() 
-                + " gibt nach " + zuege + " Zügen auf! " + gewinner.getName() 
+                + " gibt nach " + zuege + " Zuegen auf! " + gewinner.getName() 
                 + " gewinnt!!!");
-            // Das spiel ist vorbei also keine Züge mehr möglich
+            // Das spiel ist vorbei also keine Zuege mehr moeglich
             for (Feld feld : felderListe) {
                 feld.removeMouseListener(this);
             }
@@ -1030,41 +1161,60 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             JOptionPane.showMessageDialog(parent, "Spiel gespeichert",
                 "Speichern", JOptionPane.INFORMATION_MESSAGE);
         }
+        // Wenn der Wiederholen-Button gedrueckt wird
         if (e.getSource().equals(btnWiederholung)) {
-            btnWiederholung.setFocusable(false);
+            // Wird das Steuerelement fuer Start/Stopp angezeigt
             btnStopp.setVisible(true);
+            // Die Wiederholung startet
             wiederholung = true;
             start();
+            // Wenn dies der erste Klick ist
             if (zaehler == -1) {
+                // Muss die Liste aller zuege des Spiels geladen werden
                 spielvideo = spiel.spielvideo();
+                spielfeldAufbau();
+            // Bei allen weiteren Klicks    
             } else {
+                // Wird der naechste Zug aus der Zugliste ausgewaehlt
                 Zug zug = spielvideo.get(zaehler);
-                // Ziehe jeden Zug
+                // Und ausgefuehrt
                 spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), 
                     zug.getZugzeit());
                 zugListe.setSelectedIndex(zaehler);
                 // Wenn es ein Umwandlungszug war
                 if (zug instanceof Umwandlungszug) {
-                    // Wandel die Figur entsprechend um
+                    // Muss nachtraeglich noch die figur umgewandelt werden
                     spielfeld.umwandeln(spielfeld.getSpieldaten()
                         .getLetzterZug().getFigur(), 
                         ((Umwandlungszug) zug).getNeueFigur().getWert());
                 }
+                spielfeldAufbau();
+                // Start und Ziel feld werden a gruen makiert
+                zug.getStartfeld().setBackground(gruen);
+                zug.getZielfeld().setBackground(gruen);
             }
-            spielfeldAufbau();
+            // naechster Zug
             zaehler++;
+            // Wenn alle Zuege ausgefuehrt wurden
             if (zaehler == spielvideo.size()) {
+                // Wird der WiedeholungsButton ausgegraut
                 btnWiederholung.setEnabled(false);
+                // und Die Steuerelemente versteckt
                 btnStopp.setVisible(false);
+                // Die Wiederholung beendet
                 wiederholung = false;
             }
         }
+        // Wenn der Stopp-Button gedrueckt wurde
         if (e.getSource().equals(btnStopp)) {
+            // boolean fuer Labelaenderung
             wiederholen = !(wiederholen);
             if (wiederholen) {
+                // Wenn gerade widerholt wird kann man stoppen
                 btnStopp.setText("Stopp");
                 start();
             } else {
+                // Wenn die Widerholung gestoppt ist kann man sie starten
                 btnStopp.setText("Start");
             }
         }
@@ -1072,7 +1222,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         if (e.getActionCommand().equals(commandStartmenue)) {
             // Muss der Thread gestoppt werden
             uhrAktiv = false;
-            // Und auf die Eröffnungseite gewechselt werden
+            // Und auf die Eroeffnungseite gewechselt werden
             parent.seitenAuswahl("Eroeffnungsseite");
         }
     }
@@ -1081,15 +1231,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Wenn der Remis-Button gedrueckt wird wird hier die Auswertung der Remis-
      * Anfrage bearbeitet.
      */
-    private void remiAuswertung() {
-     // Testen ob die 50-Züge-Regel verletzt wurde
+    private void remisAuswertung() {
+     // Testen ob die 50-Zuege-Regel verletzt wurde
         if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
             // Unentschieden einreichen
             spielVorbei = true;
             spiel.unentschieden();
             parent.soundAbspielen("Hinweis.wav");
-            JOptionPane.showMessageDialog(parent, "50 Züge Regel wurde "
-                + "erfüllt. Das Spiel endet in einem Unentschieden");
+            JOptionPane.showMessageDialog(parent, "50 Zuege Regel wurde "
+                + "erfuellt. Das Spiel endet in einem Unentschieden");
             this.remove(cEast);
             cEndeErstellen();
             this.add(cEnde, BorderLayout.EAST);
@@ -1099,7 +1249,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if (!(spieler2 instanceof Computerspieler)) {
                 parent.soundAbspielen("Hinweis.wav");
                 int eingabe = JOptionPane.showConfirmDialog(parent, 
-                    "Möchten Sie sich auf ein Unentschieden einigen?");
+                    "Moechten Sie sich auf ein Unentschieden einigen?");
                 if (eingabe == 0) {
                     spielVorbei = true;
                     spiel.unentschieden();
@@ -1149,7 +1299,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Startet eine neue Zeitnahmesession für die Zugzeit der Spieler.
+     * Startet eine neue Zeitnahmesession fuer die Zugzeit der Spieler.
      */
     private void start() {
         // Neue Zeit anfangen
@@ -1159,7 +1309,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Runnable Methode zum erstellen der Zugzeit des momentanen Spielers.
+     * Runnable Methode zum erstellen und &uuml;berwachen der Zugzeit und zum
+     * ausf&uuml;hren der Wiederholungsfunktion.
+     * Solange der Thread aktiv ist (wird noch von einer Funktion gebraucht)
+     * wird alle 10ms die Uhrzeit auf dem daf&uuml;r passendem Label 
+     * aktualisiert und gepr&uuml;ft ob die maximale Zugzeit &uuml;berschritten
+     * worden ist. 
+     * Wenn der Wiederholungs-Boolean true ist dann wird alle 2s der 
+     * Wiederholungs-Button geklickt um so ein Spielvideo zu erzeugen.   
      */
     public void run() {
         StringBuffer ausgabe;
@@ -1174,10 +1331,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Vergangene Zeit in Millisekuden
             sekundenStopp = System.currentTimeMillis()
                     - sekundenStart;
-            // Formatierungshilfe für Zeiten
+            // Formatierungshilfe fuer Zeiten
             Calendar dauer;
             dauer = Calendar.getInstance();
-            // Zeit in Millisekunden übergeben
+            // Zeit in Millisekunden uebergeben
             dauer.setTimeInMillis(sekundenStopp);
             // und in Minuten/Sekunden/Millisekunden (0-9/0-9/0-99)
             int min;
@@ -1187,7 +1344,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             sek = dauer.get(Calendar.SECOND);
             ms = dauer.get(Calendar.MILLISECOND);
             
-            // An den AusgabeString anhängen
+            // An den AusgabeString anhaengen
             if (min <= 9) {
                 ausgabe.append("0" + min + ":");
             } else {
@@ -1207,102 +1364,31 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             // Auf das Zugzeit-Label schreiben
             zugzeit.setText(ausgabe.toString());
-            // Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button
             if (!spielVorbei) {
                 int begrenzung = spielfeld.getEinstellungen()
                     .getZugZeitBegrenzung();
+                // Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button
                 if (begrenzung > 0 && sekundenStopp / 1000 >= begrenzung) {
                     aufgeben.doClick();
                 }
             }
+            // Wenn ein Spielvideo angeziegt werden soll
             if (btnWiederholung.isEnabled()) {
+                /* Wenn wiederholt werden soll und nicht stopp ist und 2 oder 
+                 * mehr Sekunden vergangen sind 
+                */
                 if (wiederholung && wiederholen && sekundenStopp >= 2000) {
+                    // Dann soll der naechste zug ausgefuert werden
                     btnWiederholung.doClick();
                     start();
                 }
+            // Wenn die Wiederholung vorbei ist    
             } else {
+                // Thread beenden
                 uhrAktiv = false;
             }
             
         }
-    }
-    
-    /**
-     * Dreht das Spielfeld, sodass es immer vom aktuellen Spieler aus gesehen 
-     * wird.
-     */
-    private void spielfeldDrehen() {
-        // Entfernt alle Felder
-        cCenter.removeAll();
-        // Wenn weiss dran ist
-        if (spielfeld.getAktuellerSpieler()) {
-            for (int i = 7; i >= 0; i--) {
-                for (int j = 0; j < 8; j++) {
-                    cCenter.add(felderListe.get(j + i * 8));
-                }
-            }
-        // Wenn schwarz dran ist
-        } else {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    cCenter.add(felderListe.get(j + i * 8));
-                }
-            }
-        }
-        this.validate();
-        this.repaint();  
-    }
-    
-    /**
-     * Spielende Ansicht.
-     */
-    private void cEndeErstellen()  {
-        // Alle Autosave Dateien des Spiels löschen
-        parent.autoSaveLoeschen();
-        
-        // cEnde
-        cEnde.setLayout(new GridBagLayout());
-        cEnde.setBackground(cBraunRot);
-        GridBagConstraints gbc2 = new GridBagConstraints();
-        
-        // Startmenue Button
-        JButton startmenue = new JButton("Zurück zum Startmenü");
-        startmenue.setActionCommand(commandStartmenue);
-        startmenue.addActionListener(this);
-        startmenue.setBackground(cHellesBeige);
-        gbc2.insets = new Insets(15, 15, 15, 15);
-        gbc2.gridx = 0;
-        gbc2.gridy = 0;
-        cEnde.add(startmenue, gbc2);
-        
-        // Wiederholung-Anzeigen-Button
-        btnWiederholung.setBackground(cHellesBeige);
-        btnWiederholung.addActionListener(this);
-        gbc2.gridy = 1;
-        cEnde.add(btnWiederholung, gbc2);
-        
-        // Pause-Button für die Wiederholung
-        btnStopp.setBackground(cHellesBeige);
-        btnStopp.addActionListener(this);
-        btnStopp.setVisible(false);
-        gbc2.gridy = 2;
-        cEnde.add(btnStopp, gbc2);
-        
-        // Zugliste
-        DefaultListModel<String> listModel = new DefaultListModel<String>();
-        String[] zuege = spielfeld.getSpieldaten().toString()
-            .split(System.getProperty("line.separator"));
-        for (String string : zuege) {
-            listModel.addElement(string);
-        }
-        zugListe = new JList<String>(listModel);
-        zugListe.setBackground(cHellesBeige);
-        JScrollPane sPane = new JScrollPane(zugListe);
-        sPane.setBackground(cHellesBeige);
-        gbc2.gridy = 3;
-        gbc2.fill = GridBagConstraints.HORIZONTAL;
-        cEnde.add(sPane, gbc2);
-        cEnde.revalidate();
     }
     
     /**
@@ -1325,7 +1411,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * @param e durch resizen ausgeloestes Event
      */
     public void componentResized(ComponentEvent e) {
-        spielfeldAufbau();
+        spielfeldUIUpdate();
     }
     
     /**

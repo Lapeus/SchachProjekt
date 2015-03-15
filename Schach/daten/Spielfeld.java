@@ -253,14 +253,14 @@ public class Spielfeld {
         figur.getPosition().setFigur(null);
         // Wenn auf dem Zielfeld eine Figur steht
         if (zielfeld.getFigur() != null) {
-            // Wenn wir selbst eine weiße Figur sind
+            // Wenn wir selbst eine weisse Figur sind
             if (figur.getFarbe()) {
                 // schlagen wir eine schwarze Figur
                 schwarzeFiguren.remove(zielfeld.getFigur());
                 geschlagenSchwarz.add(zielfeld.getFigur());
             // Wenn wir selbst eine schwarze Figur sind
             } else {
-                // schlagen wir eine weiße Figur
+                // schlagen wir eine weisse Figur
                 weisseFiguren.remove(zielfeld.getFigur());
                 geschlagenWeiss.add(zielfeld.getFigur());
             }   
