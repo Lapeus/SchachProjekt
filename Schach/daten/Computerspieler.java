@@ -469,11 +469,12 @@ public class Computerspieler extends Spieler {
         }
         Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
         Figur figur;
+        // Wenn es ein RochadenZug war
         if (letzterZug instanceof RochadenZug) {
+            // Ist es der Turm, der entscheidend ist
             figur = ((RochadenZug) letzterZug).getTurm();
-        } else if (letzterZug instanceof EnPassantZug) {
-            figur = ((EnPassantZug) letzterZug).getAusfuehrer();
         } else {
+            // Sonst die aktive Figur
             figur = letzterZug.getFigur();
         }
         // Wenn die zuletzt gezogene Figur dem Koenig Schach bietet

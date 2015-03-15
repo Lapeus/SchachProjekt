@@ -29,7 +29,15 @@ public class Koenig extends Figur {
     }
 
     /**
-     * {@inheritDoc}
+     * Ermittelt alle Felder, auf die der K&ouml;nig nach den eingestellten 
+     * Zugregeln ziehen kann und f&uuml;gt sie einer Liste zu, die am Ende
+     * zur&uuml;ckgegeben wird. <br>
+     * Ein K&ouml;nig kann grunds&auml;tzlich auf jedes benachbarte Feld ziehen,
+     * sofern es von keiner eigenen Figur besetzt wird. Ist die Option 
+     * "Rochade m&ouml;glich" aktiviert, muss noch getestet werden, ob er eine
+     * Rochade durchf&uuml;hren kann. Dies geschieht jedoch in einer anderen
+     * Methode.
+     * @return Die Liste der m&ouml;glichen Felder
      */
     protected List<Feld> getMoeglicheFelder() {
         /* Hier muss eine Auslagerung vorgenommen werden. Die normalen
@@ -107,8 +115,8 @@ public class Koenig extends Figur {
     }
     
     /**
-     * Ermittelt die m&ouml;glichen Felder des K&ouml;nigs, wenn er auch 
-     * rochieren darf.
+     * Ermittelt die zus&auml;tzlich m&ouml;glichen Felder des K&ouml;nigs, 
+     * wenn er auch rochieren darf.
      * @return Liste mit den m&ouml;glichen Rochade-Feldern auf die der 
      * K&ouml;nig ziehen darf
      */
@@ -132,7 +140,17 @@ public class Koenig extends Figur {
     }
 
     /**
-     * Pr&uuml;ft, ob alle Bedinungen f&uuml;r eine Rochade erf&uuml;llt sind.
+     * Pr&uuml;ft, ob alle Bedingungen f&uuml;r eine Rochade erf&uuml;llt sind.
+     * <br> Dabei m&uuml;ssen folgende Kriterien erf&uuml;llt sein:
+     * <ul>
+     * <li> Weder der K&ouml;nig noch der beteiligte Turm d&uuml;rfen bisher
+     * gezogen worden sein </li>
+     * <li> Der K&ouml;nig darf momentan nicht im Schach stehen </li>
+     * <li> Der K&ouml;nig darf nach der Rochade nicht im Schach stehen </li>
+     * <li> Der K&ouml;nig darf &uuml;ber kein Feld gezogen werden, das bedroht
+     * ist. <br>In der Praxis hei&szlig;t das: Der Turm darf nach dem Zug nicht 
+     * bedroht sein </li>
+     * </ul>
      * @param kleineRochade Ob es eine kleine oder gro&szlig;e Rochade ist.
      * <b>True</b> f&uuml;r kleine, <b>false</b> f&uuml;r gro&szlig;e Rochade
      * @return Wahrheitswert, ob Rochade durchgef&uuml;hrt werden darf
@@ -204,9 +222,14 @@ public class Koenig extends Figur {
     }
     
     /**
-     * Ermittelt alle vom Gegner bedrohten Felder.
+     * Ermittelt alle vom Gegner bedrohten Felder. <br>
      * Wird verwendet, um bei der Rochade pr&uuml;fen zu k&ouml;nnen, ob eines
-     * der Felder, &uuml;ber die der K&ouml;nig ziehen muss, bedroht ist.
+     * der Felder, &uuml;ber die der K&ouml;nig ziehen muss, bedroht ist. <br>
+     * <i>Hinweis: Die Methode ist fast identisch mit der Methode 
+     * {@link Spielfeld#getBedrohteFelder()} in der Klasse Spielfeld, jedoch 
+     * wird in dieser Variante nicht getestet, ob der K&ouml;nig eine Rochade 
+     * ziehen d&uuml;rfte, da es sonst zu einer endlosen Rekursion k&auml;me.
+     * </i>
      * @return Liste mit allen bedrohten Feldern
      */
     private List<Feld> alleBedrohtenFelder() {

@@ -28,7 +28,13 @@ public class Dame extends Figur {
     }
 
     /**
-     * {@inheritDoc}
+     * Ermittelt alle m&ouml;glichen Felder, auf die die Dame nach den Zugregeln
+     * ziehen k&ouml;nnte. Dabei kann sie sich grundsätzlich horizontal, 
+     * vertikal und diagonal bewegen und zwar so lange, bis eine eigene Figur
+     * im Weg steht, eine gegnerische Figur im Weg steht und geschlagen werden
+     * kann oder das Spielfeld zu Ende ist. Alle m&ouml;glichen Felder werden
+     * einer Liste zugef&uuml;gt die am Ende zur&uuml;ck gegeben wird.
+     * @return Die Liste mit den m&ouml;glichen Feldern
      */
     protected List<Feld> getMoeglicheFelder() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
