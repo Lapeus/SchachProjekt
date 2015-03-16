@@ -42,19 +42,19 @@ public class SpielLaden extends JPanel implements ActionListener {
     private Container cCenter;
     
     /**
-     * Label fuer die Information "Spiel Laden".
+     * Label fuer die Information "Spiel laden".
      */
     private JLabel lblSpielLaden = new JLabel("Spiel Laden");
     
     /**
      * Button um die laden() Methode der SpielGUI aufzurufen.
      */
-    private JButton btnSpielLaden = new JButton("SpielLaden");
+    private JButton btnSpielLaden = new JButton("Spiel Laden");
     
     /**
      * Button um auf das Startpanel zurueckzukehren.
      */
-    private JButton btnZurueck = new JButton("zurueck");
+    private JButton btnZurueck = new JButton("<html>Zur&uuml;ck");
     
     /**
      * Liste mit den zu ladenden Spielen.
@@ -132,7 +132,7 @@ public class SpielLaden extends JPanel implements ActionListener {
         btnSpielLaden.setBackground(cHellesBeige);
         cSouth.add(btnSpielLaden);
         
-        // ZUrueck-Button
+        // Zurueck-Button
         btnZurueck.addActionListener(new SeitenwechselListener(parent));
         btnZurueck.setActionCommand("Eroeffnungsseite");
         btnZurueck.setBackground(cHellesBeige);
@@ -175,8 +175,8 @@ public class SpielLaden extends JPanel implements ActionListener {
                 }
             } else {
                 parent.soundAbspielen("Hinweis.wav");
-                JOptionPane.showMessageDialog(parent, "Waehlen Sie ein Spiel "
-                    + "zum laden aus");
+                JOptionPane.showMessageDialog(parent, "<html>W&auml;hlen Sie "
+                    + "ein Spiel zum Laden aus");
             }
             
             

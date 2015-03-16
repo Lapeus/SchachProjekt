@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.text.html.HTMLEditorKit;
 
 import daten.Spieler;
 import daten.Statistik;
@@ -108,7 +109,7 @@ public class Statistiken extends JPanel implements ActionListener {
         cCenter.setBackground(cBraunRot);
         List<Spieler> spielerListe = parent.getSpielerListe();
         String[] spielernamen = new String[spielerListe.size() + 1];
-        spielernamen[0] = "Waehlen sie einen Spieler aus";
+        spielernamen[0] = "<html>W&auml;hlen Sie einen Spieler aus";
         for (int i = 0; i < spielernamen.length - 1; i++) {
             spielernamen[i + 1] = spielerListe.get(i).getName();
         }
@@ -119,25 +120,29 @@ public class Statistiken extends JPanel implements ActionListener {
         
         this.add(cNorth, BorderLayout.NORTH);
         
+        // Center
+        HTMLEditorKit hEdi = new HTMLEditorKit();
+        daten.setEditorKit(hEdi);
+        
         // South
         JPanel cSouth = new JPanel();
         cSouth.setLayout(new FlowLayout());
         cSouth.setBackground(cBraunRot);
         
-        // Zurueck-Button
-        JButton zurueck = new JButton("zurueck");
-        zurueck.addActionListener(new SeitenwechselListener(parent));
-        zurueck.setActionCommand("Eroeffnungsseite");
-        zurueck.setBackground(cHellesBeige);
-        cSouth.add(zurueck);
-        
         // Zuruecksetzen Button
         JButton btnzuruecksetzen 
-            = new JButton("Spielerstatistik zuruecksetzen");
+            = new JButton("<html>Spielerstatistik zur&uuml;cksetzen");
         btnzuruecksetzen.setActionCommand("zuruecksetzen");
         btnzuruecksetzen.addActionListener(this);
         btnzuruecksetzen.setBackground(cHellesBeige);
         cSouth.add(btnzuruecksetzen);
+        
+        // Zurueck-Button
+        JButton zurueck = new JButton("<html>Zur&uuml;ck");
+        zurueck.addActionListener(new SeitenwechselListener(parent));
+        zurueck.setActionCommand("Eroeffnungsseite");
+        zurueck.setBackground(cHellesBeige);
+        cSouth.add(zurueck);
         
         this.add(cSouth, BorderLayout.SOUTH);
    
@@ -170,10 +175,9 @@ public class Statistiken extends JPanel implements ActionListener {
             if (e.getActionCommand().equals("zuruecksetzen")) {
                 spieler.setStatistik(new Statistik());
             } 
-            //daten.removeAll();
             Statistik statistik = spieler.getStatistik();
             String momentan;
-            String lineSep = System.getProperty("line.separator");
+            String lineSep = "<br>";
             momentan = "Spiele: " 
                 + statistik.getAnzahlSpiele() + lineSep;
             momentan += "Siege: " 
@@ -193,15 +197,15 @@ public class Statistiken extends JPanel implements ActionListener {
                     + statistik.getSchnellsterSieg() + " Sekunden" + lineSep;
             }
             if (statistik.getKuerzesterSieg() != -1) {
-                momentan += "Kuerzester Sieg: "
-                    + statistik.getKuerzesterSieg() + " Zuege" + lineSep;
+                momentan += "K&uuml;rzester Sieg: "
+                    + statistik.getKuerzesterSieg() + " Z&uuml;ge" + lineSep;
             }
             if (statistik.getSchnellstesMatt() != -1) {
                 momentan += "Schnellstes Matt: " 
                     + statistik.getSchnellstesMatt() + " Sekunden" + lineSep;
             }
             if (statistik.getKuerzestesMatt() != -1) {
-                momentan += "Kuerzestes Matt:  "
+                momentan += "K&uuml;rzestes Matt:  "
                     + statistik.getKuerzestesMatt() + " Zuege" + lineSep; 
             }
             if (statistik.getZeitSiegDurchschnitt() != -1) {
@@ -215,12 +219,14 @@ public class Statistiken extends JPanel implements ActionListener {
                     + lineSep;
             }
             if (statistik.getZuegeSiegDurchschnitt() != -1) {
-                momentan += "Durschnittliche Siegzuege: " 
-                    + statistik.getZuegeSiegDurchschnitt() + " Zuege" + lineSep;
+                momentan += "Durschnittliche Siegz&uuml;ge: " 
+                    + statistik.getZuegeSiegDurchschnitt() + " Z&uuml;ge" 
+                    + lineSep;
             }
             if (statistik.getZuegeMattDurchschnitt() != -1) {
-                momentan += "Durschnittliche Mattzuege: " 
-                    + statistik.getZuegeMattDurchschnitt() + " Zuege" + lineSep;
+                momentan += "Durschnittliche Mattz&uuml;ge: " 
+                    + statistik.getZuegeMattDurchschnitt() + " Z&uuml;ge" 
+                    + lineSep;
             }
             if (statistik.getMatWertSiegDurchschnitt() != -1) {
                 momentan += "Durschnittlicher Materialwert Sieg: " 
