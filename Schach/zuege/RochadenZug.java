@@ -93,7 +93,7 @@ public class RochadenZug extends Zug {
      * Gibt das Startfeld des K&ouml;nigs zur&uuml;ck.
      * @return Das Startfeld des K&ouml;nigs
      */
-    public Feld getStartfeldK() {
+    public Feld getStartfeld() {
         return startfeldK;
     }
     

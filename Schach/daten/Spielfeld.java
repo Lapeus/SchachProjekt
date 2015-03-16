@@ -416,9 +416,9 @@ public class Spielfeld {
             // Das Zielfeld des Koenigs leeren
             rochzug.getZielfeld().setFigur(null);
             // Die Position des Koenigs auf das Startfeld setzen
-            rochzug.getKoenig().setPosition(rochzug.getStartfeldK());
+            rochzug.getKoenig().setPosition(rochzug.getStartfeld());
             // Dem Startfeld den Koenig zuweisen
-            rochzug.getStartfeldK().setFigur(rochzug.getKoenig());
+            rochzug.getStartfeld().setFigur(rochzug.getKoenig());
             // Der Koenig wurde noch nicht gezogen
             rochzug.getKoenig().setGezogen(false);
             
@@ -624,7 +624,7 @@ public class Spielfeld {
         Zug zug = spieldaten.getLetzterZug();
         if (zug instanceof RochadenZug) {
             // Das Startfeld des Koenigs
-            letzteFelder.add(((RochadenZug) zug).getStartfeldK());
+            letzteFelder.add(zug.getStartfeld());
             // Das Zielfeld des Koenigs
             letzteFelder.add(zug.getZielfeld());
             // Das Startfeld des Turms
