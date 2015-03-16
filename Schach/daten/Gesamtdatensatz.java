@@ -814,12 +814,33 @@ public class Gesamtdatensatz {
             fw.close();
             // Schreibschutz
             spielDatei.setReadOnly();
+            // Die Namen der vorhandenen Spiele laden / aktualisieren
+            gespeicherteSpiele.clear();
+            File spieleOrdner = new File("settings" + System.getProperty(
+                "file.separator") + "Spiele");
+            File[] files = spieleOrdner.listFiles();
+            for (File gamefile : files) {
+                try {
+                    BufferedReader br = new BufferedReader(
+                        new FileReader(gamefile));
+                    String datum = br.readLine();
+                    br.close();
+                    // Den Namen (Name der Datei ohne das .txt)
+                    String name = gamefile.getName().substring(
+                        0, gamefile.getName().length() - 4);
+                    name += " " + datum;
+                    gespeicherteSpiele.add(name);
+                } catch (IOException ioEx) {
+                    ioEx.printStackTrace();
+                }
+            }
         } catch (IOException ioEx) {
             ioEx.printStackTrace();
         }
-        if (!gespeicherteSpiele.contains(spiel.getSpielname())) {
-            gespeicherteSpiele.add(spiel.getSpielname());
-        }
+        
+        
+        
+        
         
     }
     
