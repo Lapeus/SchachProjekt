@@ -1049,8 +1049,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             remove(cEast);
             cEndeErstellen();
             add(cEnde, BorderLayout.EAST);
-            validate();
-            repaint();  
+            revalidate();  
         // Wenn der momentane Spieler im Schach steht
         } else if (spielfeld.isSchach()) {
             schachWarnung();
@@ -1171,6 +1170,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Wenn das Spiel gespeichert werden soll
         if (e.getActionCommand().equals(commandSpeichern)) {
             parent.spielSpeichern(spiel);
+            parent.autoSaveLoeschen();
             parent.soundAbspielen("Hinweis.wav");
             JOptionPane.showMessageDialog(parent, "Spiel gespeichert",
                 "Speichern", JOptionPane.INFORMATION_MESSAGE);
@@ -1392,7 +1392,25 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     .getZugZeitBegrenzung();
                 // Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button
                 if (begrenzung > 0 && sekundenStopp / 1000 >= begrenzung) {
-                    aufgeben.doClick();
+                    // Spiel ist vorbei
+                    spielVorbei = true;
+                    spielfeldAufbau();
+                    // das Spiel ausgewertet
+                    List<Object> auswertung = spiel.auswertung();
+                    Spieler gewinner = (Spieler) auswertung.get(0);
+                    String ergebnis; 
+                    String zuege = auswertung.get(2).toString();
+                    ergebnis = "<html>Bedenkzeit &uuml;berschritten. " 
+                        + gewinner.getName() + " gewinnt nach " + zuege 
+                        + " Z&uuml;gen.";
+                    // Und Ein Dialogfenster fuer den Gewinner angezeigt
+                    parent.soundAbspielen("SchachMatt.wav");
+                    JOptionPane.showMessageDialog(parent, ergebnis);
+                    // Endscreen aufrufen
+                    remove(cEast);
+                    cEndeErstellen();
+                    add(cEnde, BorderLayout.EAST);
+                    revalidate();  
                 }
             }
             // Wenn ein Spielvideo angeziegt werden soll

@@ -165,26 +165,35 @@ public class SpielLaden extends JPanel implements ActionListener {
                         spiel));
                 // Wenn es keins gibt
                 } else {
+                    System.out.println("Hier");
+                    cCenter.removeAll();
+                    validate();
+                    repaint();
                     // Muss ein Fehler ausgegeben werden 
                     parent.soundAbspielen("FehlerBeimLaden.wav");
-                    JOptionPane.showMessageDialog(parent, "Das ausgewaehlte "
-                        + "Spiel kann nicht geladen werden");
+                    JOptionPane.showMessageDialog(parent, "<html>Das "
+                        + "ausgew&auml;hlte Spiel kann nicht geladen werden");
                     /* und die Liste muss neu geladen werden, damit der falsche
                      * Name aus der Liste entfernt wird.
                      */
                     DefaultListModel<String> listModel 
                         = new DefaultListModel<String>();
                     List<String> spieleListe = parent.getSpieleListe();
-                    jSpieleListe = new JList<String>();
-                    for (int i = 0; i < spieleListe.size(); i++) {
-                        listModel.addElement((spieleListe.get(i)));
+                    System.out.println(spieleListe.size());
+                    if (spieleListe.size() == 0) {
+                        parent.seitenAuswahl("Eroeffnungsseite");
+                    } else {
+                        jSpieleListe = new JList<String>();
+                        for (int i = 0; i < spieleListe.size(); i++) {
+                            System.out.println(spieleListe.get(i));
+                            listModel.addElement((spieleListe.get(i)));
+                        }
+                        jSpieleListe = new JList<String>(listModel);
+                        jSpieleListe.setBackground(cHellesBeige);
+                        JScrollPane scrollPane = new JScrollPane(jSpieleListe);
+                        cCenter.add(scrollPane);
                     }
-                    jSpieleListe = new JList<String>(listModel);
-                    jSpieleListe.setBackground(cHellesBeige);
-                    JScrollPane scrollPane = new JScrollPane(jSpieleListe);
-                    cCenter.removeAll();
-                    cCenter.add(scrollPane);
-                    revalidate();
+                    cCenter.revalidate();
                 }
             // Wenn kein Spiel ausgewaehlt wurde
             } else {
@@ -193,8 +202,7 @@ public class SpielLaden extends JPanel implements ActionListener {
                 JOptionPane.showMessageDialog(parent, "<html>W&auml;hlen Sie "
                     + "ein Spiel zum Laden aus");
             }
-            
-            
+            this.revalidate();
         }
     }
 }

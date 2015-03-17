@@ -234,7 +234,6 @@ public class SpielGUI extends JFrame implements WindowListener {
         gesamtdatensatz = new Gesamtdatensatz();
         gesamtdatensatz.laden();
         // TODO Laden
-        
     }
     
     /**

@@ -358,6 +358,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
                 parent.soundAbspielen("Hinweis.wav");
                 JOptionPane.showMessageDialog(parent,
                     "Einstellungen gespeichert!");
+                parent.seitenAuswahl("Eroeffnungsseite");
             // Wenn die Zugzeitzahl nicht korrekt ist
             } else {
                 // Wird eine Warnung ausgegeben
