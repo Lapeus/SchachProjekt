@@ -123,7 +123,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         // South
         JPanel cSouth = new JPanel();
         cSouth.setBackground(cBraunRot);
-        speichern = new JButton("Einstellungen Speichern");
+        speichern = new JButton("Einstellungen speichern");
         speichern.setBackground(cHellesBeige);
         speichern.addActionListener(this);
         cSouth.add(speichern);        
@@ -349,7 +349,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
                 JOptionPane.showMessageDialog(parent,
                     "Einstellungen gespeichert!");
             } else {
-                JOptionPane.showMessageDialog(parent, "Geben sie eine gueltige "
+                JOptionPane.showMessageDialog(parent, "Geben Sie eine gueltige "
                     + "Zugzeitbegrenzung ein");
             }
         } else if (command.equals("drehenJa")) {

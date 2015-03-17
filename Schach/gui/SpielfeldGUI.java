@@ -56,7 +56,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private static final long serialVersionUID = -5131381120236108231L;
     
     /**
-     * Das ElterGUI-Objekt von dem aus das jeweilige Spielfeld aufgerufen wurde.
+     * Das ElternGUI-Objekt von dem aus das jeweilige Spielfeld aufgerufen 
+     * wurde.
      */
     private SpielGUI parent;
     
@@ -66,13 +67,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private JButton speichern = new JButton("Spiel speichern");
     
     /**
-     * Button um einen Zug Rueckgaenig zu machen.
+     * Button um einen Zug r&uuml;ckg&auml;ngig zu machen.
      */
     private JButton rueckgaengig 
-        = new JButton("<html>Zug R&uuml;ckg&auml;ngig");
+        = new JButton("<html>Zug r&uuml;ckg&auml;ngig");
     
     /**
-     * Button um ein unetschieden anzubieten.
+     * Button um ein Unentschieden anzubieten.
      */
     private JButton btnUnentschieden = new JButton("Remis anbieten");
     
@@ -87,7 +88,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private JButton btnWiederholung = new JButton("Wiederholung ansehen");
     
     /**
-     * Button zum pausieren/weiterfuehren der Wiederholung.
+     * Button zum Pausieren / Weiterf&uuml;hren der Wiederholung.
      */
     private JButton btnStopp = new JButton("Stopp");
     
@@ -102,22 +103,24 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private JLabel zugzeit = new JLabel("  ");
     
     /**
-     * JPanel fuer die Geschlagenen schwarzen Figuren.
+     * JPanel f&uuml;r die Geschlagenen schwarzen Figuren.
      */
     private JPanel geschlageneSchwarze = new JPanel(); 
     
     /**
-     * JPanel fuer die Geschlagenen schwarzen Figuren.
+     * JPanel f&uuml;r die Geschlagenen schwarzen Figuren.
      */
     private JPanel geschlageneWeisse = new JPanel();
     
     /**
-     * Spieler1, welcher von der <b>Spielerauswahl</b> Seite uebergeben wird.
+     * Spieler1, welcher von der <b>Spielerauswahl</b> Seite &uuml;bergeben 
+     * wird.
      */
     private Spieler spieler1;
     
     /**
-     * Spieler2, welcher von der <b>Spielerauswahl</b> Seite uebergeben wird.
+     * Spieler2, welcher von der <b>Spielerauswahl</b> Seite &uuml;bergeben 
+     * wird.
      */
     private Spieler spieler2;
     
@@ -484,7 +487,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         GridBagConstraints gbc2 = new GridBagConstraints();
         
         // Startmenue Button
-        JButton startmenue = new JButton("Zurueck zum Startmenue");
+        JButton startmenue = new JButton("<html>Zur&uuml;ck zum Startmen&uuml");
         startmenue.setActionCommand(commandStartmenue);
         startmenue.addActionListener(this);
         startmenue.setBackground(cHellesBeige);
@@ -825,8 +828,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // Unentschieden einreichen
                 spiel.unentschieden();
                 parent.soundAbspielen("Hinweis.wav");
-                JOptionPane.showMessageDialog(parent, "50 Zuege Regel wurde "
-                    + "erfuellt. Das Spiel endet mit einem Unentschieden");
+                JOptionPane.showMessageDialog(parent, "<html>50 Z&uuml;ge Regel"
+                    + " wurde erf&uuml;llt. Das Spiel endet mit einem "
+                    + "Unentschieden");
                 this.remove(cEast);
                 cEndeErstellen();
                 this.add(cEnde, BorderLayout.EAST);
@@ -1246,8 +1250,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             spielVorbei = true;
             spiel.unentschieden();
             parent.soundAbspielen("Hinweis.wav");
-            JOptionPane.showMessageDialog(parent, "50 Zuege Regel wurde "
-                + "erfuellt. Das Spiel endet in einem Unentschieden");
+            JOptionPane.showMessageDialog(parent, "<html>50 Z&uuml;ge Regel "
+                + "wurde erf&uuml;llt. Das Spiel endet in einem Unentschieden");
             this.remove(cEast);
             cEndeErstellen();
             this.add(cEnde, BorderLayout.EAST);

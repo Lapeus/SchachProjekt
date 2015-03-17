@@ -391,7 +391,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             fehlermeldung = "Beide Spieler haben den gleichen Namen!";
         } else if (tSpielname.getText().equals("") 
             || !enthaehltKorrekteZeichen(tSpielname.getText())) {
-            fehlermeldung = "Geben sie einen korrekten Spielnamen ein!";
+            fehlermeldung = "Geben Sie einen korrekten Spielnamen ein!";
         } else if (spielIstBereitsVorhanden(tSpielname.getText())) {
             fehlermeldung = "Es existiert bereits ein Spiel mit diesem Namen!";
         }

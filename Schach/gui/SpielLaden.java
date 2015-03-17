@@ -44,12 +44,12 @@ public class SpielLaden extends JPanel implements ActionListener {
     /**
      * Label fuer die Information "Spiel laden".
      */
-    private JLabel lblSpielLaden = new JLabel("Spiel Laden");
+    private JLabel lblSpielLaden = new JLabel("Spiel laden");
     
     /**
      * Button um die laden() Methode der SpielGUI aufzurufen.
      */
-    private JButton btnSpielLaden = new JButton("Spiel Laden");
+    private JButton btnSpielLaden = new JButton("Spiel laden");
     
     /**
      * Button um auf das Startpanel zurueckzukehren.

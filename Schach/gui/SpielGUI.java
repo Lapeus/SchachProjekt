@@ -284,7 +284,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     public void windowClosing(WindowEvent e) {
         soundAbspielen("Hinweis.wav");
         int auswahl = JOptionPane.showConfirmDialog(this, "Wollen Sie das Spiel"
-            + " wirklich beenden", "Fenster schliessen",
+            + " wirklich beenden", "Fenster schlie\u00dfen",
             JOptionPane.YES_NO_OPTION);
         // Wenn Ja angeklickt wird
         if (auswahl == 0) {
