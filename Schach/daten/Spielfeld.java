@@ -584,7 +584,7 @@ public class Spielfeld {
         // Fuer jede eigene Figur
         for (Figur figur : eigeneFiguren) {
             // Fuege der Liste alle moeglichen Felder zu
-            alleFelder.addAll(figur.getKorrektFelder());
+            alleFelder.addAll(figur.getKorrekteFelder());
         }
         // Wenn es fuer keine Figur ein moegliches Feld gibt
         if (alleFelder.isEmpty()) {
@@ -663,7 +663,7 @@ public class Spielfeld {
         // Fuer alle gegnerischen Figuren
         for (Figur gegner : gegnerFiguren) {
             // Liste mit den korrekten Feldern dieser Figur
-            List<Feld> felder = gegner.getKorrektFelder();
+            List<Feld> felder = gegner.getKorrekteFelder();
             // Fuer jedes dieser Felder
             for (Feld feld : felder) {
                 // Wenn auf dem Feld eine Figur steht
@@ -703,7 +703,7 @@ public class Spielfeld {
         // Fuer alle eigenen Figuren
         for (Figur eigen : eigeneFiguren) {
             // Liste mit den korrekten Feldern dieser Figur
-            List<Feld> felder = eigen.getKorrektFelder();
+            List<Feld> felder = eigen.getKorrekteFelder();
             // Fuer jedes dieser Felder
             for (Feld feld : felder) {
                 // Wenn auf dem Feld eine Figur steht
@@ -722,29 +722,8 @@ public class Spielfeld {
      * @return Eine mehrzeilige Zeichenkette
      */
     public String toString() {
-        String string;
+        String string = "";
         String lineSep = System.getProperty("line.separator");
-        string = aktuellerSpieler + lineSep;
-        string += "Weisse Figuren" + lineSep;
-        for (Figur figur : weisseFiguren) {
-            string += figur.toString();
-        }
-        string += lineSep;
-        string += "Schwarze Figuren" + lineSep;
-        for (Figur figur : schwarzeFiguren) {
-            string += figur.toString();
-        }
-        string += lineSep;
-        string += "Geschlagene weisse Figuren" + lineSep;
-        for (Figur figur : geschlagenWeiss) {
-            string += figur.toString();
-        }
-        string += lineSep;
-        string += "Geschlagene schwarze Figuren" + lineSep;
-        for (Figur figur : geschlagenSchwarz) {
-            string += figur.toString();
-        }
-        string += lineSep;
         string += einstellungen.toString() + lineSep;
         string += spieldaten.toString();
         return string;
