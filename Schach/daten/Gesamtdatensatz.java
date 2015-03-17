@@ -9,10 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import figuren.Bauer;
 import figuren.Dame;
 import figuren.Figur;
-import figuren.Koenig;
 import figuren.Laeufer;
 import figuren.Springer;
 import figuren.Turm;
@@ -289,123 +287,6 @@ public class Gesamtdatensatz {
     }
     
     /**
-     * L&auml;dt das angegebene Spiel und gibt es zur&uuml;ck.
-     * @param name Der Name des Spiels
-     * @return Das Spiel mit dem angegebenen Namen
-     */
-    public Spiel getSpiel(String name) {
-        String spielname = name.substring(0, name.length() - 20);
-        // Die Quelldatei fuer das Spiel
-        File file = new File("settings" + System.getProperty(
-            "file.separator") + "Spiele" + System.getProperty(
-                "file.separator") + spielname + ".txt");
-        // Das Spiel anlegen
-        Spiel spiel;
-        // Wenn es ein Autosave Spiel war, muss der urspruengliche Name 
-        // rausgefiltert werden
-        if (spielname.contains("(autosave)")) {
-            spielname = spielname.substring(0, spielname.length() - 11);
-        }
-        try {
-            // Ein Reader um die Datei zeilenweise auslesen zu koennen
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
-            br.readLine(); // Zeit lesen lassen
-            Spieler spieler1 = getSpieler(br.readLine());
-            boolean farbe1 = Boolean.parseBoolean(br.readLine());
-            Spieler spieler2 = getSpieler(br.readLine());
-            boolean farbe2 = Boolean.parseBoolean(br.readLine());
-            // Neue FelderListe wird erstellt
-            List<Feld> felderListe = erstelleFelderListe();
-            // Neues Spielfeld erzeugen
-            boolean aktuellerSpieler = Boolean.parseBoolean(br.readLine());
-            Spielfeld spielfeld = new Spielfeld(felderListe, aktuellerSpieler);
-            spielfeld.setSpieldaten(new Spieldaten());
-            // Nacheinander werden jetzt die Listen ausgelesen
-            // Die weisse Figuren-Liste
-            List<Figur> weisseFiguren = fuelleFigurenListe(br, felderListe);
-            // Die schwarze Figuren-Liste
-            List<Figur> schwarzeFiguren = fuelleFigurenListe(br, felderListe);
-            // Die geschlagenen weissen Figuren
-            List<Figur> geschlagenWeiss = fuelleFigurenListe(br, felderListe);
-            // Die geschlagenen schwarzen Figuren
-            List<Figur> geschlagenSchwarz = fuelleFigurenListe(br, felderListe);
-            
-            // Listen dem Spielfeld uebergeben
-            spielfeld.setWeisseFiguren(weisseFiguren);
-            spielfeld.setSchwarzeFiguren(schwarzeFiguren);
-            spielfeld.setGeschlagenWeiss(geschlagenWeiss);
-            spielfeld.setGeschlagenSchwarz(geschlagenSchwarz);
-            
-            // Den Feldern die Figuren zuweisen
-            for (Figur figur : weisseFiguren) {
-                figur.getPosition().setFigur(figur);
-            }
-            for (Figur figur : schwarzeFiguren) {
-                figur.getPosition().setFigur(figur);
-            }
-            
-            // Den Figuren das fertige Spielfeld uebergeben
-            for (Figur figur : weisseFiguren) {
-                figur.setSpielfeld(spielfeld);
-            }
-            for (Figur figur : schwarzeFiguren) {
-                figur.setSpielfeld(spielfeld);
-            }
-            for (Figur figur : geschlagenWeiss) {
-                figur.setSpielfeld(spielfeld);
-            }
-            for (Figur figur : geschlagenSchwarz) {
-                figur.setSpielfeld(spielfeld);
-            }
-            // Einstellungen laden
-            // Die ZugzeitBegrenzung
-            int zzb = Integer.parseInt(br.readLine());
-            // Die sechs booleans
-            boolean[] bool = new boolean[7];
-            for (int i = 0; i <= 6; i++) {
-                bool[i] = Boolean.parseBoolean(br.readLine());
-            }
-            einstellungen = new Einstellungen();
-            einstellungen.setZugZeitBegrenzung(zzb);
-            einstellungen.setMoeglicheFelderAnzeigen(bool[0]);
-            einstellungen.setBedrohteFigurenAnzeigen(bool[1]);
-            einstellungen.setRochadeMoeglich(bool[2]);
-            einstellungen.setEnPassantMoeglich(bool[3]);
-            einstellungen.setSchachWarnung(bool[4]);
-            einstellungen.setInStatistikEinbeziehen(bool[5]);
-            einstellungen.setSpielfeldDrehen(bool[6]);
-            
-            // Schachnotation laden
-            schachNotaLaden(br, spielfeld);
-          
-            // Den Reader schliessen
-            br.close();
-            
-            // Dem Spielfeld die Einstellungen zuf&uuml;gen
-            spielfeld.setEinstellungen(einstellungen);
-            
-            // Den Spielern ihre Farben setzen
-            spieler1.setFarbe(farbe1);
-            spieler2.setFarbe(farbe2);
-            
-            // Das Spiel erstellen
-            spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
-        } catch (IOException ioEx) {
-            // Wenn irgendwas schief geht
-            spiel = null;
-            // Wenn das Spiel null ist, gibt die GUI eine Fehlermeldung aus
-        }
-        
-        // Die Quelldatei loeschen
-        file.delete();
-        // Die Liste aktualisieren
-        gespeicherteSpiele.remove(name);
-        
-        return spiel;
-    }
-    
-    /**
      * Erstellt eine neue felderListe mit 64 Feldern(Index 0-7, 0-7).
      * @return Die neu erstellte Felder-Liste
      */
@@ -421,156 +302,13 @@ public class Gesamtdatensatz {
     }
     
     /**
-     * Liest mithilfe des angegebenen BufferedReaders eine Liste von Figuren
-     * aus der Textdatei.
-     * @param br Ein BufferedReader der entsprechenden Textdatei
-     * @param felderListe Die Felder-Liste um die Figuren richtig setzen zu
-     * k&ouml;nnen
-     * @return Eine Liste mit Figuren
-     */
-    private List<Figur> fuelleFigurenListe(BufferedReader br, 
-        List<Feld> felderListe) {
-        List<Figur> figuren = new ArrayList<Figur>();
-        // Solange keine Leerzeile erreicht ist
-        try {
-            // Die Ueberschrift lesen aber nicht speichern
-            br.readLine();
-            // Die erste korrekte Zeile
-            String line = br.readLine();
-            // Solange die erste Zeile nicht leer ist
-            while (!line.equals("")) {
-                // Die Position
-                String position = line;
-                // Aus der Position das Feld bestimmen
-                Feld feld = positionToFeld(position, felderListe); 
-                // Farbe der Figur
-                boolean farbe = Boolean.parseBoolean(br.readLine());
-                // Wert der Figur
-                int wert = Integer.parseInt(br.readLine());
-                // Ob sie schon gezogen wurde
-                boolean gezogen = Boolean.parseBoolean(br.readLine());
-                // Neue Figur anlegen
-                Figur figur;
-                // Je nach Wert die Figur entsprechend erstellen
-                if (wert == 0) {
-                    figur = new Koenig(feld, farbe);
-                } else if (wert == 100) {
-                    figur = new Bauer(feld, farbe);
-                } else if (wert == 275) {
-                    figur = new Springer(feld, farbe);
-                } else if (wert == 325) {
-                    figur = new Laeufer(feld, farbe);
-                } else if (wert == 465) {
-                    figur = new Turm(feld, farbe);
-                } else {
-                    figur = new Dame(feld, farbe);
-                }
-             
-                figur.setGezogen(gezogen);
-                // Die Figur der Liste zufuegen
-                figuren.add(figur);
-                // Naechste Zeile einlesen
-                /* Entweder ist das die erste Zeile der neuen Figur oder die 
-                 * Leerzeile die der while-Schleife signalisiert, dass die Liste
-                 * zu Ende ist und abgebrochen werden soll.
-                 */
-                line = br.readLine();
-            }
-        } catch (Exception ex) {
-            figuren = null;
-        }
-        
-        return figuren;
-        
-    } 
-    
-    /**
-     * Wandelt die gespeicherte zweistellige Position in das entsprechende
-     * Feld um und gibt es zur&uuml;ck.
-     * @param position Die zweistelligen Koordinaten des Feldes
-     * @param felderListe Die Liste der Felder auf die zugegriffen werden soll
-     * @return Das gesuchte Feld
-     */
-    private Feld positionToFeld(String position, List<Feld> felderListe) {
-        int x = Integer.parseInt(position.substring(0, 1));
-        int y = Integer.parseInt(position.substring(1));
-        return felderListe.get(x + 8 * y);
-    }
-    
-    /**
-     * L&auml;dt die Schachnotation und f&uuml;gt die Daten dem Spielfeld zu.
-     * @param br Ein BufferedReader an der entsprechenden Stelle
-     * @param spielfeld Das Spielfeld, das geladen werden soll
-     */
-    private void schachNotaLaden(BufferedReader br, Spielfeld spielfeld) {
-        try {
-         // Schachnotation laden
-            String notation = "";
-            // Zugzeiten und Anzahl der Zuege fuer beide Spieler
-            int zugZeitWeiss = 0;
-            int zugZeitSchwarz = 0;
-            int zuegeWeiss = 0;
-            int zuegeSchwarz = 0;
-            // Der aktuell zu behandelne Spieler (weiss beginnt)
-            boolean aktuell = true;
-            String line = br.readLine();
-            // Solange es noch neue Zuege gibt
-            while (!(line == null || line.equals(""))) {
-                // Ganze Zeile speichern
-                notation += line + System.getProperty("line.separator");
-                /* Es gibt verschiedene Arten von Schachnotation:
-                 * Klassisch: Db3-c4 23 sek
-                 * Schlag: Db3xc4 23 sek
-                 * Bauer: b3-b4 23 sek
-                 * Rochade: 0-0 bzw. 0-0-0 23 sek
-                 * en Passant: f5xg6 e.p. 23 sek
-                 * Die Zugzeit kann natuerlich auch verschieden viele Stellen
-                 * haben.
-                 * Daher: Die Zugzeit steht immer zwischen den letzten beiden 
-                 * Leerzeichen
-                 */
-                // Letztes Leerzeichen
-                int hinteresLeerzeichen = line.lastIndexOf(" ");
-                String vordererTeil = line.substring(0, hinteresLeerzeichen);
-                // Vorletztes Leerzeichen
-                int vorderesLeerzeichen = vordererTeil.lastIndexOf(" ");
-                // Zugzeit steht dazwischen
-                int zugzeit = Integer.parseInt(line.substring(
-                    vorderesLeerzeichen + 1, hinteresLeerzeichen));
-                // Wenn das ein weisser Zug ist
-                if (aktuell) {
-                    // Addiere die Zugzeit auf weiss und erhoehe die Zuganzahl
-                    zugZeitWeiss += zugzeit;
-                    zuegeWeiss++;
-                } else {
-                    // Addiere die Zugzeit auf schwarz und erhoehe die Zuganzahl
-                    zugZeitSchwarz += zugzeit;
-                    zuegeSchwarz++;
-                }
-                // Betreffenden Spieler aendern
-                aktuell = !aktuell;
-                // Naechste Zeile lesen
-                line = br.readLine();
-            }
-            // Die gelesenen Daten in die Spieldaten schreiben
-            spielfeld.getSpieldaten().setGeladenZeitWeiss(zugZeitWeiss);
-            spielfeld.getSpieldaten().setGeladenZeitSchwarz(zugZeitSchwarz);
-            spielfeld.getSpieldaten().setGeladenZuegeWeiss(zuegeWeiss);
-            spielfeld.getSpieldaten().setGeladenZuegeSchwarz(zuegeSchwarz);
-            spielfeld.getSpieldaten().setGeladenNotation(notation);
-        } catch (IOException ioEx) {
-            ioEx.printStackTrace();
-        }
-    }
-    
-    /**
      * L&auml;dt das Spiel mit dem angegebenen Namen anhand der gespeicherten
      * Schachnotation.
      * @param name Der Name des Spiels, wie er in dem Auswahlfenster angezeigt
      * wird
      * @return Das entsprechende Spiel
      */
-    public Spiel getSpiel2(String name) {
+    public Spiel getSpiel(String name) {
         if (name.length() < 21) {
             return null;
         }
@@ -598,22 +336,12 @@ public class Gesamtdatensatz {
             // Neue FelderListe wird erstellt
             List<Feld> felderListe = erstelleFelderListe();
             // Neues Spielfeld erzeugen
-            br.readLine(); // Aktuellen Spieler lesen lassen
             Spielfeld spielfeld = new Spielfeld(felderListe, true);
             spielfeld.setSpieldaten(new Spieldaten());
             // Einem Computergegner muss das Spielfeld zugefuegt werden
             if (spieler2 instanceof Computerspieler) {
                 ((Computerspieler) spieler2).setSpielfeld(spielfeld);
             }
-            // Nacheinander werden jetzt die Listen ausgelesen
-            // Die weisse Figuren-Liste
-            fuelleFigurenListe(br, felderListe);
-            // Die schwarze Figuren-Liste
-            fuelleFigurenListe(br, felderListe);
-            // Die geschlagenen weissen Figuren
-            fuelleFigurenListe(br, felderListe);
-            // Die geschlagenen schwarzen Figuren
-            fuelleFigurenListe(br, felderListe);
             
             // Einstellungen laden
             // Die ZugzeitBegrenzung

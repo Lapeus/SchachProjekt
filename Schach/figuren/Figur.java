@@ -70,7 +70,7 @@ public abstract class Figur {
      * k&ouml;nnte, st&auml;nde er jetzt im Schach.
      * @return Liste der tats&auml;chlich ziehbaren Felder
      */
-    public List<Feld> getKorrektFelder() {
+    public List<Feld> getKorrekteFelder() {
         // Uebergabe der zu pruefenden Felder
         List<Feld> korrekt = this.getMoeglicheFelder();
         // Das Feld auf dem der eigene Koenig steht

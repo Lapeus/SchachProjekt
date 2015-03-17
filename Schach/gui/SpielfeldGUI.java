@@ -899,7 +899,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // Wird diese als neue Ausgewaehlte Figur gespeichert
                 momentanesFeld.setBackground(rot);
                 if (spielfeld.getEinstellungen().isMoeglicheFelderAnzeigen()) {
-                    for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
+                    for (Feld makieren : ausgewaehlteFigur
+                        .getKorrekteFelder()) {
                         makieren.setBackground(rot);
                     }
                 }
@@ -912,17 +913,18 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     .contains(ausgewaehlteFigur)) {
                 momentanesFeld.setBackground(rot);
                 if (spielfeld.getEinstellungen().isMoeglicheFelderAnzeigen()) {
-                    for (Feld makieren : ausgewaehlteFigur.getKorrektFelder()) {
+                    for (Feld makieren : ausgewaehlteFigur
+                        .getKorrekteFelder()) {
                         makieren.setBackground(rot);
                     }
                 }
             }
         // Wenn es bereits eine ausgewaehlte Figur gibt 
         } else if (ausgewaehlteFigur != null 
-            && ausgewaehlteFigur.getKorrektFelder().contains(momentanesFeld)) {
+            && ausgewaehlteFigur.getKorrekteFelder().contains(momentanesFeld)) {
             /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
              dieser ist */
-            if (ausgewaehlteFigur.getKorrektFelder()
+            if (ausgewaehlteFigur.getKorrekteFelder()
                 .contains(momentanesFeld)) {
                 // Hier zieht ein menschlicher Spieler
                 spielerzugGUI(momentanesFeld);

@@ -138,7 +138,7 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @return Spiel zu dem eingegeben Namen
      */
     public Spiel getSpiel(String spielname) {
-        return gesamtdatensatz.getSpiel2(spielname);
+        return gesamtdatensatz.getSpiel(spielname);
     }
     
     /**

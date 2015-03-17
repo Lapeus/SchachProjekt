@@ -106,7 +106,7 @@ public class Computerspieler extends Spieler {
         for (Feld feld : bedroht) {
             // Wenn die Figur darauf einen hoeheren Wert hat und wegziehen kann
             if (feld.getFigur().getWert() > maxWertVerlust 
-                && !feld.getFigur().getKorrektFelder().isEmpty()) {
+                && !feld.getFigur().getKorrekteFelder().isEmpty()) {
                 // Wird das der neue Zug
                 maxWertVerlust = feld.getFigur().getWert();
                 maxFeldVerlust = feld;
@@ -124,7 +124,7 @@ public class Computerspieler extends Spieler {
         } else if (maxWertSchlag == 0 || maxWertSchlag < maxWertVerlust) {
             Figur verlust = maxFeldVerlust.getFigur();
             // Alle Felder auf die die bedrohte Figur ziehen koennte
-            List<Feld> alternativen = verlust.getKorrektFelder();
+            List<Feld> alternativen = verlust.getKorrekteFelder();
             // Zieht voruebergehend zufaellig weg
             // Erzeugt eine Zufallszahl zwischen 0 und alleFelder.size() - 1
             int zufall = (int) (Math.random() * alternativen.size());
@@ -146,7 +146,7 @@ public class Computerspieler extends Spieler {
             for (Figur figur : eigeneFiguren) {
                 // Schaue ob sie das Feld erreichen kann und wenn ja, ob sie 
                 // einen geringeren Wert hat als AlternativFiguren
-                if (figur.getKorrektFelder().contains(maxFeldSchlag)
+                if (figur.getKorrekteFelder().contains(maxFeldSchlag)
                     && figur.getWert() < minWert) {
                     ziehendeFigur = figur;
                     minWert = figur.getWert();
@@ -171,7 +171,7 @@ public class Computerspieler extends Spieler {
         List<Feld> alleFelder = new ArrayList<Feld>();
         int zufall, zufall2;
         for (Figur figur : eigeneFiguren) {
-            alleFelder.addAll(figur.getKorrektFelder());
+            alleFelder.addAll(figur.getKorrekteFelder());
         }
         if (!alleFelder.isEmpty()) {
             do {
@@ -179,7 +179,7 @@ public class Computerspieler extends Spieler {
                 // eigeneFiguren.size() - 1
                 zufall = (int) (Math.random() * eigeneFiguren.size());
                 // Alle moeglichen Felder
-                alleFelder = eigeneFiguren.get(zufall).getKorrektFelder();
+                alleFelder = eigeneFiguren.get(zufall).getKorrekteFelder();
                 // Erzeugt eine Zufallszahl zwischen 0 und alleFelder.size() - 1
                 zufall2 = (int) (Math.random() * alleFelder.size());
             } while (alleFelder.isEmpty());
@@ -216,7 +216,7 @@ public class Computerspieler extends Spieler {
         List<Feld> besteFelder = new ArrayList<Feld>();
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         for (Figur figur : alleFiguren) {
-            for (Feld feld : figur.getKorrektFelder()) {
+            for (Feld feld : figur.getKorrekteFelder()) {
                 // Mache den Zug
                 spielfeld.ziehe(figur, feld, 0);
                 // Wenn ein Bauer umgewandelt wird
@@ -305,7 +305,7 @@ public class Computerspieler extends Spieler {
         int zaehl = 0;
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         for (Figur figur : alleFiguren) {
-            for (Feld feld : figur.getKorrektFelder()) {
+            for (Feld feld : figur.getKorrekteFelder()) {
                 zaehl++;
                 spielfeld.ziehe(figur, feld, 0);
                 // Wenn ein Bauer umgewandelt wird
@@ -369,7 +369,7 @@ public class Computerspieler extends Spieler {
         int zaehl = 0;
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         for (Figur figur : alleFiguren) {
-            for (Feld feld : figur.getKorrektFelder()) {
+            for (Feld feld : figur.getKorrekteFelder()) {
                 spielfeld.ziehe(figur, feld, 0);
                 // Wenn ein Bauer umgewandelt wird
                 Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
