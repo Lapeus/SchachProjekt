@@ -478,6 +478,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Es werden alle Autosavedaten des Spiels gel&ouml;scht. 
      */
     private void cEndeErstellen()  {
+        // Listener von den Feldern entfernen(keine Zuege mehr moeglich)
+        for (Feld feld : felderListe) {
+            feld.removeMouseListener(this);
+        }
         // Alle Autosave Dateien des Spiels loeschen
         parent.autoSaveLoeschen();
         
@@ -714,7 +718,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Updated die Anzeigen der geschlagenen Figuren.
      * Geht die geschlagenenFigurenListen der jeweiligen Farbe durch und 
-     * zeigt diese in dem jewiligen Conatiner an.
+     * zeigt diese in dem jeweiligen Conatiner an.
      */
     private void geschlageneFigureUpdate() {
         geschlageneSchwarze.removeAll();
@@ -791,9 +795,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Wertet aus, ob der Spieler ein Computerspieler ist und ob dieser 
+     * Wertet aus, ob der Spieler2 ein Computerspieler ist und ob dieser 
      * momentan am Zug ist.
-     * @return true - ist ein Computerspieler false - ist kein Computerspieler
+     * @return true - ist ein Computerspieler und am Zug<br>
+     * false - ist kein Computerspieler / ist ein Computerspieler ist aber nicht
+     * am Zug
      */
     private boolean istComputerSpielerUndIstAmZug() {
         boolean istCompSpielerUndDran = false;
@@ -963,6 +969,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
 
     /**
      * Hier werden die Zuege veranlasst und auf der Gui geupdated.
+     * Die Zugzeit wird gestoppt und der dem Zug werden diese sowie das Start-
+     * und Zielfeld &uuml;bergeben.
      * @param momentanesFeld Das momentan ausgewaehlte Feld
      */
     private void spielerzugGUI(Feld momentanesFeld) {
@@ -972,15 +980,16 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Ein Zug wird ausgefuehrt und die Zugzeit uebergeben
         spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
             (int) sekundenStopp);
-        spielfeldAufbau();
-        revalidate();  
         // Neuer Spieler = keine Ausgewaehlte Figur
         ausgewaehlteFigur = null;
+        // Bedrohte Felder muessen geladen werden
         spielfeld.getBedrohteFelder();
+        // Der letzte Zug (gerade uebergeben)
         Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
-        mattOderSchach();
+        // Wenn der letzte Zug ein Umwandlungszug war
         if (!spielVorbei && letzterZug instanceof Umwandlungszug)   {
             spielfeldAufbau();
+            // Wird gefragt in welche Figur umgewandelt werden soll
             parent.soundAbspielen("Hinweis.wav");
             String[] moeglicheFiguren = {"Dame", "Turm", "Laeufer", 
                 "Springer"};
@@ -990,7 +999,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 , "Figurenwechsel", JOptionPane.
                 PLAIN_MESSAGE, null, moeglicheFiguren, "Dame");
             int wert;
-            if (s.equals("Dame")) {
+            System.out.println(s);
+            // Je nach ausgelsesenem Wert (wenn "x" oder "cancel" - Dame)
+            if (s == null || s.equals("Dame")) {
                 wert = 900;
             } else if (s.equals("Turm")) {
                 wert = 465;
@@ -1001,6 +1012,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             spielfeld.umwandeln(letzterZug.getFigur(), wert);
         }
+        spielfeldAufbau();
+        revalidate();  
+        mattOderSchach();
         // Start der neuen Zugzeit
         start();
     }
@@ -1017,6 +1031,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private void mattOderSchach() {
         // Wenn das Spiel vorbei ist
         if (spielfeld.schachMatt()) {
+            // Spiel ist vorbei
+            spielVorbei = true;
             spielfeldAufbau();
             // das Spiel ausgewertet
             List<Object> auswertung = spiel.auswertung();
@@ -1031,19 +1047,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             // Und Ein Dialogfenster fuer den Gewinner angezeigt
             parent.soundAbspielen("SchachMatt.wav");
-            JOptionPane.showMessageDialog(parent
-                , ergebnis);
-            // Das spiel ist vorbei also keine Zuege mehr moeglich
-            for (Feld feld : felderListe) {
-                feld.removeMouseListener(this);
-            }
-            // Spielende Screen
+            JOptionPane.showMessageDialog(parent, ergebnis);
+            // Endscreen aufrufen
             this.remove(cEast);
             cEndeErstellen();
             this.add(cEnde, BorderLayout.EAST);
             this.validate();
             this.repaint();  
-            spielVorbei = true;
         // Wenn der momentane Spieler im Schach steht
         } else if (spielfeld.isSchach()) {
             schachWarnung();
@@ -1156,10 +1166,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             JOptionPane.showMessageDialog(parent, "<html>" 
                 + verlierer.getName() + " gibt nach " + zuege 
                 + " Z&uuml;gen auf! " + gewinner.getName() + " gewinnt!!!");
-            // Das spiel ist vorbei also keine Zuege mehr moeglich
-            for (Feld feld : felderListe) {
-                feld.removeMouseListener(this);
-            }
+            // Endscreen aufrufen
             this.remove(cEast);
             cEndeErstellen();
             this.add(cEnde, BorderLayout.EAST);
@@ -1244,65 +1251,76 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Anfrage bearbeitet.
      */
     private void remisAuswertung() {
-     // Testen ob die 50-Zuege-Regel verletzt wurde
+        // Testen ob die 50-Zuege-Regel verletzt wurde
         if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
-            // Unentschieden einreichen
+            // Spiel ist vorbei
             spielVorbei = true;
+            // Unentschieden einreichen
             spiel.unentschieden();
             parent.soundAbspielen("Hinweis.wav");
             JOptionPane.showMessageDialog(parent, "<html>50 Z&uuml;ge Regel "
                 + "wurde erf&uuml;llt. Das Spiel endet in einem Unentschieden");
+            // Endescreen wird aufgebaut
             this.remove(cEast);
             cEndeErstellen();
             this.add(cEnde, BorderLayout.EAST);
-            this.validate();
-            this.repaint();  
+            revalidate();
+        // Wenn Spieler 2 kein Computerspieler ist und keine 50-Zuge-Regel
         } else {
             if (!(spieler2 instanceof Computerspieler)) {
                 parent.soundAbspielen("Hinweis.wav");
+                // Wird gefragt ob ein Unentschieden angenommen wird
                 int eingabe = JOptionPane.showConfirmDialog(parent, 
                     "<html>M&ouml;chten Sie sich auf ein Unentschieden "
                     + "einigen?");
+                // Wenn "Ja" ausgewaehlt wurde
                 if (eingabe == 0) {
+                    // ist das Spiel vorbei
                     spielVorbei = true;
+                    // Unentschieden einreichen
                     spiel.unentschieden();
-                    for (Feld feld : felderListe) {
-                        feld.removeMouseListener(this);
-                    }
                     this.remove(cEast);
                     cEndeErstellen();
                     this.add(cEnde, BorderLayout.EAST);
                     this.validate();
-                    this.repaint();  
+                    this.repaint();
+                // Wenn "Nein" ausgewaehlt wurde    
                 } else {
                     Spieler spieler;
+                    // Wenn Spieler1 das Unentschieden angeboten hat
                     if (spielfeld.getAktuellerSpieler() == spieler1
                         .getFarbe()) {
+                        // lehnt Spieler 2 somit ab
                         spieler = spieler2;
+                    // sonst hat Spieler2 das Unentschieden angeboten
                     } else {
+                        // sonst lehnt Spieler 1 ab
                         spieler = spieler1;
                     }
                     parent.soundAbspielen("Aufgeben.wav");
                     JOptionPane.showMessageDialog(parent, 
                         spieler.getName() + " hat das Remis abgelehnt");
                 }
+            // Wenn Spieler2 ein Computerspieler ist 
             } else {
+                // Wenn ein Unentschieden aktzeptabel ist
                 if ((boolean) ((Computerspieler) spieler2)
                     .unentschiedenAnnehmen()) {
+                    // Nimmt der Computerspieler das Unentschieden an
                     parent.soundAbspielen("Hinweis.wav");
                     JOptionPane.showMessageDialog(parent, "Spiel endet "
                         + "unentschieden.");
                     spielVorbei = true;
                     spiel.unentschieden();
-                    for (Feld feld : felderListe) {
-                        feld.removeMouseListener(this);
-                    }
+                    // Endscreen aufrufen
                     this.remove(cEast);
                     cEndeErstellen();
                     this.add(cEnde, BorderLayout.EAST);
                     this.validate();
                     this.repaint();
+                // Wenn es nicht aktzeptabel ist 
                 } else {
+                    // lehnt der Computerspieler ab
                     parent.soundAbspielen("Aufgeben.wav");
                     JOptionPane.showMessageDialog(parent, 
                         spieler2.getName() + " hat das Remis abgelehnt");
@@ -1315,9 +1333,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Startet eine neue Zeitnahmesession fuer die Zugzeit der Spieler.
      */
     private void start() {
-        // Neue Zeit anfangen
         uhrAktiv = true;
-        // Thread anlegen 
+        // Neue Zeit anfangen
         sekundenStart = System.currentTimeMillis();
     }
     
@@ -1405,14 +1422,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Component Listener Methode.
+     * Unbenutzte Component Listener Methode.
      * @param e durch Component ausgeloestes Event
      */
     public void componentHidden(ComponentEvent e) {
     }
     
     /**
-     * Component Listener Methode.
+     * Unbenutzte Component Listener Methode.
      * @param e durch Component ausgeloestes Event
      */
     public void componentMoved(ComponentEvent e) {
@@ -1428,7 +1445,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Component Listener Methode.
+     * Unbenutzte Component Listener Methode.
      * @param e durch resizen ausgeloestes Event
      */
     public void componentShown(ComponentEvent e) {
