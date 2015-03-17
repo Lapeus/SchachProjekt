@@ -118,7 +118,9 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     /**
      * Einziger Konstruktor von der Klasse Sielerauswahl. Erstellt ein neues 
      * Panel fuer die Auswahl von zwei Spielern fuer eine Partie Schach.
-     * 
+     * Die eingegebenen Daten werden bevor sie ans Backend geschickt werden 
+     * auf ihre Korrektheit &uuml;berp&uuml;ft.
+     * Ruft die init()-Methode auf.
      * @param parent Die ElternGUI auf der das Panel angezeigt werden soll
      */
     public Spielerauswahl(SpielGUI parent) {
@@ -132,11 +134,13 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     /**
      * Methode wird vom Konstruktor aufgerufen und modelliert das Panel fuer die
      * Spielerauswahl.
+     * Es gibt 2 mal die Spielerauswahl, welche in der 
+     * {@link #auswahlPanel(String)}-Methode erstellt wird. 
+     * Zudem wird ein Eingabefeld f&uuml; den Spielnamen erstellt und die 
+     * Auswahl der Farbe f&uuml; Spieler 1 wird im Center angezeigt.
      */
     private void init() {
-        parent.setMinimumSize(new Dimension(500, 300));
-        parent.setSize(new Dimension(200, 200));
-        this.setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
         bSpielen.addActionListener(this);
         bSpielen.setActionCommand(bSpielen.getText());
         setBackground(cBraunRot);        
@@ -153,14 +157,14 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         cNorth.add(tSpielname, gbc);
-        this.add(cNorth, BorderLayout.NORTH);
+        add(cNorth, BorderLayout.NORTH);
         
         // West (Spieler 1)
-        this.add(auswahlPanel("West"), BorderLayout.WEST);
+        add(auswahlPanel("West"), BorderLayout.WEST);
        
         
         // East (Spieler 2)
-        this.add(auswahlPanel("East"), BorderLayout.EAST);
+        add(auswahlPanel("East"), BorderLayout.EAST);
         
         // Center (Farbauswahl --> Radio Buttons)
         
@@ -202,7 +206,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         cCenter.add(cCenterLabel);
         cCenter.add(cCenterMenu);
         
-        this.add(cCenter, BorderLayout.CENTER);
+        add(cCenter, BorderLayout.CENTER);
         
         // South 
         Container cSouth = new Container();
@@ -218,17 +222,17 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         btnZurueck.setActionCommand("Eroeffnungsseite");
         cSouth.add(btnZurueck);
         
-        this.add(cSouth, BorderLayout.SOUTH);
+        add(cSouth, BorderLayout.SOUTH);
     }
     
     /**
-     * Gibt ein Panel mit den Feldern fuer die Eingabe eines Spielers aus.
-     * Wird fuer jeden Spieler einmal aufgerufen.
+     * Gibt ein Panel mit den Feldern f&uuml;r die Eingabe eines Spielers aus.
+     * Wird f&uuml;r jeden Spieler einmal aufgerufen.
      * 
-     * @param seite Die Seite ("West" oder "East") muss uebergeben werden 
+     * @param seite Die Seite ("West" oder "East") muss &uuml;bergeben werden 
      * 
      * @return Gibt ein Panel zurueck das Felder zur Eingabe von Spielernamen 
-     * enthaelt
+     * enth&auml;lt
      */
     private JPanel auswahlPanel(String seite) {
         JPanel eingabePanel = new JPanel();
@@ -238,22 +242,28 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         JComboBox<String> spielerMenu;
         // Array mit allen Spielern + Computerspieler (EAST)
         if (seite.equals("East")) {
+            // +1 da wir als erstes noch "neuer Spieler" einfuegen
             String[] spielerListe 
                 = new String[parent.getSpielerListe().size() + 1];
             spielerListe[0] = "neuer Spieler";
+            // Jeden Spielernamen ins Array kopieren
             for (int i = 0; i < spielerListe.length - 1; i++) {
+                // +1 da SpielerListe schon "neuer Spieler" enthaehlt
                 spielerListe[i + 1] = parent.getSpielerListe().get(i).getName();
             }
             spielerMenu = new JComboBox<String>(spielerListe);
             spielerMenu.addActionListener(this);
             spielerMenu.setActionCommand("boxWEST");
             boxEAST = spielerMenu;
+        // Array mit allen Spielern ohne Computerspieler (West)    
         } else {
-        // Array mit allen Spielern ohne Computerspieler (West)
+            // +1 da wir als erstes noch "neuer Spieler" einfuegen
             String[] menschlicheSpielerListe 
                 = new String[parent.getMenschlicheSpielerListe().size() + 1];
             menschlicheSpielerListe[0] = "neuer Spieler";
+            // Jeden Spielernamen ins Array kopieren
             for (int i = 0; i < menschlicheSpielerListe.length - 1; i++) {
+                // +1 da SpielerListe schon "neuer Spieler" enthaehlt
                 menschlicheSpielerListe[i + 1] 
                     = parent.getMenschlicheSpielerListe().get(i).getName();
             }
@@ -264,8 +274,6 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             boxWEST = spielerMenu;
         }
         
-        
-        
         spielerMenu.setBackground(cHellesBeige);
         eingabePanel.add(spielerMenu);
         
@@ -273,10 +281,12 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         JLabel lName = new JLabel("Spielername");
         eingabePanel.add(lName);
         
+        // Wenn es fuer die menschlische SpielerListe ist
         if (seite.equals("West")) {
             nameWEST.setBackground(cHellesBeige);
             nameWEST.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space ");
             eingabePanel.add(nameWEST);
+        // Wenn es fuer die komlette SpielerListe ist
         } else {
             nameEAST.setBackground(cHellesBeige);
             nameEAST.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space ");
@@ -285,40 +295,6 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         eingabePanel.setBackground(cBraunRot);
         return eingabePanel;
     }
-    
-    /**
-     * Gibt zurueck ob es schon einen Spieler mit dem neu Eingegebenen 
-     * namen ist.
-     * @param name name nach dem in der SpielerListe gesucht werden soll
-     * @return true - Spielernamen gibt es schon. false - Spielernamen gibt es 
-     * noch nicht 
-     */
-    private Spieler istBereitsVorhanden(String name) {
-        Spieler spielerVorhanden = null;
-        for (Spieler spieler : parent.getSpielerListe()) {
-            if (spieler.getName().equals(name)) {
-                spielerVorhanden = spieler;
-            }
-        }
-        return spielerVorhanden;
-    }
-    
-    /**
-     * Gibt zurueck ob ein Spiel mit dem Namen schon existiert.
-     * @param name String name nach welchem gesucht werden soll
-     * @return true - spiel gibt es bereits false - spiel gibt es noch nicht
-     */
-    private boolean spielIstBereitsVorhanden(String name) {
-        boolean vorhanden = false;
-        for (String spielname : parent.getSpieleListe()) {
-            if (spielname.equals(name)) {
-                vorhanden = true;
-            }
-        }
-        return vorhanden;    
-    }
-    
-    // Methoden Ende
     
     // ActionListener
 
@@ -371,31 +347,43 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     
     /**
      * Prueft ob alle Felder Korrekte eingaben enthalten.
+     * Wenn nicht dann wird die passende Fehlermeldung angezeigt.
      * @param nameWest name im westlichen Textfeld(Spieler 1)
      * @param nameEast name im oestlichen Textfeld(Spieler 2)
      * @return true wenn alle Felder Korrekt sind
      */
     private boolean wennFelderKorrekt(String nameWest, String nameEast) {
+        // Wenn es keinen Fehler gibt wird true zurueckgegeben
         boolean korrekt = true;
         String fehlermeldung = "";
         String spieler1 = nameWEST.getText();
         String spieler2 = nameEAST.getText();
+        /* Je nach dem welches(wenn) Feld einen Fehler enthaehlt wird die 
+         * Fehlermeldung an dieses Feld angepasst 
+         */
+        // Spieler1 : Name ist leer oder enthaehlt unerlaubte Zeichen
         if (nameWest.equals("") || !enthaehltKorrekteZeichen(spieler1)) {
             fehlermeldung = "<html>Geben Sie einen korrekten Namen f&uuml;r "
                 + "Spieler1 an!";
+        // Spieler2 : Name ist leer oder enthaehlt unerlaubte Zeichen
         } else if (nameEast.equals("") 
             || !enthaehltKorrekteZeichen(spieler2)) {
             fehlermeldung = "<html>Geben Sie einen korrekten Namen f&uuml;r "
                 + "Spieler2 an!";
+        // Spieler 1 und Spieler 2 haben den gleichen Namen
         } else if (nameWEST.getText().equals(nameEAST.getText())) {
             fehlermeldung = "Beide Spieler haben den gleichen Namen!";
+        // Spielname ist leer oder enthaehlt unerlaubte Zeichen
         } else if (tSpielname.getText().equals("") 
             || !enthaehltKorrekteZeichen(tSpielname.getText())) {
             fehlermeldung = "Geben Sie einen korrekten Spielnamen ein!";
+        // Spielname ist bereits vorhanden
         } else if (spielIstBereitsVorhanden(tSpielname.getText())) {
             fehlermeldung = "Es existiert bereits ein Spiel mit diesem Namen!";
         }
+        // Wenn es eine Fehlermeldung gibt
         if (!(fehlermeldung.equals(""))) {
+            // Wird diese angezeigt und es wird false zurueckgegeben
             korrekt = false;
             parent.soundAbspielen("FehlerhafteEingabe.wav");
             JOptionPane.showMessageDialog(parent, fehlermeldung);
@@ -441,7 +429,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
      // Wenn Spieler1 ein neuer Spieler ist
         if (nameWest.equals("neuer Spieler")) { 
             // Wenn der Spieler noch nicht vorhanden ist
-            if (istBereitsVorhanden(nameWEST.getText()) == null) {
+            if (wennBereitsVorhanden(nameWEST.getText()) == null) {
                 // Wird der Erste Spieler als Spieler mit dem namen erstellt
                 spieler1 = new Spieler(nameWEST.getText());
                 // Und der SpielerListe zugefuegt
@@ -457,7 +445,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         // Wenn Spieler2 ein neuer Spieler ist
         if (nameEast.equals("neuer Spieler")) {
             // Wenn der Spieler noch nicht vorhanden ist
-            if (istBereitsVorhanden(nameEAST.getText()) == null) {
+            if (wennBereitsVorhanden(nameEAST.getText()) == null) {
                 // Wird der Zweite Spieler als Spieler mit dem namen erstellt
                 spieler2 = new Spieler(nameEAST.getText());
                 // Und der SpielerListe zugefuegt
@@ -473,14 +461,14 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         }
     
         // Wenn Spieler1 ein bereits vorhandener Spieler ist
-        if (istBereitsVorhanden(nameWest) != null) {
+        if (wennBereitsVorhanden(nameWest) != null) {
             // Wird Spieler1 auf diesen gesetzt
-            spieler1 = istBereitsVorhanden(nameWest);
+            spieler1 = wennBereitsVorhanden(nameWest);
         }
         // Wenn Spieler2 ein bereits vorhandener Spieler ist
-        if (istBereitsVorhanden(nameEast) != null) {
+        if (wennBereitsVorhanden(nameEast) != null) {
             // Wird Spieler2 auf diesen gesetzt
-            spieler2 = istBereitsVorhanden(nameEast);
+            spieler2 = wennBereitsVorhanden(nameEast);
         }
        
         
@@ -504,6 +492,39 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                 tSpielname.getText(), spieler1, spieler2));
             parent.revalidate();
         } 
+    }
+    
+    /**
+     * Gibt zur&uuml;ck ob es schon einen Spieler mit dem neu eingegebenen 
+     * namen gibt.
+     * @param name name nach dem in der SpielerListe gesucht werden soll
+     * @return null wenn es keinen Spieler gibt sonst den Spieler; 
+     */
+    private Spieler wennBereitsVorhanden(String name) {
+        Spieler spielerVorhanden = null;
+        // Spieler-Liste auf den eingegebenen namen pruefen
+        for (Spieler spieler : parent.getSpielerListe()) {
+            if (spieler.getName().equals(name)) {
+                spielerVorhanden = spieler;
+            }
+        }
+        return spielerVorhanden;
+    }
+    
+    /**
+     * Gibt zurueck ob ein Spiel mit dem Namen schon existiert.
+     * @param name String name nach welchem gesucht werden soll
+     * @return true - spiel gibt es bereits false - spiel gibt es noch nicht
+     */
+    private boolean spielIstBereitsVorhanden(String name) {
+        boolean vorhanden = false;
+        // Spieler-Liste auf den eingegebenen namen pruefen
+        for (String spielname : parent.getSpieleListe()) {
+            if (spielname.equals(name)) {
+                vorhanden = true;
+            }
+        }
+        return vorhanden;    
     }
     
 }

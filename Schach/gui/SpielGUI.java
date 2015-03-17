@@ -45,17 +45,25 @@ public class SpielGUI extends JFrame implements WindowListener {
     
     /**
      * Erstellt ein neues Spiel-Fenster.
-     * Ruft dabei init() auf.
+     * Verwaltet den Gesamtdatensatz einer Spielsession. Dient als Grundfenster
+     * auf dem nur die jeweiligen Panels aufgerufen werden. Jedem Panel wird 
+     * dieses Fenster als parent-Fenster &uuml;bergeben, damit diese auf die 
+     * hier lokalisierten Funktionen zugreifen können.
+     * Ruft die init()-Methode auf.
      */
     public SpielGUI() {
         super("Schachspiel");
-        //pack();
         setVisible(true);
-        this.setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
-        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        this.addWindowListener(this);
+        // Maximale Screengroesse auf Vollbild setzten;
+        setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
+        // Default CloseOperation ausschalten
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        // Eigene CloseOperation einbinden
+        addWindowListener(this);
+        // Gesamtdaten laden
         gesamtdatenLaden();
         gesamtdatenSpeichern();
+        // Eroeffnungsseite aufrufen
         seitenAuswahl("Eroeffnungsseite");
     }
     
@@ -63,56 +71,62 @@ public class SpielGUI extends JFrame implements WindowListener {
     
     /**
      * Dient zum wechsel der Contentpane, welches dur den SeitenwechselnListener
-     * aufgeruden wird.
+     * aufgeruden wird. In Ausnahmef&auml;llen wird diese Methode auch von dem 
+     * jeweiligen Panel aufgerufen.
      * @param auswahl Auf die zu wechselnde Seite.
      */
     public void seitenAuswahl(String auswahl) {
         Container seite;
-        Dimension minimaleGroesse;
+        // Je nach command die passende Seite aufrufen
         switch (auswahl) {
         case "Eroeffnungsseite":
             seite = new Eroeffnungsseite(this);
-            this.setContentPane(seite);
-            minimaleGroesse = new Dimension(500, 500);
-            setMinimumSize(minimaleGroesse);
-            setSize(minimaleGroesse);
+            setContentPane(seite);
+            setMinimumSize(new Dimension(500, 500));
+            setSize(new Dimension(500, 500));
             setLocationRelativeTo(null);
             break;
             
         case "Spielerauswahl":
+            setMinimumSize(new Dimension(500, 300));
+            setSize(new Dimension(200, 200));
             seite = new Spielerauswahl(this);
-            this.setContentPane(seite);
+            setContentPane(seite);
+            setLocationRelativeTo(null);
             break;
             
         case "Spiel laden":
             seite = new SpielLaden(this);
-            this.setContentPane(seite);
-            minimaleGroesse = new Dimension(300, 300);
-            setMinimumSize(minimaleGroesse);
-            setSize(minimaleGroesse);
+            setContentPane(seite);
+            setMinimumSize(new Dimension(300, 300));
+            setSize(new Dimension(300, 300));
+            setLocationRelativeTo(null);
             break;
             
         case "Einstellungen":
             seite = new EinstellungenGUI(this);
-            this.setContentPane(seite);
+            setContentPane(seite);
+            setLocationRelativeTo(null);
             break;
             
         case "Highscore":
             seite = new Highscore(this);
-            this.setContentPane(seite);
+            setContentPane(seite);
+            setLocationRelativeTo(null);
             break;
             
         case "Statistiken":
             seite = new Statistiken(this);
-            this.setContentPane(seite);
+            setContentPane(seite);
+            setLocationRelativeTo(null);
             break;
             
 
         default:
             break;
         }
-        this.revalidate();
-        this.paint(getGraphics());
+        revalidate();
+        paint(getGraphics());
     }
     
     /**
@@ -288,7 +302,9 @@ public class SpielGUI extends JFrame implements WindowListener {
             JOptionPane.YES_NO_OPTION);
         // Wenn Ja angeklickt wird
         if (auswahl == 0) {
+            // Gesamtdaten vor beenden abspeichern
             gesamtdatenSpeichern();
+            // Beenden-Sound absspielen
             try {
                 AudioInputStream ais = AudioSystem.getAudioInputStream(
                     new File("sounds" + System.getProperty("file.separator") 
@@ -296,11 +312,12 @@ public class SpielGUI extends JFrame implements WindowListener {
                 Clip clip = AudioSystem.getClip();
                 clip.open(ais);
                 clip.start();
-                this.dispose();
+                dispose();
                 Thread.sleep(2000);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            // Fenster schliessen
             System.exit(0);
         }
         // Wenn Nein angeklickt wird passiert nichts
