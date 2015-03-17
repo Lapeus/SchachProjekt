@@ -310,6 +310,8 @@ public class Gesamtdatensatz {
      */
     public Spiel getSpiel(String name) {
         if (name.length() < 21) {
+            // Die Liste aktualisieren
+            gespeicherteSpiele.remove(name);
             return null;
         }
         String spielname = name.substring(0, name.length() - 20);
@@ -324,9 +326,10 @@ public class Gesamtdatensatz {
         if (spielname.contains("(autosave)")) {
             spielname = spielname.substring(0, spielname.length() - 11);
         }
+        BufferedReader br = null;
         try {
             // Ein Reader um die Datei zeilenweise auslesen zu koennen
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            br = new BufferedReader(new FileReader(file));
             // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
             br.readLine(); // Zeit lesen lassen
             Spieler spieler1 = getSpieler(br.readLine());
@@ -375,9 +378,6 @@ public class Gesamtdatensatz {
                         ((Umwandlungszug) zug).getNeueFigur().getWert());
                 }
             }
-
-            // Den Reader schliessen
-            br.close();
             
             // Dem Spielfeld die Einstellungen zuf&uuml;gen
             spielfeld.setEinstellungen(einstellungen);
@@ -392,6 +392,13 @@ public class Gesamtdatensatz {
             // Wenn irgendwas schief geht
             spiel = null;
             // Wenn das Spiel null ist, gibt die GUI eine Fehlermeldung aus
+        } finally {
+            // Reader schliessen
+            try {
+                br.close();
+            } catch (IOException exc) {
+                exc.printStackTrace();
+            }
         }
         
         // Die Quelldatei loeschen
