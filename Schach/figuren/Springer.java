@@ -28,7 +28,11 @@ public class Springer extends Figur {
     }
 
     /**
-     * {@inheritDoc}
+     * Ermittelt alle m&ouml;glichen Felder, auf die ein Springer ziehen darf.
+     * Sofern keine Figuren auf den Zielfeldern stehen oder der Spielfeldrand
+     * dabei erreicht wird, sind das acht verschiedene Felder. Diese werden
+     * einer Liste zugef&uuml;gt und anschlie&szlig;end zur&uuml;ck gegeben.
+     * @return Die Liste der m&ouml;glichen Felder
      */
     protected List<Feld> getMoeglicheFelder() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();

@@ -29,7 +29,14 @@ public class Turm extends Figur {
     }
 
     /**
-     * {@inheritDoc}
+     * Ermittelt alle Felder, auf die ein Turm ziehen darf. Ein Turm darf sich
+     * grunds&auml;tzlich horizontal und vertikal so weit bewegen, bis er eine
+     * andere Figur oder den Bildschirmrand erreicht. Das &Uuml;berspringen
+     * des K&ouml;nigs bei der Rochade wird nicht einbezogen, da das beim 
+     * Ziehen einer Rochade ber&uuml;cksichtigt wird. Alle m&ouml;glichen
+     * Felder werden einer Liste zugef&uuml;gt und anschlie&szlig;end 
+     * zur&uuml;ck gegeben.
+     * @return Die Liste der m&ouml;glichen Felder
      */
     protected List<Feld> getMoeglicheFelder() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();

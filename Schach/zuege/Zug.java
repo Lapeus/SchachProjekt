@@ -49,6 +49,7 @@ public class Zug {
      * k&ouml;nnen. <br>
      * @see RochadenZug
      * @see EnPassantZug
+     * @see Umwandlungszug
      */
     public Zug() {
 

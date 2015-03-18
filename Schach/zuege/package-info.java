@@ -1,9 +1,11 @@
 /**
  * Verwaltet die vier verschiedenen Arten von Z&uuml;gen. <br>
- * 1. Der normale Zug
- * 2. Ein Bauer erreicht die gegnerische Grundlinie und wird umgewandelt
- * 3. Eine Rochade wird gezogen
- * 4. Ein En-Passant-Schlag wird ausgef&uuml;hrt
+ * <ul>
+ * <li>Der normale Zug</li>
+ * <li>Ein Bauer erreicht die gegnerische Grundlinie und wird umgewandelt</li>
+ * <li>Eine Rochade wird gezogen</li>
+ * <li>Ein En-Passant-Schlag wird ausgef&uuml;hrt</li>
+ * </ul>
  * @author Christian Ackermann
  */
 package zuege;

@@ -56,9 +56,7 @@ public class RochadenZug extends Zug {
     }
     
     /**
-     * Gibt den Zug in einer stark vereinfachten Schachnotation samt Zugzeit 
-     * wieder.
-     * @return Darstellung des Zugs als Zeichenkette
+     * {@inheritDoc}
      */
     public String toSchachNotation() {
         String string = "";

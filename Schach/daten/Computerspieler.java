@@ -27,6 +27,7 @@ public class Computerspieler extends Spieler {
      * Ist hier als Attribut unabdingbar, da die &uuml;bliche ziehen-Methode
      * selbst in Spielfeld ist und hier daher sonst Zugriffsm&ouml;glichkeiten
      * fehlen w&uuml;rden.
+     * @see Spielfeld#ziehe(Figur, Feld, int)
      */
     private Spielfeld spielfeld;
     
@@ -41,31 +42,24 @@ public class Computerspieler extends Spieler {
     }
     
     /**
-     * Generiert einen Zug und zieht ihn anschlie&szlig;end.
+     * Generiert einen Zug und zieht ihn anschlie&szlig;end. <br>
+     * Je nach Computergegner sieht die Ermittlung des Zuges anders aus.
+     * @see #nachRegeln()
+     * @see #rekursKI(int)
      */
     public void ziehen() {
-        /* Ein Zug eines Computerspielers laeuft grundsaetzlich folgendermassen
-         * ab:
-         * 1. Ermittle fuer alle eigenen Figuren alle moeglichen Felder.
-         * 2. Ziehe nacheinander alle diese Felder und fuehre fuer jeden Zug
-         *    wieder die ersten beiden Schritte aus, bis die gewuenschte 
-         *    Rekursionstiefe (angepeilt sind eigentlich 3) erreicht ist.
-         * 3. Bewerte die aktuelle Brettstellung (Materialwert und eventuell
-         *    Weiteres) und gib den Wert in der Rekursion zurueck an die oberste
-         *    Stufe.
-         * 4. Jede Stufe entscheidet nun nach dem MiniMax-Algorithmus, welcher
-         *    Zug der jeweils Beste ist und gibt den Wert weiter nach oben
-         * 5. Die letzte Stufe weiss nun genau, welcher Zug bei bestmoeglichem
-         *    Spiel beider Seiten in n Zuegen die beste Spielsituation hervor-
-         *    ruft. Dieser Zug wird anschliessend gezogen.
-         */
+        // Je nach Name / Stufe wird eine andere Methode aufgerufen
         if (getName().equals("Karl Heinz")) {
+            // Einfache Zugregeln
             nachRegeln();
         } else if (getName().equals("Rosalinde")) {
+            // Rekursionstiefe 2
             rekursKI(2);
         } else if (getName().equals("Ursula")) {
+            // Rekursionstiefe 3
             rekursKI(3);
         } else if (getName().equals("Walter")) {
+            // Rekursionstiefe 4
             rekursKI(4);
         }
         
@@ -82,7 +76,23 @@ public class Computerspieler extends Spieler {
     }
     
     /**
-     * F&uuml;hrt einen Computerzug nach relativ simplen Zug-Regeln durch.
+     * F&uuml;hrt einen Computerzug nach relativ simplen Zug-Regeln durch.<br>
+     * Dabei werden folgende Kriterien untersucht:
+     * <ul>
+     * <li> Kann eine gegnerische Figur geschlagen werden?</li>
+     * <li> Ist eine eigene Figur bedroht? </li>
+     * <li> Wenn beides zutrifft: <br>
+     * Ist die wertvollste zu schlagende Figur wertvoller als die wertvollste
+     * bedrohte Figur? </li>
+     * </ul>
+     * Folgende Regel gilt immer: <br>
+     * Schlage die wertvollste Figur des Gegners mit der Figur mit dem
+     * geringsten Wert, f&uuml;r den Fall, dass die gegnerische Figur gedeckt
+     * ist.<br>
+     * Entscheidet sich der Computer daf&uuml;r, eine Figur in Sicherheit zu
+     * bringen, so zieht er sie einfach wahllos auf ein freies Feld. Ob dieses
+     * bedroht ist, oder dadurch andere Vorteile f&uuml;r den Gegner entstehen,
+     * wird nicht getestet.
      */
     private void nachRegeln() {
         // Liste mit den zu schlagenden Feldern
@@ -125,7 +135,7 @@ public class Computerspieler extends Spieler {
             Figur verlust = maxFeldVerlust.getFigur();
             // Alle Felder auf die die bedrohte Figur ziehen koennte
             List<Feld> alternativen = verlust.getKorrekteFelder();
-            // Zieht voruebergehend zufaellig weg
+            // Zieht zufaellig weg
             // Erzeugt eine Zufallszahl zwischen 0 und alleFelder.size() - 1
             int zufall = (int) (Math.random() * alternativen.size());
             spielfeld.ziehe(verlust, alternativen.get(zufall), 0);
@@ -158,7 +168,9 @@ public class Computerspieler extends Spieler {
     }
     
     /**
-     * F&uuml;hrt einen zuf&auml;lligen Zug aus.
+     * Ermittelt alle m&ouml;glichen Z&uuml;ge aller Figuren, w&auml;hlt 
+     * zuf&auml;llig einen von ihnen aus und f&uuml;hrt ihn anschlie&szlig;end 
+     * durch.
      */
     private void zufall() {
         // Eigene Figuren
@@ -191,14 +203,31 @@ public class Computerspieler extends Spieler {
     
     /**
      * Ein rekursiver Computergegner, der theoretisch beliebig viele Stufen 
-     * untersuchen kann. <br> Ermittelt den besten Zug und zieht ihn.
+     * untersuchen kann. <br> 
+     * Ermittelt den besten Zug und zieht ihn.
      * Praktisch nur sinnvoll f&uuml;r die Stufen 2 - 4. <br>
      * Teile der verwendeten Methoden min und max basieren auf dem folgenden
-     * Prinzip {@link de.wikipedia.org/wiki/Alpha-Beta-Suche} 
+     * Prinzip: {@link <a href="de.wikipedia.org/wiki/Alpha-Beta-Suche">
+     * de.wikipedia.org/wiki/Alpha-Beta-Suche</a>}  
      * @param maxStufe Die maximale Suchtiefe (sinnvollerweise zwischen 2 und
      * 4)
      */
     private void rekursKI(int maxStufe) {
+        /* Ein Zug eines Computerspielers laeuft grundsaetzlich folgendermassen
+         * ab:
+         * 1. Ermittle fuer alle eigenen Figuren alle moeglichen Felder.
+         * 2. Ziehe nacheinander alle diese Felder und fuehre fuer jeden Zug
+         *    wieder die ersten beiden Schritte aus, bis die gewuenschte 
+         *    Rekursionstiefe (angepeilt sind eigentlich 3) erreicht ist.
+         * 3. Bewerte die aktuelle Brettstellung (Materialwert und eventuell
+         *    Weiteres) und gib den Wert in der Rekursion zurueck an die oberste
+         *    Stufe.
+         * 4. Jede Stufe entscheidet nun nach dem MiniMax-Algorithmus, welcher
+         *    Zug der jeweils Beste ist und gibt den Wert weiter nach oben
+         * 5. Die letzte Stufe weiss nun genau, welcher Zug bei bestmoeglichem
+         *    Spiel beider Seiten in n Zuegen die beste Spielsituation hervor-
+         *    ruft. Dieser Zug wird anschliessend gezogen.
+         */
         List<Figur> alleFiguren;
         // Wenn momentan weiss dran ist
         if (getFarbe()) {
@@ -414,8 +443,13 @@ public class Computerspieler extends Spieler {
     
     /**
      * Bewertet das Spielfeld nach verschiedenen Kriterien.
+     * <ul>
+     * <li> Materialwert </li>
+     * <li> Entfernung der Bauern von der gegnerischen Grundlinie </li>
+     * <li> Schachgebot </li>
+     * </ul>
      * @return Eine Bewertung in Form einer ganzen Zahl im Bereich von etwa
-     * -4500 bis +4500; <b> positiv </b> ist gut f&uuml;r wei&szlig;,
+     * -4500 bis +4500<br> <b> positiv </b> ist gut f&uuml;r wei&szlig;,
      * <b> negativ </b> ist gut f&uuml;r schwarz.
      */
     private int bewertungsfunktion() {
@@ -486,7 +520,11 @@ public class Computerspieler extends Spieler {
     
     /**
      * Entscheidet, ob ein Unentschieden-Angebot vom Gegner angenommen werden 
-     * soll.
+     * soll. <br>
+     * Dabei wird getestet, ob der Computergegner vom Materialwert her deutlich
+     * hinten liegt und ob in den letzten 16 Halbz&uuml;gen ein Bauer gezogen
+     * oder eine Figur geschlagen wurde (Abwandlung der 50-Z&uuml;ge-Regel).
+     * @see Spieldaten#fuenfzigZuegeRegel()
      * @return Wahrheitswert
      */
     public boolean unentschiedenAnnehmen() {

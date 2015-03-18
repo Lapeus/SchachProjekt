@@ -29,7 +29,12 @@ public class Laeufer extends Figur {
     }
 
     /**
-     * {@inheritDoc}
+     * Ermittelt alle m&ouml;glichen Felder, auf die der L&auml;fer nach den
+     * normalen Zugregeln ziehen kann. Dabei darf er sich grunds&auml;tzlich 
+     * so weit diagonal bewegen, bis er eine andere Figur oder den 
+     * Bildschirmrand erreicht. Alle m&ouml;glichen Felder werden einer Liste
+     * zugef&uuml;gt, die am Ende zur&uuml;ck gegeben wird.
+     * @return Die Liste der m&ouml;glichen Felder
      */
     protected List<Feld> getMoeglicheFelder() {
         List<Feld> moeglicheFelder = new ArrayList<Feld>();
