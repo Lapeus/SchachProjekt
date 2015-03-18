@@ -25,7 +25,7 @@ import daten.Einstellungen;
 
 /**
  * Panel um die Einstellungen zu verwalten.
- * Moegliche Eintellungen:/n 
+ * M&uuml;gliche Eintellungen:/n 
  * 
  */
 public class EinstellungenGUI extends JPanel implements ActionListener {
@@ -93,14 +93,14 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     
     /**
      * Erstellt eine neue Einstellungspane.
-     * @param parent Eltern-SpielGui auf der die Pane dragestellt werden soll
+     * @param parent Eltern-SpielGui auf der die Pane dargestellt werden soll
      */
     public EinstellungenGUI(SpielGUI parent) {
         super();
         this.parent = parent;
         this.einstellungen = parent.getEinstellungen();
-        this.setLayout(new BorderLayout());
-        this.setBackground(cBraunRot);
+        setLayout(new BorderLayout());
+        setBackground(cBraunRot);
         init();
     }
     
@@ -132,12 +132,12 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         zurueck.setActionCommand("Eroeffnungsseite");
         zurueck.addActionListener(new SeitenwechselListener(parent));
         cSouth.add(zurueck); 
-        this.add(cSouth, BorderLayout.SOUTH);
+        add(cSouth, BorderLayout.SOUTH);
         
     }
     
     /**
-     * Erstellt neue Buttons und gibt ihnen die uebergebenen ActionCommands.
+     * Erstellt neue Buttons und gibt ihnen die &uuml;bergebenen ActionCommands.
      * @param commmandJa ActionCommand fuer den Ja-RadioButton
      * @param commandNein ActionCommand fuer den Nein-RadioButton
      */
@@ -178,7 +178,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         // TextPane Zugzeitbegrenzung
         gbc.gridx = 1;
         gbc.gridwidth = 2;
-        String zugzeit = this.einstellungen.getZugZeitBegrenzung() + "";
+        String zugzeit = einstellungen.getZugZeitBegrenzung() + "";
         txtZugzeitbegrenzung = new JTextPane();
         txtZugzeitbegrenzung.setText(zugzeit);
         txtZugzeitbegrenzung.setBackground(cHellesBeige);
@@ -194,7 +194,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         cCenter.add(lblMoeglicheFelder, gbc);
         // RadioButtons Moegliche Felder anzeigen
         auswahlJaNein("moeglicheFelderJa", "moeglicheFelderNein");
-        if (this.einstellungen.isMoeglicheFelderAnzeigen()) {
+        if (einstellungen.isMoeglicheFelderAnzeigen()) {
             ja.setSelected(true);
         } else {
             nein.setSelected(true);
@@ -211,7 +211,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         cCenter.add(lblBedrohtefelder, gbc);
         // RadioButtons bedrohte Felder anzeigen
         auswahlJaNein("bedrohteFelderJa", "bedrohteFelderNein");
-        if (this.einstellungen.isBedrohteFigurenAnzeigen()) {
+        if (einstellungen.isBedrohteFigurenAnzeigen()) {
             ja.setSelected(true);
         } else {
             nein.setSelected(true);
@@ -228,7 +228,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         cCenter.add(lblRochadeBenutzbar, gbc);
         // Radio Buttons Rochade Benutzbar
         auswahlJaNein("rochadeBenutzbarJa", "rochadeBenutzbarNein");
-        if (this.einstellungen.isRochadeMoeglich()) {
+        if (einstellungen.isRochadeMoeglich()) {
             ja.setSelected(true);
         } else {
             nein.setSelected(true);
@@ -245,7 +245,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         cCenter.add(lblEnPassantSchlagen, gbc);
         // Radio Buttons En-Passant-Schlagen
         auswahlJaNein("enPassantSchlagenJa", "enPassantSchlagenNein");
-        if (this.einstellungen.isEnPassantMoeglich()) {
+        if (einstellungen.isEnPassantMoeglich()) {
             ja.setSelected(true);
         } else {
             nein.setSelected(true);
@@ -262,7 +262,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         cCenter.add(lblSchachwarnung, gbc);
         // Radio Buttons Schachwarnung
         auswahlJaNein("schachwarnungJa", "schachwarnungNein");
-        if (this.einstellungen.isSchachWarnung()) {
+        if (einstellungen.isSchachWarnung()) {
             ja.setSelected(true);
         } else {
             nein.setSelected(true);
@@ -279,7 +279,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         cCenter.add(lblStatistik, gbc);
         // Radio Buttons Statistik
         auswahlJaNein("statistikJa", "statistikNein");
-        if (this.einstellungen.isInStatistikEinbeziehen()) {
+        if (einstellungen.isInStatistikEinbeziehen()) {
             ja.setSelected(true);
         } else {
             nein.setSelected(true);
@@ -297,7 +297,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         cCenter.add(lblSpielfeldDrehen, gbc);
         // Radio Buttons Statistik
         auswahlJaNein("drehenJa", "drehenNein");
-        if (this.einstellungen.isSpielfeldDrehen()) {
+        if (einstellungen.isSpielfeldDrehen()) {
             ja.setSelected(true);
         } else {
             nein.setSelected(true);
@@ -307,7 +307,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         gbc.gridx = 3;
         cCenter.add(nein, gbc);
         
-        this.add(cCenter, BorderLayout.CENTER);
+        add(cCenter, BorderLayout.CENTER);
     }
     
     /**
@@ -318,14 +318,20 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     private boolean korrekteZahl() {
         boolean korrekt = true;
         String zahl = txtZugzeitbegrenzung.getText();
+        // Wenn die Zahl nicht 0 ist
         if (!zahl.equals("0")) {
+            // Und die erste Ziffer keine 0 ist
             if (!(zahl.equals("")) && (zahl.charAt(0) >= 49 && zahl
-                .charAt(0) <= 58)) {
+                .charAt(0) <= 57)) {
+                // fuer jede Ziffer pruefen 
                 for (int i = 1; i < zahl.length(); i++) {
+                    // Wenn nicht zwischen 0..9
                     if (!(zahl.charAt(i) >= 48 && zahl.charAt(i) <= 57)) {
+                        // Dann ist die Zahl falsch
                         korrekt = false;
                     }
                 }
+            // Wenn die erste Ziffer keine Ziffer zwischen 1..9 ist
             } else {
                 korrekt = false;
             }
@@ -341,17 +347,27 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (e.getSource().equals(speichern)) {
+            // Wenn die Zugzeitzahl korrekt ist
             if (korrekteZahl()) {
+                /* Werden die parent Einstellungen auf die neuen Einstellungen
+                 * gesetzt
+                 */
                 einstellungen.setZugZeitBegrenzung(
                     Integer.parseInt(txtZugzeitbegrenzung.getText()));
                 parent.setEinstellungen(einstellungen);
                 parent.soundAbspielen("Hinweis.wav");
                 JOptionPane.showMessageDialog(parent,
                     "Einstellungen gespeichert!");
+                parent.seitenAuswahl("Eroeffnungsseite");
+            // Wenn die Zugzeitzahl nicht korrekt ist
             } else {
+                // Wird eine Warnung ausgegeben
                 JOptionPane.showMessageDialog(parent, "Geben Sie eine gueltige "
                     + "Zugzeitbegrenzung ein");
             }
+        /* Wenn bei einem der Radio-Button-Groups die Auwahl geaendert wird dann
+         * wird die Einstellung dieses Fenster auf diese Veraenderung angepasst
+         */
         } else if (command.equals("drehenJa")) {
             einstellungen.setSpielfeldDrehen(true);
         } else if (command.equals("drehenNein")) {    

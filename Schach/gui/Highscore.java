@@ -15,7 +15,7 @@ import javax.swing.JTextPane;
 import daten.Spieler;
 
 /**
- * Darstelung aller Spieler in einer Highscore-Liste.
+ * Darstellung aller Spieler in einer Highscore-Liste.
  * @author Marvin Wolf
  */
 public class Highscore extends JPanel {
@@ -31,29 +31,29 @@ public class Highscore extends JPanel {
     private SpielGUI parent;
     
     /**
-     * JLabel fuer die Information "Highscore".
+     * JLabel f&uuml;r die Information "Highscore".
      */
     private JLabel lblHighscore = new JLabel("Highscore");
     
     /**
-     * Textarea fuer die HighscoreListe.
+     * Textarea f&uuml;r die HighscoreListe.
      */
     private JTextPane highscorePane = new JTextPane();
     
     /**
-     * Konstante fuer den Farbton des Hintergrundes (Braun).
+     * Konstante f&uuml;r den Farbton des Hintergrundes (Braun).
      */
     private final Color cBraunRot = new Color(164, 43, 24); 
     
     /**
-     * Konstante fuer den Farbton der Buttons (Beige).
+     * Konstante f&uml;r den Farbton der Buttons (Beige).
      */
     private final Color cHellesBeige = new Color(255, 248, 151);
     
     // Konstruktor
     /**
      * Erzeugt ein neues JPanel welches die Darstellung des Highscores 
-     * uebernimmt.
+     * &uuml;bernimmt.
      * @param parent Eltern-SpielGUI-Fenster
      */
     public Highscore(SpielGUI parent) {
@@ -63,11 +63,11 @@ public class Highscore extends JPanel {
     }
     
     /**
-     * Kuemmert sich um die Darstellung eines Highscores-Fensters.
+     * K&uuml;mmert sich um die Darstellung eines Highscores-Fensters.
      */
     public void init() {
-        this.setLayout(new BorderLayout());
-        this.setBackground(cBraunRot);
+        setLayout(new BorderLayout());
+        setBackground(cBraunRot);
         
         // North 
         Container cNorth = new JPanel();
@@ -75,37 +75,45 @@ public class Highscore extends JPanel {
         cNorth.setLayout(new FlowLayout());
         lblHighscore.setFont(new Font("Arial", Font.BOLD, 20));
         cNorth.add(lblHighscore);
-        this.add(cNorth, BorderLayout.NORTH);
+        add(cNorth, BorderLayout.NORTH);
         
         // Center 
         JPanel cCenter = new JPanel();
         cCenter.setBackground(cBraunRot);
         List<Spieler> ranking = parent.getRanking();
         String ergebnis = "";
+        // Counter fuer die anzeige des Bestenlistenmplatz
         int counter = 1;
+        // nach jedem Spieler gibt es einen Zeilenumbruch
         String lineSep =  System.getProperty("line.separator");
+        // Fuer jeden Spieler
         for (Spieler spieler : ranking) {
+            // "Platz" + "Name" + "Score" + "Punkte" + <br>
             ergebnis += counter + ". " + spieler.getName() + " " 
                 + spieler.getStatistik().getScore() + " Punkte" + lineSep; 
             counter++;
         }
+        // Ergebnis String den letzten LineSep abziehen(sonst Leerzeile)
         ergebnis = ergebnis.substring(0, ergebnis.length() - lineSep.length());
+        // String in der Pane hinzufuegen
         highscorePane.setText(ergebnis);
         highscorePane.setBackground(cHellesBeige);
         highscorePane.setEditable(false);
         cCenter.add(highscorePane);
-        this.add(cCenter, BorderLayout.CENTER);
+        add(cCenter, BorderLayout.CENTER);
         
         // South 
         JPanel cSouth = new JPanel();
         cSouth.setBackground(cBraunRot);
+        
+        // Button zurueck
         JButton zurueck = new JButton("<html>Zur&uuml;ck");
         zurueck.addActionListener(new SeitenwechselListener(parent));
         zurueck.setActionCommand("Eroeffnungsseite");
         zurueck.setBackground(cHellesBeige);
-        cSouth.add(zurueck);
-        this.add(cSouth, BorderLayout.SOUTH);
         
-        this.revalidate();
+        cSouth.add(zurueck);
+        add(cSouth, BorderLayout.SOUTH);
+        revalidate();
     }
 }

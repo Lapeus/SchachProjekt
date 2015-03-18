@@ -368,7 +368,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         // CENTER
         cCenter.addComponentListener(this);
-        this.setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
         cCenter.setBackground(new Color(0, 0, 0));
         cCenter.setLayout(new GridLayout(8, 8, 1, 1));
         
@@ -456,8 +456,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(aufgeben, gbc);
         
         // Zu Panel hinzufuegen
-        this.add(cCenter, BorderLayout.CENTER);
-        this.add(cEast, BorderLayout.EAST);
+        add(cCenter, BorderLayout.CENTER);
+        add(cEast, BorderLayout.EAST);
         
         // Zugzeit fuer den ersten Zug starten
         start();
@@ -489,6 +489,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Es werden alle Autosavedaten des Spiels gel&ouml;scht. 
      */
     private void cEndeErstellen()  {
+        // Listener von den Feldern entfernen(keine Zuege mehr moeglich)
+        for (Feld feld : felderListe) {
+            feld.removeMouseListener(this);
+        }
         // Alle Autosave Dateien des Spiels loeschen
         parent.autoSaveLoeschen();
         
@@ -624,8 +628,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 }
             }
         }
-        this.validate();
-        this.repaint();  
+        revalidate();  
     }
     
     /**
@@ -648,163 +651,163 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         // - schwarze Figurenbilder
         for (Figur schwarz  : spielfeld.getSchwarzeFiguren()) {
+            // Feld der Figur abspeichern
             Feld momentan = schwarz.getPosition();
+            // Image in der Mitte zentrieren lassen
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
-            String lineSep = System.getProperty("file.separator");
-            String name = "";
-            if (schwarz.getWert() == 900) {
-                name = "pictures" + lineSep + "queenb.gif";
-            }
-            if (schwarz.getWert() == 100) {
-                name = "pictures" + lineSep + "pawnb.gif";
-            }
-            if (schwarz.getWert() == 0) {
-                name = "pictures" + lineSep + "kingb.gif";
-            }
-            if (schwarz.getWert() == 325) {
-                name = "pictures" + lineSep + "bishopb.gif";
-            }
-            if (schwarz.getWert() == 275) {
-                name = "pictures" + lineSep + "knightb.gif";
-            }
-            if (schwarz.getWert() == 465) {
-                name = "pictures" + lineSep + "rookb.gif";
-            }
-            try {
-                int width = parent.getWidth() / 10;
-                int height = parent.getHeight() / 9;
-                Image imageB = ImageIO.read(new File(name));
-                ImageIcon iconB  = new ImageIcon(imageB
-                    .getScaledInstance(width, height, Image.SCALE_SMOOTH));
-                momentan.setIcon(iconB);
-            } catch (IOException exc) {
-                exc.printStackTrace();
-            }
+            // Die Groesse an die Fenstergroesse angepasst
+            int width = parent.getWidth() / 10;
+            int height = parent.getHeight() / 9;
+            // Das Bild aus dem Dateipfad geladen
+            Image imageB = getImage(schwarz);
+            // rescaled
+            ImageIcon iconB  = new ImageIcon(imageB
+                .getScaledInstance(width, height, Image.SCALE_SMOOTH));
+            // Als Icon des Feldes setzen
+            momentan.setIcon(iconB);
         }
         // - weisse Figurenbilder
         for (Figur weiss  : spielfeld.getWeisseFiguren()) {
+            // Feld der Figur abspeichern
             Feld momentan = weiss.getPosition();
+            // Image in der Mitte zentrieren lassen
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
-            String lineSep = System.getProperty("file.separator");
-            String name = "";
-            if (weiss.getWert() == 900) {
-                name = "pictures" + lineSep + "queenw.gif";
-            }
-            if (weiss.getWert() == 100) {
-                name = "pictures" + lineSep +  "pawnw.gif";
-            }
-            if (weiss.getWert() == 0) {
-                name = "pictures" + lineSep + "kingw.gif";
-            }
-            if (weiss.getWert() == 325) {
-                name = "pictures" + lineSep + "bishopw.gif";
-            }
-            if (weiss.getWert() == 275) {
-                name = "pictures" + lineSep + "knightw.gif";
-            }
-            if (weiss.getWert() == 465) {
-                name = "pictures" + lineSep + "rookw.gif";
-            }
-            try {
-                int width = parent.getWidth() / 10;
-                int height = parent.getHeight() / 9;
-                Image imageW = ImageIO.read(new File(name));
-                ImageIcon iconW  = new ImageIcon(imageW
-                    .getScaledInstance(width, height, Image.SCALE_SMOOTH));
-                momentan.setIcon(iconW);
-            } catch (Exception exc) {
-                exc.printStackTrace();
-            }
+            // Die Groesse an die Fenstergroesse angepasst
+            int width = parent.getWidth() / 10;
+            int height = parent.getHeight() / 9;
+            // Das Bild aus dem Dateipfad geladen
+            Image imageW = getImage(weiss);
+            // rescaled
+            ImageIcon iconW  = new ImageIcon(imageW
+                .getScaledInstance(width, height, Image.SCALE_SMOOTH));
+            // Als Icon des Feldes setzen
+            momentan.setIcon(iconW);
         }
         geschlageneFigureUpdate();
-        this.revalidate();  
+        revalidate();  
     }
     
     /**
      * Updated die Anzeigen der geschlagenen Figuren.
      * Geht die geschlagenenFigurenListen der jeweiligen Farbe durch und 
-     * zeigt diese in dem jewiligen Conatiner an.
+     * zeigt diese in dem jeweiligen Conatiner an.
      */
     private void geschlageneFigureUpdate() {
+        // Alle Labels entfernen
         geschlageneSchwarze.removeAll();
+        // Fuer alle geschlagenen schwarzen Figuren
         for (Figur schwarz : spielfeld.getGeschlagenSchwarzSort()) {
+            // neues Label fuer das Icon erstellen
             JLabel momentan = new JLabel();
+            // Icons zentrieren
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
-            String lineSep = System.getProperty("file.separator");
-            String name = "";
-            if (schwarz.getWert() == 900) {
-                name = "pictures" + lineSep + "queenb.gif";
-            }
-            if (schwarz.getWert() == 100) {
-                name = "pictures" + lineSep + "pawnb.gif";
-            }
-            if (schwarz.getWert() == 0) {
-                name = "pictures" + lineSep + "kingb.gif";
-            }
-            if (schwarz.getWert() == 325) {
-                name = "pictures" + lineSep + "bishopb.gif";
-            }
-            if (schwarz.getWert() == 275) {
-                name = "pictures" + lineSep + "knightb.gif";
-            }
-            if (schwarz.getWert() == 465) {
-                name = "pictures" + lineSep + "rookb.gif";
-            }
-            try {
-                Image imageB = ImageIO.read(new File(name));
-                ImageIcon iconB  = new ImageIcon(
-                    imageB.getScaledInstance(45, 45, Image.SCALE_DEFAULT));
-                momentan.setIcon(iconB);
-                geschlageneSchwarze.add(momentan);
-            } catch (IOException exc) {
-                exc.printStackTrace();
-            }  
+            // Bild aus Dateipfad laden
+            Image imageB = getImage(schwarz);
+            // rescalen
+            ImageIcon iconB  = new ImageIcon(
+                imageB.getScaledInstance(45, 45, Image.SCALE_DEFAULT));
+            // Label Icon hinzufuegen
+            momentan.setIcon(iconB);
+            // Container Label hinzufuegen
+            geschlageneSchwarze.add(momentan); 
         }
-               
+        // Alle Label entfernen       
         geschlageneWeisse.removeAll();
+        // Fuer alle geschlagenen weissen Figuren
         for (Figur weiss : spielfeld.getGeschlagenWeissSort()) {
+            // neues Label fuer das Icon erstellen
             JLabel momentan = new JLabel();
+            // Icons zentrieren
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
-            String lineSep = System.getProperty("file.separator");
-            String name = "";
-            if (weiss.getWert() == 900) {
+            // Bild aus Dateipfad laden
+            Image imageW = getImage(weiss);
+            // rescalen
+            ImageIcon iconW  = new ImageIcon(
+                imageW.getScaledInstance(45, 45, Image.SCALE_DEFAULT));
+            // Label Icon hinzufuegen
+            momentan.setIcon(iconW);
+            // Container Label hinzufuegen
+            geschlageneWeisse.add(momentan);
+            
+        }
+    }
+     /**
+      * Gibt f&uuml;r eine &uuml;bergebene Figur das passende Image zur&uuml;ck.
+      * @param figur f&uuml;r die ein Bild geladen werden soll
+      * @return passendes Bild f&uuml;r die &uuml;bergebene Figur
+      */
+    private Image getImage(Figur figur) {
+        String lineSep = System.getProperty("file.separator");
+        String name = "";
+        Image image = null;
+        // Wenn die Figur Weiss ist
+        if (figur.getFarbe()) {
+            // Je nach Wert der Figur das den passenden Bildpfad speichern
+            if (figur.getWert() == 900) {
                 name = "pictures" + lineSep + "queenw.gif";
             }
-            if (weiss.getWert() == 100) {
+            if (figur.getWert() == 100) {
                 name = "pictures" + lineSep + "pawnw.gif";
             }
-            if (weiss.getWert() == 0) {
+            if (figur.getWert() == 0) {
                 name = "pictures" + lineSep + "kingw.gif";
             }
-            if (weiss.getWert() == 325) {
+            if (figur.getWert() == 325) {
                 name = "pictures" + lineSep + "bishopw.gif";
             }
-            if (weiss.getWert() == 275) {
+            if (figur.getWert() == 275) {
                 name = "pictures" + lineSep + "knightw.gif";
             }
-            if (weiss.getWert() == 465) {
+            if (figur.getWert() == 465) {
                 name = "pictures" + lineSep + "rookw.gif";
             }
             try {
-                Image imageW = ImageIO.read(new File(name));
-                ImageIcon iconW  = new ImageIcon(
-                    imageW.getScaledInstance(45, 45, Image.SCALE_DEFAULT));
-                momentan.setIcon(iconW);
-                geschlageneWeisse.add(momentan);
+                // Bild aus Dateipfad laden
+                image = ImageIO.read(new File(name));
+            } catch (IOException exc) {
+                exc.printStackTrace();
+            }
+        // Wenn die Figur schwarz ist
+        } else {
+            // Je nach Wert der Figur das den passenden Bildpfad speichern
+            if (figur.getWert() == 900) {
+                name = "pictures" + lineSep + "queenb.gif";
+            }
+            if (figur.getWert() == 100) {
+                name = "pictures" + lineSep + "pawnb.gif";
+            }
+            if (figur.getWert() == 0) {
+                name = "pictures" + lineSep + "kingb.gif";
+            }
+            if (figur.getWert() == 325) {
+                name = "pictures" + lineSep + "bishopb.gif";
+            }
+            if (figur.getWert() == 275) {
+                name = "pictures" + lineSep + "knightb.gif";
+            }
+            if (figur.getWert() == 465) {
+                name = "pictures" + lineSep + "rookb.gif";
+            }
+            try {
+                // Bild aus Dateipfad laden
+                image = ImageIO.read(new File(name));
             } catch (IOException exc) {
                 exc.printStackTrace();
             }
         }
+        return image;
     }
     
     /**
-     * Wertet aus, ob der Spieler ein Computerspieler ist und ob dieser 
+     * Wertet aus, ob der Spieler2 ein Computerspieler ist und ob dieser 
      * momentan am Zug ist.
-     * @return true - ist ein Computerspieler false - ist kein Computerspieler
+     * @return true - ist ein Computerspieler und am Zug<br>
+     * false - ist kein Computerspieler / ist ein Computerspieler ist aber nicht
+     * am Zug
      */
     private boolean istComputerSpielerUndIstAmZug() {
         boolean istCompSpielerUndDran = false;
@@ -842,11 +845,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 JOptionPane.showMessageDialog(parent, "<html>50 Z&uuml;ge Regel"
                     + " wurde erf&uuml;llt. Das Spiel endet mit einem "
                     + "Unentschieden");
-                this.remove(cEast);
+                remove(cEast);
                 cEndeErstellen();
-                this.add(cEnde, BorderLayout.EAST);
-                this.validate();
-                this.repaint();  
+                add(cEnde, BorderLayout.EAST);
+                revalidate(); 
             } else {
                 // Zugzeit neu starten
                 start();
@@ -969,13 +971,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 bedroht.setBackground(new Color(100, 100, 100));
             }
         }
-        this.validate();
-        this.repaint();  
+        revalidate();  
     }
     
 
     /**
      * Hier werden die Zuege veranlasst und auf der Gui geupdated.
+     * Die Zugzeit wird gestoppt und der dem Zug werden diese sowie das Start-
+     * und Zielfeld &uuml;bergeben.
      * @param momentanesFeld Das momentan ausgewaehlte Feld
      */
     private void spielerzugGUI(Feld momentanesFeld) {
@@ -985,15 +988,16 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Ein Zug wird ausgefuehrt und die Zugzeit uebergeben
         spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
             (int) sekundenStopp);
-        spielfeldAufbau();
-        revalidate();  
         // Neuer Spieler = keine Ausgewaehlte Figur
         ausgewaehlteFigur = null;
+        // Bedrohte Felder muessen geladen werden
         spielfeld.getBedrohteFelder();
+        // Der letzte Zug (gerade uebergeben)
         Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
-        mattOderSchach();
+        // Wenn der letzte Zug ein Umwandlungszug war
         if (!spielVorbei && letzterZug instanceof Umwandlungszug)   {
             spielfeldAufbau();
+            // Wird gefragt in welche Figur umgewandelt werden soll
             parent.soundAbspielen("Hinweis.wav");
             String[] moeglicheFiguren = {"Dame", "Turm", "Laeufer", 
                 "Springer"};
@@ -1003,7 +1007,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 , "Figurenwechsel", JOptionPane.
                 PLAIN_MESSAGE, null, moeglicheFiguren, "Dame");
             int wert;
-            if (s.equals("Dame")) {
+            System.out.println(s);
+            // Je nach ausgelsesenem Wert (wenn "x" oder "cancel" - Dame)
+            if (s == null || s.equals("Dame")) {
                 wert = 900;
             } else if (s.equals("Turm")) {
                 wert = 465;
@@ -1014,6 +1020,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             spielfeld.umwandeln(letzterZug.getFigur(), wert);
         }
+        spielfeldAufbau();
+        revalidate();  
+        mattOderSchach();
         // Start der neuen Zugzeit
         start();
     }
@@ -1030,6 +1039,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private void mattOderSchach() {
         // Wenn das Spiel vorbei ist
         if (spielfeld.schachMatt()) {
+            // Spiel ist vorbei
+            spielVorbei = true;
             spielfeldAufbau();
             // das Spiel ausgewertet
             List<Object> auswertung = spiel.auswertung();
@@ -1044,19 +1055,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             // Und Ein Dialogfenster fuer den Gewinner angezeigt
             parent.soundAbspielen("SchachMatt.wav");
-            JOptionPane.showMessageDialog(parent
-                , ergebnis);
-            // Das spiel ist vorbei also keine Zuege mehr moeglich
-            for (Feld feld : felderListe) {
-                feld.removeMouseListener(this);
-            }
-            // Spielende Screen
-            this.remove(cEast);
+            JOptionPane.showMessageDialog(parent, ergebnis);
+            // Endscreen aufrufen
+            remove(cEast);
             cEndeErstellen();
-            this.add(cEnde, BorderLayout.EAST);
-            this.validate();
-            this.repaint();  
-            spielVorbei = true;
+            add(cEnde, BorderLayout.EAST);
+            revalidate();  
         // Wenn der momentane Spieler im Schach steht
         } else if (spielfeld.isSchach()) {
             schachWarnung();
@@ -1150,8 +1154,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Zugzeit neu starten
             start();
             spielfeldAufbau();
-            this.validate();
-            this.repaint();  
+            revalidate();  
         }
         // Wenn ein Spieler ein Remis anbietet
         if (e.getActionCommand().equals(commandRemis)) {
@@ -1169,19 +1172,16 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             JOptionPane.showMessageDialog(parent, "<html>" 
                 + verlierer.getName() + " gibt nach " + zuege 
                 + " Z&uuml;gen auf! " + gewinner.getName() + " gewinnt!!!");
-            // Das spiel ist vorbei also keine Zuege mehr moeglich
-            for (Feld feld : felderListe) {
-                feld.removeMouseListener(this);
-            }
-            this.remove(cEast);
+            // Endscreen aufrufen
+            remove(cEast);
             cEndeErstellen();
-            this.add(cEnde, BorderLayout.EAST);
-            this.validate();
-            this.repaint();  
+            add(cEnde, BorderLayout.EAST);
+            revalidate();  
         }
         // Wenn das Spiel gespeichert werden soll
         if (e.getActionCommand().equals(commandSpeichern)) {
             parent.spielSpeichern(spiel);
+            parent.autoSaveLoeschen();
             parent.soundAbspielen("Hinweis.wav");
             JOptionPane.showMessageDialog(parent, "Spiel gespeichert",
                 "Speichern", JOptionPane.INFORMATION_MESSAGE);
@@ -1257,65 +1257,74 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Anfrage bearbeitet.
      */
     private void remisAuswertung() {
-     // Testen ob die 50-Zuege-Regel verletzt wurde
+        // Testen ob die 50-Zuege-Regel verletzt wurde
         if (spielfeld.getSpieldaten().fuenfzigZuegeRegel()) {
-            // Unentschieden einreichen
+            // Spiel ist vorbei
             spielVorbei = true;
+            // Unentschieden einreichen
             spiel.unentschieden();
             parent.soundAbspielen("Hinweis.wav");
             JOptionPane.showMessageDialog(parent, "<html>50 Z&uuml;ge Regel "
                 + "wurde erf&uuml;llt. Das Spiel endet in einem Unentschieden");
-            this.remove(cEast);
+            // Endescreen wird aufgebaut
+            remove(cEast);
             cEndeErstellen();
-            this.add(cEnde, BorderLayout.EAST);
-            this.validate();
-            this.repaint();  
+            add(cEnde, BorderLayout.EAST);
+            revalidate();
+        // Wenn Spieler 2 kein Computerspieler ist und keine 50-Zuge-Regel
         } else {
             if (!(spieler2 instanceof Computerspieler)) {
                 parent.soundAbspielen("Hinweis.wav");
+                // Wird gefragt ob ein Unentschieden angenommen wird
                 int eingabe = JOptionPane.showConfirmDialog(parent, 
                     "<html>M&ouml;chten Sie sich auf ein Unentschieden "
                     + "einigen?");
+                // Wenn "Ja" ausgewaehlt wurde
                 if (eingabe == 0) {
+                    // ist das Spiel vorbei
                     spielVorbei = true;
+                    // Unentschieden einreichen
                     spiel.unentschieden();
-                    for (Feld feld : felderListe) {
-                        feld.removeMouseListener(this);
-                    }
-                    this.remove(cEast);
+                    remove(cEast);
                     cEndeErstellen();
-                    this.add(cEnde, BorderLayout.EAST);
-                    this.validate();
-                    this.repaint();  
+                    add(cEnde, BorderLayout.EAST);
+                    revalidate();
+                // Wenn "Nein" ausgewaehlt wurde    
                 } else {
                     Spieler spieler;
+                    // Wenn Spieler1 das Unentschieden angeboten hat
                     if (spielfeld.getAktuellerSpieler() == spieler1
                         .getFarbe()) {
+                        // lehnt Spieler 2 somit ab
                         spieler = spieler2;
+                    // sonst hat Spieler2 das Unentschieden angeboten
                     } else {
+                        // sonst lehnt Spieler 1 ab
                         spieler = spieler1;
                     }
                     parent.soundAbspielen("Aufgeben.wav");
                     JOptionPane.showMessageDialog(parent, 
                         spieler.getName() + " hat das Remis abgelehnt");
                 }
+            // Wenn Spieler2 ein Computerspieler ist 
             } else {
+                // Wenn ein Unentschieden aktzeptabel ist
                 if ((boolean) ((Computerspieler) spieler2)
                     .unentschiedenAnnehmen()) {
+                    // Nimmt der Computerspieler das Unentschieden an
                     parent.soundAbspielen("Hinweis.wav");
                     JOptionPane.showMessageDialog(parent, "Spiel endet "
                         + "unentschieden.");
                     spielVorbei = true;
                     spiel.unentschieden();
-                    for (Feld feld : felderListe) {
-                        feld.removeMouseListener(this);
-                    }
-                    this.remove(cEast);
+                    // Endscreen aufrufen
+                    remove(cEast);
                     cEndeErstellen();
-                    this.add(cEnde, BorderLayout.EAST);
-                    this.validate();
-                    this.repaint();
+                    add(cEnde, BorderLayout.EAST);
+                    revalidate();
+                // Wenn es nicht aktzeptabel ist 
                 } else {
+                    // lehnt der Computerspieler ab
                     parent.soundAbspielen("Aufgeben.wav");
                     JOptionPane.showMessageDialog(parent, 
                         spieler2.getName() + " hat das Remis abgelehnt");
@@ -1328,9 +1337,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Startet eine neue Zeitnahmesession fuer die Zugzeit der Spieler.
      */
     private void start() {
-        // Neue Zeit anfangen
         uhrAktiv = true;
-        // Thread anlegen 
+        // Neue Zeit anfangen
         sekundenStart = System.currentTimeMillis();
     }
     
@@ -1395,7 +1403,25 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     .getZugZeitBegrenzung();
                 // Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button
                 if (begrenzung > 0 && sekundenStopp / 1000 >= begrenzung) {
-                    aufgeben.doClick();
+                    // Spiel ist vorbei
+                    spielVorbei = true;
+                    spielfeldAufbau();
+                    // das Spiel ausgewertet
+                    List<Object> auswertung = spiel.auswertung();
+                    Spieler gewinner = (Spieler) auswertung.get(0);
+                    String ergebnis; 
+                    String zuege = auswertung.get(2).toString();
+                    ergebnis = "<html>Bedenkzeit &uuml;berschritten. " 
+                        + gewinner.getName() + " gewinnt nach " + zuege 
+                        + " Z&uuml;gen.";
+                    // Und Ein Dialogfenster fuer den Gewinner angezeigt
+                    parent.soundAbspielen("SchachMatt.wav");
+                    JOptionPane.showMessageDialog(parent, ergebnis);
+                    // Endscreen aufrufen
+                    remove(cEast);
+                    cEndeErstellen();
+                    add(cEnde, BorderLayout.EAST);
+                    revalidate();  
                 }
             }
             // Wenn ein Spielvideo angeziegt werden soll
@@ -1418,14 +1444,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Component Listener Methode.
+     * Unbenutzte Component Listener Methode.
      * @param e durch Component ausgeloestes Event
      */
     public void componentHidden(ComponentEvent e) {
     }
     
     /**
-     * Component Listener Methode.
+     * Unbenutzte Component Listener Methode.
      * @param e durch Component ausgeloestes Event
      */
     public void componentMoved(ComponentEvent e) {
@@ -1441,7 +1467,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Component Listener Methode.
+     * Unbenutzte Component Listener Methode.
      * @param e durch resizen ausgeloestes Event
      */
     public void componentShown(ComponentEvent e) {

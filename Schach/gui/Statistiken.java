@@ -21,8 +21,8 @@ import daten.Spieler;
 import daten.Statistik;
 
 /**
- * Bietet ein Panel zur Dartsellung von Statistiken von auszuwaehlenden Spieler
- * des Schachspiels. 
+ * Bietet ein Panel zur Dartsellung von Statistiken vom auszuw&auml;hlenden 
+ * Spieler des Schachspiels. 
  */
 public class Statistiken extends JPanel implements ActionListener {
     // Anfang Attribute
@@ -87,7 +87,7 @@ public class Statistiken extends JPanel implements ActionListener {
      * auswaehlen kann und von diesem die Statistik angezeigt bekommt.
      */
     private void init() {
-        this.setBackground(cBraunRot);
+        setBackground(cBraunRot);
         
         // NORTH
         cNorth.setLayout(new BorderLayout());
@@ -107,21 +107,27 @@ public class Statistiken extends JPanel implements ActionListener {
         daten.setBackground(cBraunRot);
         cCenter.setLayout(new BorderLayout());
         cCenter.setBackground(cBraunRot);
+        // Spieler Liste des Backends
         List<Spieler> spielerListe = parent.getSpielerListe();
+        // +1 wegen "Waehlen sie einen Spieler aus"
         String[] spielernamen = new String[spielerListe.size() + 1];
         spielernamen[0] = "<html>W&auml;hlen Sie einen Spieler aus";
+        // Jeden Spieler in das Array packen
         for (int i = 0; i < spielernamen.length - 1; i++) {
+            // +1 wegen "Waehlen sie einen Spieler aus"
             spielernamen[i + 1] = spielerListe.get(i).getName();
         }
+        // ComboBox mit dem Array als Inhalt erzeugen 
         spielerAuswahl = new JComboBox<String>(spielernamen);
         spielerAuswahl.setBackground(cHellesBeige);
         spielerAuswahl.addActionListener(this);
         cNorth.add(spielerAuswahl, BorderLayout.CENTER);
         
-        this.add(cNorth, BorderLayout.NORTH);
+        add(cNorth, BorderLayout.NORTH);
         
         // Center
         HTMLEditorKit hEdi = new HTMLEditorKit();
+        // daten kann jetzt HTML-Code uebersetzen
         daten.setEditorKit(hEdi);
         
         // South
@@ -144,40 +150,32 @@ public class Statistiken extends JPanel implements ActionListener {
         zurueck.setBackground(cHellesBeige);
         cSouth.add(zurueck);
         
-        this.add(cSouth, BorderLayout.SOUTH);
+        add(cSouth, BorderLayout.SOUTH);
    
         
     }
-    
-    /**
-     * Gibt SpielerObjekt des Spielers mit diesem namen zurueck.
-     * @param name name des gesuchten Spielers
-     * @return Spieler mit dem namen - null wenn es keinen gibt
-     */
-    private Spieler istVorhanden(String name) {
-        Spieler vorhanden = null;
-        for (Spieler spieler : parent.getSpielerListe()) {
-            if (spieler.getName().equals(name)) {
-                vorhanden = spieler;
-            }
-        }
-        return vorhanden;
-    }
-    
+
     /**
      * ActionPeformed Methode fuer die auswahlCombobox.
+     * Erstellt wenn ein korrekter Spieler ausgewaehlt wurde einen String, 
+     * welcher die Spielerstatistik auf der Textpane darstellt.
      * @param e ausgeloestes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
         String ausgewaehlt = (String) spielerAuswahl.getSelectedItem();
         Spieler spieler = istVorhanden(ausgewaehlt);
+        // Wenn es einen Spieler mit diesem Namen gibt
         if (spieler != null) {
+            // Wenn man auf zuruecksetzen drueckt wird die Statistik geloescht
             if (e.getActionCommand().equals("zuruecksetzen")) {
                 spieler.setStatistik(new Statistik());
             } 
+            // Statistik aus dem Backend holen
             Statistik statistik = spieler.getStatistik();
             String momentan;
+            // Zeilenumbruch HTML
             String lineSep = "<br>";
+            // Folgende Werte werden immer angezeigt
             momentan = "Spiele: " 
                 + statistik.getAnzahlSpiele() + lineSep;
             momentan += "Siege: " 
@@ -192,6 +190,10 @@ public class Statistiken extends JPanel implements ActionListener {
                 + statistik.getAnzahlPattC() + lineSep;
             momentan += "Matt vs. Comp: " 
                 + statistik.getAnzahlMattC() + lineSep;
+            /* Bei allen Werten die ab hier folgen wird zunaecht ueberprueft ob
+             * diese ueberhaupt schon einen Wert haben. Nur dies zutrifft wird 
+             * der jeweilige Wert in der Statistik angezeigt
+             */
             if (statistik.getSchnellsterSieg() != -1) {
                 momentan += "Schnellster Sieg: " 
                     + statistik.getSchnellsterSieg() + " Sekunden" + lineSep;
@@ -239,10 +241,23 @@ public class Statistiken extends JPanel implements ActionListener {
             daten.setBackground(cHellesBeige);
             daten.setText(momentan);
             cCenter.add(daten, BorderLayout.NORTH);
-            this.add(cCenter, BorderLayout.CENTER);
-            this.revalidate();
+            add(cCenter, BorderLayout.CENTER);
+            revalidate();
+        }  
+    }
+    
+    /**
+     * Gibt SpielerObjekt des Spielers mit diesem namen zurueck.
+     * @param name name des gesuchten Spielers
+     * @return Spieler mit dem namen - null wenn es keinen gibt
+     */
+    private Spieler istVorhanden(String name) {
+        Spieler vorhanden = null;
+        for (Spieler spieler : parent.getSpielerListe()) {
+            if (spieler.getName().equals(name)) {
+                vorhanden = spieler;
+            }
         }
-        
-        
+        return vorhanden;
     }
 }

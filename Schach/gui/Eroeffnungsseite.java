@@ -14,9 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * Dient zur Konfiguration der Eroeffnungsseite.
- * Von hier aus kann man zu allen anderen Fenstern wechseln und hier fuehrt der
- * Zurueck-Button aller anderen Panels hin.
+ * Dient zur Konfiguration der Er&ouml;ffnungsseite.
+ * Von hier aus kann man zu allen anderen Fenstern wechseln und hier f&uuml;hrt 
+ * der Zurueck-Button aller anderen Panels hin.
  * @author Marvin Wolf
  */
 public class Eroeffnungsseite extends Panel {
@@ -94,8 +94,8 @@ public class Eroeffnungsseite extends Panel {
      * Definiert das Aussehen der Eroeffnungsseite.
      */
     private void init() {
-        this.setLayout(new BorderLayout(140, 20));
-        this.setBackground(cBraunRot);
+        setLayout(new BorderLayout(140, 20));
+        setBackground(cBraunRot);
         
         // Button ActionListener
         ActionListener wechselListener = new SeitenwechselListener(parent);
@@ -116,7 +116,7 @@ public class Eroeffnungsseite extends Panel {
         menue.setFont(new Font("Arial", Font.BOLD, 20));
         cNorth.add(menue);
         cNorth.setBackground(cBraunRot);
-        this.add(cNorth, BorderLayout.NORTH);
+        add(cNorth, BorderLayout.NORTH);
         
         // Center
         Container cCenter = new JPanel();
@@ -138,15 +138,15 @@ public class Eroeffnungsseite extends Panel {
         cCenter.add(highscore);
         cCenter.add(statistiken);
 
-        this.add(cCenter, BorderLayout.CENTER);
+        add(cCenter, BorderLayout.CENTER);
         
         // East 
         JLabel platzhalter = new JLabel();
-        this.add(platzhalter, BorderLayout.EAST);
+        add(platzhalter, BorderLayout.EAST);
         
         // West 
         JLabel platzhalter2 = new JLabel();
-        this.add(platzhalter2, BorderLayout.WEST);
+        add(platzhalter2, BorderLayout.WEST);
     }
 
 }
