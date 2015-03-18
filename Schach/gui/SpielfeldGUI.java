@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -350,9 +351,19 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * 4. Erstellt das Aussehen des Spielfelds  
      */
     private void init() { 
-        Dimension size = new Dimension(1200, 800);
-        parent.setMinimumSize(size);
-        parent.setSize(size);
+        Dimension maxsize = new Dimension(GraphicsEnvironment
+            .getLocalGraphicsEnvironment().getMaximumWindowBounds().getSize());
+        
+        Dimension minsize = new Dimension(1200, 800);
+        if (minsize.width > maxsize.width) {
+            minsize.width = maxsize.width;
+        }
+        if (minsize.height > maxsize.height) {
+            minsize.height = (int) (maxsize.height);
+        }
+        parent.setMinimumSize(minsize);
+        parent.setMaximumSize(maxsize);
+        parent.setSize(minsize);
         parent.setLocationRelativeTo(null);
         
         // CENTER
