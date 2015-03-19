@@ -21,10 +21,10 @@ import zuege.Zug;
 /**
  * Verwaltet alle Daten, die beim Schlie&szlig;en des Programms gespeichert und
  * beim &Ouml;ffnen des Programms geladen werden m&uuml;ssen.<br>
- * Unter anderem wird eine Liste mit den bisher angelegten Spielern, eine Liste
- * mit den gespeicherten Spielen und das Ranking der Spieler gespeichert.
- * Stellt die Methoden zum Speichern und Laden des Gesamtdatensatzes zur
- * Verf&uuml;gung.
+ * Es werden dabei eine Liste mit den bisher angelegten Spielern, den 
+ * gespeicherten Spielen und die aktuellen Einstellungen gespeichert.
+ * Au&szlig;erdem stellt sie Methoden zum Speichern und Laden des 
+ * Gesamtdatensatzes zur Verf&uuml;gung.
  * @author Christian Ackermann
  */
 public class Gesamtdatensatz {
@@ -32,15 +32,16 @@ public class Gesamtdatensatz {
     /**
      * Eine Liste mit allen bisher angelegten Spielern.
      */
-    private List<Spieler> spielerListe;
+    private List<Spieler> spielerListe = new ArrayList<Spieler>();
     
     /**
-     * Eine Liste mit den Namen aller gespeicherten Spiele.
+     * Eine Liste mit den Namen aller gespeicherten Spiele inklusive 
+     * Zeitstempel des letzten Speicherns.
      */
-    private List<String> gespeicherteSpiele;
+    private List<String> gespeicherteSpiele = new ArrayList<String>();
     
     /**
-     * Die Standardeinstellungen des Spiels.
+     * Die aktuellen Einstellungen des Spiels.
      */
     private Einstellungen einstellungen;
     
@@ -50,13 +51,189 @@ public class Gesamtdatensatz {
      * Methode mit Informationen gef&uuml;llt.
      */
     public Gesamtdatensatz() {
-        this.spielerListe = new ArrayList<Spieler>();
-        this.gespeicherteSpiele  = new ArrayList<String>();
+   
+    }
+    
+    /**
+     * L&auml;dt alle ben&ouml;tigten Daten aus dem ausf&uuml;hrenden Ordner.
+     * <br> Sollten sich dort keine Daten befinden, werden diese neu erstellt.
+     * @see #ladeDaten
+     * @see #erzeugeNeueDaten
+     */
+    public void laden() {
+        // Spieler Ordner
+        File ordner = new File("settings" + System.getProperty(
+            "file.separator") + "Spieler");
+        // Wenn dieser gefuellt ist, muesste es einen intakten gespeicherten
+        // Datensatz geben
+        if (ordner.exists() && ordner.listFiles().length > 4) {         
+            ladeDaten();
+        } else {
+            erzeugeNeueDaten();
+        }
+    }
+    
+    /**
+     * L&auml;dt die vorhandenen Daten in den Gesamtdatensatz.<br>
+     * Dabei wird zuerst die Datei settings.txt aus dem settings-Ordner gelesen.
+     * Ein neuer Satz Einstellungen wird erzeugt und anschlie&szlig;end mit den
+     * gelesenen Daten gef&uuml;llt. Sollte beim Laden etwas nicht 
+     * funktionieren, wird automatisch ein neuer Satz mit Standardeinstellungen
+     * erstellt. <br>
+     * Danach werden die vorhandenen Spieler geladen. Der Dateiname gibt den
+     * Spielernamen vor, in der Datei selbst stehen nur die Attribute der 
+     * Statistik. <br>
+     * Am Schluss werden noch die Namen der vorhanden Spiele geladen und um
+     * ihren Zeitstempel erweitert, damit sie im Laden-Fenster entsprechend
+     * angezeigt werden k&ouml;nnen.
+     */
+    private void ladeDaten() {
+        // Die Einstellungen laden
+        BufferedReader br1 = null;
+        try {
+            // Die Datei in der die Einstellungen liegen
+            File setting = new File("settings" + System.getProperty(
+                "file.separator") + "settings.txt");
+            // Ein Reader um sie zeilenweise auslesen zu koennen
+            br1 = new BufferedReader(new FileReader(setting));
+            // Die ZugzeitBegrenzung
+            int zzb = Integer.parseInt(br1.readLine());
+            // Die sechs booleans
+            boolean[] bool = new boolean[7];
+            for (int i = 0; i <= 6; i++) {
+                bool[i] = Boolean.parseBoolean(br1.readLine());
+            }
+            // Einen neuen Einstellungssatz mit den gelesenen Daten erstellen
+            einstellungen = new Einstellungen();
+            einstellungen.setZugZeitBegrenzung(zzb);
+            einstellungen.setMoeglicheFelderAnzeigen(bool[0]);
+            einstellungen.setBedrohteFigurenAnzeigen(bool[1]);
+            einstellungen.setRochadeMoeglich(bool[2]);
+            einstellungen.setEnPassantMoeglich(bool[3]);
+            einstellungen.setSchachWarnung(bool[4]);
+            einstellungen.setInStatistikEinbeziehen(bool[5]);
+            einstellungen.setSpielfeldDrehen(bool[6]);
+        } catch (IOException ioEx) {
+            /* Wenn irgendwas beim Laden schief geht, werden die Standard-
+             * Einstellungen wiederhergestellt.
+             */
+            einstellungen = new Einstellungen();
+        } finally {
+            try {
+                br1.close();
+            } catch (IOException exc) {
+                exc.printStackTrace();
+            }
+        }
+        
+        // Die Spieler laden
+        File spielerOrdner = new File("settings" + System.getProperty(
+            "file.separator") + "Spieler");
+        File[] files = spielerOrdner.listFiles();
+        // Liste mit den Namen der Computerspieler
+        List<String> computerNamen = new ArrayList<String>(
+            Arrays.asList("Walter", "Karl Heinz", "Rosalinde", "Ursula"));
+        for (File spielerFile : files) {
+            // Der Name des Spielers (Name der Datei ohne .txt)
+            String name = spielerFile.getName()
+                .substring(0, spielerFile.getName().length() - 4);
+            BufferedReader br2 = null;
+            try {
+                // Die Datei in der die Spielerdaten liegen
+                File file = new File("settings" + System.getProperty(
+                    "file.separator") + "Spieler" + System.getProperty(
+                        "file.separator") + name + ".txt");
+                // Ein Reader um sie zeilenweise auslesen zu koennen
+                br2 = new BufferedReader(new FileReader(file));
+                // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
+                Spieler spieler;
+                // Wenn es ein Computerspieler ist
+                if (computerNamen.contains(name)) {
+                    spieler = new Computerspieler(name);
+                // Wenn es ein normaler Spieler ist
+                } else {
+                    spieler = new Spieler(name);
+                }
+                // Die Statistik des Spielers
+                int[] stat = new int[16];
+                for (int j = 0; j <= 15; j++) {
+                    stat[j] = Integer.parseInt(br2.readLine());
+                }
+                // Neue Statistik erstellen
+                Statistik statistik = new Statistik(stat);
+                // Die Statistik dem Spieler zuordnen
+                spieler.setStatistik(statistik);
+                spielerListe.add(spieler);
+            } catch (IOException ioEx) {
+                // Wenn das schief geht, wird der Spieler neu erzeugt
+                spielerListe.add(new Spieler(name));
+                // Und die fehlerhafte Datei geloescht
+                spielerFile.delete();
+            } finally {
+                try {
+                    br2.close();
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+        } 
+        
+        // Die Namen der vorhandenen Spiele laden
+        File spieleOrdner = new File("settings" + System.getProperty(
+            "file.separator") + "Spiele");
+        files = spieleOrdner.listFiles();
+        for (File file : files) {
+            BufferedReader br3 = null;
+            try {
+                br3 = new BufferedReader(new FileReader(file));
+                String datum = br3.readLine();
+                // Den Namen (Name der Datei ohne das .txt)
+                String name = file.getName().substring(
+                    0, file.getName().length() - 4);
+                name += " " + datum;
+                gespeicherteSpiele.add(name);
+            } catch (IOException ioEx) {
+                gespeicherteSpiele.remove(file.getName());
+            } finally {
+                try {
+                    br3.close();
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+        }
+        
+    }
+    
+    /**
+     * Legt den Standard-Einstellungssatz und neue Computerspieler an.
+     */
+    private void erzeugeNeueDaten() {
+        /* Grundeinstellungen:
+         * Zugzeit-Begrenzung: Nicht vorhanden (0)
+         * Moegliche Felder anzeigen: True
+         * Bedrohte Felder anzeigen: False
+         * Rochade moeglich: True
+         * En Passant moeglich: False
+         * Schachwarnung: True
+         * Statistik: True
+         */
+        einstellungen = new Einstellungen();
+        spielerListe.add(new Computerspieler("Karl Heinz"));
+        spielerListe.add(new Computerspieler("Rosalinde"));
+        spielerListe.add(new Computerspieler("Ursula"));
+        spielerListe.add(new Computerspieler("Walter"));
+        
     }
     
     /**
      * Speichert den Gesamtdatensatz in einen Einstellungsordner um beim 
-     * Neustart des Programms alle Daten wieder Laden zu k&ouml;nnen.
+     * Neustart des Programms alle Daten wieder Laden zu k&ouml;nnen. <br>
+     * Dabei wird zuerst getestet, ob eine intakte Ordnerstruktur vorhanden ist.
+     * Wenn dem nicht so ist, wird sie entsprechend erstellt. Danach wird die
+     * bisherige Einstellungsdatei zur Sicherheit gel&ouml;scht und eine neue
+     * erstellt. Ebenso werden alle vorhandenen Spieler-Dateien gel&ouml;scht
+     * und neu erstellt.
      */
     public void speichern() {
         // Ordnerstruktur abfragen oder erstellen
@@ -100,6 +277,7 @@ public class Gesamtdatensatz {
         } catch (IOException ioEx) {
             ioEx.printStackTrace();
         }
+        
         // Den Inhalt des Spieler-Ordners - sofern vorhanden - loeschen
         File ordner = new File("settings" + System.getProperty(
             "file.separator") + "Spieler");         
@@ -131,147 +309,6 @@ public class Gesamtdatensatz {
     }
     
     /**
-     * L&auml;dt - sofern vorhanden - alle ben&ouml;tigten Daten aus dem
-     * ausf&uuml;hrenden Ordner.
-     */
-    public void laden() {
-        // Spieler Ordner
-        File ordner = new File("settings" + System.getProperty(
-            "file.separator") + "Spieler");
-        // Wenn dieser gefuellt ist, muesste es einen intakten gespeicherten
-        // Datensatz geben
-        if (ordner.exists() && ordner.listFiles().length > 4) {         
-            ladeDaten();
-        } else {
-            erzeugeNeueDaten();
-        }
-    }
-    
-    /**
-     * L&auml;dt die vorhandenen Daten in den Gesamtdatensatz.
-     */
-    private void ladeDaten() {
-        // Die Einstellungen laden
-        try {
-            // Die Datei in der die Einstellungen liegen
-            File sett = new File("settings" + System.getProperty(
-                "file.separator") + "settings.txt");
-            // Ein Reader um sie zeilenweise auslesen zu koennen
-            BufferedReader br = new BufferedReader(new FileReader(sett));
-            // Die ZugzeitBegrenzung
-            int zzb = Integer.parseInt(br.readLine());
-            // Die sechs booleans
-            boolean[] bool = new boolean[7];
-            for (int i = 0; i <= 6; i++) {
-                bool[i] = Boolean.parseBoolean(br.readLine());
-            }
-            br.close();
-            // Einen neuen Einstellungssatz mit den gelesenen Daten erstellen
-            einstellungen = new Einstellungen();
-            einstellungen.setZugZeitBegrenzung(zzb);
-            einstellungen.setMoeglicheFelderAnzeigen(bool[0]);
-            einstellungen.setBedrohteFigurenAnzeigen(bool[1]);
-            einstellungen.setRochadeMoeglich(bool[2]);
-            einstellungen.setEnPassantMoeglich(bool[3]);
-            einstellungen.setSchachWarnung(bool[4]);
-            einstellungen.setInStatistikEinbeziehen(bool[5]);
-            einstellungen.setSpielfeldDrehen(bool[6]);
-        } catch (IOException ioEx) {
-            /* Wenn irgendwas beim Laden schief geht, werden die Standard-
-             * Einstellungen wiederhergestellt.
-             */
-            einstellungen = new Einstellungen();
-        }
-        
-        // Die Spieler laden
-        File spielerOrdner = new File("settings" + System.getProperty(
-            "file.separator") + "Spieler");
-        File[] files = spielerOrdner.listFiles();
-        // Liste mit den Namen der Computerspieler
-        List<String> computerNamen = new ArrayList<String>(
-            Arrays.asList("Walter", "Karl Heinz", "Rosalinde", "Ursula"));
-        for (File spielerFile : files) {
-            // Der Name des Spielers (Name der Datei ohne .txt)
-            String name = spielerFile.getName()
-                .substring(0, spielerFile.getName().length() - 4);
-            try {
-                // Die Datei in der die Spielerdaten liegen
-                File file = new File("settings" + System.getProperty(
-                    "file.separator") + "Spieler" + System.getProperty(
-                        "file.separator") + name + ".txt");
-                // Ein Reader um sie zeilenweise auslesen zu koennen
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                // Hier muessen alle Zeilen ausgelesen und zugeordnet werden
-                Spieler spieler;
-                // Wenn es ein Computerspieler ist
-                if (computerNamen.contains(name)) {
-                    spieler = new Computerspieler(name);
-                // Wenn es ein normaler Spieler ist
-                } else {
-                    spieler = new Spieler(name);
-                }
-                // Die Statistik des Spielers
-                int[] stat = new int[16];
-                for (int j = 0; j <= 15; j++) {
-                    stat[j] = Integer.parseInt(br.readLine());
-                }
-                br.close();
-                // Neue Statistik erstellen
-                Statistik statistik = new Statistik(stat);
-                // Die Statistik dem Spieler zuordnen
-                spieler.setStatistik(statistik);
-                spielerListe.add(spieler);
-            } catch (IOException ioEx) {
-                // Wenn das schief geht, wird der Spieler neu erzeugt
-                spielerListe.add(new Spieler(name));
-                // Und die fehlerhafte Datei geloescht
-                spielerFile.delete();
-            }
-        } 
-        
-        // Die Namen der vorhandenen Spiele laden
-        File spieleOrdner = new File("settings" + System.getProperty(
-            "file.separator") + "Spiele");
-        files = spieleOrdner.listFiles();
-        for (File file : files) {
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                String datum = br.readLine();
-                br.close();
-                // Den Namen (Name der Datei ohne das .txt)
-                String name = file.getName().substring(
-                    0, file.getName().length() - 4);
-                name += " " + datum;
-                gespeicherteSpiele.add(name);
-            } catch (IOException ioEx) {
-                gespeicherteSpiele.remove(file.getName());
-            }
-        }
-        
-    }
-    
-    /**
-     * Legt neue Computerspieler und den Standard-Einstellungssatz an.
-     */
-    private void erzeugeNeueDaten() {
-        /* Grundeinstellungen:
-         * Zugzeit-Begrenzung: Nicht vorhanden (0)
-         * Moegliche Felder anzeigen: True
-         * Bedrohte Felder anzeigen: False
-         * Rochade moeglich: True
-         * En Passant moeglich: False
-         * Schachwarnung: True
-         * Statistik: True
-         */
-        einstellungen = new Einstellungen();
-        spielerListe.add(new Computerspieler("Karl Heinz"));
-        spielerListe.add(new Computerspieler("Rosalinde"));
-        spielerListe.add(new Computerspieler("Ursula"));
-        spielerListe.add(new Computerspieler("Walter"));
-        
-    }
-    
-    /**
      * Gibt den Spieler mit dem angegebenen Namen zur&uuml;ck.
      * @param name Der Name des gesuchten Spielers
      * @return  Der Spieler mit dem angegebenen Namen
@@ -287,7 +324,9 @@ public class Gesamtdatensatz {
     }
     
     /**
-     * Erstellt eine neue felderListe mit 64 Feldern(Index 0-7, 0-7).
+     * Erstellt eine neue felderListe mit 64 Feldern(Index 0-7, 0-7). <br>
+     * Sie ist eine Kopie der Methode aus der Klasse <b>SpielfeldGUI</b>.
+     * @see gui.SpielfeldGUI#fuelleFelderListe
      * @return Die neu erstellte Felder-Liste
      */
     private List<Feld> erstelleFelderListe() {
@@ -303,10 +342,20 @@ public class Gesamtdatensatz {
     
     /**
      * L&auml;dt das Spiel mit dem angegebenen Namen anhand der gespeicherten
-     * Schachnotation.
+     * Schachnotation.<br>
+     * Dabei werden die Namen der Spieler mit ihren Farben, die Einstellungen,
+     * mit denen das Spiel begonnen wurde und am Ende die Schachnotation 
+     * geladen. Wenn die Schachnotation vollst&auml;ndig in Z&uuml;ge 
+     * &uuml;bersetzt wurde, werden diese Z&uuml;ge aus der Startaufstellung
+     * gezogen, sodass am Ende das Spielfeld genauso aussieht, wie es 
+     * gespeichert wurde. Dies ist n&ouml;tig, da in der Notation keine Verweise
+     * auf die Objekte der Figuren sondern nur auf die Felder vorhanden sind.
+     * <br>Mit den ganzen Informationen wird ein neues Spiel erzeugt, 
+     * welches anschlie&szlig;end zur&uuml;ckgegeben werden kann.
      * @param name Der Name des Spiels, wie er in dem Auswahlfenster angezeigt
      * wird
      * @return Das entsprechende Spiel
+     * @see #ladeZugListe(BufferedReader, List)
      */
     public Spiel getSpiel(String name) {
         if (name.length() < 21) {
@@ -411,7 +460,7 @@ public class Gesamtdatensatz {
     
     /**
      * L&auml;dt mithilfe des &uuml;bergebenen BufferedReaders die Zugliste aus
-     * der Textdatei. Dabei wird Schachnotation in einen Zug umgewandelt.
+     * der Textdatei. Dabei wird die Schachnotation in einen Zug umgewandelt.
      * @param br Ein BufferedReader der entsprechenden Textdatei
      * @param felderListe Die zugeh&ouml;hrige Liste der Felder 
      * @return Die vollst&auml;ndige Zugliste

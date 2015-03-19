@@ -430,7 +430,6 @@ public class Spielfeld {
             rochzug.getStartfeldT().setFigur(rochzug.getTurm());
             // Der Turm wurde noch nicht gezogen
             rochzug.getTurm().setGezogen(false);
-            
         // Wenn es ein En-Passant-Schlag war   
         } else if (zug instanceof EnPassantZug) {
             // Umwandlung des Zugs

@@ -62,7 +62,6 @@ public class Computerspieler extends Spieler {
             // Rekursionstiefe 4
             rekursKI(4);
         }
-        
         // Wenn ein Bauer umgewandelt wird
         Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
         if (letzterZug instanceof Umwandlungszug) {
@@ -236,9 +235,9 @@ public class Computerspieler extends Spieler {
             alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
         }
         // Maximale Bewertung; initialisiert mit niedrigstem Wert
-        int maxbewertung = 4000;
+        int maxbewertung = 4500;
         if (getFarbe()) {
-            maxbewertung = -4000;
+            maxbewertung = -4500;
         }
         // Der Zug der durchgefuehrt werden soll
         List<Figur> besteFiguren = new ArrayList<Figur>();
@@ -257,7 +256,7 @@ public class Computerspieler extends Spieler {
                 // In Abhaengigkeit der Farbe
                 if (getFarbe()) {
                     // Bekomme die Bewertung dafuer
-                    int bewertung = min(maxStufe - 1, -4000, 4000);
+                    int bewertung = min(maxStufe - 1, -4500, 4500);
                     // Wenn ein neuer MaxWert entsteht (weiss)
                     if (bewertung > maxbewertung) {
                         // Loesche bisherige Figuren und Felder
@@ -274,7 +273,7 @@ public class Computerspieler extends Spieler {
                     }
                 } else {
                     // Bekomme die Bewertung dafuer
-                    int bewertung = max(maxStufe - 1, -4000, 4000);
+                    int bewertung = max(maxStufe - 1, -4500, 4500);
                     // Wenn ein neuer MinWert entsteht (schwarz)
                     if (bewertung < maxbewertung) {
                         // Loesche bisherige Figuren und Felder
@@ -458,38 +457,40 @@ public class Computerspieler extends Spieler {
         bewertung = spielfeld.getMaterialwert(true) 
             - spielfeld.getMaterialwert(false);
         // Bauern kurz vor der Umwandlung
-        int index = 1;
-        while (index < spielfeld.getWeisseFiguren().size() 
-            && spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
-            Figur bauer = spielfeld.getWeisseFiguren().get(index);
-            int y = bauer.getPosition().getYK();
-            if (y <= 3) {
-                bewertung += 20;
-                if (y <= 2) {
-                    bewertung += 40;
-                    if (y == 1) {
-                        bewertung += 60;
+        //if (spielfeld.getSpieldaten().getZugListe().size() > 16) {
+            int index = 1;
+            while (index < spielfeld.getWeisseFiguren().size() 
+                && spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
+                Figur bauer = spielfeld.getWeisseFiguren().get(index);
+                int y = bauer.getPosition().getYK();
+                if (y <= 3) {
+                    bewertung += 20;
+                    if (y <= 2) {
+                        bewertung += 40;
+                        if (y == 1) {
+                            bewertung += 60;
+                        }
                     }
                 }
+                index++;
             }
-            index++;
-        }
-        index = 1;
-        while (index < spielfeld.getSchwarzeFiguren().size() 
-            && spielfeld.getSchwarzeFiguren().get(index).getWert() == 100) {
-            Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
-            int y = bauer.getPosition().getYK();
-            if (y <= 3) {
-                bewertung -= 20;
-                if (y <= 2) {
-                    bewertung -= 40;
-                    if (y == 1) {
-                        bewertung -= 60;
+            index = 1;
+            while (index < spielfeld.getSchwarzeFiguren().size() 
+                && spielfeld.getSchwarzeFiguren().get(index).getWert() == 100) {
+                Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
+                int y = bauer.getPosition().getYK();
+                if (y <= 3) {
+                    bewertung -= 20;
+                    if (y <= 2) {
+                        bewertung -= 40;
+                        if (y == 1) {
+                            bewertung -= 60;
+                        }
                     }
                 }
+                index++;
             }
-            index++;
-        }
+        //}
         // Das Feld des gegnerischen Koenigs
         Feld koenig;
         // Der Einfluss auf die Spielbewertung
@@ -515,6 +516,7 @@ public class Computerspieler extends Spieler {
         if (figur.bietetSchach(koenig)) {
             bewertung += bonus;
         }
+        
         return bewertung;
     }
     

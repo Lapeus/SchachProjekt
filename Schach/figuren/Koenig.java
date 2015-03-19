@@ -226,10 +226,10 @@ public class Koenig extends Figur {
      * Wird verwendet, um bei der Rochade pr&uuml;fen zu k&ouml;nnen, ob eines
      * der Felder, &uuml;ber die der K&ouml;nig ziehen muss, bedroht ist. <br>
      * <i>Hinweis: Die Methode ist fast identisch mit der Methode 
-     * {@link Spielfeld#getBedrohteFelder()} in der Klasse Spielfeld, jedoch 
-     * wird in dieser Variante nicht getestet, ob der K&ouml;nig eine Rochade 
-     * ziehen d&uuml;rfte, da es sonst zu einer endlosen Rekursion k&auml;me.
-     * </i>
+     * {@link daten.Spielfeld#getBedrohteFelder()} in der Klasse Spielfeld, 
+     * jedoch wird in dieser Variante nicht getestet, ob der K&ouml;nig eine 
+     * Rochade ziehen d&uuml;rfte, da es sonst zu einer endlosen Rekursion 
+     * k&auml;me.</i>
      * @return Liste mit allen bedrohten Feldern
      */
     private List<Feld> alleBedrohtenFelder() {

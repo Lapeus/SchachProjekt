@@ -68,7 +68,9 @@ public class Einstellungen {
     }
 
     /**
-     * Gibt die Einstellungen als mehrzeilige Zeichenkette zur&uuml;ck.
+     * Gibt die Einstellungen als mehrzeilige Zeichenkette zur&uuml;ck. <br>
+     * Dabei wird jedes Attribut in der angegebenen Reihenfolge in eine eigene
+     * Zeile geschrieben.
      * @return Eine mehrzeilige Zeichenkette
      */
     public String toString() {
