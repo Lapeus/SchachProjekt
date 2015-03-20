@@ -941,9 +941,9 @@ public class Spielfeld {
 
     /**
      * Setzt, ob der aktuelle Spieler im Schach steht. <br>
-     * Wird ausschlie&szlig;lich von der GUI aufgerufen um das Attribut 
-     * wieder auf <b>false</b> zu setzen, wenn die Schachwarnung verarbeitet
-     * wurde.
+     * Wird ausschlie&szlig;lich von der GUI und vom Computerspieler aufgerufen
+     * um das Attribut wieder auf <b>false</b> zu setzen, wenn die 
+     * Schachwarnung verarbeitet wurde.
      * @param schach Wahrheitswert
      * @see gui.SpielfeldGUI#schachWarnung()
      */

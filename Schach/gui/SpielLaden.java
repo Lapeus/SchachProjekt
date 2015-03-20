@@ -165,7 +165,6 @@ public class SpielLaden extends JPanel implements ActionListener {
                         spiel));
                 // Wenn es keins gibt
                 } else {
-                    System.out.println("Hier");
                     cCenter.removeAll();
                     validate();
                     repaint();
@@ -179,13 +178,11 @@ public class SpielLaden extends JPanel implements ActionListener {
                     DefaultListModel<String> listModel 
                         = new DefaultListModel<String>();
                     List<String> spieleListe = parent.getSpieleListe();
-                    System.out.println(spieleListe.size());
                     if (spieleListe.size() == 0) {
                         parent.seitenAuswahl("Eroeffnungsseite");
                     } else {
                         jSpieleListe = new JList<String>();
                         for (int i = 0; i < spieleListe.size(); i++) {
-                            System.out.println(spieleListe.get(i));
                             listModel.addElement((spieleListe.get(i)));
                         }
                         jSpieleListe = new JList<String>(listModel);

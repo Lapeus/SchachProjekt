@@ -1007,7 +1007,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 , "Figurenwechsel", JOptionPane.
                 PLAIN_MESSAGE, null, moeglicheFiguren, "Dame");
             int wert;
-            System.out.println(s);
             // Je nach ausgelsesenem Wert (wenn "x" oder "cancel" - Dame)
             if (s == null || s.equals("Dame")) {
                 wert = 900;
@@ -1203,8 +1202,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // Wird der naechste Zug aus der Zugliste ausgewaehlt
                 Zug zug = spielvideo.get(zaehler);
                 // Und ausgefuehrt
-                spielfeld.ziehe(zug.getFigur(), zug.getZielfeld(), 
-                    zug.getZugzeit());
+                spielfeld.ziehe(zug.getStartfeld().getFigur(), 
+                    zug.getZielfeld(), zug.getZugzeit());
                 zugListe.setSelectedIndex(zaehler);
                 // Wenn es ein Umwandlungszug war
                 if (zug instanceof Umwandlungszug) {

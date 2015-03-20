@@ -5,6 +5,6 @@
  * m&ouml;glichen zu ziehenden Felder, da jede Figur andere Zugregeln befolgen
  * muss.
  * @author Christian Ackermann
- * @see Figur
+ * @see figuren.Figur
  */
 package figuren;

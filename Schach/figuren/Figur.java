@@ -9,7 +9,7 @@ import daten.Spielfeld;
 
 /**
  * Die abstrakte Klasse <i>Figur</i> stellt den Bauplan 
- * für s&auml;mtliche Figuren bereit. <br>
+ * f&uuml;r s&auml;mtliche Figuren bereit. <br>
  * Neben der abstrakten Methode <i>getMoeglicheFelder()</i>, die f&uuml;r 
  * jede Figur anders aussieht, verf&uuml;gt diese Klasse &uuml;ber mehrere
  * Hilfsmethoden sowie einem Test der m&ouml;glichen Felder, ob der eigene
