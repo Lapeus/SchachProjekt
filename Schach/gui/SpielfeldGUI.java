@@ -957,13 +957,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     parent.autoSave(spiel);
                 } 
             }
-        // Wenn man die selbe Figur anklickt    
-        } else if (momentanesFeld.getFigur() == null) {
+        // Wenn man auf die selbe Figur / ein leeres Feld / Fremde Figur klickt
+        } else {
+            // Figur abwaehlen
             ausgewaehlteFigur = null;
-        } else if (ausgewaehlteFigur != null
-            && momentanesFeld.getFigur().equals(ausgewaehlteFigur)) {
-            ausgewaehlteFigur = null; 
-        } 
+        }
         
         // Faerbt die bedrohten Felder Grau
         if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen()) {
