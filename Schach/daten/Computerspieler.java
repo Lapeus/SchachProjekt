@@ -269,7 +269,6 @@ public class Computerspieler extends Spieler {
                         // Gibt es Extrapunkte (Figuren raus bringen)
                         bewertung += 20;
                     }
-                    System.out.println(letzterZug.toSchachNotation() + " " + bewertung);
                     // Wenn ein neuer MaxWert entsteht (weiss)
                     if (bewertung > maxbewertung) {
                         // Loesche bisherige Figuren und Felder
@@ -296,7 +295,6 @@ public class Computerspieler extends Spieler {
                         // Gibt es Extrapunkte (Figuren raus bringen)
                         bewertung -= 20;
                     }
-                    System.out.println(letzterZug.toSchachNotation() + " " + bewertung);
                     
                     // Wenn ein neuer MinWert entsteht (schwarz)
                     if (bewertung < maxbewertung) {
