@@ -850,16 +850,16 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 add(cEnde, BorderLayout.EAST);
                 revalidate(); 
             } else {
-                System.out.println("Vor: " + System.currentTimeMillis() / 1000);
                 // Zugzeit neu starten
                 start();
                 // Zug ausfuehren
                 ((Computerspieler) spieler2).ziehen();
-                System.out.println("Nach: " + System.currentTimeMillis() / 1000);
-                // zugzeit stoppen 
+                // Zugzeit stoppen 
                 sekundenStopp = (System.currentTimeMillis()
                     - sekundenStart) / 1000;
                 System.out.println("Zugzeit: " + sekundenStopp);
+                System.out.println((int) sekundenStopp);
+                System.out.println((int) (long) sekundenStopp);
                 // und nachtraeglcih uebergeben
                 spielfeld.getSpieldaten().getLetzterZug().setZugzeit(
                     (int) sekundenStopp);
