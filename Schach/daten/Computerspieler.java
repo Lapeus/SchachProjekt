@@ -457,7 +457,7 @@ public class Computerspieler extends Spieler {
         bewertung = spielfeld.getMaterialwert(true) 
             - spielfeld.getMaterialwert(false);
         // Bauern kurz vor der Umwandlung
-        //if (spielfeld.getSpieldaten().getZugListe().size() > 16) {
+        if (spielfeld.getSpieldaten().getZugListe().size() > 16) {
             int index = 1;
             while (index < spielfeld.getWeisseFiguren().size() 
                 && spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
@@ -490,7 +490,7 @@ public class Computerspieler extends Spieler {
                 }
                 index++;
             }
-        //}
+        }
         // Das Feld des gegnerischen Koenigs
         Feld koenig;
         // Der Einfluss auf die Spielbewertung

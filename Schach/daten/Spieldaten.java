@@ -9,7 +9,7 @@ import zuege.Umwandlungszug;
 import zuege.Zug;
 
 /**
- * Verwaltet alle spielspezifischen Daten wie die durchgef&uuml;hrten 
+ * Verwaltet alle spielspezifischen Daten, wie die durchgef&uuml;hrten 
  * Z&uuml;ge und die Zugzeit jeden Spielers.
  * @author Christian Ackermann
  */
@@ -35,7 +35,7 @@ public class Spieldaten {
      * Pr&uuml;ft, ob laut der 50-Z&uuml;ge-Regel die Partie Remis ausgeht.<br>
      * Voraussetzungen: In den letzten 50 Z&uuml;gen durfte kein Bauer gezogen
      * und keine Figur geschlagen worden sein.
-     * @return <b>true</b> wenn das Spiel nach der Regel beendet werden kann
+     * @return <b>true</b> wenn das Spiel laut der Regel beendet werden kann
      */
     public boolean fuenfzigZuegeRegel() {
         // Grundsaetzliche Annahme, die 50 Zuege Regel wuerde zutreffen
@@ -115,8 +115,10 @@ public class Spieldaten {
     }
     
     /**
-     * Gibt die gesamte Zugliste als Zeichenkette zur&uuml;ck.
+     * Gibt die gesamte Zugliste als Zeichenkette zur&uuml;ck. Dabei steht in
+     * jeder Zeile ein Zug.
      * @return Eine Zeichenkette mit allen Z&uuml;gen
+     * @see zuege.Zug#toSchachNotation()
      */
     public String toString() {
         String string = "";

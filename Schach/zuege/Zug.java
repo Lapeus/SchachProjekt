@@ -94,7 +94,8 @@ public class Zug {
     
     /**
      * Gibt den Zug in einer stark vereinfachten Schachnotation samt Zugzeit 
-     * wieder.
+     * wieder. Eine genaue Beschreibung der Notation ist in der
+     * Benutzerdokumentation zu finden.
      * @return Darstellung des Zugs als Zeichenkette
      */
     public String toSchachNotation() {
@@ -134,7 +135,7 @@ public class Zug {
     /**
      * Gibt die gezogene Figur zur&uuml;ck.
      * Wenn beim Laden keine Figur &uuml;bergeben werden konnte, wird die Figur
-     * auf dem Startfeld genommen.
+     * auf dem Startfeld verwendet.
      * @return Die Figur
      */
     public Figur getFigur() {

@@ -64,6 +64,12 @@ public class Spiel {
      * ermittelten Daten.
      * @return Eine Liste vom Typ Object mit den wichtigen Informationen zum 
      * Spielausgang
+     * <ul>
+     * <li>Der Gewinner des Spiels vom Typ Spieler</li>
+     * <li>Ob es Matt oder Patt ausgegangen ist (<b>true</b> f&uuml;r Matt)</li>
+     * <li>Die Anzahl der Z&uuml;ge nach denen dieses Spiel beendet wurde</li>
+     * </ul>
+     * 
      */
     public List<Object> auswertung() {
         List<Object> ergebnis = new ArrayList<Object>();
@@ -135,7 +141,8 @@ public class Spiel {
     }
     
     /**
-     * Wertet eine Einigung auf Unentschieden zwischen den Spielern aus.
+     * Wertet eine Einigung auf Unentschieden zwischen den Spielern aus.<br>
+     * Dabei wird Ausschlie&szlig;lich die Statistik aktualisiert.
      */
     public void unentschieden() {
         if (spielfeld.getEinstellungen().isInStatistikEinbeziehen()) {
@@ -339,8 +346,8 @@ public class Spiel {
     }
     
     /**
-     * Bereitet das Spielvideo vor. Macht alle bisherigen Z&uuml;ge 
-     * r&uuml;ckg&auml;nig und gibt der aufrufenden Methode die ZugListe
+     * Bereitet die Spielwiederholung vor. Macht alle bisherigen Z&uuml;ge 
+     * r&uuml;ckg&auml;ngig und gibt der aufrufenden Methode die ZugListe
      * zur&uuml;ck, damit diese jeden Zug in einem gewissen Zeitintervall
      * ziehen kann.
      * @return Die Liste aller Z&uuml;ge
@@ -355,9 +362,9 @@ public class Spiel {
     }
     
     /**
-     * Gibt eine Zeichenkette mit allen wichtigen Daten des Spiels zur&uuml;ck.
-     * Wird zum Speichern ben&ouml;tigt.
-     * @return Eine Zeichenkette mit allen wichtigen Daten
+     * Gibt eine mehrzeilige Zeichenkette mit allen wichtigen Daten des Spiels 
+     * zur&uuml;ck. Diese wird zum Speichern ben&ouml;tigt.
+     * @return Eine mehrzeilige Zeichenkette mit allen wichtigen Daten
      */
     public String toString() {
         String string;
@@ -373,6 +380,7 @@ public class Spiel {
         string += spielfeld.toString();
         return string;
     }
+    
     /**
      * Gibt den Namen des Spiels zur&uuml;ck.
      * @return Der Name als String

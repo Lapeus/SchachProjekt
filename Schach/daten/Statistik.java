@@ -102,7 +102,8 @@ public class Statistik {
     }
     
     /**
-     * Erstellt eine neue Statistik f&uuml;r den Spieler.<br>
+     * Erstellt eine neue Statistik f&uuml;r den Spieler anhand der 
+     * &uuml;bergebenen Attribute.<br>
      * Aufruf in der Regel beim Laden der Statistik eines Spielers im 
      * Gesamtdatensatz.
      * @param stat Ein Integer-Array mit allen Statistik-Werten
@@ -127,7 +128,16 @@ public class Statistik {
     }
     
     /**
-     * Berechnet den Score des Spielers anhand einiger der gespeicherten Daten.
+     * Berechnet den Score des Spielers anhand der gespeicherten Daten. <br>
+     * <ul>
+     * <li>300 Punkte f&uuml;r einen Sieg</li>
+     * <li>100 Punkte f&uuml;r ein Remis</li>
+     * <li>Berechnung auf Punkte pro Partie</li>
+     * <li>Durchschnittliche Z&uuml;ge &uuml;ber 30</li>
+     * <li>Materialwert beim Sieg / 100</li>
+     * <li>Verdreifachung des Werts um den Referenzwert 1000 erreichen zu 
+     * k&ouml;nnen</li>
+     * </ul>
      * @return Ganzzahliger Score zwischen 0 und 1000
      */
     public int getScore() {
@@ -170,7 +180,8 @@ public class Statistik {
     
     /**
      * Liefert eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
-     * Wird f&uuml;r das Speichern des Gesamtdatensatzes verwendet.
+     * Wird f&uuml;r das Speichern des Gesamtdatensatzes verwendet. Dabei 
+     * wird jedes Attribut in eine eigene Zeile geschrieben.
      * @return Eine mehrzeilige Zeichenkette
      */
     public String toString() {
@@ -195,6 +206,7 @@ public class Statistik {
         
         return string;
     }
+    
     /**
      * Gibt die Anzahl der gesamten Spiele zur&uuml;ck.
      * @return Die Anzahl der gespielten Spiele

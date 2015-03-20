@@ -150,12 +150,12 @@ public class Bauer extends Figur {
              */
             if (!(letzterZug instanceof RochadenZug 
                 || letzterZug instanceof EnPassantZug)
-                && letzterZug.getFigur().getFarbe() != getFarbe()) {
+                && letzterZug.getFigur().getFarbe() != super.getFarbe()) {
                 // Wenn im letzten Zug ein Bauer ein Doppelzug gemacht hat
                 if (letzterZug.getFigur().getWert() == 100 
                     && letzterZug.isErsterZug()
-                    && letzterZug.getZielfeld().getYK() == 4 
-                    || letzterZug.getZielfeld().getYK() == 3) {
+                    && (letzterZug.getZielfeld().getYK() == 4 
+                    || letzterZug.getZielfeld().getYK() == 3)) {
                     Figur gegner = letzterZug.getFigur();
                     // Der eigene Bauer steht in der gleichen Reihe
                     if (gegner.getPosition().getYK() 
@@ -164,7 +164,7 @@ public class Bauer extends Figur {
                         if (Math.abs(gegner.getPosition().getXK() 
                             - getPosition().getXK()) == 1) {
                             // Dann ist das Schlagen moeglich
-                            if (getFarbe()) {
+                            if (super.getFarbe()) {
                                 // Das Feld ueber dem Gegner
                                 moeglicheFelder.add(getFeld(
                                     gegner.getFeldIndex() + 8));
@@ -178,6 +178,7 @@ public class Bauer extends Figur {
                 }
             }
         }
+        
         return moeglicheFelder;
     }
     

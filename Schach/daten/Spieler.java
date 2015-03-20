@@ -1,7 +1,7 @@
 package daten;
 
 /**
- * Verwaltet alle wichtigen Informationen eines Spielers.
+ * Verwaltet alle wichtigen Informationen eines Spielers.<br>
  * Neben dem Namen und der aktuellen Spielfarbe wird auch eine Statistik
  * f&uuml;r jeden Spieler gespeichert.
  * @author Christian Ackermann
@@ -36,7 +36,10 @@ public class Spieler {
     
     /**
      * Liefert eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
-     * Wird f&uuml;r das Speichern des Gesamtdatensatzes verwendet.
+     * Wird f&uuml;r das Speichern des Gesamtdatensatzes verwendet. Dabei ist
+     * nur die Statitik des Spielers bedeutend, da der Name aus dem Dateinamen
+     * abzuleiten ist und die aktuelle Farbe unerheblich ist, f&uuml;r den Fall,
+     * dass die Spiele nicht in chronologischer Reihenfolge geladen werden.
      * @return Eine mehrzeilige Zeichenkette
      */
     public String toString() {
