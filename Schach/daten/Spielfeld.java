@@ -17,9 +17,11 @@ import zuege.EnPassantZug;
 import zuege.Umwandlungszug;
 
 /**
- * Verwaltet die Figuren und ihre Position auf dem Brett.
- * Sie stellt die Methoden zum Ziehen bereit und gibt zus&auml;tzlich an, ob 
- * das Brett aktuell aus wei&szlig;er oder aus schwarzer Sicht gezeigt wird.
+ * Verwaltet die Figuren, ihre Position auf dem Brett, eine Auflistung der 
+ * durchgef&uuml;hrten Z&uuml;ge und die Einstellungen, mit denen das Spiel
+ * gestartet wurde. <br>
+ * Sie stellt die Methoden zum Ziehen bereit und gibt zus&auml;tzlich an, 
+ * welcher Spieler aktuell am Zug ist.
  * @author Christian Ackermann
  */
 public class Spielfeld {
@@ -102,7 +104,7 @@ public class Spielfeld {
     }
     
     /**
-     * Zweiter Konstruktor, um ein Spielfeld laden zu k&ouml;nnen ohne dass 
+     * Zweiter Konstruktor, um ein Spielfeld laden zu k&ouml;nnen, ohne dass 
      * dabei alle Figuren neu erzeugt werden m&uuml;ssen.
      * @param felder Die Felder-Liste
      * @param aktuellerSpieler Setzt den aktuellen Spieler: <b>True</b> f&uuml;r
@@ -116,11 +118,11 @@ public class Spielfeld {
     
     /**
      * Erzeugt neue Figuren und stellt sie in die Startaufstellung.<br>
-     * Ist <b>public</b> weil sie f&uuml;r das Spielvideo aus Gesamtdatensatz 
-     * aufgerufen werden k&ouml;nnen muss.
+     * Ist <b>public</b>, weil sie f&uuml;r die Spielwiederholung aus 
+     * {@link Gesamtdatensatz} aufgerufen werden k&ouml;nnen muss.
      */
     public void init() {
-     // Acht weisse Bauern
+        // Acht weisse Bauern
         for (int i = 1; i <= 8; i++) {
             // Erstellen
             Bauer bauer = new Bauer(felder.get(7 + i), true);
@@ -214,7 +216,16 @@ public class Spielfeld {
     
     /**
      * F&uuml;hrt einen Zug durch und passt alle n&ouml;tigen Listen und Felder
-     * an.
+     * an.<br>
+     * <ul>
+     * <li> Test auf Schlagzug </li>
+     * <li> Test auf ersten Zug einer Figur </li>
+     * <li> Unterscheidung zwischen normalem Zug und dem Umwandeln eines Bauern
+     * </li> <li> Ziehen der Figur </li>
+     * <li> Bei entsprechend aktivierter Option: Test auf Rochade und EnPassant
+     * und gegebenenfalls Anpassung des Zuges </li>
+     * <li> Aktuellen Spieler &auml;ndern </li>
+     * </ul>
      * @param figur Die Figur, die gezogen werden soll
      * @param zielfeld Das Feld, auf das die Figur gezogen werden soll
      * @param zugzeit Die Dauer des Zuges in ganzen Sekunden
@@ -251,8 +262,8 @@ public class Spielfeld {
         spieldaten.getZugListe().add(zug);
         // Figur wird von der aktuellen Position entfernt
         figur.getPosition().setFigur(null);
-        // Wenn auf dem Zielfeld eine Figur steht
-        if (zielfeld.getFigur() != null) {
+        // Wenn es ein Schlagzug ist
+        if (schlagzug) {
             // Wenn wir selbst eine weisse Figur sind
             if (figur.getFarbe()) {
                 // schlagen wir eine schwarze Figur
@@ -268,13 +279,19 @@ public class Spielfeld {
         
         /* Ueberpruefung auf Rochade aus praktischen und platztechnische
          * Gruenden ausgelagert.
+         * Aus rechenzeittechnisches Gruenden nur wenn die Option aktiviert ist
          */
-        rochadeZiehen(zug);
+        if (einstellungen.isRochadeMoeglich()) {
+            rochadeZiehen(zug);
+        }
         
         /* Ueberpruefung auf enPassantZug aus praktischen und platztechnischen
          * Gruenden ausgelagert.
+         * Aus rechenzeittechnisches Gruenden nur wenn die Option aktiviert ist
          */
-        enPassantZiehen(zug);
+        if (einstellungen.isEnPassantMoeglich()) {
+            enPassantZiehen(zug);
+        }
         
         // Figur wird auf das Zielfeld gesetzt
         zielfeld.setFigur(figur);
@@ -397,7 +414,10 @@ public class Spielfeld {
     }
     
     /**
-     * Macht den jeweils letzten Zug r&uuml;ckg&auml;ngig.
+     * Macht den jeweils letzten Zug r&uuml;ckg&auml;ngig. <br>
+     * Dabei wird grunds&auml;tzlich nur die Methode 
+     * {@link #ziehe(Figur, Feld, int)} von hinten aus ausgef&uuml;hrt. 
+     * Sonderz&uuml;ge werden gesondert behandelt.
      */
     public void zugRueckgaengig() {
         // Rufe den letzten durchgefuehrten Zug auf
@@ -564,7 +584,7 @@ public class Spielfeld {
     }
     
     /**
-     * Pr&uuml;ft ob der aktuelle Spieler noch ziehen kann. <br>
+     * Pr&uuml;ft, ob der aktuelle Spieler noch ziehen kann. <br>
      * Die Pr&uuml;fung auf Matt oder Patt erfolgt an anderer Stelle.
      * @return <b>true</b> wenn er nicht mehr ziehen kann, <b>false</b> wenn er
      * noch ziehen kann.
@@ -614,7 +634,8 @@ public class Spielfeld {
     
     /**
      * Gibt das Startfeld und das Zielfeld der zuletzt gezogenen Figur in einer
-     * Liste zur&uuml;ck.
+     * Liste zur&uuml;ck um sie auf dem Spielfeld kenntlich machen zu 
+     * k&ouml;nnen.
      * @return Eine Liste mit zwei Feldern: erst das Startfeld, dann das 
      * Zielfeld
      */
@@ -638,10 +659,11 @@ public class Spielfeld {
     }
     
     /**
-     * Gibt eine Liste von den aktuell bedrohten Feldern auf denen eine Figur
+     * Gibt eine Liste mit den aktuell bedrohten Feldern auf denen eine Figur
      * steht zur&uuml;ck. <br>
      * Wenn die entsprechende Option aktiviert ist, werden diese dem Spieler als
-     * Hilfestellung angezeigt.
+     * Hilfestellung angezeigt. Getestet wird, ob eine gegnerische Figur im
+     * n&auml;chsten Zug auf das entsprechende Feld ziehen kann.
      * @return Liste der besetzten, bedrohten Felder
      */
     public List<Feld> getBedrohteFelder() {
@@ -678,16 +700,15 @@ public class Spielfeld {
     
     /**
      * Gibt eine Liste mit den Feldern zur&uuml;ck, auf denen gegnerische 
-     * Figuren stehen und welche in diesem Zug vom aktiven Spieler geschlagen
+     * Figuren stehen und in diesem Zug vom aktiven Spieler geschlagen
      * werden k&ouml;nnen.<br>
-     * Wenn die entsprechende Option aktiviert ist, werden diese Felder dem
-     * Spieler als grafische Hilfestellung angezeigt.
+     * Verwendet wird diese Methode ausschlie&szlig;lich vom Computergegner
+     * Karl Heinz, um zu ermitteln, welche Figuren er schlagen kann. Es besteht
+     * jedoch die M&ouml;glichkeit, das Programm so zu erweitern, dass auch dem 
+     * menschlichen Spieler diese Felder als Hilfestellung angezeigt werden.
      * @return Eine Liste mit den Feldern auf denen zu schlagende Figuren stehen
      */
     public List<Feld> getSchlagendeFelder() {
-        /* Zusatz: Vorbereitung fuer die grafische Hilfestellung "Es werden
-         * alle in diesem Zug zu schlagende Figuren angezeigt."
-         */
         // Liste mit zu schlagenden Figuren leeren
         schlagendeFelder.clear();
         // Liste mit den eigenen Figuren
@@ -716,9 +737,12 @@ public class Spielfeld {
     }
     
     /**
-     * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
-     * Wird beim Speichern ben&ouml;tigt.
+     * Gibt eine mehrzeilige Zeichenkette mit allen wichtigen Daten zur&uuml;ck.
+     * <br> Wird beim Speichern ben&ouml;tigt. Dabei wird jedes 
+     * Einstellungsattribut und jeder Zug in einer Zeile gespeichert.
      * @return Eine mehrzeilige Zeichenkette
+     * @see Einstellungen#toString()
+     * @see Spieldaten#toString()
      */
     public String toString() {
         String string = "";
@@ -900,7 +924,8 @@ public class Spielfeld {
 
     /**
      * Gibt an, ob der aktuelle Spieler im Schach steht.<br>
-     * Wird nur f&uuml;r die Konversation zwischen Logik und GUI verwendet.
+     * Wird nur f&uuml;r die Konversation zwischen Algorithmik und GUI 
+     * verwendet.
      * @return Wahrheitswert
      */
     public boolean isSchach() {
@@ -915,8 +940,12 @@ public class Spielfeld {
     }
 
     /**
-     * Setzt, ob der aktuelle Spieler im Schach steht.
+     * Setzt, ob der aktuelle Spieler im Schach steht. <br>
+     * Wird ausschlie&szlig;lich von der GUI und vom Computerspieler aufgerufen
+     * um das Attribut wieder auf <b>false</b> zu setzen, wenn die 
+     * Schachwarnung verarbeitet wurde.
      * @param schach Wahrheitswert
+     * @see gui.SpielfeldGUI#schachWarnung()
      */
     public void setSchach(boolean schach) {
         this.schach = schach;

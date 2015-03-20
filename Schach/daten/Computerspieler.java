@@ -14,10 +14,11 @@ import zuege.Umwandlungszug;
  * Stellt einen Computergegner dar. <br>
  * Erbt von Spieler und verh&auml;lt sich auch genauso wie dieser. In der GUI
  * wird nach einem Zug des menschlichen Gegners getestet, ob es sich beim 
- * anderen Spieler um einen Computerspieler handelt. Wenn ja, wird eine ziehen-
+ * anderen Spieler um einen Computerspieler handelt. Wenn ja, wird die ziehen-
  * Methode des Computerspielers aufgerufen, welche einen Zug generiert und 
  * anschlie&szlig;end auch selbstst&auml;ndig zieht.
  * @see Spieler
+ * @see #ziehen()
  * @author Christian Ackermann
  */
 public class Computerspieler extends Spieler {
@@ -90,7 +91,7 @@ public class Computerspieler extends Spieler {
      * ist.<br>
      * Entscheidet sich der Computer daf&uuml;r, eine Figur in Sicherheit zu
      * bringen, so zieht er sie einfach wahllos auf ein freies Feld. Ob dieses
-     * bedroht ist, oder dadurch andere Vorteile f&uuml;r den Gegner entstehen,
+     * bedroht ist oder dadurch andere Vorteile f&uuml;r den Gegner entstehen,
      * wird nicht getestet.
      */
     private void nachRegeln() {
@@ -129,7 +130,7 @@ public class Computerspieler extends Spieler {
         if (maxWertSchlag == 0 && maxWertVerlust == 0) {
             // Soll er per Zufall ziehen
             zufall();
-        // Wenn man niemanden schlagen kann, oder der Verlust hoeher waere
+        // Wenn man niemanden schlagen kann oder der Verlust hoeher waere
         } else if (maxWertSchlag == 0 || maxWertSchlag < maxWertVerlust) {
             Figur verlust = maxFeldVerlust.getFigur();
             // Alle Felder auf die die bedrohte Figur ziehen koennte
@@ -139,7 +140,7 @@ public class Computerspieler extends Spieler {
             int zufall = (int) (Math.random() * alternativen.size());
             spielfeld.ziehe(verlust, alternativen.get(zufall), 0);
             
-        // Wenn man niemanden verlieren wuerde, oder der Verlust geringer waere
+        // Wenn man keine Figur verlieren wuerde oder der Verlust geringer waere
         } else if (maxWertVerlust == 0 || maxWertSchlag >= maxWertVerlust) {
             // Suche eine Figur die das Feld schlagen kann
             List<Figur> eigeneFiguren;
@@ -148,13 +149,13 @@ public class Computerspieler extends Spieler {
             } else {
                 eigeneFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
             }
-            // Groesser als 900
+            // Groesser als 900 (Dame)
             int minWert = 1000;
             Figur ziehendeFigur = null;
             // Fuer jede eigene Figur
             for (Figur figur : eigeneFiguren) {
                 // Schaue ob sie das Feld erreichen kann und wenn ja, ob sie 
-                // einen geringeren Wert hat als AlternativFiguren
+                // einen geringeren Wert hat als alternative Figuren
                 if (figur.getKorrekteFelder().contains(maxFeldSchlag)
                     && figur.getWert() < minWert) {
                     ziehendeFigur = figur;
@@ -179,11 +180,13 @@ public class Computerspieler extends Spieler {
         } else {
             eigeneFiguren = spielfeld.getSchwarzeFiguren();
         }
+        // Alle Felder
         List<Feld> alleFelder = new ArrayList<Feld>();
         int zufall, zufall2;
         for (Figur figur : eigeneFiguren) {
             alleFelder.addAll(figur.getKorrekteFelder());
         }
+        // Wenn der Computergegner ziehen kann
         if (!alleFelder.isEmpty()) {
             do {
                 // Erzeugt eine Zufallszahl zwischen 0 und 
@@ -206,8 +209,8 @@ public class Computerspieler extends Spieler {
      * Ermittelt den besten Zug und zieht ihn.
      * Praktisch nur sinnvoll f&uuml;r die Stufen 2 - 4. <br>
      * Teile der verwendeten Methoden min und max basieren auf dem folgenden
-     * Prinzip: {@link <a href="de.wikipedia.org/wiki/Alpha-Beta-Suche">
-     * de.wikipedia.org/wiki/Alpha-Beta-Suche</a>}  
+     * Prinzip: {@link <a href="http://de.wikipedia.org/wiki/Alpha-Beta-Suche">
+     * http://de.wikipedia.org/wiki/Alpha-Beta-Suche</a>}  
      * @param maxStufe Die maximale Suchtiefe (sinnvollerweise zwischen 2 und
      * 4)
      */
@@ -217,9 +220,9 @@ public class Computerspieler extends Spieler {
          * 1. Ermittle fuer alle eigenen Figuren alle moeglichen Felder.
          * 2. Ziehe nacheinander alle diese Felder und fuehre fuer jeden Zug
          *    wieder die ersten beiden Schritte aus, bis die gewuenschte 
-         *    Rekursionstiefe (angepeilt sind eigentlich 3) erreicht ist.
-         * 3. Bewerte die aktuelle Brettstellung (Materialwert und eventuell
-         *    Weiteres) und gib den Wert in der Rekursion zurueck an die oberste
+         *    Rekursionstiefe erreicht ist.
+         * 3. Bewerte die aktuelle Brettstellung (Materialwert und einiges
+         *    Anderes) und gib den Wert in der Rekursion zurueck an die oberste
          *    Stufe.
          * 4. Jede Stufe entscheidet nun nach dem MiniMax-Algorithmus, welcher
          *    Zug der jeweils Beste ist und gibt den Wert weiter nach oben
@@ -257,6 +260,16 @@ public class Computerspieler extends Spieler {
                 if (getFarbe()) {
                     // Bekomme die Bewertung dafuer
                     int bewertung = min(maxStufe - 1, -4500, 4500);
+                    // Wenn es noch die ersten 16 Halbzuege sind und ein 
+                    // Springer oder Laeufer gezogen wurde
+                    if (spielfeld.getSpieldaten().getZugListe().size() < 16
+                        && letzterZug.getFigur().getWert() > 100
+                        && letzterZug.getFigur().getWert() < 465
+                        && letzterZug.isErsterZug()) {
+                        // Gibt es Extrapunkte (Figuren raus bringen)
+                        bewertung += 20;
+                    }
+                    System.out.println(letzterZug.toSchachNotation() + " " + bewertung);
                     // Wenn ein neuer MaxWert entsteht (weiss)
                     if (bewertung > maxbewertung) {
                         // Loesche bisherige Figuren und Felder
@@ -274,6 +287,17 @@ public class Computerspieler extends Spieler {
                 } else {
                     // Bekomme die Bewertung dafuer
                     int bewertung = max(maxStufe - 1, -4500, 4500);
+                    // Wenn es noch die ersten 16 Halbzuege sind und ein
+                    // Springer oder Laeufer gezogen wurde
+                    if (spielfeld.getSpieldaten().getZugListe().size() < 16
+                        && letzterZug.getFigur().getWert() > 100
+                        && letzterZug.getFigur().getWert() < 465
+                        && letzterZug.isErsterZug()) {
+                        // Gibt es Extrapunkte (Figuren raus bringen)
+                        bewertung -= 20;
+                    }
+                    System.out.println(letzterZug.toSchachNotation() + " " + bewertung);
+                    
                     // Wenn ein neuer MinWert entsteht (schwarz)
                     if (bewertung < maxbewertung) {
                         // Loesche bisherige Figuren und Felder
@@ -294,20 +318,33 @@ public class Computerspieler extends Spieler {
             }
         }
         
-        // Ermittle eine der Alternativen
-        // Erzeugt eine Zufallszahl zwischen 0 und besteFiguren.size() - 1
-        int zufallsIndex = (int) (Math.random() * besteFiguren.size());
-        
-        /* Ist nicht ganz schoen, hilft aber an einigen Stellen und macht den
-         * Algorithmus instabil, sodass der Computer nicht mit den gleichen
-         * Schritten in jeder Partie Matt gesetzt werden kann.
-         */
         // Wenn es noch einen Zug zu ziehen gibt
         if (!besteFiguren.isEmpty()) {
+            // Ermittle eine der Alternativen
+            // Ermittle die wertgeringste Figur
+            int min = 900;
+            for (Figur figur : besteFiguren) {
+                if (min > figur.getWert()) {
+                    min = figur.getWert();
+                }
+            }
+            int zufallsIndex;
+            // Ermittle so lange einen zufaelligen Index, wie die ausgewaehlte
+            // Figur nicht die wertgeringste ist
+            do {
+                // Erzeugt einen zufaelligen Index
+                zufallsIndex = (int) (Math.random() * besteFiguren.size());
+            } while (besteFiguren.get(zufallsIndex).getWert() != min);
+            /* Ist nicht ganz schoen, hilft aber manchmal und macht den
+             * Algorithmus instabil, sodass der Computer nicht mit den gleichen
+             * Schritten in jeder Partie Matt gesetzt werden kann.
+             */
+            
             // Ziehe den besten Zug
             spielfeld.ziehe(besteFiguren.get(zufallsIndex), 
-                besteFelder.get(zufallsIndex), 0);
+                besteFelder.get(zufallsIndex), 0);   
         }
+        System.out.println("");
     }
     
     /**
@@ -315,7 +352,7 @@ public class Computerspieler extends Spieler {
      * @param stufe Die aktuelle Stufe
      * @param alpha Der Max-Wert
      * @param beta Der Min-Wert
-     * @return Maximale Bewertung
+     * @return Die maximale Bewertung als ganze Zahl
      */
     private int max(int stufe, int alpha, int beta) {
         if (stufe == 0) {
@@ -379,7 +416,7 @@ public class Computerspieler extends Spieler {
      * @param stufe Die aktuelle Stufe
      * @param alpha Der Max-Wert
      * @param beta Der Min-Wert
-     * @return Minimale Bewertung
+     * @return Die minimale Bewertung als ganze Zahl
      */
     private int min(int stufe, int alpha, int beta) {
         if (stufe == 0) {
@@ -398,6 +435,7 @@ public class Computerspieler extends Spieler {
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         for (Figur figur : alleFiguren) {
             for (Feld feld : figur.getKorrekteFelder()) {
+                zaehl++;
                 spielfeld.ziehe(figur, feld, 0);
                 // Wenn ein Bauer umgewandelt wird
                 Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
@@ -428,7 +466,7 @@ public class Computerspieler extends Spieler {
                  * erstrebenswert.
                  */
                 // Wenn der Spieler aktuell deutlich fuehrt
-                // (Minimieren fuer schwarz -> je kleiner desto besser
+                // (Minimieren fuer schwarz -> je kleiner desto besser)
                 if (bewertungsfunktion() < 600) {
                     /* Wird der hoechst moegliche Wert gesetzt, der beim 
                      * Minimieren natuerlich der schlechteste ist
@@ -448,7 +486,7 @@ public class Computerspieler extends Spieler {
      * <li> Schachgebot </li>
      * </ul>
      * @return Eine Bewertung in Form einer ganzen Zahl im Bereich von etwa
-     * -4500 bis +4500<br> <b> positiv </b> ist gut f&uuml;r wei&szlig;,
+     * -4500 bis +4500<br> <b> Positiv </b> ist gut f&uuml;r wei&szlig;,
      * <b> negativ </b> ist gut f&uuml;r schwarz.
      */
     private int bewertungsfunktion() {
@@ -456,41 +494,76 @@ public class Computerspieler extends Spieler {
         // Materialwert
         bewertung = spielfeld.getMaterialwert(true) 
             - spielfeld.getMaterialwert(false);
-        // Bauern kurz vor der Umwandlung
-        //if (spielfeld.getSpieldaten().getZugListe().size() > 16) {
-            int index = 1;
-            while (index < spielfeld.getWeisseFiguren().size() 
-                && spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
-                Figur bauer = spielfeld.getWeisseFiguren().get(index);
-                int y = bauer.getPosition().getYK();
-                if (y <= 3) {
-                    bewertung += 20;
-                    if (y <= 2) {
-                        bewertung += 40;
-                        if (y == 1) {
-                            bewertung += 60;
+        // Bauern kurz vor der Umwandlung und Springer am Rand
+        int index = 1;
+        while (index < spielfeld.getWeisseFiguren().size() 
+            && spielfeld.getWeisseFiguren().get(index).getWert() < 325) {
+            // Wenn es Bauern sind
+            if (spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
+                // Zaehlt erst ab 16 Zuegen
+                if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
+                    Figur bauer = spielfeld.getWeisseFiguren().get(index);
+                    int y = bauer.getPosition().getYK();
+                    // Je naeher die Bauern an der gegnerisches Grundlinie sind
+                    if (y >= 4) {
+                        // Desto mehr Punkte zaehlen sie
+                        // Drei Reihen vor der Umwandlung +20
+                        bewertung += 20;
+                        if (y >= 5) {
+                            // Zwei Reihen vor der Umwandlung +20 +40
+                            bewertung += 40;
+                            if (y == 6) {
+                                // Letzte Reihe vor der Umwandlung +20 +40 +115
+                                bewertung += 115;
+                                // Damit sind sie direkt vor der Umwandlung so 
+                                // viel wert wie ein Springer
+                            }
                         }
                     }
                 }
-                index++;
+            } else {
+                Figur springer = spielfeld.getWeisseFiguren().get(index);
+                int x = springer.getPosition().getXK();
+                // Springer am Rand sind hinderlich
+                if (x == 0 || x == 7) {
+                    // Strafpunkte
+                    bewertung -= 40;
+                }
             }
-            index = 1;
-            while (index < spielfeld.getSchwarzeFiguren().size() 
-                && spielfeld.getSchwarzeFiguren().get(index).getWert() == 100) {
-                Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
-                int y = bauer.getPosition().getYK();
-                if (y <= 3) {
-                    bewertung -= 20;
-                    if (y <= 2) {
-                        bewertung -= 40;
-                        if (y == 1) {
-                            bewertung -= 60;
+            index++;
+        }
+        // Schwarz analog
+        index = 1;
+        while (index < spielfeld.getSchwarzeFiguren().size() 
+            && spielfeld.getSchwarzeFiguren().get(index).getWert() < 325) {
+            // Wenn es ein Bauer ist
+            if (spielfeld.getSchwarzeFiguren().get(index).getWert() 
+                == 100) {
+                // Zaehlt erst nach 16 Zuegen
+                if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
+                    Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
+                    int y = bauer.getPosition().getYK();
+                    if (y <= 3) {
+                        bewertung -= 20;
+                        if (y <= 2) {
+                            bewertung -= 40;
+                            if (y == 1) {
+                                bewertung -= 115;
+                            }
                         }
                     }
                 }
-                index++;
+            } else {
+                Figur springer = spielfeld.getSchwarzeFiguren().get(index);
+                int x = springer.getPosition().getXK();
+                // Springer am Rand sind hinderlich
+                if (x == 0 || x == 7) {
+                    // Strafpunkte
+                    bewertung += 40;
+                }
             }
-        //}
+            index++;
+        }
         // Das Feld des gegnerischen Koenigs
         Feld koenig;
         // Der Einfluss auf die Spielbewertung

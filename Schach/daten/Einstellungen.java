@@ -54,7 +54,8 @@ public class Einstellungen {
      * Erzeugt einen neuen Satz Einstellungen, der sp&auml;ter einem Spiel 
      * hinzugef&uuml;gt werden kann.<br>
      * Einziger Konstruktor dieser Klasse.
-     * Attribute werden mit Standardwerten initialisiert.
+     * Attribute werden mit Standardwerten initialisiert und k&ouml;nnen bei
+     * Bedarf &uuml;berschrieben werden.
      */
     public Einstellungen() {
         this.zugZeitBegrenzung = 0;

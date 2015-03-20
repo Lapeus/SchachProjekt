@@ -29,7 +29,7 @@ public class Dame extends Figur {
 
     /**
      * Ermittelt alle m&ouml;glichen Felder, auf die die Dame nach den Zugregeln
-     * ziehen k&ouml;nnte. Dabei kann sie sich grundsätzlich horizontal, 
+     * ziehen k&ouml;nnte. Dabei kann sie sich grunds&auml;tzlich horizontal, 
      * vertikal und diagonal bewegen und zwar so lange, bis eine eigene Figur
      * im Weg steht, eine gegnerische Figur im Weg steht und geschlagen werden
      * kann oder das Spielfeld zu Ende ist. Alle m&ouml;glichen Felder werden

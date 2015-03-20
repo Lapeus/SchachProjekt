@@ -132,7 +132,7 @@ public class Gesamtdatensatz {
         File[] files = spielerOrdner.listFiles();
         // Liste mit den Namen der Computerspieler
         List<String> computerNamen = new ArrayList<String>(
-            Arrays.asList("Walter", "Karl Heinz", "Rosalinde", "Ursula"));
+            Arrays.asList("Karl Heinz", "Rosalinde", "Ursula", "Walter"));
         for (File spielerFile : files) {
             // Der Name des Spielers (Name der Datei ohne .txt)
             String name = spielerFile.getName()
@@ -412,6 +412,8 @@ public class Gesamtdatensatz {
             einstellungen.setSchachWarnung(bool[4]);
             einstellungen.setInStatistikEinbeziehen(bool[5]);
             einstellungen.setSpielfeldDrehen(bool[6]);
+            // Dem Spielfeld die Einstellungen zuf&uuml;gen
+            spielfeld.setEinstellungen(einstellungen);
             
             // Schachnotation wird zurueckuebersetzt
             List<Zug> zugliste = ladeZugListe(br, felderListe);
@@ -428,9 +430,6 @@ public class Gesamtdatensatz {
                 }
             }
             
-            // Dem Spielfeld die Einstellungen zuf&uuml;gen
-            spielfeld.setEinstellungen(einstellungen);
-            
             // Den Spielern ihre Farben setzen
             spieler1.setFarbe(farbe1);
             spieler2.setFarbe(farbe2);
@@ -439,6 +438,7 @@ public class Gesamtdatensatz {
             spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
         } catch (Exception ex) {
             // Wenn irgendwas schief geht
+            ex.printStackTrace();
             spiel = null;
             // Wenn das Spiel null ist, gibt die GUI eine Fehlermeldung aus
         } finally {
@@ -578,7 +578,11 @@ public class Gesamtdatensatz {
     }
         
     /**
-     * Speichert das angegebene Spiel in den Text-Dateien.
+     * Speichert das angegebene Spiel in den Text-Dateien. <br>
+     * Dabei wird die Datei des Spiels, sofern sie vorhanden ist, gel&ouml;scht,
+     * eine neue Datei mit den entsprechenden Daten angelegt und 
+     * anschlie&szlig;end schreibgesch&uuml;tzt. Am Ende wird die Liste der 
+     * gespeicherten Spiele aktualisiert.
      * @param spiel Das Spiel, welches gespeichert werden soll
      */
     public void spielSpeichern(Spiel spiel) {
@@ -622,17 +626,17 @@ public class Gesamtdatensatz {
             ioEx.printStackTrace();
         }
         
-        
-        
-        
-        
     }
     
     /**
      * Speichert das angegebene Spiel f&uuml;r den Fall, dass der Computer
      * abst&uuml;rzt. <br>
      * Es kann immer nur ein Spiel gespeichert werden. Ruft man diese Methode
-     * mehrfach auf, wird immer nur das letzte Spiel gespeichert.
+     * mehrfach auf, wird immer nur das letzte Spiel gespeichert. <br>
+     * Hierbei werden alle vorhandenen automatisch gespeicherten Spiele 
+     * gel&ouml;scht (normalerweise d&uuml;rfte es nur eins geben), danach das
+     * aktuelle mit dem Zusatz "(autosave)" gespeichert und der Liste der 
+     * gespeicherten Spiele zugef&uuml;gt.
      * @param spiel Das aktuelle Spiel was gespeichert werden soll
      */
     public void automatischesSpeichern(Spiel spiel) {
@@ -655,12 +659,11 @@ public class Gesamtdatensatz {
             + " (autosave)")) {
             gespeicherteSpiele.add(spiel.getSpielname() + " (autosave)");
         }
-        // Einstellungen und Spieler vorsorglich auch mit speichern
-        speichern();
     }
     
     /**
-     * L&ouml;scht automatisch gespeicherte Spiele.
+     * L&ouml;scht automatisch gespeicherte Spiele im Ordner und in der Liste. 
+     * Diese werden an dem Zusatz "(autosave)" im Dateinamen erkannt.
      */
     public void autosaveLoeschen() {
         File ordner = new File("settings" + System.getProperty(
@@ -723,17 +726,27 @@ public class Gesamtdatensatz {
     }
     
     /**
-     * Gibt die Liste der Spieler zur&uuml;ck.
+     * Gibt die Liste der Spieler zur&uuml;ck. Dabei werden die Computergegner
+     * an vorderer Stelle aufgef&uuml;hrt, um sie beim Anzeigen von den
+     * menschlichen Spielern unterscheiden zu k&ouml;nnen.
      * @return Liste der Spieler
      */
     public List<Spieler> getSpielerListe() {
+        /* Anmerkung: Beim letzten Testlauf in C147 bemerkten wir, dass die
+         * Methode listFiles() die Spieler nicht in der alphabetischen 
+         * Reihenfolge zurueckgaben. Daher muessen die Computergegner hier
+         * per Hand sortiert werden, damit sie nach aufsteigendem Schwierig-
+         * keitsgrad angezeigt werden.
+         */
         List<Spieler> spielerSorted = new ArrayList<Spieler>();
-        // Alle Spieler kopieren
-        spielerSorted.addAll(spielerListe);
-        // Alle menschlichen Spieler entfernen
-        spielerSorted.removeAll(getMenschlicheSpieler());
-        // Und hinten wieder anhaengen
+        // In der richtigen Reihenfolge die Computergegner zufuegen
+        spielerSorted.add(getSpieler("Karl Heinz"));
+        spielerSorted.add(getSpieler("Rosalinde"));
+        spielerSorted.add(getSpieler("Ursula"));
+        spielerSorted.add(getSpieler("Walter"));
+        // Die menschlichen Spieler anhaengen
         spielerSorted.addAll(getMenschlicheSpieler());
+        
         return spielerSorted;
     }
     
