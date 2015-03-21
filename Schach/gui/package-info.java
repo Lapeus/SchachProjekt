@@ -1,5 +1,5 @@
 /**
- * Diese Packet ist fuer die GUI und damit f&uuml;r die Darstellung und 
+ * Diese Packet ist f&uuml;r die GUI und damit f&uuml;r die Darstellung und 
  * Ein-/Ausgabe von Daten veranwortlich.
  * @author Marvin Wolf
  */

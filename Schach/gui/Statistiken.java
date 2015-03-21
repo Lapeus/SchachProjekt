@@ -1,5 +1,3 @@
-//TODO Ruecksetzen Button
-
 package gui;
 
 import java.awt.BorderLayout;
@@ -23,6 +21,7 @@ import daten.Statistik;
 /**
  * Bietet ein Panel zur Dartsellung von Statistiken vom auszuw&auml;hlenden 
  * Spieler des Schachspiels. 
+ * @author Marvin Wolf
  */
 public class Statistiken extends JPanel implements ActionListener {
     // Anfang Attribute
@@ -37,34 +36,34 @@ public class Statistiken extends JPanel implements ActionListener {
     private SpielGUI parent;
     
     /**
-     * JPanel fuer die Komponenten im NORDEN des Panels.
+     * JPanel f&uuml;r die Komponenten im NORDEN des Panels.
      */
     private JPanel cNorth = new JPanel();
     
     /**
-     * JPanel fuer die Komponenten im NORDEN des Panels.
+     * JPanel f&uuml;r die Komponenten im NORDEN des Panels.
      */
     private JPanel cCenter = new JPanel();
     
     /**
-     * JComboBox um Spieler auszuwaehlen von dem die Statistik angezeigt werden
-     * soll.
+     * JComboBox um Spieler auszuw&auml;hlen von dem die Statistik angezeigt 
+     * werden soll.
      */
     private JComboBox<String> spielerAuswahl;
     
     /**
-     * TextArea in der die Statistik von dem ausgewaehlten Spieler angezeigt 
-     * wird.
+     * TextArea in der die Statistik von dem ausgew&auml;hlten Spieler 
+     * angezeigt wird.
      */
     private JTextPane daten = new JTextPane();
     
     /**
-     * Konstante fuer den Farbton des Hintergrundes (Braun).
+     * Konstante f&uuml;r den Farbton des Hintergrundes (Braun).
      */
     private final Color cBraunRot = new Color(164, 43, 24); 
     
     /**
-     * Konstante fuer den Farbton der Buttons (Beige).
+     * Konstante f&uuml;r den Farbton der Buttons (Beige).
      */
     private final Color cHellesBeige = new Color(255, 248, 151);
 
@@ -72,9 +71,9 @@ public class Statistiken extends JPanel implements ActionListener {
     
     // Konstruktor
     /**
-     * Erstellt ein neues Statistik-Panel, bei dem man einen Spieler auswaehlen
-     * kann und dann dessen Statistik angezeigt bekommt.
-     * @param parent Eltern-SpielGUI um auf Gesamtdaten zugreifen zu koennen
+     * Erstellt ein neues Statistik-Panel, bei dem man einen Spieler 
+     * ausw&auml;hlen kann und dann dessen Statistik angezeigt bekommt.
+     * @param parent Eltern-SpielGUI um auf Gesamtdaten zugreifen zu k&ouml;nnen
      */
     public Statistiken(SpielGUI parent) {
         this.parent = parent;
@@ -84,7 +83,7 @@ public class Statistiken extends JPanel implements ActionListener {
     
     /**
      * Initialisert eine Statistik-Seite, auf welcher man einen Spieler 
-     * auswaehlen kann und von diesem die Statistik angezeigt bekommt.
+     * ausw&auml;hlen kann und von diesem die Statistik angezeigt bekommt.
      */
     private void init() {
         setBackground(cBraunRot);
@@ -127,7 +126,7 @@ public class Statistiken extends JPanel implements ActionListener {
         
         // Center
         HTMLEditorKit hEdi = new HTMLEditorKit();
-        // daten kann jetzt HTML-Code uebersetzen
+        // daten kann jetzt HTML-Code &uuml;bersetzen
         daten.setEditorKit(hEdi);
         
         // South
@@ -135,7 +134,7 @@ public class Statistiken extends JPanel implements ActionListener {
         cSouth.setLayout(new FlowLayout());
         cSouth.setBackground(cBraunRot);
         
-        // Zuruecksetzen Button
+        // Zur&uuml;cksetzen Button
         JButton btnzuruecksetzen 
             = new JButton("<html>Spielerstatistik zur&uuml;cksetzen");
         btnzuruecksetzen.setActionCommand("zuruecksetzen");
@@ -156,10 +155,10 @@ public class Statistiken extends JPanel implements ActionListener {
     }
 
     /**
-     * ActionPeformed Methode fuer die auswahlCombobox.
-     * Erstellt wenn ein korrekter Spieler ausgewaehlt wurde einen String, 
+     * ActionPeformed Methode f&uuml;r die auswahlCombobox.
+     * Erstellt wenn ein korrekter Spieler ausgew&auml;hlt wurde einen String, 
      * welcher die Spielerstatistik auf der Textpane darstellt.
-     * @param e ausgeloestes ActionEvent
+     * @param e ausgel&ouml;stes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
         String ausgewaehlt = (String) spielerAuswahl.getSelectedItem();
@@ -247,7 +246,7 @@ public class Statistiken extends JPanel implements ActionListener {
     }
     
     /**
-     * Gibt SpielerObjekt des Spielers mit diesem namen zurueck.
+     * Gibt SpielerObjekt des Spielers mit diesem namen zur&uuml;ck.
      * @param name name des gesuchten Spielers
      * @return Spieler mit dem namen - null wenn es keinen gibt
      */

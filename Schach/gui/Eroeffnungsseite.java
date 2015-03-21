@@ -34,17 +34,17 @@ public class Eroeffnungsseite extends Panel {
     private SpielGUI parent;
     
     /**
-     * JButton um in das Spielerauswahlmenue zu kommen (Spiel anfangen).
+     * JButton um in das Spielerauswahlmen&uuml; zu kommen (Spiel anfangen).
      */
     private JButton spielen = new JButton("Spielen");
     
     /**
-     * JButton um in das Menue zum Spielladen zu kommen.
+     * JButton um in das Men&uuml; zum Spielladen zu kommen.
      */
     private JButton spielLaden = new JButton("Spiel laden");
     
     /**
-     * JButton um in das Einstellungsmenue zu kommen.
+     * JButton um in das Einstellungsmen&uuml; zu kommen.
      */
     private JButton einstellungen = new JButton("Einstellungen");
     
@@ -60,17 +60,17 @@ public class Eroeffnungsseite extends Panel {
     
     
     /**
-     * JLabel um Fenster als Menue zu kennzeichen.
+     * JLabel um Fenster als Men&uuml; zu kennzeichen.
      */
     private JLabel menue = new JLabel("<html>Men&uuml;</html>");
     
     /**
-     * Konstante fuer den Farbton des Hintergrundes (Braun).
+     * Konstante f&uuml;r den Farbton des Hintergrundes (Braun).
      */
     private final Color cBraunRot = new Color(164, 43, 24); 
     
     /**
-     * Konstante fuer den Farbton der Buttons (Beige).
+     * Konstante f&uuml;r den Farbton der Buttons (Beige).
      */
     private final Color cHellesBeige = new Color(255, 248, 151);
     
@@ -80,7 +80,7 @@ public class Eroeffnungsseite extends Panel {
     
     /**
      * Erstelllt eine eroeffnungsseite.
-     * @param parent Elter-Fenster uebergeben
+     * @param parent Elter-Fenster &uuml;bergeben
      */
     public Eroeffnungsseite(SpielGUI parent) {
         super();

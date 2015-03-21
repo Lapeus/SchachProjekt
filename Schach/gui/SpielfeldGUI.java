@@ -44,7 +44,8 @@ import zuege.Umwandlungszug;
 
 /**
  * Eine Klasse die von <b>JPanel</b> und einen eigenen <b>MouseListener</b>
- * implementiert und fuer die Darstellung des Spielfeldfenster zustaednig ist.
+ * implementiert und f&uuml;r die Darstellung des Spielfeldfenster 
+ * zust&auml;dnig ist.
  * @author Marvin Wolf 
  */
 public class SpielfeldGUI extends JPanel implements MouseListener, 
@@ -130,43 +131,43 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private Spieler spieler2;
     
     /**
-     * Liste die 64 Schachfelder enthaelt.
+     * Liste die 64 Schachfelder enth&auml;lt.
      */
     private List<Feld> felderListe;
     
     /**
-     * Objekt der Klasse <b>Spielfeld</b>, welches fuer Figurenpositionen 
-     * benoetigt wird.
+     * Objekt der Klasse <b>Spielfeld</b>, welches f&uuml;r Figurenpositionen 
+     * ben&ouml;tigt wird.
      */
     private Spielfeld spielfeld;
     
     
     /**
      * Objekt der Klasse <b>Spiel</b>, welche das Spiel speichert zu dem dieses 
-     * Spielfeld gehoert.
+     * Spielfeld geh&ouml;rt.
      */
     private Spiel spiel;
     
     /**
-     * Enhaelt eventuell momentan ausgewaehlte Figur. <br>
-     * Wird benoetigt um Zug auszufuehren, da man ja nur ziehen kann wenn man
-     * vorher schon eine Figur ausgewaehlt hat.
+     * Enh&auml;lt eventuell momentan ausgew&auml;hlte Figur. <br>
+     * Wird ben&ouml;tigt um Zug auszuf&uuml;hren, da man ja nur ziehen kann 
+     * wenn man vorher schon eine Figur ausgew&auml;hlt hat.
      */
     private Figur ausgewaehlteFigur;
     
     /**
-     * Zugliste fuer den Engamescreen.
+     * Zugliste f&uuml;r den Engamescreen.
      */
     private JList<String> zugListe;
     
     /**
-     * JPanel fuer das Spielfeld. Wird in der <i>spielfeldUpdate</i> Methode 
-     * benoetigt.  
+     * JPanel f&uuml;r das Spielfeld. Wird in der <i>spielfeldUpdate</i> 
+     * Methode ben&ouml;tigt.  
      */
     private Container cCenter = new JPanel();
     
     /**
-     * Kontainer fuer die Anzeigen und Button neben dem Spielfeld.
+     * Kontainer f&uuml;r die Anzeigen und Button neben dem Spielfeld.
      */
     private JPanel cEast = new JPanel();
     
@@ -176,67 +177,67 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private JPanel cEnde = new JPanel();
     
     /**
-     * Konstante fuer den Farbton der "schwarzen" Felder (braun).
+     * Konstante f&uuml;r den Farbton der "schwarzen" Felder (braun).
      */
     private final Color braun = new Color(181, 81, 16);
     
     /**
-     * Konstante fuer den Farbton der "weissen" Felder (helles Beige).
+     * Konstante f&uuml;r den Farbton der "weissen" Felder (helles Beige).
      */
     private final Color weiss = new Color(255, 248, 151);
     
     /**
-     * Konstante fuer den Farbton der makierten Felder (rot).
+     * Konstante f&uuml;r den Farbton der makierten Felder (rot).
      */
     private final Color rot = new Color(204, 0, 0);
     
     /**
-     * Konstante fuer den Farbton der Letzten Zug Felder (gruen).
+     * Konstante f&uuml;r den Farbton der Letzten Zug Felder (gr&uuml;n).
      */
     private final Color gruen = new Color(6, 148, 6);
     
     /**
-     * Konstante fuer den Farbton des Hintergrundes (Braun).
+     * Konstante f&uuml;r den Farbton des Hintergrundes (Braun).
      */
     private final Color cBraunRot = new Color(164, 43, 24); 
     
     /**
-     * Konstante fuer den Farbton der Buttons (Beige).
+     * Konstante f&uuml;r den Farbton der Buttons (Beige).
      */
     private final Color cHellesBeige = new Color(255, 248, 151);
     
     /**
-     * Action Command fuer den Rueckgaening-Button.
+     * Action Command f&uuml;r den Rueckg&auml;ning-Button.
      */
     private final String commandRueck = "rueck";
     
     /**
-     * Action Commmand fuer den Speichern-Button.
+     * Action Commmand f&uuml;r den Speichern-Button.
      */
     private final String commandSpeichern = "speichern";
     
     /**
-     * Action Command fuer den Aufgeben-Button.
+     * Action Command f&uuml;r den Aufgeben-Button.
      */
     private final String commandAufgeben = "aufgeben";
     
     /**
-     * Action Command fuer Remi-Button.
+     * Action Command f&uuml;r Remi-Button.
      */
     private final String commandRemis = "remis";
     
     /**
-     * Action Command fuer den Startmenue-Button.
+     * Action Command f&uuml;r den Startmenue-Button.
      */
     private final String commandStartmenue = "spielende";
     
     /**
-     * Startzeit fuer die Zugzeit-Stoppuhr (Ueber Systemzeit). 
+     * Startzeit f&uuml;r die Zugzeit-Stoppuhr (&Uuml;ber Systemzeit). 
      */
     private long sekundenStart;
     
     /**
-     * Endzeit fuer die Zugzeit-Stoppuhr (Endezeit - Startzeit). 
+     * Endzeit f&uuml;r die Zugzeit-Stoppuhr (Endezeit - Startzeit). 
      */
     private long sekundenStopp;
     
@@ -272,7 +273,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private boolean wiederholen = true;
     
     /**
-     * Thread fuer die Stoppuhr.
+     * Thread f&uuml;r die Stoppuhr.
      */
     private Thread th = new Thread(this);
     
@@ -280,11 +281,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Erzeugt eine SpielfeldGUI.
      * Wird von der Spielerauswahl-Seite aufgerufen und erstellt eine Spielfeld
-     * GUI fuer ein neues Spiel.
-     * @param parent Das Objekt der dazugehoerigen <b>SpielGUI</b>
+     * GUI f&uuml;r ein neues Spiel.
+     * @param parent Das Objekt der dazugeh&ouml;rigen <b>SpielGUI</b>
      * @param spieler1 Ein Objekt der Klasse <b>Spieler</b>
      * @param spieler2 Ein weiteres Objekt der Klasse <b>Spieler</b>
-     * @param spielname Name des Spiels muss uebergeben werden
+     * @param spielname Name des Spiels muss &uuml;bergeben werden
      */
     public SpielfeldGUI(SpielGUI parent, String spielname,
         Spieler spieler1, Spieler spieler2) {
@@ -315,9 +316,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     
     /**
      * Erzeugt eine neue SpielfeldGUI.
-     * Wird von der SpielLaden-Seite Aufgerufen und erzuegt eine SpielfeldGUI 
-     * fuer ein bereits gespeichertes Spiel.
-     * @param parent Das Objekt der dazugehoerigen <b>SpielGUI</b>
+     * Wird von der SpielLaden-Seite Aufgerufen und erzeugt eine SpielfeldGUI 
+     * f&uuml;r ein bereits gespeichertes Spiel.
+     * @param parent Das Objekt der dazugeh&ouml;rigen <b>SpielGUI</b>
      * @param spiel Ein Objekt von typ Spiel, welches bereits Paramenter hat
      */
     public SpielfeldGUI(SpielGUI parent, Spiel spiel) {
@@ -350,7 +351,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Initialisierungmethode eines Spielfelds.
      * Wird vom Konstruktor aufgerufen. <br>
      * Ruft auf: <br>
-     * 1. Fuellung der felderListe <br>
+     * 1. F&uuml;llung der felderListe <br>
      * 2. Erzeugt ein <b>Spielfeld</b> mit dieser felderListe <br>
      * 3. Erzeugt ein <b>Spiel</b> mit Spielname, spieler1, spieler2 und
      *  dem spielfeld
@@ -654,7 +655,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     
     /**
      * Sorgt daf&uuml;r, dass jede Figur ihr passendes Figurenbild erh&auml;lt.
-     * Zudem wird hier gesteuert ob der rueckg&auml;ngig-Button klickbar(Zug
+     * Zudem wird hier gesteuert ob der r&uuml;ckg&auml;ngig-Button klickbar(Zug
      * vorhanden) oder nicht(kein Zug vorhande) ist. Die 
      * Figurenbildergr&ouml;&szlig;en an die Gr&ouml;&szlig;e des Fensters
      * angepasst werden. Dann wird noch die {@link #geschlageneFigureUpdate()} 
@@ -907,8 +908,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Immer wenn ein Spieldfeld angeklickt wird wird diese Methode aufgerufen
      * und verarbeitet dann den Klick.
      * Wenn noch keins ausgew&auml;hlt wurde oder die Auswahl gewechselt wurde
-     * wird ein neues ausgew&auml;hlt und wenn aktiviert die moeglichen Felder
-     * angezeigt.
+     * wird ein neues ausgew&auml;hlt und wenn aktiviert die m&ouml;glichen 
+     * Felder angezeigt.
      * Wenn  
      * @param arg0 MouseEvent erzeugt von den Feldern des Spielfelds
      */
@@ -1012,10 +1013,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     
 
     /**
-     * Hier werden die Zuege veranlasst und auf der Gui geupdated.
+     * Hier werden die Z&uuml;ge veranlasst und auf der Gui geupdated.
      * Die Zugzeit wird gestoppt und der dem Zug werden diese sowie das Start-
      * und Zielfeld &uuml;bergeben.
-     * @param momentanesFeld Das momentan ausgewaehlte Feld
+     * @param momentanesFeld Das momentan ausgew&auml;hlte Feld
      */
     private void spielerzugGUI(Feld momentanesFeld) {
         // Hier ist der jetzige Zug beendet also auch die Zugzeit
@@ -1160,7 +1161,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Action Performed fuer alle Buttons (R&uuml;ckg&auml;ngig, Remis, 
+     * Action Performed f&uuml;r alle Buttons (R&uuml;ckg&auml;ngig, Remis, 
      * Aufgeben, Speichern, Wiederholung).
      * Wenn der Zur&uuml;ck-Button gedr&uuml;ckt wurde, dann m&uuml;ssen bei 
      * einem Computergegner immer 2 Z&uuml;ge r&uuml;ckg&auml;ngig gemacht 
@@ -1173,7 +1174,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * gespeichert und ein JOptionPane zeigt die erfolgreiche Speicherung an.
      * Wenn der Wiederholungs-Button gedr&uuml;ckt wurde dann wird eine
      * Wiederholung des letzten Spiels gestartet.
-     * @param e Ausgeloestes ActionEvent
+     * @param e Ausgel&ouml;stes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
         // Wenn der momentante Spieler einen Zug rueckgaengig macht
@@ -1301,8 +1302,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Wenn der Remis-Button gedrueckt wird wird hier die Auswertung der Remis-
-     * Anfrage bearbeitet.
+     * Wenn der Remis-Button gedr&uuml;ckt wird wird hier die Auswertung der 
+     * Remis-Anfrage bearbeitet.
      */
     private void remisAuswertung() {
         // Testen ob die 50-Zuege-Regel verletzt wurde
@@ -1382,7 +1383,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
-     * Startet eine neue Zeitnahmesession fuer die Zugzeit der Spieler.
+     * Startet eine neue Zeitnahmesession f&uuml;r die Zugzeit der Spieler.
      */
     private void start() {
         uhrAktiv = true;
@@ -1493,22 +1494,22 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     
     /**
      * Unbenutzte Component Listener Methode.
-     * @param e durch Component ausgeloestes Event
+     * @param e durch Component ausgel&ouml;stes Event
      */
     public void componentHidden(ComponentEvent e) {
     }
     
     /**
      * Unbenutzte Component Listener Methode.
-     * @param e durch Component ausgeloestes Event
+     * @param e durch Component ausgel&ouml;stes Event
      */
     public void componentMoved(ComponentEvent e) {
     }
     
     /**
-     * Sorgt dafuer, dass nach einem resize die Spielfiguren in der richtigen 
-     * Groesse angezeigt werden.
-     * @param e durch resizen ausgeloestes Event
+     * Sorgt daf&uuml;r, dass nach einem resize die Spielfiguren in der 
+     * richtigen Gr&ouml;&szlig;e angezeigt werden.
+     * @param e durch resizen ausgel&ouml;stes Event
      */
     public void componentResized(ComponentEvent e) {
         spielfeldUIUpdate();
@@ -1516,7 +1517,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     
     /**
      * Unbenutzte Component Listener Methode.
-     * @param e durch resizen ausgeloestes Event
+     * @param e durch resizen ausgel&ouml;stes Event
      */
     public void componentShown(ComponentEvent e) {
     }

@@ -29,7 +29,7 @@ public class SeitenwechselListener implements ActionListener {
     /**
      * Action Performed, welche das Wechseln der Seite an die Eltern-SpielGUI-Me
      * thode {@link SpielGUI#seitenAuswahl(String)} &uuml;bergibt.
-     * @param e Ausgeloestes ActionEvent
+     * @param e Ausgel&ouml;stes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
