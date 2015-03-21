@@ -332,10 +332,10 @@ public class Computerspieler extends Spieler {
         // Wenn es noch einen Zug zu ziehen gibt
         if (!besteFiguren.isEmpty()) {
             // Ermittle eine der Alternativen
-            // Ermittle die wertgeringste Figur
+            // Ermittle die wertgeringste Figur abgesehen vom Koenig
             int min = 900;
             for (Figur figur : besteFiguren) {
-                if (min > figur.getWert()) {
+                if (min > figur.getWert() && figur.getWert() > 0) {
                     min = figur.getWert();
                 }
             }
