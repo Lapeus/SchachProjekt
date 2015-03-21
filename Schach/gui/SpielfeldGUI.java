@@ -625,7 +625,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         /* Spielfeld drehen wenn Spieler 1 schwarz ist und ein Computergegner
         dran ist */
         if (!(spieler1.getFarbe())
-                && spieler2 instanceof Computerspieler && !spielVorbei) {
+                && spieler2 instanceof Computerspieler
+                && spielfeld.getEinstellungen().isSpielfeldDrehen()
+                && !spielVorbei) {
             spielfeldDrehen();
         }
         spielfeldUIUpdate();
@@ -1473,7 +1475,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 /* Wenn wiederholt werden soll und nicht stopp ist und 2 oder 
                  * mehr Sekunden vergangen sind 
                 */
-                if (wiederholung && wiederholen && sekundenStopp >= 2000) {
+                if (wiederholung && wiederholen && sekundenStopp >= 2500) {
                     // Dann soll der naechste zug ausgefuert werden
                     btnWiederholung.doClick();
                     start();
