@@ -100,7 +100,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * JLabel zum Anzeigen der Zugzeit des momentanen Spielers.
      */
-    private JLabel zugzeit = new JLabel("  ");
+    private JLabel zugzeit;
+    
+    /**
+     * JLabel zum anzeigen des letzten Zugs.
+     */
+    private JLabel letzterZug;
     
     /**
      * JPanel f&uuml;r die Geschlagenen schwarzen Figuren.
@@ -394,7 +399,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         //geschlageneLabelB
         JLabel lGeschlageneB = new JLabel("Geschlagene Schwarze Figuren:");
         lGeschlageneB.setForeground(Color.BLACK);
-        gbc.gridy = 8;
+        gbc.gridy = 9;
         cEast.add(lGeschlageneB, gbc);
         
         // geschlagene Weiss
@@ -407,19 +412,38 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // geschlagene Schwarz
         geschlageneSchwarze.setBackground(cBraunRot);
         geschlageneSchwarze.setLayout(new GridLayout(3, 0));
-        gbc.gridy = 9;
+        gbc.gridy = 10;
         cEast.add(geschlageneSchwarze, gbc);
         
         // Label momentanerSpieler
-        momentanerSpieler.setForeground(Color.WHITE);
+        // Je nach aktuellem Spieler wird das Label gesetzt (Spiel Laden)
+        if (spielfeld.getAktuellerSpieler()) {
+            momentanerSpieler.setText("<html>Wei&szlig;");
+            momentanerSpieler.setForeground(Color.WHITE);
+        } else {
+            momentanerSpieler.setText("Schwarz");
+            momentanerSpieler.setForeground(Color.BLACK);
+        }
         momentanerSpieler.setBackground(cHellesBeige);
         gbc.gridheight = 1;
         gbc.gridy = 3;
         cEast.add(momentanerSpieler, gbc);
         
+        // Label letzterZug
+        letzterZug = new JLabel();
+        letzterZug.setForeground(Color.BLACK);
+        letzterZug.setBackground(cHellesBeige);
+        if (null != spielfeld.getSpieldaten().getLetzterZug()) {
+            letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
+                .toSchachNotation());
+        }
+        gbc.gridy = 4;
+        cEast.add(letzterZug, gbc);
+        
         // Label Stoppuhr
+        zugzeit = new JLabel();
         zugzeit.setBackground(cHellesBeige);
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         cEast.add(zugzeit, gbc);
         
         // Button rueck
@@ -427,7 +451,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         rueckgaengig.setBackground(cHellesBeige);
         rueckgaengig.addActionListener(this);
         rueckgaengig.setActionCommand(commandRueck);
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         cEast.add(rueckgaengig, gbc);
         
@@ -436,7 +460,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         speichern.addActionListener(this);
         speichern.setActionCommand(commandSpeichern);
         gbc.gridx = 2;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         cEast.add(speichern, gbc);
         
         // Button unentschieden
@@ -444,7 +468,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         btnUnentschieden.addActionListener(this);
         btnUnentschieden.setActionCommand(commandRemis);
         gbc.gridx = 1;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         cEast.add(btnUnentschieden, gbc);
         
         
@@ -453,7 +477,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         aufgeben.addActionListener(this);
         aufgeben.setActionCommand(commandAufgeben);
         gbc.gridx = 2;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         cEast.add(aufgeben, gbc);
         
         // Zu Panel hinzufuegen
@@ -601,7 +625,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         /* Spielfeld drehen wenn Spieler 1 schwarz ist und ein Computergegner
         dran ist */
         if (!(spieler1.getFarbe())
-                && spieler2 instanceof Computerspieler) {
+                && spieler2 instanceof Computerspieler && !spielVorbei) {
             spielfeldDrehen();
         }
         spielfeldUIUpdate();
@@ -955,6 +979,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     momentanerSpieler.setText("Schwarz");
                     momentanerSpieler.setForeground(Color.BLACK);
                 }
+                // Wenn es einen letzen Zug gibt wird dieser angezeigt
+                if (!spielfeld.getSpieldaten().getLetzterZug().equals(null)) {
+                    letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
+                        .toSchachNotation());
+                }
                 // Wenn das Spiel nicht vorbei ist 
                 if (!spielVorbei) {
                     // autosave initiieren
@@ -968,7 +997,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         
         // Faerbt die bedrohten Felder Grau
-        if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen()) {
+        if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen() 
+            && !spielVorbei) {
             for (Feld bedroht : spielfeld.getBedrohteFelder()) {
                 bedroht.setBackground(new Color(100, 100, 100));
             }
@@ -1054,6 +1084,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             } else {
                 ergebnis = "Das Spiel endet in einem Patt";
             }
+            // letzen Zug gruen makieren
+            for (Feld feld : spielfeld.getLetzteFelder()) {
+                feld.setBackground(gruen);
+            }
             // Und Ein Dialogfenster fuer den Gewinner angezeigt
             parent.soundAbspielen("SchachMatt.wav");
             JOptionPane.showMessageDialog(parent, ergebnis);
@@ -1079,10 +1113,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             && !spielVorbei) {
             spielfeldAufbau();
             parent.soundAbspielen("FehlerhafteEingabe.wav");
-            // Schachmeldung ausgeben
+            // letzen Zug gruen makieren
             for (Feld feld : spielfeld.getLetzteFelder()) {
                 feld.setBackground(gruen);
             }
+            // Schachmeldung ausgeben
             JOptionPane.showMessageDialog(parent, 
                 "Sie stehen im Schach!", "Schachwarnung!",
                 JOptionPane.WARNING_MESSAGE);
@@ -1154,6 +1189,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 momentanerSpieler.setText("Schwarz");  
                 momentanerSpieler.setForeground(Color.BLACK);
             }
+            // Wenn es einen letzten zug gibt wird dieser angezeigt
+            if (!spielfeld.getSpieldaten().getLetzterZug().equals(null)) {
+                letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
+                    .toSchachNotation());
+            }
             // Zugzeit neu starten
             start();
             spielfeldAufbau();
@@ -1218,8 +1258,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 }
                 spielfeldAufbau();
                 // Start und Ziel feld werden a gruen makiert
-                zug.getStartfeld().setBackground(gruen);
-                zug.getZielfeld().setBackground(gruen);
+                for (Feld feld : spielfeld.getLetzteFelder()) {
+                    feld.setBackground(gruen);
+                }
             }
             // naechster Zug
             zaehler++;
