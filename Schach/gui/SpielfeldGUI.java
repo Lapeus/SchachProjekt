@@ -498,12 +498,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
          * den ersten Zug machen
          */
         wennComputerDannZiehen();
-        // Den Zug des Computers makieren
-        if (istComputerSpielerUndIstAmZug()) {
-            for (Feld feld : spielfeld.getLetzteFelder()) {
-                feld.setBackground(gruen);
-            }
-        }
     }
     
     /**
@@ -895,6 +889,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // Letzten Zug gruen makieren
                 for (Feld feld : spielfeld.getLetzteFelder()) {
                     feld.setBackground(gruen);
+                }
+                // Labels wieder richtig setzen
+                if (spielfeld.getAktuellerSpieler()) {
+                    momentanerSpieler.setText("<html>Wei&szlig;");
+                    momentanerSpieler.setForeground(Color.WHITE);
+                } else {
+                    momentanerSpieler.setText("Schwarz");  
+                    momentanerSpieler.setForeground(Color.BLACK);
                 }
             }
         }
