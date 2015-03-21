@@ -18,7 +18,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -562,7 +561,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Dient zum Erstellen der SpielfeldGUI, d.h. das Spielfeld wird mit den 
      * Feldern der {@link #felderListe} gef&uuml;llt und die Labels bekommen 
      * ihre Farbe. Dann wird die Methode {@link #spielfeldUIUpdate()} 
-     * aufgerufen, welche für die Darstellung der Figuren sorgt.
+     * aufgerufen, welche f&uuml;r die Darstellung der Figuren sorgt.
      */
     private void spielfeldAufbau() {        
         // boolean fuer abwechselnd schwarz/weiss
@@ -1072,8 +1071,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     
     /**
      * Gibt eine Schachwarnung aus, wenn der aktuelle Spieler ein menschlicher 
-     * Spieler ist. Computerspieler ben&ouml;tigen diese Warung aus 
-     * offensichtilchen Gru&uuml;den nicht.
+     * Spieler ist. Computerspieler ben&ouml;tigen diese Warnung nicht, da sie
+     * selbst&auml;ndig erkennen wenn sie im Schach stehen.
      */
     private void schachWarnung() {
         // Wenn kein Computerspieler dran ist und das Spiel nocht vorbei ist
