@@ -11,6 +11,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -110,6 +112,11 @@ public class Spielerauswahl extends JPanel implements ActionListener {
      * ausgelsen wird.
      */
     private ButtonGroup bGFarbauswahl; 
+    
+    /**
+     * Liste mit verbotenen Spielernamen.
+     */
+    private List<String> verboten = new ArrayList<String>();
 
     // Ende Attribute
     
@@ -157,7 +164,14 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         cNorth.add(tSpielname, gbc);
+        
         add(cNorth, BorderLayout.NORTH);
+        
+        // Liste mit verbotenen Spielernamen fuellen
+        verboten.add("C1 Karl Heinz");
+        verboten.add("C2 Rosalinde");
+        verboten.add("C3 Ursula");
+        verboten.add("C4 Walter");
         
         // West (Spieler 1)
         add(auswahlPanel("West"), BorderLayout.WEST);
@@ -246,8 +260,12 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             String[] spielerListe 
                 = new String[parent.getSpielerListe().size() + 1];
             spielerListe[0] = "neuer Spieler";
+            spielerListe[1] = "C1 " + parent.getSpielerListe().get(0).getName();
+            spielerListe[2] = "C2 " + parent.getSpielerListe().get(1).getName();
+            spielerListe[3] = "C3 " + parent.getSpielerListe().get(2).getName();
+            spielerListe[4] = "C4 " + parent.getSpielerListe().get(3).getName();
             // Jeden Spielernamen ins Array kopieren
-            for (int i = 0; i < spielerListe.length - 1; i++) {
+            for (int i = 4; i < spielerListe.length - 1; i++) {
                 // +1 da SpielerListe schon "neuer Spieler" enthaehlt
                 spielerListe[i + 1] = parent.getSpielerListe().get(i).getName();
             }
@@ -309,7 +327,13 @@ public class Spielerauswahl extends JPanel implements ActionListener {
      */
     public void actionPerformed(ActionEvent arg0) {
         String nameWest = (String) boxWEST.getSelectedItem();
-        String nameEast = (String) boxEAST.getSelectedItem();
+        String nameEast;
+        if (((String) boxEAST.getSelectedItem()).equals("neuer Spieler")) {
+            nameEast = (String) boxEAST.getSelectedItem();
+        } else {
+            nameEast = parent.getSpielerListe().get(boxEAST
+                .getSelectedIndex() - 1).getName();
+        }
         // Wenn der "Spiel starten"-Button gedrueckt wird
         if (arg0.getActionCommand().equals("Spiel starten")) {
             // Wenn alle Felder korrekt ausgefuellt sind
@@ -361,15 +385,16 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         /* Je nach dem welches(wenn) Feld einen Fehler enthaehlt wird die 
          * Fehlermeldung an dieses Feld angepasst 
          */
-        // Spieler1 : Name ist leer oder enthaehlt unerlaubte Zeichen
-        if (nameWest.equals("") || !enthaehltKorrekteZeichen(spieler1)) {
-            fehlermeldung = "<html>Geben Sie einen korrekten Namen f&uuml;r "
-                + "Spieler1 an!";
-        // Spieler2 : Name ist leer oder enthaehlt unerlaubte Zeichen
-        } else if (nameEast.equals("") 
-            || !enthaehltKorrekteZeichen(spieler2)) {
-            fehlermeldung = "<html>Geben Sie einen korrekten Namen f&uuml;r "
-                + "Spieler2 an!";
+        // Spieler1 : Name ist leer oder enthaehlt unerlaubte Zeichen/Namen
+        if (nameWest.equals("") || !enthaehltKorrekteZeichen(spieler1) 
+            || verboten.contains(spieler1)) {
+            fehlermeldung = "<html>Geben Sie einen g&uuml;ltigen Namen "
+                + "f&uuml;r Spieler1 an!";
+        // Spieler2 : Name ist leer oder enthaehlt unerlaubte Zeichen/Namen
+        } else if (nameEast.equals("") || !enthaehltKorrekteZeichen(spieler2)
+            || verboten.contains(spieler2)) {
+            fehlermeldung = "<html>Geben Sie einen g&uuml;ltigen Namen "
+                + "f&uuml;r Spieler2 an!";
         // Spieler 1 und Spieler 2 haben den gleichen Namen
         } else if (nameWEST.getText().equals(nameEAST.getText())) {
             fehlermeldung = "Beide Spieler haben den gleichen Namen!";
@@ -400,8 +425,9 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         // man geht von einer korrekten Zeichenkette aus
         boolean korrekt = true;
         // fuer jeden Charakter
-        if (!zeichenKette.equals("")) {
-            for (int i = 0; i < zeichenKette.length(); i++) {
+        if (!zeichenKette.equals("") && !(zeichenKette.charAt(0) == ' ')) {
+            // -1 da das letzte Zeichen gesondert geprueft wird
+            for (int i = 0; i < zeichenKette.length() - 1; i++) {
                 char zeichen = zeichenKette.charAt(i);
                 int nummer = zeichen;
                 // Wenn es kein Zeichen zwischen 0..9/a..z/A..Z ist
@@ -412,6 +438,16 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                     // dann ist die Zeichenkette Fehlerhaft
                     korrekt = false;
                 }
+            }
+            char letzter = zeichenKette.charAt(zeichenKette.length() - 1);
+            int nummer = letzter;
+            /* Die letzte Stelle darf kein Leerzeichen sein, da diese beim 
+             * speichern(Windows) einfach geloescht werden
+             */
+            if (!((nummer >= 48 && nummer <= 71) 
+                || (nummer >= 65 && nummer <= 90)
+                || (nummer >= 97 && nummer <= 122))) {
+                korrekt = false;
             }
         } else {
             korrekt = false;
