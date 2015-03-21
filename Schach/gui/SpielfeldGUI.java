@@ -327,10 +327,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         if (spielfeld.getAktuellerSpieler()) {
             momentanerSpieler.setText("<html>Wei&szlig;");
-            momentanerSpieler.setForeground(new Color(255, 255, 255));
+            momentanerSpieler.setForeground(Color.WHITE);
         } else {
             momentanerSpieler.setText("Schwarz");  
-            momentanerSpieler.setForeground(new Color(0, 0, 0));
+            momentanerSpieler.setForeground(Color.BLACK);
         }
         if (parent.getEinstellungen().isBedrohteFigurenAnzeigen()) {
             for (Feld bedroht : spielfeld.getBedrohteFelder()) {
@@ -382,7 +382,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // geschlageneLabelW
         JLabel lGeschlageneW 
             = new JLabel("<html>Geschlagene Wei&szlig;e Figuren:");
-        lGeschlageneW.setForeground(new Color(0, 0, 0));
+        lGeschlageneW.setForeground(Color.BLACK);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 4;
@@ -393,7 +393,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         //geschlageneLabelB
         JLabel lGeschlageneB = new JLabel("Geschlagene Schwarze Figuren:");
-        lGeschlageneB.setForeground(new Color(0, 0, 0));
+        lGeschlageneB.setForeground(Color.BLACK);
         gbc.gridy = 8;
         cEast.add(lGeschlageneB, gbc);
         
@@ -411,7 +411,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(geschlageneSchwarze, gbc);
         
         // Label momentanerSpieler
-        momentanerSpieler.setForeground(new Color(255, 255, 255));
+        momentanerSpieler.setForeground(Color.WHITE);
         momentanerSpieler.setBackground(cHellesBeige);
         gbc.gridheight = 1;
         gbc.gridy = 3;
@@ -423,7 +423,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(zugzeit, gbc);
         
         // Button rueck
-        rueckgaengig.setForeground(new Color(0, 0, 0));
+        rueckgaengig.setForeground(Color.BLACK);
         rueckgaengig.setBackground(cHellesBeige);
         rueckgaengig.addActionListener(this);
         rueckgaengig.setActionCommand(commandRueck);
@@ -855,12 +855,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 start();
                 // Zug ausfuehren
                 ((Computerspieler) spieler2).ziehen();
+                // Zugzeit stoppen 
                 // zugzeit stoppen 
                 sekundenStopp = (System.currentTimeMillis()
                     - sekundenStart);
-                System.out.println("Zugzeit: " + sekundenStopp);
-                System.out.println(sekundenStopp / 1000);
-                // und nachtraeglcih uebergeben
+                // und nachtraeglich uebergeben
                 spielfeld.getSpieldaten().getLetzterZug().setZugzeit(
                     (int) (sekundenStopp / 1000));
                 // auf Matt und Schach Pruefen
@@ -951,10 +950,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // Je nach aktuellem Spieler wird das Label gesetzt
                 if (spielfeld.getAktuellerSpieler()) {
                     momentanerSpieler.setText("<html>Wei&szlig;");
-                    momentanerSpieler.setForeground(new Color(255, 255, 255));
+                    momentanerSpieler.setForeground(Color.WHITE);
                 } else {
                     momentanerSpieler.setText("Schwarz");
-                    momentanerSpieler.setForeground(new Color(0, 0, 0));
+                    momentanerSpieler.setForeground(Color.BLACK);
                 }
                 // Wenn das Spiel nicht vorbei ist 
                 if (!spielVorbei) {
@@ -1150,10 +1149,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Labels wieder richtig setzen
             if (spielfeld.getAktuellerSpieler()) {
                 momentanerSpieler.setText("<html>Wei&szlig;");
-                momentanerSpieler.setForeground(new Color(255, 255, 255));
+                momentanerSpieler.setForeground(Color.WHITE);
             } else {
                 momentanerSpieler.setText("Schwarz");  
-                momentanerSpieler.setForeground(new Color(255, 255, 255));
+                momentanerSpieler.setForeground(Color.BLACK);
             }
             // Zugzeit neu starten
             start();
