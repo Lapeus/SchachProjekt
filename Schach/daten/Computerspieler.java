@@ -255,7 +255,7 @@ public class Computerspieler extends Spieler {
                 if (letzterZug instanceof Umwandlungszug) {
                     spielfeld.umwandeln(letzterZug.getFigur(), 900);
                 }
-                
+   
                 // In Abhaengigkeit der Farbe
                 if (getFarbe()) {
                     // Bekomme die Bewertung dafuer
@@ -268,6 +268,13 @@ public class Computerspieler extends Spieler {
                         && letzterZug.isErsterZug()) {
                         // Gibt es Extrapunkte (Figuren raus bringen)
                         bewertung += 20;
+                    }
+                    // Wenn ein Springer an den Rand gezogen wird
+                    if (letzterZug.getFigur().getWert() == 275
+                        && (letzterZug.getZielfeld().getXK() == 0
+                        || letzterZug.getZielfeld().getXK() == 7)) {
+                        // Gibt es noch einen zusaetzlichen Strafpunkt
+                        bewertung -= 1;
                     }
                     // Wenn ein neuer MaxWert entsteht (weiss)
                     if (bewertung > maxbewertung) {
@@ -295,7 +302,13 @@ public class Computerspieler extends Spieler {
                         // Gibt es Extrapunkte (Figuren raus bringen)
                         bewertung -= 20;
                     }
-                    
+                    // Wenn ein Springer an den Rand gezogen wird
+                    if (letzterZug.getFigur().getWert() == 275
+                        && (letzterZug.getZielfeld().getXK() == 0
+                        || letzterZug.getZielfeld().getXK() == 7)) {
+                        // Gibt es noch einen zusaetzlichen Strafpunkt
+                        bewertung += 1;
+                    }
                     // Wenn ein neuer MinWert entsteht (schwarz)
                     if (bewertung < maxbewertung) {
                         // Loesche bisherige Figuren und Felder
@@ -587,7 +600,6 @@ public class Computerspieler extends Spieler {
         if (figur.bietetSchach(koenig)) {
             bewertung += bonus;
         }
-        
         return bewertung;
     }
     
