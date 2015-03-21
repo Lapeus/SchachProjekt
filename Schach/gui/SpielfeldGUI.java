@@ -743,33 +743,33 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
       * @return passendes Bild f&uuml;r die &uuml;bergebene Figur
       */
     private Image getImage(Figur figur) {
-        String lineSep = System.getProperty("file.separator");
+        String fileSep = System.getProperty("file.separator");
         String name = "";
         Image image = null;
         // Wenn die Figur Weiss ist
         if (figur.getFarbe()) {
             // Je nach Wert der Figur das den passenden Bildpfad speichern
             if (figur.getWert() == 900) {
-                name = "pictures" + lineSep + "queenw.gif";
+                name = "pictures" + fileSep + "queenw.gif";
             }
             if (figur.getWert() == 100) {
-                name = "pictures" + lineSep + "pawnw.gif";
+                name = "pictures" + fileSep + "pawnw.gif";
             }
             if (figur.getWert() == 0) {
-                name = "pictures" + lineSep + "kingw.gif";
+                name = "pictures" + fileSep + "kingw.gif";
             }
             if (figur.getWert() == 325) {
-                name = "pictures" + lineSep + "bishopw.gif";
+                name = "pictures" + fileSep + "bishopw.gif";
             }
             if (figur.getWert() == 275) {
-                name = "pictures" + lineSep + "knightw.gif";
+                name = "pictures" + fileSep + "knightw.gif";
             }
             if (figur.getWert() == 465) {
-                name = "pictures" + lineSep + "rookw.gif";
+                name = "pictures" + fileSep + "rookw.gif";
             }
             try {
                 // Bild aus Dateipfad laden
-                image = ImageIO.read(new File(name));
+                image = ImageIO.read(getClass().getResource("/" + name));
             } catch (IOException exc) {
                 exc.printStackTrace();
             }
@@ -777,26 +777,26 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         } else {
             // Je nach Wert der Figur das den passenden Bildpfad speichern
             if (figur.getWert() == 900) {
-                name = "pictures" + lineSep + "queenb.gif";
+                name = "pictures" + fileSep + "queenb.gif";
             }
             if (figur.getWert() == 100) {
-                name = "pictures" + lineSep + "pawnb.gif";
+                name = "pictures" + fileSep + "pawnb.gif";
             }
             if (figur.getWert() == 0) {
-                name = "pictures" + lineSep + "kingb.gif";
+                name = "pictures" + fileSep + "kingb.gif";
             }
             if (figur.getWert() == 325) {
-                name = "pictures" + lineSep + "bishopb.gif";
+                name = "pictures" + fileSep + "bishopb.gif";
             }
             if (figur.getWert() == 275) {
-                name = "pictures" + lineSep + "knightb.gif";
+                name = "pictures" + fileSep + "knightb.gif";
             }
             if (figur.getWert() == 465) {
-                name = "pictures" + lineSep + "rookb.gif";
+                name = "pictures" + fileSep + "rookb.gif";
             }
             try {
                 // Bild aus Dateipfad laden
-                image = ImageIO.read(new File(name));
+                image = ImageIO.read(getClass().getResource("/" + name));
             } catch (IOException exc) {
                 exc.printStackTrace();
             }
