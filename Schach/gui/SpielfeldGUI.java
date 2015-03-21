@@ -644,7 +644,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Wenn schwarz dran ist
         } else {
             for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
+                for (int j = 7; j >= 0; j--) {
                     cCenter.add(felderListe.get(j + i * 8));
                 }
             }
