@@ -333,11 +333,16 @@ public class Computerspieler extends Spieler {
         if (!besteFiguren.isEmpty()) {
             // Ermittle eine der Alternativen
             // Ermittle die wertgeringste Figur abgesehen vom Koenig
-            int min = 900;
+            int min = 1000;
             for (Figur figur : besteFiguren) {
                 if (min > figur.getWert() && figur.getWert() > 0) {
                     min = figur.getWert();
                 }
+            }
+            // Wenn kein min-Wert gesetzt wurde, konnte nur noch der Koenig
+            // ziehen und deswegen wird der entsprechende Wert 0 gesetzt
+            if (min == 1000) {
+                min = 0;
             }
             int zufallsIndex;
             // Ermittle so lange einen zufaelligen Index, wie die ausgewaehlte
@@ -355,7 +360,6 @@ public class Computerspieler extends Spieler {
             spielfeld.ziehe(besteFiguren.get(zufallsIndex), 
                 besteFelder.get(zufallsIndex), 0);   
         }
-        System.out.println("");
     }
     
     /**

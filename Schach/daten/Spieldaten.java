@@ -151,7 +151,11 @@ public class Spieldaten {
      * @return Der letzte Zug
      */
     public Zug getLetzterZug() {
-        return zugListe.get(zugListe.size() - 1);
+        if (zugListe.size() > 0) {
+            return zugListe.get(zugListe.size() - 1);
+        } else {
+            return null;
+        }
     }
     
 }
