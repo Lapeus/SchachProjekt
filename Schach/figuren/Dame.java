@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Der Bauplan fuer die Spielfigur Dame. <br>
- * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
+ * Der Bauplan f&uuml;r die Spielfigur Dame. <br>
+ * Enth&auml;lt nur die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
  * @author Christian Ackermann
  * @see Figur
@@ -33,7 +33,7 @@ public class Dame extends Figur {
      * vertikal und diagonal bewegen und zwar so lange, bis eine eigene Figur
      * im Weg steht, eine gegnerische Figur im Weg steht und geschlagen werden
      * kann oder das Spielfeld zu Ende ist. Alle m&ouml;glichen Felder werden
-     * einer Liste zugef&uuml;gt die am Ende zur&uuml;ck gegeben wird.
+     * einer Liste zugef&uuml;gt die am Ende zur&uuml;ckgegeben wird.
      * @return Die Liste mit den m&ouml;glichen Feldern
      */
     protected List<Feld> getMoeglicheFelder() {

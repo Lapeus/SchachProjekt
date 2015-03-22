@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Der Bauplan fuer die Spielfigur L&auml;ufer. <br>
- * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
+ * Der Bauplan f&uuml;r die Spielfigur L&auml;ufer. <br>
+ * Enth&auml;lt nur die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
  * @author Christian Ackermann
  * @see Figur
@@ -29,11 +29,11 @@ public class Laeufer extends Figur {
     }
 
     /**
-     * Ermittelt alle m&ouml;glichen Felder, auf die der L&auml;fer nach den
+     * Ermittelt alle m&ouml;glichen Felder, auf die der L&auml;ufer nach den
      * normalen Zugregeln ziehen kann. Dabei darf er sich grunds&auml;tzlich 
      * so weit diagonal bewegen, bis er eine andere Figur oder den 
-     * Bildschirmrand erreicht. Alle m&ouml;glichen Felder werden einer Liste
-     * zugef&uuml;gt, die am Ende zur&uuml;ck gegeben wird.
+     * Spielfeldrand erreicht. Alle m&ouml;glichen Felder werden einer Liste
+     * zugef&uuml;gt, die am Ende zur&uuml;ckgegeben wird.
      * @return Die Liste der m&ouml;glichen Felder
      */
     protected List<Feld> getMoeglicheFelder() {

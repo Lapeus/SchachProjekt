@@ -69,6 +69,7 @@ public abstract class Figur {
      * Feld des K&ouml;nigs erreichen k&ouml;nnte und ihn damit schlagen 
      * k&ouml;nnte, st&auml;nde er jetzt im Schach.
      * @return Liste der tats&auml;chlich ziehbaren Felder
+     * @see #getMoeglicheFelder()
      */
     public List<Feld> getKorrekteFelder() {
         // Uebergabe der zu pruefenden Felder

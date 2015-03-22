@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Der Bauplan fuer die Spielfigur Springer. <br>
- * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
+ * Der Bauplan f&uuml;r die Spielfigur Springer. <br>
+ * Enth&auml;lt nur die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
  * @author Christian Ackermann
  * @see Figur
@@ -31,7 +31,7 @@ public class Springer extends Figur {
      * Ermittelt alle m&ouml;glichen Felder, auf die ein Springer ziehen darf.
      * Sofern keine Figuren auf den Zielfeldern stehen oder der Spielfeldrand
      * dabei erreicht wird, sind das acht verschiedene Felder. Diese werden
-     * einer Liste zugef&uuml;gt und anschlie&szlig;end zur&uuml;ck gegeben.
+     * einer Liste zugef&uuml;gt und anschlie&szlig;end zur&uuml;ckgegeben.
      * @return Die Liste der m&ouml;glichen Felder
      */
     protected List<Feld> getMoeglicheFelder() {

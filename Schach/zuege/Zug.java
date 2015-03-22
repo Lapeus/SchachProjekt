@@ -28,7 +28,7 @@ public class Zug {
     
     /**
      * Gibt an, ob bei diesem Zug eine Figur geschlagen wurde. <br>
-     * Ist wichig, wenn der Zug r&uuml;ckg&auml;ngig gemacht werden soll.
+     * Ist wichtig, wenn der Zug r&uuml;ckg&auml;ngig gemacht werden soll.
      */
     private boolean schlagzug;
     

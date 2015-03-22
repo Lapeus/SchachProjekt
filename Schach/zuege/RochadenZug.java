@@ -79,13 +79,6 @@ public class RochadenZug extends Zug {
     public Figur getFigur() {
         return koenig;
     }
-    /**
-     * Gibt den beteiligten K&ouml;nig zur&uuml;ck.
-     * @return Der beteiligte K&ouml;nig
-     */
-    public Figur getKoenig() {
-        return koenig;
-    }
     
     /**
      * Gibt das Startfeld des K&ouml;nigs zur&uuml;ck.

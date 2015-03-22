@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Der Bauplan fuer die Spielfigur Turm. <br>
- * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
+ * Der Bauplan f&uuml;r die Spielfigur Turm. <br>
+ * Enth&auml;lt nur die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
  * @author Christian Ackermann
  * @see Figur
@@ -31,11 +31,11 @@ public class Turm extends Figur {
     /**
      * Ermittelt alle Felder, auf die ein Turm ziehen darf. Ein Turm darf sich
      * grunds&auml;tzlich horizontal und vertikal so weit bewegen, bis er eine
-     * andere Figur oder den Bildschirmrand erreicht. Das &Uuml;berspringen
+     * andere Figur oder den Spielfeldrand erreicht. Das &Uuml;berspringen
      * des K&ouml;nigs bei der Rochade wird nicht einbezogen, da das beim 
      * Ziehen einer Rochade ber&uuml;cksichtigt wird. Alle m&ouml;glichen
      * Felder werden einer Liste zugef&uuml;gt und anschlie&szlig;end 
-     * zur&uuml;ck gegeben.
+     * zur&uuml;ckgegeben.
      * @return Die Liste der m&ouml;glichen Felder
      */
     protected List<Feld> getMoeglicheFelder() {

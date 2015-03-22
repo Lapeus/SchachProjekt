@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Der Bauplan fuer die Spielfigur K&ouml;nig. <br>
- * Besitzt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
+ * Der Bauplan f&uuml;r die Spielfigur K&ouml;nig. <br>
+ * Enth&auml;lt haupts&auml;chlich die spezifizierte Methode zur Ermittlung der 
  * m&ouml;glichen Z&uuml;ge.
  * @author Christian Ackermann
  * @see Figur
@@ -35,8 +35,7 @@ public class Koenig extends Figur {
      * Ein K&ouml;nig kann grunds&auml;tzlich auf jedes benachbarte Feld ziehen,
      * sofern es von keiner eigenen Figur besetzt wird. Ist die Option 
      * "Rochade m&ouml;glich" aktiviert, muss noch getestet werden, ob er eine
-     * Rochade durchf&uuml;hren kann. Dies geschieht jedoch in einer anderen
-     * Methode.
+     * Rochade durchf&uuml;hren kann.
      * @return Die Liste der m&ouml;glichen Felder
      */
     protected List<Feld> getMoeglicheFelder() {
@@ -226,7 +225,7 @@ public class Koenig extends Figur {
      * Wird verwendet, um bei der Rochade pr&uuml;fen zu k&ouml;nnen, ob eines
      * der Felder, &uuml;ber die der K&ouml;nig ziehen muss, bedroht ist. <br>
      * <i>Hinweis: Die Methode ist fast identisch mit der Methode 
-     * {@link daten.Spielfeld#getBedrohteFelder()} in der Klasse Spielfeld, 
+     * {@link daten.Spielfeld#getBedrohteFelder()}, 
      * jedoch wird in dieser Variante nicht getestet, ob der K&ouml;nig eine 
      * Rochade ziehen d&uuml;rfte, da es sonst zu einer endlosen Rekursion 
      * k&auml;me.</i>

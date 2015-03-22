@@ -19,8 +19,8 @@ public class Umwandlungszug extends Zug {
     /**
      * Erstellt einen neuen Umwandlungszug mit nahezu den gleichen Attributen
      * wie seine Elternklasse. <br>
-     * Er &uuml;bergibt auch dem super-Konstruktor alle ben&ouml;tigten Daten
-     * Der boolean ersterZug wird standardm&auml;&szlig;ig auf <b>false</b> 
+     * Er &uuml;bergibt auch dem super-Konstruktor alle ben&ouml;tigten Daten.
+     * Der Boolean ersterZug wird standardm&auml;&szlig;ig auf <b>false</b> 
      * gesetzt, da der Bauer bereits gezogen worden sein muss, damit er die 
      * gegnerische Grundlinie erreichen konnte.
      * @param startfeld Das Feld auf dem der Bauer vor dem Zug stand
@@ -36,7 +36,7 @@ public class Umwandlungszug extends Zug {
     
     /**
      * Zweiter Konstruktor dieser Klasse. Wird ben&ouml;tigt, wenn ein Spiel 
-     * geladen wird, da es dort noch keine ziehenden Figuren sondern nur deren
+     * geladen wird, da es dort noch keine ziehenden Figuren, sondern nur deren
      * Felder gibt.
      * @param startfeld Das Startfeld der ziehenden Figur
      * @param zielfeld Das Zielfeld der ziehenden Figur
