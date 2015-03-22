@@ -19,7 +19,7 @@ import zuege.Zug;
 public class Bauer extends Figur {
     
     /**
-     * Erzeugt einen neuen Bauern.
+     * Erzeugt einen neuen Bauern. 
      * Einziger Konstruktor dieser Klasse.
      * @param position Das Feld auf dem die Figur stehen soll
      * @param farbe Die Spielfarbe der Figur (<b>true</b> f&uuml;r wei&szlig;
