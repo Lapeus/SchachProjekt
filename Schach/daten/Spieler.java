@@ -37,7 +37,7 @@ public class Spieler {
     /**
      * Liefert eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
      * Wird f&uuml;r das Speichern des Gesamtdatensatzes verwendet. Dabei ist
-     * nur die Statitik des Spielers bedeutend, da der Name aus dem Dateinamen
+     * nur die Statistik des Spielers bedeutend, da der Name aus dem Dateinamen
      * abzuleiten ist und die aktuelle Farbe unerheblich ist, f&uuml;r den Fall,
      * dass die Spiele nicht in chronologischer Reihenfolge geladen werden.
      * @return Eine mehrzeilige Zeichenkette
@@ -53,14 +53,6 @@ public class Spieler {
      */
     public String getName() {
         return name;
-    }
-    
-    /**
-     * Setzt den Namen des Spielers.
-     * @param name Name des Spielers
-     */
-    public void setName(String name) {
-        this.name = name;
     }
     
     /**

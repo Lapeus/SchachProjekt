@@ -33,7 +33,7 @@ public class Spielfeld {
     
     /**
      * Alle spielbezogenen Einstellungen, die beim Laden &uuml;bernommen werden
-     * m&uuml;ssten.
+     * m&uuml;ssen.
      */
     private Einstellungen einstellungen;
     
@@ -56,30 +56,19 @@ public class Spielfeld {
     private List<Figur> schwarzeFiguren = new ArrayList<Figur>();
     
     /**
-     * Eine Liste mit allen geschlagenen wei&szlig;en Figuren, nach absteigendem
-     * Wert sortiert.
+     * Eine Liste mit allen geschlagenen wei&szlig;en Figuren, chronologisch
+     * nach Zeitpunkt des Schlagens sortiert.
      */
     private List<Figur> geschlagenWeiss = new ArrayList<Figur>();
     
     /**
-     * Eine Liste mit allen geschlagenen schwarzen Figuren, nach absteigendem
-     * Wert sortiert.
+     * Eine Liste mit allen geschlagenen schwarzen Figuren, chronologisch
+     * nach Zeitpunkt des Schlagens sortiert.
      */
     private List<Figur> geschlagenSchwarz = new ArrayList<Figur>();
     
     /**
-     * Eine Liste mit den Feldern der bedrohten Figuren.
-     */
-    private List<Feld> bedrohteFelder = new ArrayList<Feld>();
-    
-    /**
-     * Eine Liste mit den Feldern der zu schlagenden Figuren.
-     */
-    private List<Feld> schlagendeFelder = new ArrayList<Feld>();
-    
-    /**
-     * Gibt an, welcher Spieler am Zug ist und von welcher Person aus das Brett
-     * aufgebaut ist. <br>
+     * Gibt an, welcher Spieler am Zug ist.<br>
      * <b>true</b> f&uuml;r wei&szlig;, <b>false</b> f&uuml;r schwarz
      */
     private boolean aktuellerSpieler = true;
@@ -356,7 +345,7 @@ public class Spielfeld {
             felder.get(indexStart).setFigur(null);
             // Der Turm wurde gezogen
             turm.setGezogen(true);
-            /* Der Zug wird geandert um ihn einfacher rueckgaengig machen
+            /* Der Zug wird geaendert um ihn einfacher rueckgaengig machen
              * zu koennen.
              */
             spieldaten.getZugListe().remove(zug);
@@ -402,7 +391,7 @@ public class Spielfeld {
             // Das Feld wird aktualisiert
             andererBauer.getPosition().setFigur(null);
             
-            /* Der Zug wird geandert um ihn einfacher rueckgaengig machen
+            /* Der Zug wird geaendert um ihn einfacher rueckgaengig machen
              * zu koennen.
              */
             spieldaten.getZugListe().remove(zug);
@@ -416,7 +405,7 @@ public class Spielfeld {
     /**
      * Macht den jeweils letzten Zug r&uuml;ckg&auml;ngig. <br>
      * Dabei wird grunds&auml;tzlich nur die Methode 
-     * {@link #ziehe(Figur, Feld, int)} von hinten aus ausgef&uuml;hrt. 
+     * {@link #ziehe(Figur, Feld, int)} r&uuml;ckw&auml;rts ausgef&uuml;hrt. 
      * Sonderz&uuml;ge werden gesondert behandelt.
      */
     public void zugRueckgaengig() {
@@ -425,7 +414,6 @@ public class Spielfeld {
         // Loesche ihn aus der Liste
         spieldaten.getZugListe().remove(zug);
         // Mache ihn rueckgaengig (ziehe Methode von hinten)
-        // Die bedrohten Felder koennen ignoriert werden
         
         // Aktiver Spieler muss geaendert werden.
         aktuellerSpieler = !aktuellerSpieler;
@@ -544,7 +532,7 @@ public class Spielfeld {
     
     /**
      * Wandelt den angegebenen Bauern in eine andere Figur um.
-     * @param figur Der Bauer, der umgewandelt werden darf
+     * @param figur Der Bauer, der umgewandelt werden soll
      * @param wert Der Wert der Figur, in die er umgewandelt werden soll
      */
     public void umwandeln(Figur figur, int wert) {
@@ -588,6 +576,7 @@ public class Spielfeld {
      * Die Pr&uuml;fung auf Matt oder Patt erfolgt an anderer Stelle.
      * @return <b>true</b> wenn er nicht mehr ziehen kann, <b>false</b> wenn er
      * noch ziehen kann.
+     * @see Spiel#auswertung()
      */
     public boolean schachMatt() {
         boolean matt = false;
@@ -637,7 +626,8 @@ public class Spielfeld {
      * Liste zur&uuml;ck um sie auf dem Spielfeld kenntlich machen zu 
      * k&ouml;nnen.
      * @return Eine Liste mit zwei Feldern: erst das Startfeld, dann das 
-     * Zielfeld
+     * Zielfeld<br>
+     * Im Fall von Rochade werden alle vier beteiligten Felder zugef&uuml;gt
      */
     public List<Feld> getLetzteFelder() {
         List<Feld> letzteFelder = new ArrayList<Feld>();
@@ -670,8 +660,8 @@ public class Spielfeld {
         /* Zusatz: Vorbereitung fuer die grafische Hilfestellung "Es werden
          * alle in diesem Zug bedrohten Figuren angezeigt."
          */
-        // Liste mit den bedrohten Figuren leeren
-        bedrohteFelder.clear();
+        // Liste mit den bedrohten Figuren anlegen
+        List<Feld> bedrohteFelder = new ArrayList<Feld>();
         // Liste mit den gegnerischen Figuren
         List<Figur> gegnerFiguren;
         // Wenn weiss als naechstes dran ist
@@ -709,8 +699,8 @@ public class Spielfeld {
      * @return Eine Liste mit den Feldern auf denen zu schlagende Figuren stehen
      */
     public List<Feld> getSchlagendeFelder() {
-        // Liste mit zu schlagenden Figuren leeren
-        schlagendeFelder.clear();
+        // Liste mit zu schlagenden Figuren erstellen
+        List<Feld> schlagendeFelder = new ArrayList<Feld>();
         // Liste mit den eigenen Figuren
         List<Figur> eigeneFiguren;
         // Wenn weiss als naechstes dran ist
@@ -836,29 +826,11 @@ public class Spielfeld {
     }
     
     /**
-     * Setzt die Liste der wei&szlig;en Figuren. <br>
-     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
-     * @param weisseFiguren Die Liste der wei&szlig;en Figuren
-     */
-    public void setWeisseFiguren(List<Figur> weisseFiguren) {
-        this.weisseFiguren = weisseFiguren;
-    }
-    
-    /**
      * Gibt die schwarzen noch im Spiel befindlichen Figuren zur&uuml;ck.
      * @return Liste von schwarzen Figuren
      */
     public List<Figur> getSchwarzeFiguren() {
         return sortiereListe(schwarzeFiguren);
-    }
-    
-    /**
-     * Setzt die Liste der schwarzen Figuren. <br>
-     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
-     * @param schwarzeFiguren Die Liste der schwarzen Figuren
-     */
-    public void setSchwarzeFiguren(List<Figur> schwarzeFiguren) {
-        this.schwarzeFiguren = schwarzeFiguren;
     }
     
     /**
@@ -870,29 +842,11 @@ public class Spielfeld {
     }
     
     /**
-     * Setzt die Liste der geschlagenen wei&szlig;en Figuren. <br>
-     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
-     * @param geschlagenWeiss Die Liste der geschlagenen wei&szlig;en Figuren
-     */
-    public void setGeschlagenWeiss(List<Figur> geschlagenWeiss) {
-        this.geschlagenWeiss = geschlagenWeiss;
-    }
-    
-    /**
      * Gibt die geschlagenen schwarzen Figuren zur&uuml;ck.
      * @return Liste von schwarzen Figuren
      */
     public List<Figur> getGeschlagenSchwarz() {
         return geschlagenSchwarz;
-    }
-    
-    /**
-     * Setzt die Liste der geschlagenen schwarzen Figuren. <br>
-     * Wird ausschlie&szlig;lich von der Laden-Methode verwendet.
-     * @param geschlagenSchwarz Die Liste der geschlagenen schwarzen Figuren
-     */
-    public void setGeschlagenSchwarz(List<Figur> geschlagenSchwarz) {
-        this.geschlagenSchwarz = geschlagenSchwarz;
     }
     
     /**
@@ -914,8 +868,7 @@ public class Spielfeld {
     }
     
     /**
-     * Gibt an, welcher Spieler am Zug ist und ob das Brett momentan von 
-     * Wei&szlig; oder von Schwarz aus gesehen wird.
+     * Gibt an, welcher Spieler am Zug ist.
      * @return <b>true</b> f&uuml;r wei&szlig;, <b>false</b> f&uuml;r schwarz
      */
     public boolean getAktuellerSpieler() {

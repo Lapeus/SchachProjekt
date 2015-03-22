@@ -1001,11 +1001,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             ausgewaehlteFigur = null;
         }
         
-        // Faerbt die bedrohten Felder Grau
+        // Faerbt die bedrohten Felder Grau und den Koenig orange
         if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen() 
             && !spielVorbei) {
             for (Feld bedroht : spielfeld.getBedrohteFelder()) {
-                bedroht.setBackground(new Color(100, 100, 100));
+                if (bedroht.getFigur().getWert() == 0) {
+                    bedroht.setBackground(Color.ORANGE);
+                } else {
+                    bedroht.setBackground(new Color(100, 100, 100));
+                }
             }
         }
         revalidate();  
@@ -1086,6 +1090,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if ((boolean) auswertung.get(1)) {
                 ergebnis = "<html>" + gewinner.getName() 
                     + " gewinnt nach " + zuege + " Z&uuml;gen.";
+                // Den Koenig pink makieren
+                if (spielfeld.getAktuellerSpieler()) {
+                    spielfeld.getWeisseFiguren().get(0).getPosition()
+                    .setBackground(new Color(182, 0, 182));
+                } else {
+                    spielfeld.getSchwarzeFiguren().get(0).getPosition()
+                    .setBackground(new Color(182, 0, 182));
+                }
             } else {
                 ergebnis = "Das Spiel endet in einem Patt";
             }

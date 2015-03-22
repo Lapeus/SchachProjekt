@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.text.html.HTMLEditorKit;
 
+import daten.Computerspieler;
 import daten.Spieler;
 import daten.Statistik;
 
@@ -183,12 +184,15 @@ public class Statistiken extends JPanel implements ActionListener {
                 + statistik.getAnzahlPatt() + lineSep;
             momentan += "Matt: " 
                 + statistik.getAnzahlMatt() + lineSep;
-            momentan += "Siege vs. Comp: "
-                + statistik.getAnzahlSiegeC() + lineSep;
-            momentan += "Patt vs. Comp: " 
-                + statistik.getAnzahlPattC() + lineSep;
-            momentan += "Matt vs. Comp: " 
-                + statistik.getAnzahlMattC() + lineSep;
+            // Nur wenn es kein Computerspieler ist
+            if (!(spieler instanceof Computerspieler)) {
+                momentan += "Siege vs. Comp: "
+                    + statistik.getAnzahlSiegeC() + lineSep;
+                momentan += "Patt vs. Comp: " 
+                    + statistik.getAnzahlPattC() + lineSep;
+                momentan += "Matt vs. Comp: " 
+                    + statistik.getAnzahlMattC() + lineSep;
+            }
             /* Bei allen Werten die ab hier folgen wird zunaecht ueberprueft ob
              * diese ueberhaupt schon einen Wert haben. Nur dies zutrifft wird 
              * der jeweilige Wert in der Statistik angezeigt

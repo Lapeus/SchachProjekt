@@ -187,27 +187,11 @@ public class Zug {
     }
     
     /**
-     * Setzt, ob bei dem Zug eine Figur geschlagen wurde.
-     * @param schlagzug Wahrheitswert, ob eine Figur geschlagen wird
-     */
-    public void setSchlagzug(boolean schlagzug) {
-        this.schlagzug = schlagzug;
-    }
-    
-    /**
      * Gibt an, ob es der erste Zug dieser Figur ist.
      * @return Wahrheitswert, ob es der erste Zug ist
      */
     public boolean isErsterZug() {
         return ersterZug;
-    }
-
-    /**
-     * Setzt, ob es der erste Zug dieser Figur ist.
-     * @param ersterZug Wahrheitswert, ob es der erste Zug ist
-     */
-    public void setErsterZug(boolean ersterZug) {
-        this.ersterZug = ersterZug;
     }
 
   
