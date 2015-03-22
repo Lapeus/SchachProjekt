@@ -37,12 +37,12 @@ public class SpielLaden extends JPanel implements ActionListener {
     private SpielGUI parent;
     
     /**
-     * Container fuer die Center-Objekte. 
+     * Container f&uuml;r die Center-Objekte. 
      */
     private Container cCenter;
     
     /**
-     * Label fuer die Information "Spiel laden".
+     * Label f&uuml;r die Information "Spiel laden".
      */
     private JLabel lblSpielLaden = new JLabel("Spiel laden");
     
@@ -52,7 +52,7 @@ public class SpielLaden extends JPanel implements ActionListener {
     private JButton btnSpielLaden = new JButton("Spiel laden");
     
     /**
-     * Button um auf das Startpanel zurueckzukehren.
+     * Button um auf das Startpanel zur&uuml;ckzukehren.
      */
     private JButton btnZurueck = new JButton("<html>Zur&uuml;ck");
     
@@ -62,12 +62,12 @@ public class SpielLaden extends JPanel implements ActionListener {
     private JList<String> jSpieleListe;
     
     /**
-     * Konstante fuer den Farbton den Hintergrunds (Braun).
+     * Konstante f&uuml;r den Farbton den Hintergrunds (Braun).
      */
     private static Color cBraunRot = new Color(164, 43, 24); 
     
     /**
-     * Konstante fuer den Farbton der Auswahlfelder (Beige).
+     * Konstante f&uuml;r den Farbton der Auswahlfelder (Beige).
      */
     private static Color cHellesBeige = new Color(255, 248, 151);
     
@@ -86,7 +86,8 @@ public class SpielLaden extends JPanel implements ActionListener {
     }
     
     /**
-     * Gestaltet ein JPanel mit Auswahlfeldern fuer eine Spiel laden Operation.
+     * Gestaltet ein JPanel mit Auswahlfeldern f&uuml;r eine Spiel laden 
+     * Operation.
      */
     private void init() {
         this.setLayout(new BorderLayout());
@@ -146,12 +147,12 @@ public class SpielLaden extends JPanel implements ActionListener {
     }
     
     /**
-     * Actionperformed fuer den laden Button.
+     * Actionperformed f&uuml;r den laden Button.
      * F&auml;ngt die ung&uuml;ltigen Eingaben/Auswahlen ab. 
      * Aktualisiert die Liste, wenn ein falscher(nicht zu ladendes Spiel) 
      * auftaucht.
      * Ruft die laden Methode von parent auf.
-     * @param e ausgeloestes ActionEvent 
+     * @param e ausgel&ouml;stes ActionEvent 
      */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(btnSpielLaden)) {

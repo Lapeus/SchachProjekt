@@ -35,7 +35,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     // Anfang Attribute
     
     /**
-     * SerialKey zur spaeteren Identifizierung.
+     * SerialKey zur spauml;teren Identifizierung.
      */
     private static final long serialVersionUID = -6920443370361911344L;
     
@@ -66,7 +66,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     private JButton bSpielen = new JButton("Spiel starten");
     
     /**
-     * Button um auf die Eroeffnungseite zu kommen.
+     * Button um auf die Er&ouml;ffnungseite zu kommen.
      */
     private JButton btnZurueck = new JButton("<html>Zur&uuml;ck");
     
@@ -77,13 +77,13 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     
     /**
      * Spieler der mit dem Namen aus dem Textfeld nameWest erstellt und 
-     * spaeter an die SpielfeldGUI uebergeben wird.
+     * sp&auml;ter an die SpielfeldGUI uebergeben wird.
      */
     private Spieler spieler1;
     
     /**
      * Spieler der mit dem Namen aus dem Textfeld nameEast erstellt und 
-     * spaeter an die SpielfeldGUI uebergeben wird.
+     * sp&auml;ter an die SpielfeldGUI uebergeben wird.
      */
     private Spieler spieler2;
     
@@ -159,7 +159,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         lSpielname.setMinimumSize(new Dimension(150, 50));
         cNorth.add(lSpielname, gbc);
         tSpielname.setBackground(cHellesBeige);
-        tSpielname.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space ");
+        tSpielname.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space");
         gbc.gridy = 1;
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -302,12 +302,12 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         // Wenn es fuer die menschlische SpielerListe ist
         if (seite.equals("West")) {
             nameWEST.setBackground(cHellesBeige);
-            nameWEST.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space ");
+            nameWEST.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space");
             eingabePanel.add(nameWEST);
         // Wenn es fuer die komlette SpielerListe ist
         } else {
             nameEAST.setBackground(cHellesBeige);
-            nameEAST.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space ");
+            nameEAST.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space");
             eingabePanel.add(nameEAST);
         }
         eingabePanel.setBackground(cBraunRot);
@@ -317,13 +317,13 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     // ActionListener
 
     /**
-     * ActionPerformed fuer den Fall, dass der "Spiel starten"-Button gedrueckt 
-     * wird.
-     * Wenn der "Spiel starten"-Button gedrueckt wird muss geschaut werden, ob
-     * ob die benoetigten Felder fuer die Erstellung eines neuen Spiels 
-     * ausgefuellt sind.
+     * ActionPerformed f&uumlr den Fall, dass der "Spiel starten"-Button 
+     * gedr&uuml;ckt wird.
+     * Wenn der "Spiel starten"-Button gedr&uuml;ckt wird muss geschaut werden, 
+     * ob die ben&ouml;tigten Felder f&uuml;r die Erstellung eines ne&uuml;n 
+     * Spiels ausgef&uuml;llt sind.
      * 
-     * @param arg0 Ausgeloestes Event
+     * @param arg0 Ausgel&ouml;stes Event
      */
     public void actionPerformed(ActionEvent arg0) {
         String nameWest = (String) boxWEST.getSelectedItem();
@@ -370,10 +370,10 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     }
     
     /**
-     * Prueft ob alle Felder Korrekte eingaben enthalten.
+     * Pr&uuml;ft ob alle Felder Korrekte eingaben enthalten.
      * Wenn nicht dann wird die passende Fehlermeldung angezeigt.
      * @param nameWest name im westlichen Textfeld(Spieler 1)
-     * @param nameEast name im oestlichen Textfeld(Spieler 2)
+     * @param nameEast name im &ouml;stlichen Textfeld(Spieler 2)
      * @return true wenn alle Felder Korrekt sind
      */
     private boolean wennFelderKorrekt(String nameWest, String nameEast) {
@@ -417,9 +417,10 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     }
     
     /**
-     * Ueberprueft ob eine Zeichenkette nur die zeichen 0..9/a..z/A..Z enthaelt.
-     * @param zeichenKette zu ueberpruefende Zeichenkette
-     * @return true wenn alle Zeichen gueltig sind sonst false
+     * &uuml;berpr&uuml;ft ob eine Zeichenkette nur die zeichen 0..9/a..z/A..Z 
+     * enth&auml;lt.
+     * @param zeichenKette zu &uumlberpr&uuml;fende Zeichenkette
+     * @return true wenn alle Zeichen g&uuml;ltig sind sonst false
      */
     private boolean enthaehltKorrekteZeichen(String zeichenKette) {
         // man geht von einer korrekten Zeichenkette aus
@@ -459,7 +460,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
      * Erstellt wenn alle Daten korrekt eingegeben wein neues Spiel mit den 
      * zwei gefiltertetn Spielern und der Spielerfarbe.
      * @param nameWest name im westlichen Textfeld(Spieler 1)
-     * @param nameEast name im oestlichen Textfeld(Spieler 2)
+     * @param nameEast name im &ouml;stlichen Textfeld(Spieler 2)
      */
     private void spielErstellen(String nameWest, String nameEast) {
      // Wenn Spieler1 ein neuer Spieler ist

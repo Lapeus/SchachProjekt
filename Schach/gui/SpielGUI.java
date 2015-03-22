@@ -130,7 +130,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
-     * Gibt den momentanten Gesamtdatensatz dieser Spielsession zurueck.
+     * Gibt den momentanten Gesamtdatensatz dieser Spielsession zur&uuml;ck.
      * @return momentaner Gesamtdatensatz
      */
     public Gesamtdatensatz getGesamtdatensatz() {
@@ -138,8 +138,8 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
-     * Methode zur Rueckgabe der SpieleListe.
-     * @return Gibt die SpieleListe des Gesamtdatensatzes zurueck
+     * Methode zur R&uuml;ckgabe der SpieleListe.
+     * @return Gibt die SpieleListe des Gesamtdatensatzes zur&uuml;ck
      */
     public List<String> getSpieleListe() {
         return gesamtdatensatz.getSpieleListe();
@@ -147,7 +147,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     
     /**
      * Ruft die getSpiel-Methode des Gesamdatensatzes aus und gibt das Spiel mit
-     * diesem Namen zurueck.
+     * diesem Namen zur&uuml;ck.
      * @param spielname Name eines bereits gespeicherten Spiels
      * @return Spiel zu dem eingegeben Namen
      */
@@ -156,7 +156,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
-     * Methode zur rueckgabe der SpielerListe des Gesamtdatensatzes.
+     * Methode zur r&uuml;ckgabe der SpielerListe des Gesamtdatensatzes.
      * @return SpielerListe des Gesamtdatensatzes
      */
     public List<Spieler> getSpielerListe() {
@@ -164,7 +164,8 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
-     * Methode zur rueckgabe der MenschlichenSpielerListe des Gesamtdatensatzes.
+     * Methode zur r&uuml;ckgabe der MenschlichenSpielerListe des 
+     * Gesamtdatensatzes.
      * @return MeschlicheSpielerListe des Gesamtdatensatzes
      */
     public List<Spieler> getMenschlicheSpielerListe() {
@@ -172,7 +173,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
-     * Gibt den Einstellungsatz der momentanten Spielsession zurueck.
+     * Gibt den Einstellungsatz der momentanten Spielsession zur&uuml;ck.
      * @return momentaner Einstellungssatz
      */
     public Einstellungen getEinstellungen() {
@@ -188,24 +189,24 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
-     * Fuegt einen Spieler zum gesamtdatensatz hinzu.
-     * @param spieler Spieler, welcher zum Gesamtdatensatz hinzugefuegt werden 
-     * soll
+     * F&uuml;gt einen Spieler zum gesamtdatensatz hinzu.
+     * @param spieler Spieler, welcher zum Gesamtdatensatz hinzugef&uuml;gt 
+     * werden soll
      */
     public void addSpieler(Spieler spieler) {
         gesamtdatensatz.addSpieler(spieler);
     }
     
     /**
-     * Fuegt ein Spiel zur SpieleListe des Gesamtdatensatzes hinzu.
-     * @param spiel Das hinzuzufuegende Spieleobjekt
+     * F&uuml;gt ein Spiel zur SpieleListe des Gesamtdatensatzes hinzu.
+     * @param spiel Das hinzuzuf&uuml;gende Spieleobjekt
      */
     public void spielSpeichern(Spiel spiel) {
         gesamtdatensatz.spielSpeichern(spiel);
     }
     
     /**
-     * Gibt die HighscoreListe des Gesamtdatensatzes zurueck.
+     * Gibt die HighscoreListe des Gesamtdatensatzes zur&uuml;ck.
      * @return nach Punkten gerankedte Spielerliste 
      */
     public List<Spieler> getRanking() {
@@ -221,7 +222,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
-     * Loescht die automtische speicherung des momentanen Spiels.
+     * L&ouml;scht die automtische speicherung des momentanen Spiels.
      */
     public void autoSaveLoeschen() {
         gesamtdatensatz.autosaveLoeschen();
@@ -233,7 +234,6 @@ public class SpielGUI extends JFrame implements WindowListener {
     private void gesamtdatenLaden() {
         gesamtdatensatz = new Gesamtdatensatz();
         gesamtdatensatz.laden();
-        // TODO Laden
     }
     
     /**
@@ -267,7 +267,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     // Ende Methoden
     
     /**
-     * Sorgt fuer die Erstellung einer SpielGUI beim start des Programms.
+     * Sorgt f&uuml;r die Erstellung einer SpielGUI beim start des Programms.
      * @param args Systemrelevantes Stringarray
      */
     public static void main(String[] args) {
@@ -279,7 +279,6 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @param e WindowListenerEvent
      */
     public void windowActivated(WindowEvent e) {
-        // TODO Auto-generated method stub
     }
     
     /**
@@ -287,7 +286,6 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @param e WindowListenerEvent
      */
     public void windowClosed(WindowEvent e) {
-        // TODO Auto-generated method stub
     }
     
     /**
@@ -327,7 +325,6 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @param e WindowListenerEvent
      */
     public void windowDeactivated(WindowEvent e) {
-        // TODO Auto-generated method stub
     }
 
     /**
@@ -335,7 +332,6 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @param e WindowListenerEvent
      */    
     public void windowDeiconified(WindowEvent e) {
-        // TODO Auto-generated method stub
     }
     
     /**
@@ -343,7 +339,6 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @param e WindowListenerEvent
      */
     public void windowIconified(WindowEvent e) {
-        // TODO Auto-generated method stub
     }
     
     /**
@@ -351,6 +346,5 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @param e WindowListenerEvent
      */
     public void windowOpened(WindowEvent e) {
-        // TODO Auto-generated method stub
     }
 }

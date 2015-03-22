@@ -42,7 +42,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     private SpielGUI parent;
     
     /**
-     * Einstellungen welche spaeter aus der ElternGUI ausgelesen werden. 
+     * Einstellungen welche sp&auml;ter aus der ElternGUI ausgelesen werden. 
      */
     private Einstellungen einstellungen;
     
@@ -57,18 +57,18 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     private JRadioButton nein;
     
     /**
-     * ButtonGroup fuer ja- und nein- Buttons, damit immer nur einer der Buttons
-     * auswaehlbar ist.
+     * ButtonGroup f&uuml;r ja- und nein- Buttons, damit immer nur einer der 
+     * Buttons ausw&auml;hlbar ist.
      */
     private ButtonGroup bGAuswahl;
     
     /**
-     * Button fuer die Speicherung der Spieleinstellungen.
+     * Button f&uuml;r die Speicherung der Spieleinstellungen.
      */
     private JButton speichern;
     
     /**
-     * Button um zurueck zum Startfenster zu kommen.
+     * Button um zur&uuml;ck zum Startfenster zu kommen.
      */
     private JButton zurueck;
     
@@ -78,12 +78,12 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     private JTextPane txtZugzeitbegrenzung;
     
     /**
-     * Konstante fuer den Farbton des Hintergrundes (Braun).
+     * Konstante f&uuml;r den Farbton des Hintergrundes (Braun).
      */
     private final Color cBraunRot = new Color(164, 43, 24); 
     
     /**
-     * Konstante fuer den Farbton der Buttons (Beige).
+     * Konstante f&uuml;r den Farbton der Buttons (Beige).
      */
     private final Color cHellesBeige = new Color(255, 248, 151);
     
@@ -138,8 +138,8 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     
     /**
      * Erstellt neue Buttons und gibt ihnen die &uuml;bergebenen ActionCommands.
-     * @param commmandJa ActionCommand fuer den Ja-RadioButton
-     * @param commandNein ActionCommand fuer den Nein-RadioButton
+     * @param commmandJa ActionCommand f&uuml;r den Ja-RadioButton
+     * @param commandNein ActionCommand f&uuml;r den Nein-RadioButton
      */
     private void auswahlJaNein(String commmandJa,
         String commandNein) {
@@ -160,7 +160,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     }
     
     /**
-     * Erstellt das Auswahlmenue fuer die Einstellungen.
+     * Erstellt das Auswahlmenue f&uuml;r die Einstellungen.
      */
     private void initCenter() {
         // Center
@@ -311,8 +311,8 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     }
     
     /**
-     * Gibt zurueck ob eine eingegbene Zahl im Zugzeotbegrenzungsfenster einer 
-     * Korrekten Notation entspricht.
+     * Gibt zur&uuml;ck ob eine eingegbene Zahl im Zugzeotbegrenzungsfenster 
+     * einer Korrekten Notation entspricht.
      * @return true wenn ja false wenn nein
      */
     private boolean korrekteZahl() {
@@ -341,7 +341,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     }
     
     /**
-     * Action Performed fuer den Speichern Button.
+     * Action Performed f&uuml;r den Speichern Button.
      * @param e ausgeloestes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
