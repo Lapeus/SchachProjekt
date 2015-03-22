@@ -25,6 +25,7 @@ import daten.Einstellungen;
 
 /**
  * Panel um die Einstellungen zu verwalten.
+ * @author Marvin Wolf
  */
 public class EinstellungenGUI extends JPanel implements ActionListener {
     // Anfang Attribute

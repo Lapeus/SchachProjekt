@@ -8,7 +8,7 @@ import figuren.Figur;
  * Stellt ein Feld als Teil des Schachbrettes dar. <br>
  * Erbt von JLabel und hat zus&auml;tzlich die Koordinaten des Felder auf dem
  * Brett und die Figur auf dem Feld gespeichert.
- * @author Christian Ackermann
+ * @author Marvin Wolf
  */
 public class Feld extends JLabel {
 
