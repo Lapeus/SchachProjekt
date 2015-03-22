@@ -10,7 +10,7 @@ import zuege.Zug;
 /**
  * Verwaltet alle wichtigen Daten f&uuml;r ein Spiel. <br>
  * Ein Spiel besteht aus einem Namen, den beteiligten Spielern, dem 
- * zugehoerigen Spielfeld, sowie s&auml;mtlichen ben&ouml;tigten Daten und 
+ * zugeh&ouml;rigen Spielfeld, sowie s&auml;mtlichen ben&ouml;tigten Daten und 
  * Einstellungen.
  * @author Christian Ackermann
  */
@@ -58,7 +58,7 @@ public class Spiel {
     }
     
     /**
-     * Wertet das Spiel aus und ermittelt das Ergebnis und den Sieger und 
+     * Wertet das Spiel aus und ermittelt das Ergebnis, den Sieger und 
      * aktualisiert die Statistik.<br>
      * Wird aus der GUI aufgerufen und &uuml;bergibt dieser eine Liste mit den
      * ermittelten Daten.
@@ -110,6 +110,11 @@ public class Spiel {
      * Spielfarbe des Spielers, dessen Bedenkzeit &uuml;berschritten wurde
      * @return Eine Liste vom Typ Object mit den wichtigen Informationen zum
      * Aufgeben
+     * <ul>
+     * <li>Der Verlierer des Spiels vom Typ Spieler</li>
+     * <li>Die Anzahl der Z&uuml;ge nach denen dieses Spiel beendet wurde</li>
+     * <li>Der Gewinner des Spiels vom Typ Spieler</li>
+     * </ul>
      */
     public List<Object> aufgeben(boolean spieler) {
         // ErgebnisListe erstellen
@@ -142,7 +147,7 @@ public class Spiel {
     
     /**
      * Wertet eine Einigung auf Unentschieden zwischen den Spielern aus.<br>
-     * Dabei wird Ausschlie&szlig;lich die Statistik aktualisiert.
+     * Dabei wird ausschlie&szlig;lich die Statistik aktualisiert.
      */
     public void unentschieden() {
         if (spielfeld.getEinstellungen().isInStatistikEinbeziehen()) {
@@ -174,7 +179,7 @@ public class Spiel {
             statistikMatt(verlierer);
         // Wenn es ein Patt ist
         } else {     
-            // Die Statistik des Patt setzenden
+            // Die Statistik des Patt-Setzenden
             Statistik stat = gewinner.getStatistik();
             stat.setAnzahlPatt(stat.getAnzahlPatt() + 1);
             
@@ -183,7 +188,7 @@ public class Spiel {
                 stat.setAnzahlPattC(stat.getAnzahlPattC() + 1);
             }
             
-            // Die Statistik des Patt gesetzten 
+            // Die Statistik des Patt-Gesetzten 
             stat = verlierer.getStatistik();
             stat.setAnzahlPatt(stat.getAnzahlPatt() + 1);
             
@@ -200,7 +205,7 @@ public class Spiel {
      * @param gewinner Der Spieler der gewonnen hat
      */
     private void statistikSieg(Spieler gewinner) {
-     // Die Statistik des Gewinners
+        // Die Statistik des Gewinners
         Statistik stat = gewinner.getStatistik();
         int zuege = spielfeld.getSpieldaten().getAnzahlZuege(
             gewinner.getFarbe());
@@ -347,7 +352,7 @@ public class Spiel {
     
     /**
      * Bereitet die Spielwiederholung vor. Macht alle bisherigen Z&uuml;ge 
-     * r&uuml;ckg&auml;ngig und gibt der aufrufenden Methode die ZugListe
+     * r&uuml;ckg&auml;ngig und gibt der aufrufenden Methode die Zug-Liste
      * zur&uuml;ck, damit diese jeden Zug in einem gewissen Zeitintervall
      * ziehen kann.
      * @return Die Liste aller Z&uuml;ge

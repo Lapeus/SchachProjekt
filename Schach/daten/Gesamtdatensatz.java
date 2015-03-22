@@ -47,8 +47,8 @@ public class Gesamtdatensatz {
     
     /**
      * Erzeugt einen neuen Gesamtdatensatz der dann gespeichert werden kann.<br>
-     * Einziger Konstruktor dieser Klasse. Ist leer und wird durch die Laden-
-     * Methode mit Informationen gef&uuml;llt.
+     * Einziger Konstruktor dieser Klasse. Ist leer und wird durch die 
+     * Laden-Methode mit Informationen gef&uuml;llt.
      */
     public Gesamtdatensatz() {
    
@@ -83,7 +83,7 @@ public class Gesamtdatensatz {
      * Danach werden die vorhandenen Spieler geladen. Der Dateiname gibt den
      * Spielernamen vor, in der Datei selbst stehen nur die Attribute der 
      * Statistik. <br>
-     * Am Schluss werden noch die Namen der vorhanden Spiele geladen und um
+     * Am Schluss werden noch die Namen der vorhandenen Spiele geladen und um
      * ihren Zeitstempel erweitert, damit sie im Laden-Fenster entsprechend
      * angezeigt werden k&ouml;nnen.
      */
@@ -217,6 +217,7 @@ public class Gesamtdatensatz {
          * En Passant moeglich: False
          * Schachwarnung: True
          * Statistik: True
+         * Spielfeld drehen: False
          */
         einstellungen = new Einstellungen();
         spielerListe.add(new Computerspieler("Karl Heinz"));
@@ -324,7 +325,7 @@ public class Gesamtdatensatz {
     }
     
     /**
-     * Erstellt eine neue felderListe mit 64 Feldern(Index 0-7, 0-7). <br>
+     * Erstellt eine neue Felder-Liste mit 64 Feldern(Index 0-7, 0-7). <br>
      * Sie ist eine Kopie der Methode aus der Klasse <b>SpielfeldGUI</b>.
      * @see gui.SpielfeldGUI#fuelleFelderListe
      * @return Die neu erstellte Felder-Liste
@@ -412,7 +413,7 @@ public class Gesamtdatensatz {
             einstellungen.setSchachWarnung(bool[4]);
             einstellungen.setInStatistikEinbeziehen(bool[5]);
             einstellungen.setSpielfeldDrehen(bool[6]);
-            // Dem Spielfeld die Einstellungen zuf&uuml;gen
+            // Dem Spielfeld die Einstellungen zufuegen
             spielfeld.setEinstellungen(einstellungen);
             
             // Schachnotation wird zurueckuebersetzt
@@ -438,7 +439,6 @@ public class Gesamtdatensatz {
             spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
         } catch (Exception ex) {
             // Wenn irgendwas schief geht
-            ex.printStackTrace();
             spiel = null;
             // Wenn das Spiel null ist, gibt die GUI eine Fehlermeldung aus
         } finally {
@@ -462,7 +462,7 @@ public class Gesamtdatensatz {
      * L&auml;dt mithilfe des &uuml;bergebenen BufferedReaders die Zugliste aus
      * der Textdatei. Dabei wird die Schachnotation in einen Zug umgewandelt.
      * @param br Ein BufferedReader der entsprechenden Textdatei
-     * @param felderListe Die zugeh&ouml;hrige Liste der Felder 
+     * @param felderListe Die zugeh&ouml;rige Liste der Felder 
      * @return Die vollst&auml;ndige Zugliste
      */
     private List<Zug> ladeZugListe(BufferedReader br, List<Feld> felderListe) {
@@ -642,7 +642,7 @@ public class Gesamtdatensatz {
     public void automatischesSpeichern(Spiel spiel) {
         // Die letzte automatische Speicherung loeschen, sofern vorhanden
         autosaveLoeschen();
-        // Das Spiel speicher mit dem Zusatz (autosave)
+        // Das Spiel speichern mit dem Zusatz (autosave)
         try {
             File spielDatei = new File("settings" + System.getProperty(
                 "file.separator") + "Spiele" + System.getProperty(
@@ -734,7 +734,7 @@ public class Gesamtdatensatz {
     public List<Spieler> getSpielerListe() {
         /* Anmerkung: Beim letzten Testlauf in C147 bemerkten wir, dass die
          * Methode listFiles() die Spieler nicht in der alphabetischen 
-         * Reihenfolge zurueckgaben. Daher muessen die Computergegner hier
+         * Reihenfolge zurueckgab. Daher muessen die Computergegner hier
          * per Hand sortiert werden, damit sie nach aufsteigendem Schwierig-
          * keitsgrad angezeigt werden.
          */
@@ -783,7 +783,7 @@ public class Gesamtdatensatz {
     }
     
     /**
-     * Gibt die Standardeinstellungen zur&uum;ck.
+     * Gibt die Standardeinstellungen zur&uuml;ck.
      * @return Der Standardeinstellungssatz
      */
     public Einstellungen getEinstellungen() {

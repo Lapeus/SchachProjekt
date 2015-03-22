@@ -3,7 +3,8 @@ package daten;
 /**
  * Verwaltet alle spielbezogenen Einstellungen. <br>
  * Unter anderem wird gespeichert, ob und wenn ja, welche Profiregeln 
- * zul&auml;ssig sind und welche grafischen Hilfestellungen es geben soll.
+ * zul&auml;ssig sind und welche grafischen Hilfestellungen angezeigt werden 
+ * sollen.
  * @author Christian Ackermann
  */
 public class Einstellungen {
@@ -15,7 +16,7 @@ public class Einstellungen {
     private int zugZeitBegrenzung;
     
     /**
-     * Gibt an, ob m&ouml;gliche Felder angezeigt werden sollen..
+     * Gibt an, ob m&ouml;gliche Felder angezeigt werden sollen.
      */
     private boolean moeglicheFelderAnzeigen;
     

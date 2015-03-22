@@ -139,7 +139,7 @@ public class Spieldaten {
     
     /**
      * Setzt die Liste mit den durchgef&uuml;hrten Z&uuml;gen. Wird nur beim
-     * Laden von Gesamtdatensatz verwendet.
+     * Laden von <b>Gesamtdatensatz</b> verwendet.
      * @param zugListe Die Liste der bisherigen Z&uuml;ge
      */
     public void setZugListe(List<Zug> zugListe) {
