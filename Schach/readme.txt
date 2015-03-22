@@ -1,0 +1,2 @@
+Die Quellenangaben wie gefordert im Hauptverzeichnis als pfd.
+Im Ordner Dokumentation befinden sich die Benutzerdokumentation, ein Überblick und Hinweise für den Korrektor und die Java-Dokumentation in html.
