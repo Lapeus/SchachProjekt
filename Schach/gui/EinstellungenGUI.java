@@ -25,8 +25,6 @@ import daten.Einstellungen;
 
 /**
  * Panel um die Einstellungen zu verwalten.
- * M&uuml;gliche Eintellungen:/n 
- * 
  */
 public class EinstellungenGUI extends JPanel implements ActionListener {
     // Anfang Attribute
@@ -37,12 +35,12 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     private static final long serialVersionUID = 6356424037842416199L;
     
     /**
-     * Eltern-Fenster Eltern-Fenster in Form einer SpielGUI.
+     * Eltern-Fenster in Form einer SpielGUI.
      */
     private SpielGUI parent;
     
     /**
-     * Einstellungen welche sp&auml;ter aus der ElternGUI ausgelesen werden. 
+     * Einstellungen, welche sp&auml;ter aus der ElternGUI ausgelesen werden. 
      */
     private Einstellungen einstellungen;
     
@@ -160,7 +158,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     }
     
     /**
-     * Erstellt das Auswahlmenue f&uuml;r die Einstellungen.
+     * Erstellt das Auswahlmen&uuml; f&uuml;r die Einstellungen.
      */
     private void initCenter() {
         // Center
@@ -311,8 +309,8 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     }
     
     /**
-     * Gibt zur&uuml;ck ob eine eingegbene Zahl im Zugzeotbegrenzungsfenster 
-     * einer Korrekten Notation entspricht.
+     * Gibt zur&uuml;ck ob eine eingegebene Zahl im Zugzeitbegrenzungsfenster 
+     * einer korrekten Notation entspricht.
      * @return true wenn ja false wenn nein
      */
     private boolean korrekteZahl() {
@@ -342,7 +340,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     
     /**
      * Action Performed f&uuml;r den Speichern Button.
-     * @param e ausgeloestes ActionEvent
+     * @param e ausgel&ouml;stes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();

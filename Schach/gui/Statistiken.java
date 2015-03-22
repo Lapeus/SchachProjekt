@@ -20,7 +20,7 @@ import daten.Spieler;
 import daten.Statistik;
 
 /**
- * Bietet ein Panel zur Dartsellung von Statistiken vom auszuw&auml;hlenden 
+ * Bietet ein Panel zur Darstellung von Statistiken vom auszuw&auml;hlenden 
  * Spieler des Schachspiels. 
  * @author Marvin Wolf
  */
@@ -42,7 +42,7 @@ public class Statistiken extends JPanel implements ActionListener {
     private JPanel cNorth = new JPanel();
     
     /**
-     * JPanel f&uuml;r die Komponenten im NORDEN des Panels.
+     * JPanel f&uuml;r die Komponenten in der Mitte des Panels.
      */
     private JPanel cCenter = new JPanel();
     
@@ -83,7 +83,7 @@ public class Statistiken extends JPanel implements ActionListener {
     }
     
     /**
-     * Initialisert eine Statistik-Seite, auf welcher man einen Spieler 
+     * Initialisiert eine Statistik-Seite, auf welcher man einen Spieler 
      * ausw&auml;hlen kann und von diesem die Statistik angezeigt bekommt.
      */
     private void init() {
@@ -156,8 +156,8 @@ public class Statistiken extends JPanel implements ActionListener {
     }
 
     /**
-     * ActionPeformed Methode f&uuml;r die auswahlCombobox.
-     * Erstellt wenn ein korrekter Spieler ausgew&auml;hlt wurde einen String, 
+     * ActionPerformed-Methode f&uuml;r die auswahlCombobox.
+     * Erstellt, wenn ein korrekter Spieler ausgew&auml;hlt wurde, einen String,
      * welcher die Spielerstatistik auf der Textpane darstellt.
      * @param e ausgel&ouml;stes ActionEvent
      */
@@ -250,9 +250,9 @@ public class Statistiken extends JPanel implements ActionListener {
     }
     
     /**
-     * Gibt SpielerObjekt des Spielers mit diesem namen zur&uuml;ck.
-     * @param name name des gesuchten Spielers
-     * @return Spieler mit dem namen - null wenn es keinen gibt
+     * Gibt SpielerObjekt des Spielers mit diesem Namen zur&uuml;ck.
+     * @param name Name des gesuchten Spielers
+     * @return Spieler mit dem Namen - <b>null</b> wenn es keinen gibt
      */
     private Spieler istVorhanden(String name) {
         Spieler vorhanden = null;

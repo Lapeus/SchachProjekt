@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 /**
  * Dient zur Konfiguration der Er&ouml;ffnungsseite.
  * Von hier aus kann man zu allen anderen Fenstern wechseln und hier f&uuml;hrt 
- * der Zurueck-Button aller anderen Panels hin.
+ * der Zur&uuml;ck-Button aller anderen Panels hin.
  * @author Marvin Wolf
  */
 public class Eroeffnungsseite extends Panel {
@@ -60,7 +60,7 @@ public class Eroeffnungsseite extends Panel {
     
     
     /**
-     * JLabel um Fenster als Men&uuml; zu kennzeichen.
+     * JLabel um Fenster als Men&uuml; zu kennzeichnen.
      */
     private JLabel menue = new JLabel("<html>Men&uuml;</html>");
     
@@ -79,7 +79,7 @@ public class Eroeffnungsseite extends Panel {
     // Konstruktor
     
     /**
-     * Erstelllt eine eroeffnungsseite.
+     * Erstelllt eine Er&ouml;ffnungsseite.
      * @param parent Elter-Fenster &uuml;bergeben
      */
     public Eroeffnungsseite(SpielGUI parent) {
@@ -91,7 +91,7 @@ public class Eroeffnungsseite extends Panel {
     // Anfang Methoden
     
     /**
-     * Definiert das Aussehen der Eroeffnungsseite.
+     * Definiert das Aussehen der Er&ouml;ffnungsseite.
      */
     private void init() {
         setLayout(new BorderLayout(140, 20));

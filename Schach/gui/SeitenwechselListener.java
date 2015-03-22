@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Action Listener, der das Wechseln zwischen den verschiedenene Seiten 
+ * Action Listener, der das Wechseln zwischen den verschiedenen Seiten 
  * verarbeitet.
  * @author Marvin Wolf
  */
@@ -20,15 +20,16 @@ public class SeitenwechselListener implements ActionListener {
     
     /**
      * Erzeugt einen neuen Seitenwechsel-Listener.
-     * @param parent Eltern Fenster in dem die Seiten gewechselt werden sollen.
+     * @param parent Eltern-Fenster in dem die Seiten gewechselt werden sollen.
      */
     public SeitenwechselListener(SpielGUI parent) {
         this.parent = parent;
     }
     
     /**
-     * Action Performed, welche das Wechseln der Seite an die Eltern-SpielGUI-Me
-     * thode {@link SpielGUI#seitenAuswahl(String)} &uuml;bergibt.
+     * Action Performed, welche das Wechseln der Seite an die 
+     * Eltern-SpielGUI-Methode {@link SpielGUI#seitenAuswahl(String)} 
+     * &uuml;bergibt.
      * @param e Ausgel&ouml;stes ActionEvent
      */
     public void actionPerformed(ActionEvent e) {

@@ -75,7 +75,7 @@ public class SpielLaden extends JPanel implements ActionListener {
     
     // Konstruktor
     /**
-     * Ertsellt ein neue SpielLaden Objekt und ruft die init()-Methode auf.
+     * Erstellt ein neues SpielLaden Objekt und ruft die init()-Methode auf.
      * Einziger Konstruktor dieser Klasse.
      * @param parent Eltern-SpielGUI-Fenster 
      */
@@ -147,11 +147,11 @@ public class SpielLaden extends JPanel implements ActionListener {
     }
     
     /**
-     * Actionperformed f&uuml;r den laden Button.
+     * ActionPerformed f&uuml;r den Laden-Button.
      * F&auml;ngt die ung&uuml;ltigen Eingaben/Auswahlen ab. 
-     * Aktualisiert die Liste, wenn ein falscher(nicht zu ladendes Spiel) 
+     * Aktualisiert die Liste, wenn ein falscher (nicht zu ladendes Spiel) 
      * auftaucht.
-     * Ruft die laden Methode von parent auf.
+     * Ruft die Laden-Methode von parent auf.
      * @param e ausgel&ouml;stes ActionEvent 
      */
     public void actionPerformed(ActionEvent e) {

@@ -21,7 +21,7 @@ import daten.Einstellungen;
 
 /**
  * Das eigentliche Fenster des Schachspiels. Auf diesem Fenster werden die Panes
- * gewechselt. Erbt von JFrame
+ * gewechselt. Erbt von JFrame.
  * @author Marvin Wolf
  */
 public class SpielGUI extends JFrame implements WindowListener {
@@ -34,7 +34,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     private static final long serialVersionUID = -8895681303810255159L;
     
     /**
-     * Gesamtdatensatz, welcher zu Beginn geladen/erstellt und beim beenden 
+     * Gesamtdatensatz, welcher zu Beginn geladen/erstellt und beim Beenden 
      * gespeichert werden muss.
      */
     private Gesamtdatensatz gesamtdatensatz;    
@@ -70,9 +70,9 @@ public class SpielGUI extends JFrame implements WindowListener {
     // Anfang Methoden
     
     /**
-     * Dient zum wechsel der Contentpane, welches dur den SeitenwechselnListener
-     * aufgeruden wird. In Ausnahmef&auml;llen wird diese Methode auch von dem 
-     * jeweiligen Panel aufgerufen.
+     * Dient zum Wechsel der Contentpane, welches durch den 
+     * SeitenwechselListener aufgerufen wird. In Ausnahmef&auml;llen wird diese 
+     * Methode auch von dem jeweiligen Panel aufgerufen.
      * @param auswahl Auf die zu wechselnde Seite.
      */
     public void seitenAuswahl(String auswahl) {
@@ -130,7 +130,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
-     * Gibt den momentanten Gesamtdatensatz dieser Spielsession zur&uuml;ck.
+     * Gibt den momentanen Gesamtdatensatz dieser Spielsession zur&uuml;ck.
      * @return momentaner Gesamtdatensatz
      */
     public Gesamtdatensatz getGesamtdatensatz() {
@@ -138,42 +138,42 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
-     * Methode zur R&uuml;ckgabe der SpieleListe.
-     * @return Gibt die SpieleListe des Gesamtdatensatzes zur&uuml;ck
+     * Methode zur R&uuml;ckgabe der Spiele-Liste.
+     * @return Gibt die Spiele-Liste des Gesamtdatensatzes zur&uuml;ck
      */
     public List<String> getSpieleListe() {
         return gesamtdatensatz.getSpieleListe();
     }
     
     /**
-     * Ruft die getSpiel-Methode des Gesamdatensatzes aus und gibt das Spiel mit
+     * Ruft die getSpiel-Methode des Gesamdatensatzes auf und gibt das Spiel mit
      * diesem Namen zur&uuml;ck.
-     * @param spielname Name eines bereits gespeicherten Spiels
-     * @return Spiel zu dem eingegeben Namen
+     * @param spielname Name eines gespeicherten Spiels
+     * @return Spiel zu dem eingegebenen Namen
      */
     public Spiel getSpiel(String spielname) {
         return gesamtdatensatz.getSpiel(spielname);
     }
     
     /**
-     * Methode zur r&uuml;ckgabe der SpielerListe des Gesamtdatensatzes.
-     * @return SpielerListe des Gesamtdatensatzes
+     * Methode zur R&uuml;ckgabe der Spieler-Liste des Gesamtdatensatzes.
+     * @return Spieler-Liste des Gesamtdatensatzes
      */
     public List<Spieler> getSpielerListe() {
         return gesamtdatensatz.getSpielerListe();
     }
     
     /**
-     * Methode zur r&uuml;ckgabe der MenschlichenSpielerListe des 
+     * Methode zur R&uuml;ckgabe der Menschlichen-Spieler-Liste des 
      * Gesamtdatensatzes.
-     * @return MeschlicheSpielerListe des Gesamtdatensatzes
+     * @return Meschliche-Spieler-Liste des Gesamtdatensatzes
      */
     public List<Spieler> getMenschlicheSpielerListe() {
         return  gesamtdatensatz.getMenschlicheSpieler();
     }
     
     /**
-     * Gibt den Einstellungsatz der momentanten Spielsession zur&uuml;ck.
+     * Gibt den Einstellungssatz der momentanen Spielsession zur&uuml;ck.
      * @return momentaner Einstellungssatz
      */
     public Einstellungen getEinstellungen() {
@@ -181,15 +181,15 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
-     * Setzt die Grundeinstellung auf die neu Eingegebenen Einstellungen.
-     * @param einstellungen neue Einstellungen
+     * Setzt die Grundeinstellung auf die eingegebenen Einstellungen.
+     * @param einstellungen Neue Einstellungen
      */
     public void setEinstellungen(Einstellungen einstellungen) {
         gesamtdatensatz.setEinstellungen(einstellungen);
     }
     
     /**
-     * F&uuml;gt einen Spieler zum gesamtdatensatz hinzu.
+     * F&uuml;gt einen Spieler zum Gesamtdatensatz hinzu.
      * @param spieler Spieler, welcher zum Gesamtdatensatz hinzugef&uuml;gt 
      * werden soll
      */
@@ -198,7 +198,7 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
-     * F&uuml;gt ein Spiel zur SpieleListe des Gesamtdatensatzes hinzu.
+     * F&uuml;gt ein Spiel zur Spiele-Liste des Gesamtdatensatzes hinzu.
      * @param spiel Das hinzuzuf&uuml;gende Spieleobjekt
      */
     public void spielSpeichern(Spiel spiel) {
@@ -207,29 +207,29 @@ public class SpielGUI extends JFrame implements WindowListener {
     
     /**
      * Gibt die HighscoreListe des Gesamtdatensatzes zur&uuml;ck.
-     * @return nach Punkten gerankedte Spielerliste 
+     * @return nach Punkten gerankte Spielerliste 
      */
     public List<Spieler> getRanking() {
         return gesamtdatensatz.getRanking();
     }
     
     /**
-     * Speichert das spiel als autosave zwischen.
-     * @param spiel das zu speichernde Spiel
+     * Speichert das Spiel als autosave zwischen.
+     * @param spiel Das zu speichernde Spiel
      */
     public void autoSave(Spiel spiel) {
         gesamtdatensatz.automatischesSpeichern(spiel);
     }
     
     /**
-     * L&ouml;scht die automtische speicherung des momentanen Spiels.
+     * L&ouml;scht die automatische Speicherung des momentanen Spiels.
      */
     public void autoSaveLoeschen() {
         gesamtdatensatz.autosaveLoeschen();
     }
     
     /**
-     * Initiert das Laden des Gesamtdatensatzes durch die Datenklassen.
+     * Initiiert das Laden des Gesamtdatensatzes durch die Datenklassen.
      */
     private void gesamtdatenLaden() {
         gesamtdatensatz = new Gesamtdatensatz();
@@ -267,8 +267,8 @@ public class SpielGUI extends JFrame implements WindowListener {
     // Ende Methoden
     
     /**
-     * Sorgt f&uuml;r die Erstellung einer SpielGUI beim start des Programms.
-     * @param args Systemrelevantes Stringarray
+     * Sorgt f&uuml;r die Erstellung einer SpielGUI beim Start des Programms.
+     * @param args Systemrelevantes String-Array
      */
     public static void main(String[] args) {
         new SpielGUI();

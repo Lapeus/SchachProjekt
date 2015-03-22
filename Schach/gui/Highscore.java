@@ -36,7 +36,7 @@ public class Highscore extends JPanel {
     private JLabel lblHighscore = new JLabel("Highscore");
     
     /**
-     * Textarea f&uuml;r die HighscoreListe.
+     * Textarea f&uuml;r die Highscore-Liste.
      */
     private JTextPane highscorePane = new JTextPane();
     
@@ -46,13 +46,13 @@ public class Highscore extends JPanel {
     private final Color cBraunRot = new Color(164, 43, 24); 
     
     /**
-     * Konstante f&uml;r den Farbton der Buttons (Beige).
+     * Konstante f&uuml;r den Farbton der Buttons (Beige).
      */
     private final Color cHellesBeige = new Color(255, 248, 151);
     
     // Konstruktor
     /**
-     * Erzeugt ein neues JPanel welches die Darstellung des Highscores 
+     * Erzeugt ein neues JPanel, welches die Darstellung des Highscores 
      * &uuml;bernimmt.
      * @param parent Eltern-SpielGUI-Fenster
      */
