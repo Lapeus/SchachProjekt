@@ -1,0 +1,20 @@
+22.03.2015 22:33:00
+Christian
+true
+Marvin
+false
+0
+true
+false
+true
+false
+true
+true
+false
+e2-e4 2 sek
+d7-d5 8 sek
+Sb1-c3 2 sek
+Sg8-f6 6 sek
+Sg1-f3 2 sek
+Sb8-c6 1 sek
+Lf1-b5 5 sek
