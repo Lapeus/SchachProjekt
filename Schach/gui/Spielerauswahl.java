@@ -265,7 +265,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             spielerListe[4] = "C4 " + parent.getSpielerListe().get(3).getName();
             spielerListe[5] = "C5 " + parent.getSpielerListe().get(4).getName();
             // Jeden Spielernamen ins Array kopieren
-            for (int i = 4; i < spielerListe.length - 1; i++) {
+            for (int i = 5; i < spielerListe.length - 1; i++) {
                 // +1 da SpielerListe schon "neuer Spieler" enthaehlt
                 spielerListe[i + 1] = parent.getSpielerListe().get(i).getName();
             }

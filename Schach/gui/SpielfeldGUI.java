@@ -897,6 +897,19 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     // autosave initiieren
                     parent.autoSave(spiel);
                 } 
+                // Je nach aktuellem Spieler wird das Label gesetzt
+                if (spielfeld.getAktuellerSpieler()) {
+                    momentanerSpieler.setText("<html>Wei&szlig;");
+                    momentanerSpieler.setForeground(Color.WHITE);
+                } else {
+                    momentanerSpieler.setText("Schwarz");
+                    momentanerSpieler.setForeground(Color.BLACK);
+                }
+                // Wenn es einen letzen Zug gibt wird dieser angezeigt
+                if (!spielfeld.getSpieldaten().getLetzterZug().equals(null)) {
+                    letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
+                        .toSchachNotation());
+                }
                 start();
                 // Letzten Zug gruen makieren
                 for (Feld feld : spielfeld.getLetzteFelder()) {
@@ -991,7 +1004,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     // autosave initiieren
                     parent.autoSave(spiel);
                 } 
-                jetztIstComputerDran = true;
                 // Je nach aktuellem Spieler wird das Label gesetzt
                 if (spielfeld.getAktuellerSpieler()) {
                     momentanerSpieler.setText("<html>Wei&szlig;");
@@ -1005,6 +1017,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
                         .toSchachNotation());
                 }
+                jetztIstComputerDran = true;
             }
         // Wenn man auf die selbe Figur / ein leeres Feld / Fremde Figur klickt
         } else {
