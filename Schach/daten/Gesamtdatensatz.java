@@ -132,7 +132,8 @@ public class Gesamtdatensatz {
         File[] files = spielerOrdner.listFiles();
         // Liste mit den Namen der Computerspieler
         List<String> computerNamen = new ArrayList<String>(
-            Arrays.asList("Karl Heinz", "Rosalinde", "Ursula", "Walter"));
+            Arrays.asList("Karl Heinz", "Rosalinde", "Ursula", "Walter",
+                "Harald"));
         for (File spielerFile : files) {
             // Der Name des Spielers (Name der Datei ohne .txt)
             String name = spielerFile.getName()
@@ -224,6 +225,7 @@ public class Gesamtdatensatz {
         spielerListe.add(new Computerspieler("Rosalinde"));
         spielerListe.add(new Computerspieler("Ursula"));
         spielerListe.add(new Computerspieler("Walter"));
+        spielerListe.add(new Computerspieler("Harald"));
         
     }
     
@@ -744,6 +746,7 @@ public class Gesamtdatensatz {
         spielerSorted.add(getSpieler("Rosalinde"));
         spielerSorted.add(getSpieler("Ursula"));
         spielerSorted.add(getSpieler("Walter"));
+        spielerSorted.add(getSpieler("Harald"));
         // Die menschlichen Spieler anhaengen
         spielerSorted.addAll(getMenschlicheSpieler());
         

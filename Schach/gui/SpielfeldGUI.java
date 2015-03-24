@@ -277,6 +277,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private Thread th = new Thread(this);
     
+    /**
+     * Zeigt dem Computergegner, dass er jetzt ziehen soll.
+     */
+    private boolean jetztIstComputerDran = false;
+    
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -498,7 +503,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         /* Wenn ein Computerspieler mitspielt und anfangen soll muss er hier 
          * den ersten Zug machen
          */
-        wennComputerDannZiehen();
+        //wennComputerDannZiehen();
+        jetztIstComputerDran = true;
     }
     
     /**
@@ -886,6 +892,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // auf Matt und Schach Pruefen
                 mattOderSchach();
                 spielfeldAufbau();
+                // Wenn das Spiel nicht vorbei ist 
+                if (!spielVorbei) {
+                    // autosave initiieren
+                    parent.autoSave(spiel);
+                } 
                 start();
                 // Letzten Zug gruen makieren
                 for (Feld feld : spielfeld.getLetzteFelder()) {
@@ -974,7 +985,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 /* Wenn ein Computerspieler mitspielt muss er hier den  Zug
                  * machen
                  */
-                wennComputerDannZiehen();
+                //wennComputerDannZiehen();
+                // Wenn das Spiel nicht vorbei ist 
+                if (!spielVorbei) {
+                    // autosave initiieren
+                    parent.autoSave(spiel);
+                } 
+                jetztIstComputerDran = true;
                 // Je nach aktuellem Spieler wird das Label gesetzt
                 if (spielfeld.getAktuellerSpieler()) {
                     momentanerSpieler.setText("<html>Wei&szlig;");
@@ -988,11 +1005,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
                         .toSchachNotation());
                 }
-                // Wenn das Spiel nicht vorbei ist 
-                if (!spielVorbei) {
-                    // autosave initiieren
-                    parent.autoSave(spiel);
-                } 
             }
         // Wenn man auf die selbe Figur / ein leeres Feld / Fremde Figur klickt
         } else {
@@ -1415,6 +1427,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     public void run() {
         StringBuffer ausgabe;
         while (uhrAktiv) {
+            if (jetztIstComputerDran) {
+                jetztIstComputerDran = false;
+                wennComputerDannZiehen();
+            }
             zugzeit.setForeground(Color.BLACK);
             ausgabe = new StringBuffer();
             try {

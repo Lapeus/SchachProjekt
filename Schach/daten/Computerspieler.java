@@ -62,6 +62,9 @@ public class Computerspieler extends Spieler {
         } else if (getName().equals("Walter")) {
             // Rekursionstiefe 4
             rekursKI(4);
+        } else if (getName().equals("Harald")) {
+            // Rekursionstiefe 5
+            rekursKI(5);
         }
         // Wenn ein Bauer umgewandelt wird
         Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();

@@ -172,6 +172,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         verboten.add("C2 Rosalinde");
         verboten.add("C3 Ursula");
         verboten.add("C4 Walter");
+        verboten.add("C5 Harald");
         
         // West (Spieler 1)
         add(auswahlPanel("West"), BorderLayout.WEST);
@@ -262,6 +263,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             spielerListe[2] = "C2 " + parent.getSpielerListe().get(1).getName();
             spielerListe[3] = "C3 " + parent.getSpielerListe().get(2).getName();
             spielerListe[4] = "C4 " + parent.getSpielerListe().get(3).getName();
+            spielerListe[5] = "C5 " + parent.getSpielerListe().get(4).getName();
             // Jeden Spielernamen ins Array kopieren
             for (int i = 4; i < spielerListe.length - 1; i++) {
                 // +1 da SpielerListe schon "neuer Spieler" enthaehlt
