@@ -523,11 +523,16 @@ public class Computerspieler extends Spieler {
             if (spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
                 // Zaehlt erst ab 8 Zuegen
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
+                    // Der entsprechende Bauer
                     Figur bauer = spielfeld.getWeisseFiguren().get(index);
-                    if (bauer.getKorrekteFelder().size() == 0) {
+                    int y = bauer.getPosition().getYK();
+                    // Der Feldindex des Bauers
+                    int feldIndex = bauer.getPosition().getXK() + y * 8;
+                    // Wenn auf dem Feld vor dem Bauern ein anderer Bauer steht
+                    if (spielfeld.getFelder().get(feldIndex + 8).getFigur()
+                        .getWert() == 100) {
                         bewertung -= 80;
                     }
-                    int y = bauer.getPosition().getYK();
                     // Je naeher die Bauern an der gegnerisches Grundlinie sind
                     int[] bauernwert;
                     // Wenn es unsere eigenen Bauern sind
@@ -572,11 +577,16 @@ public class Computerspieler extends Spieler {
                 == 100) {
                 // Zaehlt erst nach 16 Zuegen
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
+                    // Der entsprechende Bauer
                     Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
-                    if (bauer.getKorrekteFelder().size() == 0) {
+                    int y = bauer.getPosition().getYK();
+                    // Der Feldindex des Bauers
+                    int feldIndex = bauer.getPosition().getXK() + y * 8;
+                    // Wenn auf dem Feld vor dem Bauern ein anderer Bauer steht
+                    if (spielfeld.getFelder().get(feldIndex - 8).getFigur()
+                        .getWert() == 100) {
                         bewertung += 80;
                     }
-                    int y = bauer.getPosition().getYK();
                     int[] bauernwert;
                     // Wenn es unsere eigenen Figuren sind
                     if (!spielfeld.getAktuellerSpieler()) {
