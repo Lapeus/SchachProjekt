@@ -350,6 +350,23 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         parent.revalidate();
         init();
+        List<Figur> eigeneFiguren;
+        if (spielfeld.getAktuellerSpieler()) {
+            eigeneFiguren = spielfeld.getWeisseFiguren();
+        } else {
+            eigeneFiguren = spielfeld.getSchwarzeFiguren();
+        }
+        boolean spielVorbei = true;
+        for (Figur figur : eigeneFiguren) {
+            if (figur.getKorrekteFelder().size() != 0) {
+                spielVorbei = false;
+            }
+        }
+        if (spielVorbei) {
+            remove(cEast);
+            cEndeErstellen();
+            add(cEnde, BorderLayout.EAST);
+        }
     }
     
     /**
@@ -521,6 +538,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         // Alle Autosave Dateien des Spiels loeschen
         parent.autoSaveLoeschen();
+        
+        // Das beendete Spiel speichern
+        parent.endSpielSpeichern(spiel);
         
         // cEnde
         cEnde.setLayout(new GridBagLayout());
@@ -906,7 +926,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     momentanerSpieler.setForeground(Color.BLACK);
                 }
                 // Wenn es einen letzen Zug gibt wird dieser angezeigt
-                if (!spielfeld.getSpieldaten().getLetzterZug().equals(null)) {
+                if (spielfeld.getSpieldaten().getLetzterZug() != null) {
                     letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
                         .toSchachNotation());
                 }
@@ -1013,7 +1033,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     momentanerSpieler.setForeground(Color.BLACK);
                 }
                 // Wenn es einen letzen Zug gibt wird dieser angezeigt
-                if (!spielfeld.getSpieldaten().getLetzterZug().equals(null)) {
+                if (spielfeld.getSpieldaten().getLetzterZug() != null) {
                     letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
                         .toSchachNotation());
                 }
@@ -1231,7 +1251,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 momentanerSpieler.setForeground(Color.BLACK);
             }
             // Wenn es einen letzten zug gibt wird dieser angezeigt
-            if (!spielfeld.getSpieldaten().getLetzterZug().equals(null)) {
+            if (spielfeld.getSpieldaten().getLetzterZug() != null) {
                 letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
                     .toSchachNotation());
             }

@@ -265,12 +265,12 @@ public class Computerspieler extends Spieler {
                     int bewertung = min(maxStufe - 1, -4500, 4500);
                     // Wenn es noch die ersten 16 Halbzuege sind und ein 
                     // Springer oder Laeufer gezogen wurde
-                    if (spielfeld.getSpieldaten().getZugListe().size() < 16
+                    if (spielfeld.getSpieldaten().getZugListe().size() < 12
                         && letzterZug.getFigur().getWert() > 100
                         && letzterZug.getFigur().getWert() < 465
                         && letzterZug.isErsterZug()) {
                         // Gibt es Extrapunkte (Figuren raus bringen)
-                        bewertung += 20;
+                        bewertung += 18;
                     }
                     // Wenn ein Springer an den Rand gezogen wird
                     if (letzterZug.getFigur().getWert() == 275
@@ -298,12 +298,12 @@ public class Computerspieler extends Spieler {
                     int bewertung = max(maxStufe - 1, -4500, 4500);
                     // Wenn es noch die ersten 16 Halbzuege sind und ein
                     // Springer oder Laeufer gezogen wurde
-                    if (spielfeld.getSpieldaten().getZugListe().size() < 16
+                    if (spielfeld.getSpieldaten().getZugListe().size() < 12
                         && letzterZug.getFigur().getWert() > 100
                         && letzterZug.getFigur().getWert() < 465
                         && letzterZug.isErsterZug()) {
                         // Gibt es Extrapunkte (Figuren raus bringen)
-                        bewertung -= 20;
+                        bewertung -= 18;
                     }
                     // Wenn ein Springer an den Rand gezogen wird
                     if (letzterZug.getFigur().getWert() == 275
@@ -420,7 +420,8 @@ public class Computerspieler extends Spieler {
                  * erstrebenswert.
                  */
                 // Wenn der Spieler aktuell deutlich fuehrt
-                if (bewertungsfunktion() > 600) {
+                // Bei Zug rueckgaengig wurde der aktuelle Spieler gewechselt
+                if (bewertungsfunktion() < 600) {
                     // Wird der niedrigste moegliche Wert gesetzt
                     maxWert = -4500;
                 }
@@ -484,8 +485,8 @@ public class Computerspieler extends Spieler {
                  * erstrebenswert.
                  */
                 // Wenn der Spieler aktuell deutlich fuehrt
-                // (Minimieren fuer schwarz -> je kleiner desto besser)
-                if (bewertungsfunktion() < 600) {
+                // Beim Zug rueckgaengig wurde der Spieler gewechselt
+                if (bewertungsfunktion() > 600) {
                     /* Wird der hoechst moegliche Wert gesetzt, der beim 
                      * Minimieren natuerlich der schlechteste ist
                      */
@@ -512,27 +513,21 @@ public class Computerspieler extends Spieler {
         // Materialwert
         bewertung = spielfeld.getMaterialwert(true) 
             - spielfeld.getMaterialwert(false);
-        // Bauern kurz vor der Umwandlung und Springer am Rand
-        int index = 1;
+        // Figurenbeweglichkeit
+        int index = 0;
         // Der Bonus des Bauern wenn er auf einer entsprechenden Reihe steht
-        int[] bauernBonus = {20, 40, 115};
-        int[] bauernStrafe = {-40, -70, -170};
-        while (index < spielfeld.getWeisseFiguren().size() 
-            && spielfeld.getWeisseFiguren().get(index).getWert() < 325) {
+        int[] bauernBonus = {5, 25, 115};
+        int[] bauernStrafe = {-20, -50, -170};
+        while (index < spielfeld.getWeisseFiguren().size()) {
+            Figur figur = spielfeld.getWeisseFiguren().get(index);
+            if (spielfeld.getSpieldaten().getZugListe().size() > 8) {
+                bewertung -= figurenRadiusBewertung(figur);
+            }
             // Wenn es Bauern sind
             if (spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
                 // Zaehlt erst ab 8 Zuegen
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
-                    // Der entsprechende Bauer
-                    Figur bauer = spielfeld.getWeisseFiguren().get(index);
-                    int y = bauer.getPosition().getYK();
-                    // Der Feldindex des Bauers
-                    int feldIndex = bauer.getPosition().getXK() + y * 8;
-                    // Wenn auf dem Feld vor dem Bauern ein anderer Bauer steht
-                    if (spielfeld.getFelder().get(feldIndex + 8).getFigur()
-                        .getWert() == 100) {
-                        bewertung -= 80;
-                    }
+                    int y = figur.getPosition().getYK();
                     // Je naeher die Bauern an der gegnerisches Grundlinie sind
                     int[] bauernwert;
                     // Wenn es unsere eigenen Bauern sind
@@ -557,36 +552,20 @@ public class Computerspieler extends Spieler {
                         }
                     }
                 }
-            } else {
-                Figur springer = spielfeld.getWeisseFiguren().get(index);
-                int x = springer.getPosition().getXK();
-                // Springer am Rand sind hinderlich
-                if (x == 0 || x == 7) {
-                    // Strafpunkte
-                    bewertung -= 40;
-                }
             }
             index++;
         }
         // Schwarz analog
-        index = 1;
-        while (index < spielfeld.getSchwarzeFiguren().size() 
-            && spielfeld.getSchwarzeFiguren().get(index).getWert() < 325) {
+        index = 0;
+        while (index < spielfeld.getSchwarzeFiguren().size()) {
+            Figur figur = spielfeld.getSchwarzeFiguren().get(index);
+            bewertung += figurenRadiusBewertung(figur);
             // Wenn es ein Bauer ist
             if (spielfeld.getSchwarzeFiguren().get(index).getWert() 
                 == 100) {
                 // Zaehlt erst nach 16 Zuegen
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
-                    // Der entsprechende Bauer
-                    Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
-                    int y = bauer.getPosition().getYK();
-                    // Der Feldindex des Bauers
-                    int feldIndex = bauer.getPosition().getXK() + y * 8;
-                    // Wenn auf dem Feld vor dem Bauern ein anderer Bauer steht
-                    if (spielfeld.getFelder().get(feldIndex - 8).getFigur()
-                        .getWert() == 100) {
-                        bewertung += 80;
-                    }
+                    int y = figur.getPosition().getYK();
                     int[] bauernwert;
                     // Wenn es unsere eigenen Figuren sind
                     if (!spielfeld.getAktuellerSpieler()) {
@@ -606,15 +585,7 @@ public class Computerspieler extends Spieler {
                         }
                     }
                 }
-            } else {
-                Figur springer = spielfeld.getSchwarzeFiguren().get(index);
-                int x = springer.getPosition().getXK();
-                // Springer am Rand sind hinderlich
-                if (x == 0 || x == 7) {
-                    // Strafpunkte
-                    bewertung += 40;
-                }
-            }
+            } 
             index++;
         }
         // Das Feld des gegnerischen Koenigs
@@ -645,6 +616,52 @@ public class Computerspieler extends Spieler {
         return bewertung;
     }
     
+    /**
+     * Ermittelt den Punktabzug f&uuml;r den eingeschr&auml;nkten Zugradius.
+     * @param figur Die entsprechende Figur
+     * @return Punktabzug als ganze Zahl, prozentualer Anteil am Figurenwert
+     */
+    private int figurenRadiusBewertung(Figur figur) {
+        int abzug = 0;
+        int[] gewichtungsArray = {15, 13, 12, 10};
+        int[] eroeffnung = {8, 4, 2, 2};
+        if (spielfeld.getSpieldaten().getZugListe().size() < 10) {
+            gewichtungsArray = eroeffnung;
+        }
+        int anzahlFelder = figur.getMoeglicheFelderKI().size();
+        // Koenig
+        if (figur.getWert() == 0) {
+            if (anzahlFelder > 4) {
+                // Es ist gefaehrlich wenn der Koenig so frei steht
+                abzug = 50;
+            }
+        // Bauer
+        } else if (figur.getWert() == 100) {
+            // Wenn er nicht mehr ziehen kann
+            if (anzahlFelder == 0) {
+                // Zaehlt er nur noch wenig
+                abzug = 70;
+            }
+        // Springer
+        } else if (figur.getWert() == 275) {
+            abzug = (6 - anzahlFelder) * gewichtungsArray[0];
+        // Laeufer
+        } else if (figur.getWert() == 325) {
+            abzug = (7 - anzahlFelder) * gewichtungsArray[1];
+        // Turm
+        } else if (figur.getWert() == 465) {
+            if (anzahlFelder <= 4) {
+                abzug = 4 * gewichtungsArray[2] - 5;
+            } else {
+                abzug = (8 - anzahlFelder) * gewichtungsArray[2];
+            }
+        // Dame
+        } else if (figur.getWert() == 900) {
+            abzug = (12 - anzahlFelder) * gewichtungsArray[3];
+        }
+        
+        return abzug;
+    }
     /**
      * Entscheidet, ob ein Unentschieden-Angebot vom Gegner angenommen werden 
      * soll. <br>

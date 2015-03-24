@@ -374,10 +374,12 @@ public class Gesamtdatensatz {
                 "file.separator") + spielname + ".txt");
         // Das Spiel anlegen
         Spiel spiel;
-        // Wenn es ein Autosave Spiel war, muss der urspruengliche Name 
-        // rausgefiltert werden
+        // Wenn es ein Autosave oder Ended Spiel war, muss der urspruengliche 
+        // Name rausgefiltert werden
         if (spielname.contains("(autosave)")) {
             spielname = spielname.substring(0, spielname.length() - 11);
+        } else if (spielname.contains("(ended)")) {
+            spielname = spielname.substring(0, spielname.length() - 8);
         }
         BufferedReader br = null;
         try {
@@ -633,6 +635,53 @@ public class Gesamtdatensatz {
     }
     
     /**
+     * Speichert das angegebene Spiel als beendetes Spiel. <br>
+     * Funktioniert genauso wie die {@link #spielSpeichern(Spiel)}-Methode.
+     * @param spiel Das zu speichernde beendete Spiel
+     */
+    public void endSpielSpeichern(Spiel spiel) {
+     // Die Spieldatei - sofern vorhanden - loeschen
+        File file = new File("settings" + System.getProperty(
+            "file.separator") + "Spiele" + System.getProperty(
+                "file.separator") + spiel.getSpielname() + " (ended).txt");
+        if (file.exists()) {
+            file.delete();
+        }
+        try {
+            File spielDatei = new File("settings" + System.getProperty(
+                "file.separator") + "Spiele" + System.getProperty(
+                    "file.separator") + spiel.getSpielname() + " (ended).txt");
+            FileWriter fw = new FileWriter(spielDatei);
+            fw.write(spiel.toString());
+            fw.close();
+            // Schreibschutz
+            spielDatei.setReadOnly();
+            // Die Namen der vorhandenen Spiele laden / aktualisieren
+            gespeicherteSpiele.clear();
+            File spieleOrdner = new File("settings" + System.getProperty(
+                "file.separator") + "Spiele");
+            File[] files = spieleOrdner.listFiles();
+            for (File gamefile : files) {
+                try {
+                    BufferedReader br = new BufferedReader(
+                        new FileReader(gamefile));
+                    String datum = br.readLine();
+                    br.close();
+                    // Den Namen (Name der Datei ohne das .txt)
+                    String name = gamefile.getName().substring(
+                        0, gamefile.getName().length() - 4);
+                    name += " " + datum;
+                    gespeicherteSpiele.add(name);
+                } catch (IOException ioEx) {
+                    ioEx.printStackTrace();
+                }
+            }
+        } catch (IOException ioEx) {
+            ioEx.printStackTrace();
+        }
+    }
+    
+    /**
      * Speichert das angegebene Spiel f&uuml;r den Fall, dass der Computer
      * abst&uuml;rzt. <br>
      * Es kann immer nur ein Spiel gespeichert werden. Ruft man diese Methode
@@ -784,6 +833,14 @@ public class Gesamtdatensatz {
      * @return Liste der Namen der Spiele
      */
     public List<String> getSpieleListe() {
+        List<String> endSpiele = new ArrayList<String>();
+        for (String name : gespeicherteSpiele) {
+            if (name.contains("(ended)")) {
+                endSpiele.add(name);
+            }
+        }
+        gespeicherteSpiele.removeAll(endSpiele);
+        gespeicherteSpiele.addAll(endSpiele);
         return gespeicherteSpiele;
     }
     

@@ -163,6 +163,15 @@ public abstract class Figur {
      */
     
     /**
+     * Methode, damit die KI auch die m&ouml;glichen Felder einer Figur abfragen
+     * kann.
+     * @return Liste von m&ouml;glichen Feldern
+     */
+    public List<Feld> getMoeglicheFelderKI() {
+        return getMoeglicheFelder();
+    }
+    
+    /**
      * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>
      * Wird beim Speichern ben&ouml;tigt. Der Reihenfolge nach werden 
      * gespeichert: 

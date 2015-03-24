@@ -206,6 +206,14 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
+     * Speichert ein beendetes Spiel.
+     * @param spiel Das zu speichernde Spiel
+     */
+    public void endSpielSpeichern(Spiel spiel) {
+        gesamtdatensatz.endSpielSpeichern(spiel);
+    }
+    
+    /**
      * Gibt die HighscoreListe des Gesamtdatensatzes zur&uuml;ck.
      * @return nach Punkten gerankte Spielerliste 
      */
