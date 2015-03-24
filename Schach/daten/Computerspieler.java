@@ -514,27 +514,37 @@ public class Computerspieler extends Spieler {
             - spielfeld.getMaterialwert(false);
         // Bauern kurz vor der Umwandlung und Springer am Rand
         int index = 1;
+        // Der Bonus des Bauern wenn er auf einer entsprechenden Reihe steht
+        int[] bauernBonus = {20, 40, 115};
+        int[] bauernStrafe = {-40, -70, -170};
         while (index < spielfeld.getWeisseFiguren().size() 
             && spielfeld.getWeisseFiguren().get(index).getWert() < 325) {
             // Wenn es Bauern sind
             if (spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
-                // Zaehlt erst ab 16 Zuegen
+                // Zaehlt erst ab 8 Zuegen
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
                     Figur bauer = spielfeld.getWeisseFiguren().get(index);
                     int y = bauer.getPosition().getYK();
                     // Je naeher die Bauern an der gegnerisches Grundlinie sind
+                    int[] bauernwert;
+                    // Wenn es unsere eigenen Bauern sind
+                    if (spielfeld.getAktuellerSpieler()) {
+                        // Bonus
+                        bauernwert = bauernBonus;
+                    } else {
+                        // Sonst Strafe
+                        bauernwert = bauernStrafe;
+                    }
                     if (y >= 4) {
                         // Desto mehr Punkte zaehlen sie
-                        // Drei Reihen vor der Umwandlung +20
-                        bewertung += 20;
+                        // Drei Reihen vor der Umwandlung
+                        bewertung += bauernwert[0];
                         if (y >= 5) {
-                            // Zwei Reihen vor der Umwandlung +20 +40
-                            bewertung += 40;
+                            // Zwei Reihen vor der Umwandlung
+                            bewertung += bauernwert[1];
                             if (y == 6) {
-                                // Letzte Reihe vor der Umwandlung +20 +40 +115
-                                bewertung += 115;
-                                // Damit sind sie direkt vor der Umwandlung so 
-                                // viel wert wie ein Springer
+                                // Letzte Reihe vor der Umwandlung
+                                bewertung += bauernwert[2];
                             }
                         }
                     }
@@ -561,12 +571,21 @@ public class Computerspieler extends Spieler {
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
                     Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
                     int y = bauer.getPosition().getYK();
+                    int[] bauernwert;
+                    // Wenn es unsere eigenen Figuren sind
+                    if (!spielfeld.getAktuellerSpieler()) {
+                        // Bonus
+                        bauernwert = bauernBonus;
+                    } else {
+                        // Sonst Strafe
+                        bauernwert = bauernStrafe;
+                    }
                     if (y <= 3) {
-                        bewertung -= 20;
+                        bewertung -= bauernwert[0];
                         if (y <= 2) {
-                            bewertung -= 40;
+                            bewertung -= bauernwert[1];
                             if (y == 1) {
-                                bewertung -= 115;
+                                bewertung -= bauernwert[2];
                             }
                         }
                     }
