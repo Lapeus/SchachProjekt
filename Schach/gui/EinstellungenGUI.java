@@ -116,7 +116,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         add(cNorth, BorderLayout.NORTH);  
        
         // Center
-        initCenter();
+        initCenter1();
         
         // South
         JPanel cSouth = new JPanel();
@@ -160,7 +160,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     /**
      * Erstellt das Auswahlmen&uuml; f&uuml;r die Einstellungen.
      */
-    private void initCenter() {
+    private void initCenter1() {
         // Center
         Container cCenter = new JPanel();
         cCenter.setLayout(new GridBagLayout());
@@ -241,7 +241,18 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         JLabel lblEnPassantSchlagen  
             = new JLabel("En-Passant-Schlagen nutzbar? ");
         cCenter.add(lblEnPassantSchlagen, gbc);
-        // Radio Buttons En-Passant-Schlagen
+        initCenter2(gbc, cCenter);
+        
+        add(cCenter, BorderLayout.CENTER);
+    }
+    
+    /**
+     * Erstellt das Auswahlmen&uuml; f&uuml;r die Einstellungen.
+     * @param gbc Entsprechendes GridBagConstraints
+     * @param cCenter Entsprechender Container
+     */
+    private void initCenter2(GridBagConstraints gbc, Container cCenter) {
+     // Radio Buttons En-Passant-Schlagen
         auswahlJaNein("enPassantSchlagenJa", "enPassantSchlagenNein");
         if (einstellungen.isEnPassantMoeglich()) {
             ja.setSelected(true);
@@ -321,8 +332,6 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
         cCenter.add(nein, gbc);
-        
-        add(cCenter, BorderLayout.CENTER);
     }
     
     /**
