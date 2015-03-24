@@ -99,8 +99,8 @@ public class Gesamtdatensatz {
             // Die ZugzeitBegrenzung
             int zzb = Integer.parseInt(br1.readLine());
             // Die sechs booleans
-            boolean[] bool = new boolean[7];
-            for (int i = 0; i <= 6; i++) {
+            boolean[] bool = new boolean[8];
+            for (int i = 0; i <= 7; i++) {
                 bool[i] = Boolean.parseBoolean(br1.readLine());
             }
             // Einen neuen Einstellungssatz mit den gelesenen Daten erstellen
@@ -113,6 +113,7 @@ public class Gesamtdatensatz {
             einstellungen.setSchachWarnung(bool[4]);
             einstellungen.setInStatistikEinbeziehen(bool[5]);
             einstellungen.setSpielfeldDrehen(bool[6]);
+            einstellungen.setTon(bool[7]);
         } catch (IOException ioEx) {
             /* Wenn irgendwas beim Laden schief geht, werden die Standard-
              * Einstellungen wiederhergestellt.
@@ -402,8 +403,8 @@ public class Gesamtdatensatz {
             // Die ZugzeitBegrenzung
             int zzb = Integer.parseInt(br.readLine());
             // Die sechs booleans
-            boolean[] bool = new boolean[7];
-            for (int i = 0; i <= 6; i++) {
+            boolean[] bool = new boolean[8];
+            for (int i = 0; i <= 7; i++) {
                 bool[i] = Boolean.parseBoolean(br.readLine());
             }
             einstellungen = new Einstellungen();
@@ -415,6 +416,7 @@ public class Gesamtdatensatz {
             einstellungen.setSchachWarnung(bool[4]);
             einstellungen.setInStatistikEinbeziehen(bool[5]);
             einstellungen.setSpielfeldDrehen(bool[6]);
+            einstellungen.setTon(bool[7]);
             // Dem Spielfeld die Einstellungen zufuegen
             spielfeld.setEinstellungen(einstellungen);
             

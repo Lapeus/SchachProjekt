@@ -293,9 +293,26 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         JLabel lblSpielfeldDrehen  
             = new JLabel("Soll das Spielfeld gedreht werden ?");
         cCenter.add(lblSpielfeldDrehen, gbc);
-        // Radio Buttons Statistik
+        // Radio Buttons Spielfeld drehen
         auswahlJaNein("drehenJa", "drehenNein");
         if (einstellungen.isSpielfeldDrehen()) {
+            ja.setSelected(true);
+        } else {
+            nein.setSelected(true);
+        }
+        gbc.gridx = 1;
+        cCenter.add(ja, gbc);
+        gbc.gridx = 3;
+        cCenter.add(nein, gbc);
+        // Label Ton
+        gbc.gridy = 8;
+        gbc.gridx = 0;
+        JLabel lblTon  
+            = new JLabel("Ton an? ");
+        cCenter.add(lblTon, gbc);
+        // Radio Buttons Ton
+        auswahlJaNein("tonJa", "TonNein");
+        if (einstellungen.isTon()) {
             ja.setSelected(true);
         } else {
             nein.setSelected(true);
@@ -394,6 +411,10 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
             einstellungen.setInStatistikEinbeziehen(true);
         } else if (command.equals("statistikNein")) {
             einstellungen.setInStatistikEinbeziehen(false);
-        } 
+        } else if (command.equals("tonJa")) {
+            einstellungen.setTon(true);
+        } else if (command.equals("tonNein")) {
+            einstellungen.setTon(false);
+        }
     }
 }
