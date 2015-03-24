@@ -524,6 +524,9 @@ public class Computerspieler extends Spieler {
                 // Zaehlt erst ab 8 Zuegen
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
                     Figur bauer = spielfeld.getWeisseFiguren().get(index);
+                    if (bauer.getKorrekteFelder().size() == 0) {
+                        bewertung -= 80;
+                    }
                     int y = bauer.getPosition().getYK();
                     // Je naeher die Bauern an der gegnerisches Grundlinie sind
                     int[] bauernwert;
@@ -570,6 +573,9 @@ public class Computerspieler extends Spieler {
                 // Zaehlt erst nach 16 Zuegen
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
                     Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
+                    if (bauer.getKorrekteFelder().size() == 0) {
+                        bewertung += 80;
+                    }
                     int y = bauer.getPosition().getYK();
                     int[] bauernwert;
                     // Wenn es unsere eigenen Figuren sind
@@ -607,10 +613,10 @@ public class Computerspieler extends Spieler {
         int bonus;
         if (getFarbe()) {
             koenig = spielfeld.getSchwarzeFiguren().get(0).getPosition();
-            bonus = 1;
+            bonus = 11;
         } else {
             koenig = spielfeld.getWeisseFiguren().get(0).getPosition();
-            bonus = -1;
+            bonus = -11;
         }
         Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
         Figur figur;
