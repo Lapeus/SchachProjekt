@@ -834,12 +834,22 @@ public class Gesamtdatensatz {
      */
     public List<String> getSpieleListe() {
         List<String> endSpiele = new ArrayList<String>();
+        List<String> normal = new ArrayList<String>();
+        String autosave = "";
         for (String name : gespeicherteSpiele) {
             if (name.contains("(ended)")) {
                 endSpiele.add(name);
+            } else if (name.contains("(autosave)")) {
+                autosave = name;
+            } else {
+                normal.add(name);
             }
         }
-        gespeicherteSpiele.removeAll(endSpiele);
+        gespeicherteSpiele.clear();
+        if (!autosave.equals("")) {
+            gespeicherteSpiele.add(autosave);
+        }
+        gespeicherteSpiele.addAll(normal);
         gespeicherteSpiele.addAll(endSpiele);
         return gespeicherteSpiele;
     }

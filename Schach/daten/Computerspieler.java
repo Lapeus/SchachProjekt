@@ -517,10 +517,10 @@ public class Computerspieler extends Spieler {
         int index = 0;
         // Der Bonus des Bauern wenn er auf einer entsprechenden Reihe steht
         int[] bauernBonus = {5, 25, 115};
-        int[] bauernStrafe = {-20, -50, -170};
+        int[] bauernStrafe = {-20, -70, -210};
         while (index < spielfeld.getWeisseFiguren().size()) {
             Figur figur = spielfeld.getWeisseFiguren().get(index);
-            if (spielfeld.getSpieldaten().getZugListe().size() > 8) {
+            if (spielfeld.getSpieldaten().getZugListe().size() >= 12) {
                 bewertung -= figurenRadiusBewertung(figur);
             }
             // Wenn es Bauern sind

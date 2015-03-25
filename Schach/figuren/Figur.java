@@ -111,9 +111,9 @@ public abstract class Figur {
                 // Liste mit allen gegnerischen Figuren
                 List<Figur> gegner;
                 if (farbe) {
-                    gegner = spielfeld.getSchwarzeFiguren();
+                    gegner = spielfeld.clone(spielfeld.getSchwarzeFiguren());
                 } else {
-                    gegner = spielfeld.getWeisseFiguren();
+                    gegner = spielfeld.clone(spielfeld.getWeisseFiguren());
                 }
                 // Fuer alle gegnerischen Figuren
                 for (Figur figur : gegner) {

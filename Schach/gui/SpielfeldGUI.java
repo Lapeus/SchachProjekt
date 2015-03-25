@@ -698,7 +698,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             feld.setIcon(null);
         }
         // - schwarze Figurenbilder
-        for (Figur schwarz  : spielfeld.getSchwarzeFiguren()) {
+        for (Figur schwarz  : spielfeld.clone(spielfeld.getSchwarzeFiguren())) {
             // Feld der Figur abspeichern
             Feld momentan = schwarz.getPosition();
             // Image in der Mitte zentrieren lassen
@@ -716,7 +716,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             momentan.setIcon(iconB);
         }
         // - weisse Figurenbilder
-        for (Figur weiss  : spielfeld.getWeisseFiguren()) {
+        for (Figur weiss  : spielfeld.clone(spielfeld.getWeisseFiguren())) {
             // Feld der Figur abspeichern
             Feld momentan = weiss.getPosition();
             // Image in der Mitte zentrieren lassen
