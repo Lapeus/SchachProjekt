@@ -539,9 +539,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Alle Autosave Dateien des Spiels loeschen
         parent.autoSaveLoeschen();
         
-        // Das beendete Spiel speichern
-        parent.endSpielSpeichern(spiel);
-        
         // cEnde
         cEnde.setLayout(new GridBagLayout());
         cEnde.setBackground(cBraunRot);
@@ -1157,6 +1154,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             cEndeErstellen();
             add(cEnde, BorderLayout.EAST);
             revalidate();  
+            parent.soundAbspielen("Hinweis.wav");
+            int auswahl = JOptionPane.showConfirmDialog(this, 
+                "Wollen Sie das Spiel speichern?", 
+                "Spiel speichern", JOptionPane.YES_NO_OPTION);
+            if (auswahl == 0) {
+                parent.endSpielSpeichern(spiel);
+            }
         // Wenn der momentane Spieler im Schach steht
         } else if (spielfeld.isSchach()) {
             schachWarnung();
