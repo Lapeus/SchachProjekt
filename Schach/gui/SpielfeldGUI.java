@@ -972,7 +972,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             && momentanesFeld.getFigur().getFarbe() 
             == ausgewaehlteFigur.getFarbe()
             && !(momentanesFeld.getFigur().equals(ausgewaehlteFigur)))) {
-            System.out.println("Fall eins");
             // Wird diese als neue Ausgewaehlte Figur gespeichert
             ausgewaehlteFigur = momentanesFeld.getFigur();
             /* Wenn der Spieler Weiss dran ist und dies angeklickte Figur 
@@ -1468,7 +1467,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         while (uhrAktiv) {
             if (jetztIstComputerDran) {
                 jetztIstComputerDran = false;
+                parent.setEnabled(false);
                 wennComputerDannZiehen();
+                parent.setEnabled(true);
             }
             zugzeit.setForeground(Color.BLACK);
             ausgabe = new StringBuffer();
@@ -1539,7 +1540,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     revalidate();  
                 }
             }
-            // Wenn ein Spielvideo angeziegt werden soll
+            // Wenn ein Spielvideo angezeigt werden soll
             if (btnWiederholung.isEnabled()) {
                 /* Wenn wiederholt werden soll und nicht stopp ist und 2 oder 
                  * mehr Sekunden vergangen sind 
