@@ -62,6 +62,9 @@ public class Computerspieler extends Spieler {
         } else if (getName().equals("Walter")) {
             // Rekursionstiefe 4
             rekursKI(4);
+        } else if (getName().equals("Harald")) {
+            // Rekursionstiefe 5
+            rekursKI(5);
         }
         // Wenn ein Bauer umgewandelt wird
         Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
@@ -262,12 +265,21 @@ public class Computerspieler extends Spieler {
                     int bewertung = min(maxStufe - 1, -4500, 4500);
                     // Wenn es noch die ersten 16 Halbzuege sind und ein 
                     // Springer oder Laeufer gezogen wurde
-                    if (spielfeld.getSpieldaten().getZugListe().size() < 16
+                    if (spielfeld.getSpieldaten().getZugListe().size() < 12
                         && letzterZug.getFigur().getWert() > 100
                         && letzterZug.getFigur().getWert() < 465
                         && letzterZug.isErsterZug()) {
                         // Gibt es Extrapunkte (Figuren raus bringen)
-                        bewertung += 20;
+                        bewertung += 18;
+                    }
+                    // Wenn es eine Rochade gewesen ist
+                    if (letzterZug instanceof RochadenZug) {
+                        if (letzterZug.getZielfeld().equals(spielfeld
+                            .getFelder().get(6))) {
+                            bewertung += rochadeSinnvoll(true, true);
+                        } else {
+                            bewertung += rochadeSinnvoll(true, false);
+                        }
                     }
                     // Wenn ein Springer an den Rand gezogen wird
                     if (letzterZug.getFigur().getWert() == 275
@@ -295,12 +307,12 @@ public class Computerspieler extends Spieler {
                     int bewertung = max(maxStufe - 1, -4500, 4500);
                     // Wenn es noch die ersten 16 Halbzuege sind und ein
                     // Springer oder Laeufer gezogen wurde
-                    if (spielfeld.getSpieldaten().getZugListe().size() < 16
+                    if (spielfeld.getSpieldaten().getZugListe().size() < 12
                         && letzterZug.getFigur().getWert() > 100
                         && letzterZug.getFigur().getWert() < 465
                         && letzterZug.isErsterZug()) {
                         // Gibt es Extrapunkte (Figuren raus bringen)
-                        bewertung -= 20;
+                        bewertung -= 18;
                     }
                     // Wenn ein Springer an den Rand gezogen wird
                     if (letzterZug.getFigur().getWert() == 275
@@ -308,6 +320,15 @@ public class Computerspieler extends Spieler {
                         || letzterZug.getZielfeld().getXK() == 7)) {
                         // Gibt es noch einen zusaetzlichen Strafpunkt
                         bewertung += 1;
+                    }
+                    // Wenn es eine Rochade gewesen ist
+                    if (letzterZug instanceof RochadenZug) {
+                        if (letzterZug.getZielfeld().equals(spielfeld
+                            .getFelder().get(62))) {
+                            bewertung -= rochadeSinnvoll(false, true);
+                        } else {
+                            bewertung -= rochadeSinnvoll(false, false);
+                        }
                     }
                     // Wenn ein neuer MinWert entsteht (schwarz)
                     if (bewertung < maxbewertung) {
@@ -328,8 +349,17 @@ public class Computerspieler extends Spieler {
                 spielfeld.zugRueckgaengig();
             }
         }
+        zieheZug(besteFelder, besteFiguren);
         
-        // Wenn es noch einen Zug zu ziehen gibt
+    }
+    
+    /**
+     * Ermittelt den besten Zug und zieht ihn.
+     * @param besteFelder Die Liste der besten Felder
+     * @param besteFiguren Die Liste der besten Figuren
+     */
+    private void zieheZug(List<Feld> besteFelder, List<Figur> besteFiguren) {
+     // Wenn es noch einen Zug zu ziehen gibt
         if (!besteFiguren.isEmpty()) {
             // Ermittle eine der Alternativen
             // Ermittle die wertgeringste Figur abgesehen vom Koenig
@@ -361,7 +391,6 @@ public class Computerspieler extends Spieler {
                 besteFelder.get(zufallsIndex), 0);   
         }
     }
-    
     /**
      * Berechnet den Maximalwert f&uuml;r die aktuelle Stufe.
      * @param stufe Die aktuelle Stufe
@@ -417,7 +446,8 @@ public class Computerspieler extends Spieler {
                  * erstrebenswert.
                  */
                 // Wenn der Spieler aktuell deutlich fuehrt
-                if (bewertungsfunktion() > 600) {
+                // Bei Zug rueckgaengig wurde der aktuelle Spieler gewechselt
+                if (bewertungsfunktion() < 600) {
                     // Wird der niedrigste moegliche Wert gesetzt
                     maxWert = -4500;
                 }
@@ -481,8 +511,8 @@ public class Computerspieler extends Spieler {
                  * erstrebenswert.
                  */
                 // Wenn der Spieler aktuell deutlich fuehrt
-                // (Minimieren fuer schwarz -> je kleiner desto besser)
-                if (bewertungsfunktion() < 600) {
+                // Beim Zug rueckgaengig wurde der Spieler gewechselt
+                if (bewertungsfunktion() > 600) {
                     /* Wird der hoechst moegliche Wert gesetzt, der beim 
                      * Minimieren natuerlich der schlechteste ist
                      */
@@ -509,74 +539,79 @@ public class Computerspieler extends Spieler {
         // Materialwert
         bewertung = spielfeld.getMaterialwert(true) 
             - spielfeld.getMaterialwert(false);
-        // Bauern kurz vor der Umwandlung und Springer am Rand
-        int index = 1;
-        while (index < spielfeld.getWeisseFiguren().size() 
-            && spielfeld.getWeisseFiguren().get(index).getWert() < 325) {
+        // Figurenbeweglichkeit
+        int index = 0;
+        // Der Bonus des Bauern wenn er auf einer entsprechenden Reihe steht
+        int[] bauernBonus = {5, 25, 115};
+        int[] bauernStrafe = {-20, -70, -210};
+        while (index < spielfeld.getWeisseFiguren().size()) {
+            Figur figur = spielfeld.getWeisseFiguren().get(index);
+            if (spielfeld.getSpieldaten().getZugListe().size() >= 12) {
+                bewertung -= figurenRadiusBewertung(figur);
+            }
             // Wenn es Bauern sind
             if (spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
-                // Zaehlt erst ab 16 Zuegen
+                // Zaehlt erst ab 8 Zuegen
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
-                    Figur bauer = spielfeld.getWeisseFiguren().get(index);
-                    int y = bauer.getPosition().getYK();
+                    int y = figur.getPosition().getYK();
                     // Je naeher die Bauern an der gegnerisches Grundlinie sind
+                    int[] bauernwert;
+                    // Wenn es unsere eigenen Bauern sind
+                    if (spielfeld.getAktuellerSpieler()) {
+                        // Bonus
+                        bauernwert = bauernBonus;
+                    } else {
+                        // Sonst Strafe
+                        bauernwert = bauernStrafe;
+                    }
                     if (y >= 4) {
                         // Desto mehr Punkte zaehlen sie
-                        // Drei Reihen vor der Umwandlung +20
-                        bewertung += 20;
+                        // Drei Reihen vor der Umwandlung
+                        bewertung += bauernwert[0];
                         if (y >= 5) {
-                            // Zwei Reihen vor der Umwandlung +20 +40
-                            bewertung += 40;
+                            // Zwei Reihen vor der Umwandlung
+                            bewertung += bauernwert[1];
                             if (y == 6) {
-                                // Letzte Reihe vor der Umwandlung +20 +40 +115
-                                bewertung += 115;
-                                // Damit sind sie direkt vor der Umwandlung so 
-                                // viel wert wie ein Springer
+                                // Letzte Reihe vor der Umwandlung
+                                bewertung += bauernwert[2];
                             }
                         }
                     }
-                }
-            } else {
-                Figur springer = spielfeld.getWeisseFiguren().get(index);
-                int x = springer.getPosition().getXK();
-                // Springer am Rand sind hinderlich
-                if (x == 0 || x == 7) {
-                    // Strafpunkte
-                    bewertung -= 40;
                 }
             }
             index++;
         }
         // Schwarz analog
-        index = 1;
-        while (index < spielfeld.getSchwarzeFiguren().size() 
-            && spielfeld.getSchwarzeFiguren().get(index).getWert() < 325) {
+        index = 0;
+        while (index < spielfeld.getSchwarzeFiguren().size()) {
+            Figur figur = spielfeld.getSchwarzeFiguren().get(index);
+            bewertung += figurenRadiusBewertung(figur);
             // Wenn es ein Bauer ist
             if (spielfeld.getSchwarzeFiguren().get(index).getWert() 
                 == 100) {
                 // Zaehlt erst nach 16 Zuegen
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
-                    Figur bauer = spielfeld.getSchwarzeFiguren().get(index);
-                    int y = bauer.getPosition().getYK();
+                    int y = figur.getPosition().getYK();
+                    int[] bauernwert;
+                    // Wenn es unsere eigenen Figuren sind
+                    if (!spielfeld.getAktuellerSpieler()) {
+                        // Bonus
+                        bauernwert = bauernBonus;
+                    } else {
+                        // Sonst Strafe
+                        bauernwert = bauernStrafe;
+                    }
                     if (y <= 3) {
-                        bewertung -= 20;
+                        bewertung -= bauernwert[0];
                         if (y <= 2) {
-                            bewertung -= 40;
+                            bewertung -= bauernwert[1];
                             if (y == 1) {
-                                bewertung -= 115;
+                                bewertung -= bauernwert[2];
                             }
                         }
                     }
                 }
-            } else {
-                Figur springer = spielfeld.getSchwarzeFiguren().get(index);
-                int x = springer.getPosition().getXK();
-                // Springer am Rand sind hinderlich
-                if (x == 0 || x == 7) {
-                    // Strafpunkte
-                    bewertung += 40;
-                }
-            }
+            } 
             index++;
         }
         // Das Feld des gegnerischen Koenigs
@@ -585,10 +620,10 @@ public class Computerspieler extends Spieler {
         int bonus;
         if (getFarbe()) {
             koenig = spielfeld.getSchwarzeFiguren().get(0).getPosition();
-            bonus = 1;
+            bonus = 11;
         } else {
             koenig = spielfeld.getWeisseFiguren().get(0).getPosition();
-            bonus = -1;
+            bonus = -11;
         }
         Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
         Figur figur;
@@ -607,6 +642,109 @@ public class Computerspieler extends Spieler {
         return bewertung;
     }
     
+    /**
+     * Ermittelt den Punktabzug f&uuml;r den eingeschr&auml;nkten Zugradius.
+     * @param figur Die entsprechende Figur
+     * @return Punktabzug als ganze Zahl, prozentualer Anteil am Figurenwert
+     */
+    private int figurenRadiusBewertung(Figur figur) {
+        int abzug = 0;
+        int[] gewichtungsArray = {15, 13, 12, 10};
+        int[] eroeffnung = {8, 4, 2, 2};
+        if (spielfeld.getSpieldaten().getZugListe().size() < 10) {
+            gewichtungsArray = eroeffnung;
+        }
+        int anzahlFelder = figur.getMoeglicheFelderKI().size();
+        // Koenig
+        if (figur.getWert() == 0) {
+            if (anzahlFelder > 4) {
+                // Es ist gefaehrlich wenn der Koenig so frei steht
+                abzug = 50;
+            }
+        // Bauer
+        } else if (figur.getWert() == 100) {
+            // Wenn er nicht mehr ziehen kann
+            if (anzahlFelder == 0) {
+                // Zaehlt er nur noch wenig
+                abzug = 70;
+            }
+        // Springer
+        } else if (figur.getWert() == 275) {
+            abzug = (6 - anzahlFelder) * gewichtungsArray[0];
+        // Laeufer
+        } else if (figur.getWert() == 325) {
+            abzug = (7 - anzahlFelder) * gewichtungsArray[1];
+        // Turm
+        } else if (figur.getWert() == 465) {
+            if (anzahlFelder <= 4) {
+                abzug = 4 * gewichtungsArray[2] - 5;
+            } else {
+                abzug = (8 - anzahlFelder) * gewichtungsArray[2];
+            }
+        // Dame
+        } else if (figur.getWert() == 900) {
+            abzug = (12 - anzahlFelder) * gewichtungsArray[3];
+        }
+        
+        return abzug;
+    }
+    
+    /**
+     * Ermittelt, wie sinnvoll es ist, die vorgeschlagene Rochade
+     * durchzuf&uuml;hren.
+     * @param farbe Die Farbe des Spielers
+     * @param kleineRochade Ob es eine kleine Rochade oder eine gro&szlig;e ist
+     * @return Bonuspunkte, falls die Rochade durchgef&uuml;hrt wird
+     */
+    private int rochadeSinnvoll(boolean farbe, boolean kleineRochade) {
+        int bonus = 0;
+        int zaehler = 0;
+        if (farbe && kleineRochade) {
+            int[] feldIndizes = {13, 14, 15, 21, 22, 23, 31};
+            for (int index : feldIndizes) {
+                if (spielfeld.getFelder().get(index).getFigur() != null
+                    && spielfeld.getFelder().get(index).getFigur().getWert() 
+                    == 100) {
+                    zaehler++;
+                }
+            }
+        } else if (farbe && !kleineRochade) {
+            int[] feldIndizes = {9, 10, 11, 17, 18, 19};
+            for (int index : feldIndizes) {
+                if (spielfeld.getFelder().get(index).getFigur() != null
+                    && spielfeld.getFelder().get(index).getFigur().getWert() 
+                    == 100) {
+                    zaehler++;
+                }
+            }
+        } else if (!farbe && kleineRochade) {
+            int[] feldIndizes = {55, 54, 53, 47, 46, 45, 39};
+            for (int index : feldIndizes) {
+                if (spielfeld.getFelder().get(index).getFigur() != null
+                    && spielfeld.getFelder().get(index).getFigur().getWert() 
+                    == 100) {
+                    zaehler++;
+                }
+            }  
+        } else if (!farbe && !kleineRochade) {
+            int[] feldIndizes = {49, 50, 51, 41, 42, 43};
+            for (int index : feldIndizes) {
+                if (spielfeld.getFelder().get(index).getFigur() != null
+                    && spielfeld.getFelder().get(index).getFigur().getWert() 
+                    == 100) {
+                    zaehler++;
+                }
+            }
+        }
+        if (zaehler == 2) {
+            bonus = 30;
+        } else if (zaehler == 3) {
+            bonus = 80;
+        } else {
+            bonus = -10;
+        }
+        return bonus;
+    }
     /**
      * Entscheidet, ob ein Unentschieden-Angebot vom Gegner angenommen werden 
      * soll. <br>

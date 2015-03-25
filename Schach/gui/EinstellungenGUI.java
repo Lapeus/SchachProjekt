@@ -117,7 +117,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         add(cNorth, BorderLayout.NORTH);  
        
         // Center
-        initCenter();
+        initCenter1();
         
         // South
         JPanel cSouth = new JPanel();
@@ -161,7 +161,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     /**
      * Erstellt das Auswahlmen&uuml; f&uuml;r die Einstellungen.
      */
-    private void initCenter() {
+    private void initCenter1() {
         // Center
         Container cCenter = new JPanel();
         cCenter.setLayout(new GridBagLayout());
@@ -242,7 +242,18 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         JLabel lblEnPassantSchlagen  
             = new JLabel("En-Passant-Schlagen nutzbar? ");
         cCenter.add(lblEnPassantSchlagen, gbc);
-        // Radio Buttons En-Passant-Schlagen
+        initCenter2(gbc, cCenter);
+        
+        add(cCenter, BorderLayout.CENTER);
+    }
+    
+    /**
+     * Erstellt das Auswahlmen&uuml; f&uuml;r die Einstellungen.
+     * @param gbc Entsprechendes GridBagConstraints
+     * @param cCenter Entsprechender Container
+     */
+    private void initCenter2(GridBagConstraints gbc, Container cCenter) {
+     // Radio Buttons En-Passant-Schlagen
         auswahlJaNein("enPassantSchlagenJa", "enPassantSchlagenNein");
         if (einstellungen.isEnPassantMoeglich()) {
             ja.setSelected(true);
@@ -294,7 +305,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         JLabel lblSpielfeldDrehen  
             = new JLabel("Soll das Spielfeld gedreht werden ?");
         cCenter.add(lblSpielfeldDrehen, gbc);
-        // Radio Buttons Statistik
+        // Radio Buttons Spielfeld drehen
         auswahlJaNein("drehenJa", "drehenNein");
         if (einstellungen.isSpielfeldDrehen()) {
             ja.setSelected(true);
@@ -305,8 +316,23 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         cCenter.add(ja, gbc);
         gbc.gridx = 3;
         cCenter.add(nein, gbc);
-        
-        add(cCenter, BorderLayout.CENTER);
+        // Label Ton
+        gbc.gridy = 8;
+        gbc.gridx = 0;
+        JLabel lblTon  
+            = new JLabel("Ton an? ");
+        cCenter.add(lblTon, gbc);
+        // Radio Buttons Ton
+        auswahlJaNein("tonJa", "TonNein");
+        if (einstellungen.isTon()) {
+            ja.setSelected(true);
+        } else {
+            nein.setSelected(true);
+        }
+        gbc.gridx = 1;
+        cCenter.add(ja, gbc);
+        gbc.gridx = 3;
+        cCenter.add(nein, gbc);
     }
     
     /**
@@ -395,6 +421,10 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
             einstellungen.setInStatistikEinbeziehen(true);
         } else if (command.equals("statistikNein")) {
             einstellungen.setInStatistikEinbeziehen(false);
-        } 
+        } else if (command.equals("tonJa")) {
+            einstellungen.setTon(true);
+        } else if (command.equals("tonNein")) {
+            einstellungen.setTon(false);
+        }
     }
 }

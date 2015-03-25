@@ -52,6 +52,11 @@ public class Einstellungen {
     private boolean spielfeldDrehen;
     
     /**
+     * Gibt an, ob der Ton an sein soll.
+     */
+    private boolean ton;
+    
+    /**
      * Erzeugt einen neuen Satz Einstellungen, der sp&auml;ter einem Spiel 
      * hinzugef&uuml;gt werden kann.<br>
      * Einziger Konstruktor dieser Klasse.
@@ -67,6 +72,7 @@ public class Einstellungen {
         this.schachWarnung = true;
         this.inStatistikEinbeziehen = true;
         this.spielfeldDrehen = false;
+        this.ton = true;
     }
 
     /**
@@ -85,7 +91,8 @@ public class Einstellungen {
         string += enPassantMoeglich + lineSep;
         string += schachWarnung + lineSep;
         string += inStatistikEinbeziehen + lineSep;
-        string += spielfeldDrehen;
+        string += spielfeldDrehen + lineSep;
+        string += ton;
         return string;
     }
 
@@ -217,5 +224,21 @@ public class Einstellungen {
      */
     public void setSpielfeldDrehen(boolean spielfeldDrehen) {
         this.spielfeldDrehen = spielfeldDrehen;
+    }
+
+    /**
+     * Gibt an, ob der Ton aktiviert ist.
+     * @return Wahrheitswert
+     */
+    public boolean isTon() {
+        return ton;
+    }
+
+    /**
+     * Setzt, ob der Ton aktiviert sein soll.
+     * @param ton Wahrheitswert
+     */
+    public void setTon(boolean ton) {
+        this.ton = ton;
     }
 }

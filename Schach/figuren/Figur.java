@@ -111,9 +111,9 @@ public abstract class Figur {
                 // Liste mit allen gegnerischen Figuren
                 List<Figur> gegner;
                 if (farbe) {
-                    gegner = spielfeld.getSchwarzeFiguren();
+                    gegner = spielfeld.clone(spielfeld.getSchwarzeFiguren());
                 } else {
-                    gegner = spielfeld.getWeisseFiguren();
+                    gegner = spielfeld.clone(spielfeld.getWeisseFiguren());
                 }
                 // Fuer alle gegnerischen Figuren
                 for (Figur figur : gegner) {
@@ -161,6 +161,15 @@ public abstract class Figur {
      * Bauern duerfen schliesslich nur schraeg gezogen werden, wenn sie dabei 
      * eine Figur schlagen koennen.
      */
+    
+    /**
+     * Methode, damit die KI auch die m&ouml;glichen Felder einer Figur abfragen
+     * kann.
+     * @return Liste von m&ouml;glichen Feldern
+     */
+    public List<Feld> getMoeglicheFelderKI() {
+        return getMoeglicheFelder();
+    }
     
     /**
      * Gibt eine Zeichenkette mit allen wichtigen Daten zur&uuml;ck. <br>

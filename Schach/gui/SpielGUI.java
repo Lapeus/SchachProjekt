@@ -206,6 +206,14 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
+     * Speichert ein beendetes Spiel.
+     * @param spiel Das zu speichernde Spiel
+     */
+    public void endSpielSpeichern(Spiel spiel) {
+        gesamtdatensatz.endSpielSpeichern(spiel);
+    }
+    
+    /**
      * Gibt die HighscoreListe des Gesamtdatensatzes zur&uuml;ck.
      * @return nach Punkten gerankte Spielerliste 
      */
@@ -248,19 +256,21 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @param filename Name des Sound der abgespielt werden soll
      */
     public void soundAbspielen(String filename) {
-        try {
-            String fileSep = System.getProperty(
-                "file.separator");
-            AudioInputStream ais = AudioSystem
-                .getAudioInputStream(
-                new File("sounds" + fileSep 
-                        + filename));
-            Clip clip = AudioSystem.getClip();
-            clip.open(ais);
-            clip.start();
-            
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (getEinstellungen().isTon()) {
+            try {
+                String fileSep = System.getProperty(
+                    "file.separator");
+                AudioInputStream ais = AudioSystem
+                    .getAudioInputStream(
+                    new File("sounds" + fileSep 
+                            + filename));
+                Clip clip = AudioSystem.getClip();
+                clip.open(ais);
+                clip.start();
+                
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
  

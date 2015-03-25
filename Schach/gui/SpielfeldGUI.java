@@ -277,6 +277,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private Thread th = new Thread(this);
     
+    /**
+     * Zeigt dem Computergegner, dass er jetzt ziehen soll.
+     */
+    private boolean jetztIstComputerDran = false;
+    
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -345,6 +350,23 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
         parent.revalidate();
         init();
+        List<Figur> eigeneFiguren;
+        if (spielfeld.getAktuellerSpieler()) {
+            eigeneFiguren = spielfeld.getWeisseFiguren();
+        } else {
+            eigeneFiguren = spielfeld.getSchwarzeFiguren();
+        }
+        boolean spielVorbei = true;
+        for (Figur figur : eigeneFiguren) {
+            if (figur.getKorrekteFelder().size() != 0) {
+                spielVorbei = false;
+            }
+        }
+        if (spielVorbei) {
+            remove(cEast);
+            cEndeErstellen();
+            add(cEnde, BorderLayout.EAST);
+        }
     }
     
     /**
@@ -498,7 +520,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         /* Wenn ein Computerspieler mitspielt und anfangen soll muss er hier 
          * den ersten Zug machen
          */
-        wennComputerDannZiehen();
+        //wennComputerDannZiehen();
+        jetztIstComputerDran = true;
     }
     
     /**
@@ -672,7 +695,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             feld.setIcon(null);
         }
         // - schwarze Figurenbilder
-        for (Figur schwarz  : spielfeld.getSchwarzeFiguren()) {
+        for (Figur schwarz  : spielfeld.clone(spielfeld.getSchwarzeFiguren())) {
             // Feld der Figur abspeichern
             Feld momentan = schwarz.getPosition();
             // Image in der Mitte zentrieren lassen
@@ -690,7 +713,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             momentan.setIcon(iconB);
         }
         // - weisse Figurenbilder
-        for (Figur weiss  : spielfeld.getWeisseFiguren()) {
+        for (Figur weiss  : spielfeld.clone(spielfeld.getWeisseFiguren())) {
             // Feld der Figur abspeichern
             Feld momentan = weiss.getPosition();
             // Image in der Mitte zentrieren lassen
@@ -886,6 +909,24 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // auf Matt und Schach Pruefen
                 mattOderSchach();
                 spielfeldAufbau();
+                // Wenn das Spiel nicht vorbei ist 
+                if (!spielVorbei) {
+                    // autosave initiieren
+                    parent.autoSave(spiel);
+                } 
+                // Je nach aktuellem Spieler wird das Label gesetzt
+                if (spielfeld.getAktuellerSpieler()) {
+                    momentanerSpieler.setText("<html>Wei&szlig;");
+                    momentanerSpieler.setForeground(Color.WHITE);
+                } else {
+                    momentanerSpieler.setText("Schwarz");
+                    momentanerSpieler.setForeground(Color.BLACK);
+                }
+                // Wenn es einen letzen Zug gibt wird dieser angezeigt
+                if (spielfeld.getSpieldaten().getLetzterZug() != null) {
+                    letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
+                        .toSchachNotation());
+                }
                 start();
                 // Letzten Zug gruen makieren
                 for (Feld feld : spielfeld.getLetzteFelder()) {
@@ -966,7 +1007,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Wenn es bereits eine ausgewaehlte Figur gibt 
         } else if (ausgewaehlteFigur != null 
             && ausgewaehlteFigur.getKorrekteFelder().contains(momentanesFeld)) {
-            System.out.println("Fall zwei");
             /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
              dieser ist */
             if (ausgewaehlteFigur.getKorrekteFelder()
@@ -976,7 +1016,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 /* Wenn ein Computerspieler mitspielt muss er hier den  Zug
                  * machen
                  */
-                wennComputerDannZiehen();
+                //wennComputerDannZiehen();
+                // Wenn das Spiel nicht vorbei ist 
+                if (!spielVorbei) {
+                    // autosave initiieren
+                    parent.autoSave(spiel);
+                } 
                 // Je nach aktuellem Spieler wird das Label gesetzt
                 if (spielfeld.getAktuellerSpieler()) {
                     momentanerSpieler.setText("<html>Wei&szlig;");
@@ -985,20 +1030,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     momentanerSpieler.setText("Schwarz");
                     momentanerSpieler.setForeground(Color.BLACK);
                 }
-                System.out.println("hier3");
                 // Wenn es einen letzen Zug gibt wird dieser angezeigt
-                if (!spielfeld.getSpieldaten().getLetzterZug().equals(null)) {
-                    System.out.println("hier2");
+
+                if (spielfeld.getSpieldaten().getLetzterZug() != null) {
                     letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
                         .toSchachNotation());
-                    
-                    System.out.println("hier");
                 }
-                // Wenn das Spiel nicht vorbei ist 
-                if (!spielVorbei) {
-                    // autosave initiieren
-                    parent.autoSave(spiel);
-                } 
+                jetztIstComputerDran = true;
             }
         // Wenn man auf die selbe Figur / ein leeres Feld / Fremde Figur klickt
         } else {
@@ -1118,6 +1156,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             cEndeErstellen();
             add(cEnde, BorderLayout.EAST);
             revalidate();  
+            parent.soundAbspielen("Hinweis.wav");
+            int auswahl = JOptionPane.showConfirmDialog(this, 
+                "Wollen Sie das Spiel speichern?", 
+                "Spiel speichern", JOptionPane.YES_NO_OPTION);
+            if (auswahl == 0) {
+                parent.endSpielSpeichern(spiel);
+            }
         // Wenn der momentane Spieler im Schach steht
         } else if (spielfeld.isSchach()) {
             schachWarnung();
@@ -1212,7 +1257,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 momentanerSpieler.setForeground(Color.BLACK);
             }
             // Wenn es einen letzten zug gibt wird dieser angezeigt
-            if (!spielfeld.getSpieldaten().getLetzterZug().equals(null)) {
+            if (spielfeld.getSpieldaten().getLetzterZug() != null) {
                 letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
                     .toSchachNotation());
             }
@@ -1421,6 +1466,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     public void run() {
         StringBuffer ausgabe;
         while (uhrAktiv) {
+            if (jetztIstComputerDran) {
+                jetztIstComputerDran = false;
+                wennComputerDannZiehen();
+            }
             zugzeit.setForeground(Color.BLACK);
             ausgabe = new StringBuffer();
             try {
