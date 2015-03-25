@@ -931,6 +931,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             && momentanesFeld.getFigur().getFarbe() 
             == ausgewaehlteFigur.getFarbe()
             && !(momentanesFeld.getFigur().equals(ausgewaehlteFigur)))) {
+            System.out.println("Fall eins");
             // Wird diese als neue Ausgewaehlte Figur gespeichert
             ausgewaehlteFigur = momentanesFeld.getFigur();
             /* Wenn der Spieler Weiss dran ist und dies angeklickte Figur 
@@ -965,6 +966,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Wenn es bereits eine ausgewaehlte Figur gibt 
         } else if (ausgewaehlteFigur != null 
             && ausgewaehlteFigur.getKorrekteFelder().contains(momentanesFeld)) {
+            System.out.println("Fall zwei");
             /* und das neue ausgewaehlte Feld unter den moeglichen Feldern 
              dieser ist */
             if (ausgewaehlteFigur.getKorrekteFelder()
@@ -983,10 +985,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     momentanerSpieler.setText("Schwarz");
                     momentanerSpieler.setForeground(Color.BLACK);
                 }
+                System.out.println("hier3");
                 // Wenn es einen letzen Zug gibt wird dieser angezeigt
                 if (!spielfeld.getSpieldaten().getLetzterZug().equals(null)) {
+                    System.out.println("hier2");
                     letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
                         .toSchachNotation());
+                    
+                    System.out.println("hier");
                 }
                 // Wenn das Spiel nicht vorbei ist 
                 if (!spielVorbei) {
