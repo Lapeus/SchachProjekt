@@ -272,6 +272,15 @@ public class Computerspieler extends Spieler {
                         // Gibt es Extrapunkte (Figuren raus bringen)
                         bewertung += 18;
                     }
+                    // Wenn es eine Rochade gewesen ist
+                    if (letzterZug instanceof RochadenZug) {
+                        if (letzterZug.getZielfeld().equals(spielfeld
+                            .getFelder().get(6))) {
+                            bewertung += rochadeSinnvoll(true, true);
+                        } else {
+                            bewertung += rochadeSinnvoll(true, false);
+                        }
+                    }
                     // Wenn ein Springer an den Rand gezogen wird
                     if (letzterZug.getFigur().getWert() == 275
                         && (letzterZug.getZielfeld().getXK() == 0
@@ -312,6 +321,15 @@ public class Computerspieler extends Spieler {
                         // Gibt es noch einen zusaetzlichen Strafpunkt
                         bewertung += 1;
                     }
+                    // Wenn es eine Rochade gewesen ist
+                    if (letzterZug instanceof RochadenZug) {
+                        if (letzterZug.getZielfeld().equals(spielfeld
+                            .getFelder().get(62))) {
+                            bewertung -= rochadeSinnvoll(false, true);
+                        } else {
+                            bewertung -= rochadeSinnvoll(false, false);
+                        }
+                    }
                     // Wenn ein neuer MinWert entsteht (schwarz)
                     if (bewertung < maxbewertung) {
                         // Loesche bisherige Figuren und Felder
@@ -331,8 +349,17 @@ public class Computerspieler extends Spieler {
                 spielfeld.zugRueckgaengig();
             }
         }
+        zieheZug(besteFelder, besteFiguren);
         
-        // Wenn es noch einen Zug zu ziehen gibt
+    }
+    
+    /**
+     * Ermittelt den besten Zug und zieht ihn.
+     * @param besteFelder Die Liste der besten Felder
+     * @param besteFiguren Die Liste der besten Figuren
+     */
+    private void zieheZug(List<Feld> besteFelder, List<Figur> besteFiguren) {
+     // Wenn es noch einen Zug zu ziehen gibt
         if (!besteFiguren.isEmpty()) {
             // Ermittle eine der Alternativen
             // Ermittle die wertgeringste Figur abgesehen vom Koenig
@@ -364,7 +391,6 @@ public class Computerspieler extends Spieler {
                 besteFelder.get(zufallsIndex), 0);   
         }
     }
-    
     /**
      * Berechnet den Maximalwert f&uuml;r die aktuelle Stufe.
      * @param stufe Die aktuelle Stufe
@@ -661,6 +687,63 @@ public class Computerspieler extends Spieler {
         }
         
         return abzug;
+    }
+    
+    /**
+     * Ermittelt, wie sinnvoll es ist, die vorgeschlagene Rochade
+     * durchzuf&uuml;hren.
+     * @param farbe Die Farbe des Spielers
+     * @param kleineRochade Ob es eine kleine Rochade oder eine gro&szlig;e ist
+     * @return Bonuspunkte, falls die Rochade durchgef&uuml;hrt wird
+     */
+    private int rochadeSinnvoll(boolean farbe, boolean kleineRochade) {
+        int bonus = 0;
+        int zaehler = 0;
+        if (farbe && kleineRochade) {
+            int[] feldIndizes = {13, 14, 15, 21, 22, 23, 31};
+            for (int index : feldIndizes) {
+                if (spielfeld.getFelder().get(index).getFigur() != null
+                    && spielfeld.getFelder().get(index).getFigur().getWert() 
+                    == 100) {
+                    zaehler++;
+                }
+            }
+        } else if (farbe && !kleineRochade) {
+            int[] feldIndizes = {9, 10, 11, 17, 18, 19};
+            for (int index : feldIndizes) {
+                if (spielfeld.getFelder().get(index).getFigur() != null
+                    && spielfeld.getFelder().get(index).getFigur().getWert() 
+                    == 100) {
+                    zaehler++;
+                }
+            }
+        } else if (!farbe && kleineRochade) {
+            int[] feldIndizes = {55, 54, 53, 47, 46, 45, 39};
+            for (int index : feldIndizes) {
+                if (spielfeld.getFelder().get(index).getFigur() != null
+                    && spielfeld.getFelder().get(index).getFigur().getWert() 
+                    == 100) {
+                    zaehler++;
+                }
+            }  
+        } else if (!farbe && !kleineRochade) {
+            int[] feldIndizes = {49, 50, 51, 41, 42, 43};
+            for (int index : feldIndizes) {
+                if (spielfeld.getFelder().get(index).getFigur() != null
+                    && spielfeld.getFelder().get(index).getFigur().getWert() 
+                    == 100) {
+                    zaehler++;
+                }
+            }
+        }
+        if (zaehler == 2) {
+            bonus = 30;
+        } else if (zaehler == 3) {
+            bonus = 80;
+        } else {
+            bonus = -10;
+        }
+        return bonus;
     }
     /**
      * Entscheidet, ob ein Unentschieden-Angebot vom Gegner angenommen werden 
