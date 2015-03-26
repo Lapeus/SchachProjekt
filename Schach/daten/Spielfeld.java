@@ -603,6 +603,38 @@ public class Spielfeld {
     }
     
     /**
+     * Gibt die Felder der am Matt oder Patt beteiligten Figuren zur&uuml;ck.
+     * @return Liste von Feldern
+     */
+    public List<Feld> amMattBeteiligteFelder() {
+        List<Feld> moeglicheKoenigsfelder = new ArrayList<Feld>();
+        List<Figur> gegnerFiguren;
+        List<Figur> beteiligteFiguren = new ArrayList<Figur>();
+        List<Feld> felderDerBeteiligtenFiguren = new ArrayList<Feld>();
+        if (aktuellerSpieler) {
+            moeglicheKoenigsfelder = weisseFiguren.get(0)
+                .getMoeglicheFelderKI();
+            gegnerFiguren = schwarzeFiguren;
+        } else {
+            moeglicheKoenigsfelder = schwarzeFiguren.get(0)
+                .getMoeglicheFelderKI();
+            gegnerFiguren = weisseFiguren;
+        }
+        for (Figur figur : gegnerFiguren) {
+            for (Feld feld : moeglicheKoenigsfelder) {
+                if (figur.getKorrekteFelder()
+                    .contains(feld) && !beteiligteFiguren.contains(figur)) {
+                    beteiligteFiguren.add(figur);
+                }
+            }
+        }
+        for (Figur figur : beteiligteFiguren) {
+            felderDerBeteiligtenFiguren.add(figur.getPosition());
+        }
+        return felderDerBeteiligtenFiguren;
+    }
+    
+    /**
      * Gibt den gesamten Materialwert des angegebenen Spielers zur&uuml;ck.
      * @param spieler Die Spielfarbe des Spielers
      * @return Der Materialwert als ganze Zahl zwischen 0 und 3830

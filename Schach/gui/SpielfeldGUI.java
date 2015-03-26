@@ -1146,6 +1146,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             for (Feld feld : spielfeld.getLetzteFelder()) {
                 feld.setBackground(gruen);
             }
+            // beteiligte Figuren markieren
+            for (Feld feld : spielfeld.amMattBeteiligteFelder()) {
+                feld.setBackground(Color.blue);
+            }
             // Und Ein Dialogfenster fuer den Gewinner angezeigt
             parent.soundAbspielen("SchachMatt.wav");
             JOptionPane.showMessageDialog(parent, ergebnis);
