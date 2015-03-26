@@ -1030,6 +1030,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     momentanerSpieler.setForeground(Color.BLACK);
                 }
                 // Wenn es einen letzen Zug gibt wird dieser angezeigt
+
                 if (spielfeld.getSpieldaten().getLetzterZug() != null) {
                     letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
                         .toSchachNotation());
@@ -1470,7 +1471,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         while (uhrAktiv) {
             if (jetztIstComputerDran) {
                 jetztIstComputerDran = false;
+                parent.setEnabled(false);
                 wennComputerDannZiehen();
+                parent.setEnabled(true);
             }
             zugzeit.setForeground(Color.BLACK);
             ausgabe = new StringBuffer();
@@ -1541,7 +1544,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     revalidate();  
                 }
             }
-            // Wenn ein Spielvideo angeziegt werden soll
+            // Wenn ein Spielvideo angezeigt werden soll
             if (btnWiederholung.isEnabled()) {
                 /* Wenn wiederholt werden soll und nicht stopp ist und 2 oder 
                  * mehr Sekunden vergangen sind 
