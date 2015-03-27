@@ -1484,14 +1484,21 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             } catch (Exception exc) {
                 exc.printStackTrace();
             }
+            
             // Vergangene Zeit in Millisekuden
             sekundenStopp = System.currentTimeMillis()
                     - sekundenStart;
+            int begrenzung = spielfeld.getEinstellungen()
+                .getZugZeitBegrenzung();
+            int zugzeitBisher = spielfeld.getSpieldaten()
+                .getZugzeit(spielfeld.getAktuellerSpieler());
+            int gesamtZugzeit = zugzeitBisher 
+                + Integer.parseInt(sekundenStopp / 1000 + "");
             // Formatierungshilfe fuer Zeiten
             Calendar dauer;
             dauer = Calendar.getInstance();
             // Zeit in Millisekunden uebergeben
-            dauer.setTimeInMillis(sekundenStopp);
+            dauer.setTimeInMillis(zugzeitBisher * 1000 + sekundenStopp);
             // und in Minuten/Sekunden/Millisekunden (0-9/0-9/0-99)
             int min;
             int sek;
@@ -1521,13 +1528,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Auf das Zugzeit-Label schreiben
             zugzeit.setText(ausgabe.toString());
             if (!spielVorbei) {
-                int begrenzung = spielfeld.getEinstellungen()
-                    .getZugZeitBegrenzung();
-                int gesamtZugzeit = spielfeld.getSpieldaten()
-                    .getZugzeit(spielfeld.getAktuellerSpieler());
                 // Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button
-                if (begrenzung > 0 && (gesamtZugzeit + (sekundenStopp / 1000))
-                    >= begrenzung) {
+                if (begrenzung > 0 && gesamtZugzeit >= begrenzung) {
                     // Spiel ist vorbei
                     spielVorbei = true;
                     spielfeldAufbau();
