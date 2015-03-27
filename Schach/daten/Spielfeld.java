@@ -681,6 +681,21 @@ public class Spielfeld {
     }
     
     /**
+     * Gibt das Startfeld und das Zielfeld des Zuges zur&uuml;ck, den ein
+     * Computergegner ziehen w&uuml;rde.
+     * @return Eine Liste mit Start- und Zielfeld eines sinnvollen Zuges
+     */
+    public List<Feld> getHinweisZug() {
+        List<Feld> hinweisZug = new ArrayList<Feld>();
+        Computerspieler hilfe = new Computerspieler("Hilfe");
+        hilfe.ziehen();
+        hinweisZug.add(spieldaten.getLetzterZug().getStartfeld());
+        hinweisZug.add(spieldaten.getLetzterZug().getZielfeld());
+        zugRueckgaengig();
+        return hinweisZug;
+    }
+    
+    /**
      * Gibt eine Liste mit den aktuell bedrohten Feldern auf denen eine Figur
      * steht zur&uuml;ck. <br>
      * Wenn die entsprechende Option aktiviert ist, werden diese dem Spieler als

@@ -1154,7 +1154,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             for (Feld feld : spielfeld.getLetzteFelder()) {
                 feld.setBackground(gruen);
             }
-            // beteiligte Figuren markieren
+            // beteiligte Figuren blau markieren
             for (Feld feld : spielfeld.amMattBeteiligteFelder()) {
                 feld.setBackground(Color.blue);
             }
@@ -1568,6 +1568,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             
         }
+        parent.requestFocus();
     }
     
     /**
@@ -1599,4 +1600,5 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     public void componentShown(ComponentEvent e) {
     }
+
 }
