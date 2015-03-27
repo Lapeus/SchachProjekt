@@ -842,7 +842,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Updated den das momentanterSpieler Label.
      */
     private void momentanerSpielerUpdate() {
-        int laenge = (spielfeld.getSpieldaten().getZugListe().size() + 1) / 2;
+        int zugNr = (spielfeld.getSpieldaten().getZugListe().size() + 1) / 2;
         String name;
         // Wenn Spieler1 dran ist
         if (spielfeld.getAktuellerSpieler() == spieler1.getFarbe()) {
@@ -854,10 +854,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             name = spieler2.getName();
         }
         if (spielfeld.getAktuellerSpieler()) {
-            momentanerSpieler.setText("<html>" + laenge + ". " + name);
+            momentanerSpieler.setText(zugNr + 1 + ". " + name);
             momentanerSpieler.setForeground(Color.WHITE);
         } else {
-            momentanerSpieler.setText(laenge + ". " + name);
+            momentanerSpieler.setText(zugNr + ". " + name);
             momentanerSpieler.setForeground(Color.BLACK);
         }
     }
@@ -916,6 +916,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 SwingWorker<Void, Void> cpS = new SwingWorker<Void, Void>() {
 
                     protected void done() {
+                        parent.setEnabled(true);
                         // auf Matt und Schach Pruefen
                         mattOderSchach();
                         spielfeldAufbau();
@@ -943,7 +944,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         for (Feld feld : spielfeld.getLetzteFelder()) {
                             feld.setBackground(gruen);
                         }
-                        parent.setEnabled(true);
                     }
 
                     protected Void doInBackground() throws Exception {
@@ -1255,7 +1255,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             spielfeld.zugRueckgaengig();
             // Je nach aktuellem Spieler wird das Label gesetzt
-            int laenge = spielfeld.getSpieldaten().getZugListe().size() + 1;
             momentanerSpielerUpdate();
             // Wenn es einen letzten zug gibt wird dieser angezeigt
             if (spielfeld.getSpieldaten().getLetzterZug() != null) {
@@ -1317,6 +1316,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 spielfeld.ziehe(zug.getStartfeld().getFigur(), 
                     zug.getZielfeld(), zug.getZugzeit());
                 zugListe.setSelectedIndex(zaehler);
+                zugListe.ensureIndexIsVisible(zaehler);
                 // Wenn es ein Umwandlungszug war
                 if (zug instanceof Umwandlungszug) {
                     // Muss nachtraeglich noch die figur umgewandelt werden
