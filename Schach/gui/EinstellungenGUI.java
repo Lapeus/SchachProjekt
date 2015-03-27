@@ -171,12 +171,12 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         // Label Zugzeitbegrenzung
         gbc.gridx = 0;
         gbc.gridy = 0;
-        JLabel lblZugzeitbegrenzung = new JLabel("Zugzeit: ");
+        JLabel lblZugzeitbegrenzung = new JLabel("Zugzeit in Minuten: ");
         cCenter.add(lblZugzeitbegrenzung, gbc);
         // TextPane Zugzeitbegrenzung
         gbc.gridx = 1;
         gbc.gridwidth = 2;
-        String zugzeit = einstellungen.getZugZeitBegrenzung() + "";
+        String zugzeit = (int) (einstellungen.getZugZeitBegrenzung() / 60) + "";
         txtZugzeitbegrenzung = new JTextPane();
         txtZugzeitbegrenzung.setText(zugzeit);
         txtZugzeitbegrenzung.setBackground(cHellesBeige);
@@ -377,7 +377,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
                  * gesetzt
                  */
                 einstellungen.setZugZeitBegrenzung(
-                    Integer.parseInt(txtZugzeitbegrenzung.getText()));
+                    Integer.parseInt(txtZugzeitbegrenzung.getText()) * 60);
                 parent.setEinstellungen(einstellungen);
                 parent.soundAbspielen("Hinweis.wav");
                 JOptionPane.showMessageDialog(parent,

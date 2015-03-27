@@ -1523,8 +1523,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if (!spielVorbei) {
                 int begrenzung = spielfeld.getEinstellungen()
                     .getZugZeitBegrenzung();
+                int gesamtZugzeit = spielfeld.getSpieldaten()
+                    .getZugzeit(spielfeld.getAktuellerSpieler());
                 // Wenn die Zugzeit > Maximale zugzeit --> Aufgeben Button
-                if (begrenzung > 0 && sekundenStopp / 1000 >= begrenzung) {
+                if (begrenzung > 0 && (gesamtZugzeit + (sekundenStopp / 1000))
+                    >= begrenzung) {
                     // Spiel ist vorbei
                     spielVorbei = true;
                     spielfeldAufbau();
