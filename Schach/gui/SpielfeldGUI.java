@@ -899,6 +899,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 start();
                 // Zug ausfuehren
                 ((Computerspieler) spieler2).ziehen();
+                System.out.println("gezogen");
                 // Zugzeit stoppen 
                 // zugzeit stoppen 
                 sekundenStopp = (System.currentTimeMillis()
