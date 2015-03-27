@@ -914,24 +914,24 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 start();
                 // Zug ausfuehren
                 SwingWorker<Void, Void> cpS = new SwingWorker<Void, Void>() {
-
+                    
                     protected void done() {
                         parent.setEnabled(true);
                         // auf Matt und Schach Pruefen
                         mattOderSchach();
                         spielfeldAufbau();
-                        // Zugzeit stoppen 
+                        // Zugzeit stoppen
                         sekundenStopp = (System.currentTimeMillis()
                             - sekundenStart);
                         // und nachtraeglich uebergeben
                         spielfeld.getSpieldaten().getLetzterZug().setZugzeit(
                             (int) (sekundenStopp / 1000));
-                        
-                        // Wenn das Spiel nicht vorbei ist 
+                   
+                        // Wenn das Spiel nicht vorbei ist
                         if (!spielVorbei) {
                             // autosave initiieren
                             parent.autoSave(spiel);
-                        } 
+                        }
                         // Je nach aktuellem Spieler wird das Label gesetzt
                         momentanerSpielerUpdate();
                         // Wenn es einen letzen Zug gibt wird dieser angezeigt
@@ -945,7 +945,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                             feld.setBackground(gruen);
                         }
                     }
-
+                   
                     protected Void doInBackground() throws Exception {
                         parent.setEnabled(false);
                         ((Computerspieler) spieler2).ziehen();
@@ -953,7 +953,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     }
                 };
                 cpS.execute();
-                
+                     
             }
         }
     }
@@ -1153,6 +1153,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // letzen Zug gruen makieren
             for (Feld feld : spielfeld.getLetzteFelder()) {
                 feld.setBackground(gruen);
+            }
+            // beteiligte Figuren markieren
+            for (Feld feld : spielfeld.amMattBeteiligteFelder()) {
+                feld.setBackground(Color.blue);
             }
             // Und Ein Dialogfenster fuer den Gewinner angezeigt
             parent.soundAbspielen("SchachMatt.wav");
