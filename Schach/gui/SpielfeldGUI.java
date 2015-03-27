@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 
 import daten.Computerspieler;
 import daten.Spiel;
@@ -336,13 +337,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         for (Feld feld : felderListe) {
             feld.addMouseListener(this);
         }
-        if (spielfeld.getAktuellerSpieler()) {
-            momentanerSpieler.setText("<html>Wei&szlig;");
-            momentanerSpieler.setForeground(Color.WHITE);
-        } else {
-            momentanerSpieler.setText("Schwarz");  
-            momentanerSpieler.setForeground(Color.BLACK);
-        }
+        // Je nach aktuellem Spieler wird das Label gesetzt
+        momentanerSpielerUpdate();
         if (parent.getEinstellungen().isBedrohteFigurenAnzeigen()) {
             for (Feld bedroht : spielfeld.getBedrohteFelder()) {
                 bedroht.setBackground(new Color(100, 100, 100));
@@ -394,6 +390,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         parent.setMaximumSize(maxsize);
         parent.setSize(minsize);
         parent.setLocationRelativeTo(null);
+        parent.setTitle(spieler1.getName() + " vs. " + spieler2.getName());
         
         // CENTER
         cCenter.addComponentListener(this);
@@ -439,14 +436,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(geschlageneSchwarze, gbc);
         
         // Label momentanerSpieler
-        // Je nach aktuellem Spieler wird das Label gesetzt (Spiel Laden)
-        if (spielfeld.getAktuellerSpieler()) {
-            momentanerSpieler.setText("<html>Wei&szlig;");
-            momentanerSpieler.setForeground(Color.WHITE);
-        } else {
-            momentanerSpieler.setText("Schwarz");
-            momentanerSpieler.setForeground(Color.BLACK);
-        }
+        // Je nach aktuellem Spieler wird das Label gesetzt
+        momentanerSpielerUpdate();
         momentanerSpieler.setBackground(cHellesBeige);
         gbc.gridheight = 1;
         gbc.gridy = 3;
@@ -848,6 +839,30 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
+     * Updated den das momentanterSpieler Label.
+     */
+    private void momentanerSpielerUpdate() {
+        int laenge = (spielfeld.getSpieldaten().getZugListe().size() + 1) / 2;
+        String name;
+        // Wenn Spieler1 dran ist
+        if (spielfeld.getAktuellerSpieler() == spieler1.getFarbe()) {
+            // Wird der Name von Spieler1 angezeigt
+            name = spieler1.getName();
+        // Wenn Spieler2 dran ist
+        } else {
+            // Wird der Name von Spieler2 angezeigt
+            name = spieler2.getName();
+        }
+        if (spielfeld.getAktuellerSpieler()) {
+            momentanerSpieler.setText("<html>" + laenge + ". " + name);
+            momentanerSpieler.setForeground(Color.WHITE);
+        } else {
+            momentanerSpieler.setText(laenge + ". " + name);
+            momentanerSpieler.setForeground(Color.BLACK);
+        }
+    }
+    
+    /**
      * Wertet aus, ob der Spieler2 ein Computerspieler ist und ob dieser 
      * momentan am Zug ist.
      * @return true - ist ein Computerspieler und am Zug<br>
@@ -898,49 +913,47 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // Zugzeit neu starten
                 start();
                 // Zug ausfuehren
-                ((Computerspieler) spieler2).ziehen();
-                System.out.println("gezogen");
-                // Zugzeit stoppen 
-                // zugzeit stoppen 
-                sekundenStopp = (System.currentTimeMillis()
-                    - sekundenStart);
-                // und nachtraeglich uebergeben
-                spielfeld.getSpieldaten().getLetzterZug().setZugzeit(
-                    (int) (sekundenStopp / 1000));
-                // auf Matt und Schach Pruefen
-                mattOderSchach();
-                spielfeldAufbau();
-                // Wenn das Spiel nicht vorbei ist 
-                if (!spielVorbei) {
-                    // autosave initiieren
-                    parent.autoSave(spiel);
-                } 
-                // Je nach aktuellem Spieler wird das Label gesetzt
-                if (spielfeld.getAktuellerSpieler()) {
-                    momentanerSpieler.setText("<html>Wei&szlig;");
-                    momentanerSpieler.setForeground(Color.WHITE);
-                } else {
-                    momentanerSpieler.setText("Schwarz");
-                    momentanerSpieler.setForeground(Color.BLACK);
-                }
-                // Wenn es einen letzen Zug gibt wird dieser angezeigt
-                if (spielfeld.getSpieldaten().getLetzterZug() != null) {
-                    letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
-                        .toSchachNotation());
-                }
-                start();
-                // Letzten Zug gruen makieren
-                for (Feld feld : spielfeld.getLetzteFelder()) {
-                    feld.setBackground(gruen);
-                }
-                // Labels wieder richtig setzen
-                if (spielfeld.getAktuellerSpieler()) {
-                    momentanerSpieler.setText("<html>Wei&szlig;");
-                    momentanerSpieler.setForeground(Color.WHITE);
-                } else {
-                    momentanerSpieler.setText("Schwarz");  
-                    momentanerSpieler.setForeground(Color.BLACK);
-                }
+                SwingWorker<Void, Void> cpS = new SwingWorker<Void, Void>() {
+                    
+                    protected void done() {
+                        // auf Matt und Schach Pruefen
+                        mattOderSchach();
+                        spielfeldAufbau();
+                        // Zugzeit stoppen
+                        sekundenStopp = (System.currentTimeMillis()
+                            - sekundenStart);
+                        // und nachtraeglich uebergeben
+                        spielfeld.getSpieldaten().getLetzterZug().setZugzeit(
+                            (int) (sekundenStopp / 1000));
+                   
+                        // Wenn das Spiel nicht vorbei ist
+                        if (!spielVorbei) {
+                            // autosave initiieren
+                            parent.autoSave(spiel);
+                        }
+                        // Je nach aktuellem Spieler wird das Label gesetzt
+                        momentanerSpielerUpdate();
+                        // Wenn es einen letzen Zug gibt wird dieser angezeigt
+                        if (spielfeld.getSpieldaten().getLetzterZug() != null) {
+                            letzterZug.setText(spielfeld.getSpieldaten()
+                                .getLetzterZug().toSchachNotation());
+                        }
+                        start();
+                        // Letzten Zug gruen makieren
+                        for (Feld feld : spielfeld.getLetzteFelder()) {
+                            feld.setBackground(gruen);
+                        }
+                        parent.setEnabled(true);
+                    }
+                   
+                    protected Void doInBackground() throws Exception {
+                        parent.setEnabled(false);
+                        ((Computerspieler) spieler2).ziehen();
+                        return null;
+                    }
+                };
+                cpS.execute();
+                     
             }
         }
     }
@@ -1023,15 +1036,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     parent.autoSave(spiel);
                 } 
                 // Je nach aktuellem Spieler wird das Label gesetzt
-                if (spielfeld.getAktuellerSpieler()) {
-                    momentanerSpieler.setText("<html>Wei&szlig;");
-                    momentanerSpieler.setForeground(Color.WHITE);
-                } else {
-                    momentanerSpieler.setText("Schwarz");
-                    momentanerSpieler.setForeground(Color.BLACK);
-                }
+                momentanerSpielerUpdate();
                 // Wenn es einen letzen Zug gibt wird dieser angezeigt
-
                 if (spielfeld.getSpieldaten().getLetzterZug() != null) {
                     letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
                         .toSchachNotation());
@@ -1252,14 +1258,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 spielfeld.zugRueckgaengig();
             }
             spielfeld.zugRueckgaengig();
-            // Labels wieder richtig setzen
-            if (spielfeld.getAktuellerSpieler()) {
-                momentanerSpieler.setText("<html>Wei&szlig;");
-                momentanerSpieler.setForeground(Color.WHITE);
-            } else {
-                momentanerSpieler.setText("Schwarz");  
-                momentanerSpieler.setForeground(Color.BLACK);
-            }
+            // Je nach aktuellem Spieler wird das Label gesetzt
+            momentanerSpielerUpdate();
             // Wenn es einen letzten zug gibt wird dieser angezeigt
             if (spielfeld.getSpieldaten().getLetzterZug() != null) {
                 letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
@@ -1362,6 +1362,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         if (e.getActionCommand().equals(commandStartmenue)) {
             // Muss der Thread gestoppt werden
             uhrAktiv = false;
+            // Titel wieder umsetzen
+            parent.setTitle("Schachspiel");
             // Und auf die Eroeffnungseite gewechselt werden
             parent.seitenAuswahl("Eroeffnungsseite");
         }
@@ -1472,9 +1474,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         while (uhrAktiv) {
             if (jetztIstComputerDran) {
                 jetztIstComputerDran = false;
-                parent.setEnabled(false);
                 wennComputerDannZiehen();
-                parent.setEnabled(true);
             }
             zugzeit.setForeground(Color.BLACK);
             ausgabe = new StringBuffer();
