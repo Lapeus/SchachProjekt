@@ -48,6 +48,13 @@ public class Feld extends JLabel {
     }
     
     /**
+     * Berechnet den Index des Feldes in der Felder-Liste.
+     * @return Den Index des Feldes zwischen 0 und 63
+     */
+    public int getIndex() {
+        return x + y * 8;
+    }
+    /**
      * Gibt die x-Koordinate des Feldes zur&uuml;ck.
      * @return Die ganzzahlige Koordinate (zwischen 0 und 7)
      */

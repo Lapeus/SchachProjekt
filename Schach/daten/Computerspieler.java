@@ -33,6 +33,11 @@ public class Computerspieler extends Spieler {
     private Spielfeld spielfeld;
     
     /**
+     * Dient der Rekursions-Z&auml;hlung.
+     */
+    private int zaehler;
+    
+    /**
      * Erstellt einen neuen Computerspieler. <br>
      * Einziger Konstruktor dieser Klasse. Ruft nur den Konstruktor der 
      * vererbenden Klasse auf.
@@ -49,6 +54,7 @@ public class Computerspieler extends Spieler {
      * @see #rekursKI(int)
      */
     public void ziehen() {
+        zaehler = 0;
         // Je nach Name / Stufe wird eine andere Methode aufgerufen
         if (getName().equals("Karl Heinz")) {
             // Einfache Zugregeln
@@ -74,7 +80,7 @@ public class Computerspieler extends Spieler {
         if (letzterZug instanceof Umwandlungszug) {
             spielfeld.umwandeln(letzterZug.getFigur(), 900);
         }
-        
+        System.out.println(zaehler);
         /* Fordert den Garbage-Collector auf, unbenutzte Objekte zu entfernen
          * um fuer den noetigen freien Speicherplatz zu sorgen
          */
@@ -416,25 +422,31 @@ public class Computerspieler extends Spieler {
         // Testet, ob ueberhaupt ein Zug gemacht wurde
         int zaehl = 0;
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
-        for (Figur figur : alleFiguren) {
-            for (Feld feld : figur.getKorrekteFelder()) {
-                zaehl++;
-                spielfeld.ziehe(figur, feld, 0);
-                // Wenn ein Bauer umgewandelt wird
-                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
-                if (letzterZug instanceof Umwandlungszug) {
-                    spielfeld.umwandeln(letzterZug.getFigur(), 900);
-                }
-                int wert = min(stufe - 1, maxWert, beta);
-                spielfeld.zugRueckgaengig();
-                if (wert > maxWert) {
-                    maxWert = wert;
-                    if (maxWert >= beta) {
-                        return maxWert;
-                    }
+        Zugsortierer sort;
+        if (stufe == 1) {
+            sort = new Zugsortierer(alleFiguren, false);
+        } else {
+            sort = new Zugsortierer(alleFiguren, true);
+        }
+        for (int i = 0; i < sort.getSize(); i++) {
+            Figur figur = sort.get(i).getFigur();
+            Feld feld = sort.get(i).getFeld();
+            zaehl++;
+            spielfeld.ziehe(figur, feld, 0);
+            // Wenn ein Bauer umgewandelt wird
+            Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
+            if (letzterZug instanceof Umwandlungszug) {
+                spielfeld.umwandeln(letzterZug.getFigur(), 900);
+            }
+            int wert = min(stufe - 1, maxWert, beta);
+            spielfeld.zugRueckgaengig();
+            if (wert > maxWert) {
+                maxWert = wert;
+                if (maxWert >= beta) {
+                    return maxWert;
                 }
             }
-        }
+        }    
         // Wenn keine Figur gezogen werden konnte, war es eine Matt oder Patt
         // Situation
         if (zaehl == 0) {
@@ -481,25 +493,31 @@ public class Computerspieler extends Spieler {
         // Testet ob ueberhaupt eine Figur gezogen wurde
         int zaehl = 0;
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
-        for (Figur figur : alleFiguren) {
-            for (Feld feld : figur.getKorrekteFelder()) {
-                zaehl++;
-                spielfeld.ziehe(figur, feld, 0);
-                // Wenn ein Bauer umgewandelt wird
-                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
-                if (letzterZug instanceof Umwandlungszug) {
-                    spielfeld.umwandeln(letzterZug.getFigur(), 900);
-                }
-                int wert = max(stufe - 1, alpha, minWert);
-                spielfeld.zugRueckgaengig();
-                if (wert < minWert) {
-                    minWert = wert;
-                    if (minWert <= alpha) {
-                        return minWert;
-                    }
+        Zugsortierer sort;
+        if (stufe == 1) {
+            sort = new Zugsortierer(alleFiguren, false);
+        } else {
+            sort = new Zugsortierer(alleFiguren, true);
+        }
+        for (int i = 0; i < sort.getSize(); i++) {
+            Figur figur = sort.get(i).getFigur();
+            Feld feld = sort.get(i).getFeld();
+            zaehl++;
+            spielfeld.ziehe(figur, feld, 0);
+            // Wenn ein Bauer umgewandelt wird
+            Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
+            if (letzterZug instanceof Umwandlungszug) {
+                spielfeld.umwandeln(letzterZug.getFigur(), 900);
+            }
+            int wert = max(stufe - 1, alpha, minWert);
+            spielfeld.zugRueckgaengig();
+            if (wert < minWert) {
+                minWert = wert;
+                if (minWert <= alpha) {
+                    return minWert;
                 }
             }
-        }
+        } 
         // Wenn keine Figur gezogen werden konnte, war es eine Matt oder Patt
         // Situation
         if (zaehl == 0) {
@@ -538,6 +556,7 @@ public class Computerspieler extends Spieler {
      * <b> negativ </b> ist gut f&uuml;r schwarz.
      */
     private int bewertungsfunktion() {
+        zaehler++;
         int bewertung;
         // Materialwert
         bewertung = spielfeld.getMaterialwert(true) 
