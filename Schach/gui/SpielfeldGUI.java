@@ -429,14 +429,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         // geschlagene Weiss
         geschlageneWeisse.setBackground(cBraunRot);
-        geschlageneWeisse.setLayout(new GridLayout(3, 0));
+        geschlageneWeisse.setLayout(new GridLayout(0, 5));
         gbc.gridy = 1;
         gbc.gridheight = 2;
         cEast.add(geschlageneWeisse, gbc);
         
         // geschlagene Schwarz
         geschlageneSchwarze.setBackground(cBraunRot);
-        geschlageneSchwarze.setLayout(new GridLayout(3, 0));
+        geschlageneSchwarze.setLayout(new GridLayout(0, 5));
         gbc.gridy = 11;
         cEast.add(geschlageneSchwarze, gbc);
         
@@ -965,7 +965,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     protected Void doInBackground() throws Exception {
                         parent.setEnabled(false);
                         ((Computerspieler) spieler2).ziehen(progBar);
-                        System.out.println("Gezogen");
                         progBar.setValue(0);
                         progBar.setVisible(false);
                         return null;

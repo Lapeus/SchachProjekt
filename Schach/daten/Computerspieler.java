@@ -448,7 +448,7 @@ public class Computerspieler extends Spieler {
         if (stufe == 1) {
             sort = new Zugsortierer(alleFiguren, false);
         } else {
-            sort = new Zugsortierer(alleFiguren, false);
+            sort = new Zugsortierer(alleFiguren, true);
         }
         for (int i = 0; i < sort.getSize(); i++) {
             Figur figur = sort.get(i).getFigur();
@@ -519,7 +519,7 @@ public class Computerspieler extends Spieler {
         if (stufe == 1) {
             sort = new Zugsortierer(alleFiguren, false);
         } else {
-            sort = new Zugsortierer(alleFiguren, false);
+            sort = new Zugsortierer(alleFiguren, true);
         }
         for (int i = 0; i < sort.getSize(); i++) {
             Figur figur = sort.get(i).getFigur();

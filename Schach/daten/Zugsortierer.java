@@ -131,11 +131,11 @@ public class Zugsortierer {
         KIZug pivot = figurenUndFelder.get(rechts);
         do {
             while (figurenUndFelder.get(i).getBewertung() 
-                <= pivot.getBewertung() && i < rechts) {
+                >= pivot.getBewertung() && i < rechts) {
                 i++;
             }
             while (figurenUndFelder.get(j).getBewertung() 
-                >= pivot.getBewertung() && j > links) {
+                <= pivot.getBewertung() && j > links) {
                 j--;
             }
             if (i < j) {
@@ -144,7 +144,7 @@ public class Zugsortierer {
                 figurenUndFelder.set(j, temp);
             }
         } while (i < j);
-        if (figurenUndFelder.get(i).getBewertung() > pivot.getBewertung()) {
+        if (figurenUndFelder.get(i).getBewertung() < pivot.getBewertung()) {
             KIZug temp = figurenUndFelder.get(i);
             figurenUndFelder.set(i, figurenUndFelder.get(rechts));
             figurenUndFelder.set(rechts, temp);

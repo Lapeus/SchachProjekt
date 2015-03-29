@@ -614,11 +614,11 @@ public class Spielfeld {
         if (aktuellerSpieler) {
             moeglicheKoenigsfelder = weisseFiguren.get(0)
                 .getMoeglicheFelderKI();
-            gegnerFiguren = schwarzeFiguren;
+            gegnerFiguren = clone(schwarzeFiguren);
         } else {
             moeglicheKoenigsfelder = schwarzeFiguren.get(0)
                 .getMoeglicheFelderKI();
-            gegnerFiguren = weisseFiguren;
+            gegnerFiguren = clone(weisseFiguren);
         }
         for (Figur figur : gegnerFiguren) {
             for (Feld feld : moeglicheKoenigsfelder) {
