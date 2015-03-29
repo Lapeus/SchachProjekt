@@ -469,6 +469,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         progBar = new JProgressBar();
         progBar.setForeground(Color.GREEN);
         progBar.setVisible(false);
+        progBar.setPreferredSize(new Dimension(140, 14));
+        progBar.setMinimumSize(progBar.getSize());
+        progBar.setMaximumSize(progBar.getSize());
         gbc.gridy = 9;
         cEast.add(progBar, gbc);
         
@@ -756,7 +759,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             Image imageB = getImage(schwarz);
             // rescalen
             ImageIcon iconB  = new ImageIcon(
-                imageB.getScaledInstance(45, 45, Image.SCALE_DEFAULT));
+                imageB.getScaledInstance(40, 40, Image.SCALE_DEFAULT));
             // Label Icon hinzufuegen
             momentan.setIcon(iconB);
             // Container Label hinzufuegen
@@ -775,7 +778,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             Image imageW = getImage(weiss);
             // rescalen
             ImageIcon iconW  = new ImageIcon(
-                imageW.getScaledInstance(45, 45, Image.SCALE_DEFAULT));
+                imageW.getScaledInstance(40, 40, Image.SCALE_DEFAULT));
             // Label Icon hinzufuegen
             momentan.setIcon(iconW);
             // Container Label hinzufuegen
@@ -1583,7 +1586,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             
         }
-        parent.requestFocus();
     }
     
     /**
