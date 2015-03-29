@@ -3,6 +3,8 @@ package daten;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JProgressBar;
+
 import figuren.Figur;
 import gui.Feld;
 import zuege.EnPassantZug;
@@ -37,6 +39,10 @@ public class Computerspieler extends Spieler {
      */
     private int zaehler;
     
+    /**
+     * Die ProgressBar zum Anzeigen der Rechenzeit.
+     */
+    private JProgressBar progBar;
     /**
      * Erstellt einen neuen Computerspieler. <br>
      * Einziger Konstruktor dieser Klasse. Ruft nur den Konstruktor der 
@@ -85,6 +91,15 @@ public class Computerspieler extends Spieler {
          * um fuer den noetigen freien Speicherplatz zu sorgen
          */
         Runtime.getRuntime().gc();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void ziehen(JProgressBar progBar) {
+        this.progBar = progBar;
+        progBar.setVisible(true);
+        ziehen();
     }
     
     /**
@@ -258,105 +273,112 @@ public class Computerspieler extends Spieler {
         List<Figur> besteFiguren = new ArrayList<Figur>();
         List<Feld> besteFelder = new ArrayList<Feld>();
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
-        for (Figur figur : alleFiguren) {
-            for (Feld feld : figur.getKorrekteFelder()) {
-                // Mache den Zug
-                spielfeld.ziehe(figur, feld, 0);
-                // Wenn ein Bauer umgewandelt wird
-                Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
-                if (letzterZug instanceof Umwandlungszug) {
-                    spielfeld.umwandeln(letzterZug.getFigur(), 900);
-                }
+        Zugsortierer sort = new Zugsortierer(alleFiguren, false);
+        if (progBar != null) {
+            progBar.setMaximum(sort.getSize());
+        }
+        for (int i = 0; i < sort.getSize(); i++) {
+            if (progBar != null) {
+                progBar.setValue(i);
+            }
+            Figur figur = sort.get(i).getFigur();
+            Feld feld = sort.get(i).getFeld();
+            // Mache den Zug
+            spielfeld.ziehe(figur, feld, 0);
+            // Wenn ein Bauer umgewandelt wird
+            Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
+            if (letzterZug instanceof Umwandlungszug) {
+                spielfeld.umwandeln(letzterZug.getFigur(), 900);
+            }
    
                 // In Abhaengigkeit der Farbe
-                if (getFarbe()) {
-                    // Bekomme die Bewertung dafuer
-                    int bewertung = min(maxStufe - 1, -4500, 4500);
-                    // Wenn es noch die ersten 16 Halbzuege sind und ein 
-                    // Springer oder Laeufer gezogen wurde
-                    if (spielfeld.getSpieldaten().getZugListe().size() < 12
-                        && letzterZug.getFigur().getWert() > 100
-                        && letzterZug.getFigur().getWert() < 465
-                        && letzterZug.isErsterZug()) {
-                        // Gibt es Extrapunkte (Figuren raus bringen)
-                        bewertung += 18;
-                    }
-                    // Wenn es eine Rochade gewesen ist
-                    if (letzterZug instanceof RochadenZug) {
-                        if (letzterZug.getZielfeld().equals(spielfeld
-                            .getFelder().get(6))) {
-                            bewertung += rochadeSinnvoll(true, true);
-                        } else {
-                            bewertung += rochadeSinnvoll(true, false);
-                        }
-                    }
-                    // Wenn ein Springer an den Rand gezogen wird
-                    if (letzterZug.getFigur().getWert() == 275
-                        && (letzterZug.getZielfeld().getXK() == 0
-                        || letzterZug.getZielfeld().getXK() == 7)) {
-                        // Gibt es noch einen zusaetzlichen Strafpunkt
-                        bewertung -= 1;
-                    }
-                    // Wenn ein neuer MaxWert entsteht (weiss)
-                    if (bewertung > maxbewertung) {
-                        // Loesche bisherige Figuren und Felder
-                        besteFiguren.clear();
-                        besteFelder.clear();
-                        besteFiguren.add(figur);
-                        besteFelder.add(feld);
-                        maxbewertung = bewertung;
-                    // Wenn es eine Alternative mit gleicher Bewertung gibt
-                    } else if (bewertung == maxbewertung) {
-                        // Wird diese hinzugefuegt
-                        besteFiguren.add(figur);
-                        besteFelder.add(feld);
-                    }
-                } else {
-                    // Bekomme die Bewertung dafuer
-                    int bewertung = max(maxStufe - 1, -4500, 4500);
-                    // Wenn es noch die ersten 16 Halbzuege sind und ein
-                    // Springer oder Laeufer gezogen wurde
-                    if (spielfeld.getSpieldaten().getZugListe().size() < 12
-                        && letzterZug.getFigur().getWert() > 100
-                        && letzterZug.getFigur().getWert() < 465
-                        && letzterZug.isErsterZug()) {
-                        // Gibt es Extrapunkte (Figuren raus bringen)
-                        bewertung -= 18;
-                    }
-                    // Wenn ein Springer an den Rand gezogen wird
-                    if (letzterZug.getFigur().getWert() == 275
-                        && (letzterZug.getZielfeld().getXK() == 0
-                        || letzterZug.getZielfeld().getXK() == 7)) {
-                        // Gibt es noch einen zusaetzlichen Strafpunkt
-                        bewertung += 1;
-                    }
-                    // Wenn es eine Rochade gewesen ist
-                    if (letzterZug instanceof RochadenZug) {
-                        if (letzterZug.getZielfeld().equals(spielfeld
-                            .getFelder().get(62))) {
-                            bewertung -= rochadeSinnvoll(false, true);
-                        } else {
-                            bewertung -= rochadeSinnvoll(false, false);
-                        }
-                    }
-                    // Wenn ein neuer MinWert entsteht (schwarz)
-                    if (bewertung < maxbewertung) {
-                        // Loesche bisherige Figuren und Felder
-                        besteFiguren.clear();
-                        besteFelder.clear();
-                        besteFiguren.add(figur);
-                        besteFelder.add(feld);
-                        maxbewertung = bewertung;
-                    // Wenn es eine Alternative mit gleicher Bewertung gibt
-                    } else if (bewertung == maxbewertung) {
-                        // Wird diese hinzugefuegt
-                        besteFiguren.add(figur);
-                        besteFelder.add(feld);
+            if (getFarbe()) {
+                // Bekomme die Bewertung dafuer
+                int bewertung = min(maxStufe - 1, -4500, 4500);
+                // Wenn es noch die ersten 16 Halbzuege sind und ein 
+                // Springer oder Laeufer gezogen wurde
+                if (spielfeld.getSpieldaten().getZugListe().size() < 12
+                    && letzterZug.getFigur().getWert() > 100
+                    && letzterZug.getFigur().getWert() < 465
+                    && letzterZug.isErsterZug()) {
+                    // Gibt es Extrapunkte (Figuren raus bringen)
+                    bewertung += 18;
+                }
+                // Wenn es eine Rochade gewesen ist
+                if (letzterZug instanceof RochadenZug) {
+                    if (letzterZug.getZielfeld().equals(spielfeld
+                        .getFelder().get(6))) {
+                        bewertung += rochadeSinnvoll(true, true);
+                    } else {
+                        bewertung += rochadeSinnvoll(true, false);
                     }
                 }
-                // Mache den Zug rueckgaengig
-                spielfeld.zugRueckgaengig();
+                // Wenn ein Springer an den Rand gezogen wird
+                if (letzterZug.getFigur().getWert() == 275
+                    && (letzterZug.getZielfeld().getXK() == 0
+                    || letzterZug.getZielfeld().getXK() == 7)) {
+                    // Gibt es noch einen zusaetzlichen Strafpunkt
+                    bewertung -= 1;
+                }
+                // Wenn ein neuer MaxWert entsteht (weiss)
+                if (bewertung > maxbewertung) {
+                    // Loesche bisherige Figuren und Felder
+                    besteFiguren.clear();
+                    besteFelder.clear();
+                    besteFiguren.add(figur);
+                    besteFelder.add(feld);
+                    maxbewertung = bewertung;
+                // Wenn es eine Alternative mit gleicher Bewertung gibt
+                } else if (bewertung == maxbewertung) {
+                    // Wird diese hinzugefuegt
+                    besteFiguren.add(figur);
+                    besteFelder.add(feld);
+                }
+            } else {
+                // Bekomme die Bewertung dafuer
+                int bewertung = max(maxStufe - 1, -4500, 4500);
+                // Wenn es noch die ersten 16 Halbzuege sind und ein
+                // Springer oder Laeufer gezogen wurde
+                if (spielfeld.getSpieldaten().getZugListe().size() < 12
+                    && letzterZug.getFigur().getWert() > 100
+                    && letzterZug.getFigur().getWert() < 465
+                    && letzterZug.isErsterZug()) {
+                    // Gibt es Extrapunkte (Figuren raus bringen)
+                    bewertung -= 18;
+                }
+                // Wenn ein Springer an den Rand gezogen wird
+                if (letzterZug.getFigur().getWert() == 275
+                    && (letzterZug.getZielfeld().getXK() == 0
+                    || letzterZug.getZielfeld().getXK() == 7)) {
+                    // Gibt es noch einen zusaetzlichen Strafpunkt
+                    bewertung += 1;
+                }
+                // Wenn es eine Rochade gewesen ist
+                if (letzterZug instanceof RochadenZug) {
+                    if (letzterZug.getZielfeld().equals(spielfeld
+                        .getFelder().get(62))) {
+                        bewertung -= rochadeSinnvoll(false, true);
+                    } else {
+                        bewertung -= rochadeSinnvoll(false, false);
+                    }
+                }
+                // Wenn ein neuer MinWert entsteht (schwarz)
+                if (bewertung < maxbewertung) {
+                    // Loesche bisherige Figuren und Felder
+                    besteFiguren.clear();
+                    besteFelder.clear();
+                    besteFiguren.add(figur);
+                    besteFelder.add(feld);
+                    maxbewertung = bewertung;
+                // Wenn es eine Alternative mit gleicher Bewertung gibt
+                } else if (bewertung == maxbewertung) {
+                    // Wird diese hinzugefuegt
+                    besteFiguren.add(figur);
+                    besteFelder.add(feld);
+                }
             }
+            // Mache den Zug rueckgaengig
+            spielfeld.zugRueckgaengig();
         }
         zieheZug(besteFelder, besteFiguren);
         
@@ -426,7 +448,7 @@ public class Computerspieler extends Spieler {
         if (stufe == 1) {
             sort = new Zugsortierer(alleFiguren, false);
         } else {
-            sort = new Zugsortierer(alleFiguren, true);
+            sort = new Zugsortierer(alleFiguren, false);
         }
         for (int i = 0; i < sort.getSize(); i++) {
             Figur figur = sort.get(i).getFigur();
@@ -497,7 +519,7 @@ public class Computerspieler extends Spieler {
         if (stufe == 1) {
             sort = new Zugsortierer(alleFiguren, false);
         } else {
-            sort = new Zugsortierer(alleFiguren, true);
+            sort = new Zugsortierer(alleFiguren, false);
         }
         for (int i = 0; i < sort.getSize(); i++) {
             Figur figur = sort.get(i).getFigur();

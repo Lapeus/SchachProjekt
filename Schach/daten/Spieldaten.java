@@ -87,7 +87,7 @@ public class Spieldaten {
             start = 1;
         }
         // Fuer jeden zweiten Zug
-        for (int i = start; i <= zugListe.size() - 1; i += 2) {
+        for (int i = start; i < zugListe.size(); i += 2) {
             if (zugListe.get(i) != null) {
                 zugzeit += zugListe.get(i).getZugzeit();
             }

@@ -30,6 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
@@ -283,6 +284,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     private boolean jetztIstComputerDran = false;
     
+    /**
+     * Die Progressbar zum Anzeigen der Rechenzeit.
+     */
+    private JProgressBar progBar;
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -419,7 +424,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         //geschlageneLabelB
         JLabel lGeschlageneB = new JLabel("Geschlagene Schwarze Figuren:");
         lGeschlageneB.setForeground(Color.BLACK);
-        gbc.gridy = 9;
+        gbc.gridy = 10;
         cEast.add(lGeschlageneB, gbc);
         
         // geschlagene Weiss
@@ -432,7 +437,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // geschlagene Schwarz
         geschlageneSchwarze.setBackground(cBraunRot);
         geschlageneSchwarze.setLayout(new GridLayout(3, 0));
-        gbc.gridy = 10;
+        gbc.gridy = 11;
         cEast.add(geschlageneSchwarze, gbc);
         
         // Label momentanerSpieler
@@ -459,6 +464,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         zugzeit.setBackground(cHellesBeige);
         gbc.gridy = 8;
         cEast.add(zugzeit, gbc);
+        
+        // Progressbar
+        progBar = new JProgressBar();
+        progBar.setForeground(Color.GREEN);
+        progBar.setVisible(false);
+        gbc.gridy = 9;
+        cEast.add(progBar, gbc);
         
         // Button rueck
         rueckgaengig.setForeground(Color.BLACK);
@@ -895,6 +907,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * 
      */
     private void wennComputerDannZiehen() {
+        jetztIstComputerDran = false;
         // Wenn spieler 2 ein Computergegner ist und dran ist
         if (istComputerSpielerUndIstAmZug()) {
             // Testen ob die 50-Zuege-Regel verletzt wurde
@@ -948,7 +961,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                    
                     protected Void doInBackground() throws Exception {
                         parent.setEnabled(false);
-                        ((Computerspieler) spieler2).ziehen();
+                        ((Computerspieler) spieler2).ziehen(progBar);
+                        System.out.println("Gezogen");
+                        progBar.setValue(0);
+                        progBar.setVisible(false);
                         return null;
                     }
                 };
@@ -1474,7 +1490,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         StringBuffer ausgabe;
         while (uhrAktiv) {
             if (jetztIstComputerDran) {
-                jetztIstComputerDran = false;
                 wennComputerDannZiehen();
             }
             zugzeit.setForeground(Color.BLACK);
@@ -1484,7 +1499,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             } catch (Exception exc) {
                 exc.printStackTrace();
             }
-            
+            progBar.revalidate();
             // Vergangene Zeit in Millisekuden
             sekundenStopp = System.currentTimeMillis()
                     - sekundenStart;
