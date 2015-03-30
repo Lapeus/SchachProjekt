@@ -1073,7 +1073,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             && !spielVorbei) {
             for (Feld bedroht : spielfeld.getBedrohteFelder()) {
                 if (bedroht.getFigur().getWert() == 0) {
-                    bedroht.setBackground(Color.ORANGE);
+                    bedroht.setBackground(new Color(255, 153, 0));
                 } else {
                     bedroht.setBackground(new Color(100, 100, 100));
                 }
@@ -1160,10 +1160,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // Den Koenig pink makieren
                 if (spielfeld.getAktuellerSpieler()) {
                     spielfeld.getWeisseFiguren().get(0).getPosition()
-                    .setBackground(new Color(182, 0, 182));
+                    .setBackground(new Color(255, 0, 188));
                 } else {
                     spielfeld.getSchwarzeFiguren().get(0).getPosition()
-                    .setBackground(new Color(182, 0, 182));
+                    .setBackground(new Color(255, 0, 188));
                 }
             } else {
                 ergebnis = "Das Spiel endet in einem Patt";
@@ -1176,14 +1176,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             for (Feld feld : spielfeld.amMattBeteiligteFelder()) {
                 feld.setBackground(Color.blue);
             }
+            revalidate(); 
             // Und Ein Dialogfenster fuer den Gewinner angezeigt
             parent.soundAbspielen("SchachMatt.wav");
             JOptionPane.showMessageDialog(parent, ergebnis);
             // Endscreen aufrufen
             remove(cEast);
-            cEndeErstellen();
-            add(cEnde, BorderLayout.EAST);
-            revalidate();  
             parent.soundAbspielen("Hinweis.wav");
             int auswahl = JOptionPane.showConfirmDialog(this, 
                 "Wollen Sie das Spiel speichern?", 
@@ -1191,6 +1189,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if (auswahl == 0) {
                 parent.endSpielSpeichern(spiel);
             }
+            cEndeErstellen();
+            revalidate(); 
+            add(cEnde, BorderLayout.EAST); 
         // Wenn der momentane Spieler im Schach steht
         } else if (spielfeld.isSchach()) {
             schachWarnung();
@@ -1306,6 +1307,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 + " Z&uuml;gen auf! " + gewinner.getName() + " gewinnt!!!");
             // Endscreen aufrufen
             remove(cEast);
+            parent.soundAbspielen("Hinweis.wav");
+            int auswahl = JOptionPane.showConfirmDialog(this, 
+                "Wollen Sie das Spiel speichern?", 
+                "Spiel speichern", JOptionPane.YES_NO_OPTION);
+            if (auswahl == 0) {
+                parent.endSpielSpeichern(spiel);
+            }
             cEndeErstellen();
             add(cEnde, BorderLayout.EAST);
             revalidate();  
@@ -1404,6 +1412,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 + "wurde erf&uuml;llt. Das Spiel endet in einem Unentschieden");
             // Endescreen wird aufgebaut
             remove(cEast);
+            parent.soundAbspielen("Hinweis.wav");
+            int auswahl = JOptionPane.showConfirmDialog(this, 
+                "Wollen Sie das Spiel speichern?", 
+                "Spiel speichern", JOptionPane.YES_NO_OPTION);
+            if (auswahl == 0) {
+                parent.endSpielSpeichern(spiel);
+            }
             cEndeErstellen();
             add(cEnde, BorderLayout.EAST);
             revalidate();
@@ -1422,6 +1437,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     // Unentschieden einreichen
                     spiel.unentschieden();
                     remove(cEast);
+                    parent.soundAbspielen("Hinweis.wav");
+                    int auswahl = JOptionPane.showConfirmDialog(this, 
+                        "Wollen Sie das Spiel speichern?", 
+                        "Spiel speichern", JOptionPane.YES_NO_OPTION);
+                    if (auswahl == 0) {
+                        parent.endSpielSpeichern(spiel);
+                    }
                     cEndeErstellen();
                     add(cEnde, BorderLayout.EAST);
                     revalidate();
@@ -1455,6 +1477,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     spiel.unentschieden();
                     // Endscreen aufrufen
                     remove(cEast);
+                    parent.soundAbspielen("Hinweis.wav");
+                    int auswahl = JOptionPane.showConfirmDialog(this, 
+                        "Wollen Sie das Spiel speichern?", 
+                        "Spiel speichern", JOptionPane.YES_NO_OPTION);
+                    if (auswahl == 0) {
+                        parent.endSpielSpeichern(spiel);
+                    }
                     cEndeErstellen();
                     add(cEnde, BorderLayout.EAST);
                     revalidate();

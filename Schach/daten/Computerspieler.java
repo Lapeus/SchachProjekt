@@ -445,11 +445,7 @@ public class Computerspieler extends Spieler {
         int zaehl = 0;
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         Zugsortierer sort;
-        if (stufe == 1) {
-            sort = new Zugsortierer(alleFiguren, false);
-        } else {
-            sort = new Zugsortierer(alleFiguren, true);
-        }
+        sort = new Zugsortierer(alleFiguren, true);
         for (int i = 0; i < sort.getSize(); i++) {
             Figur figur = sort.get(i).getFigur();
             Feld feld = sort.get(i).getFeld();
@@ -516,11 +512,7 @@ public class Computerspieler extends Spieler {
         int zaehl = 0;
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         Zugsortierer sort;
-        if (stufe == 1) {
-            sort = new Zugsortierer(alleFiguren, false);
-        } else {
-            sort = new Zugsortierer(alleFiguren, true);
-        }
+        sort = new Zugsortierer(alleFiguren, true);
         for (int i = 0; i < sort.getSize(); i++) {
             Figur figur = sort.get(i).getFigur();
             Feld feld = sort.get(i).getFeld();
