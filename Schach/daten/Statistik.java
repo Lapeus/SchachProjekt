@@ -93,6 +93,16 @@ public class Statistik {
     private int matWertMattDurchschnitt = -1;
     
     /**
+     * Der Score des Spielers.
+     */
+    private int score = 0;
+    
+    /**
+     * Der Score des letzten Spiels.
+     */
+    private int scoreLastGame = 0;
+    
+    /**
      * Erstellt eine neue Statistik f&uuml;r den Spieler.<br>
      * &Uuml;blicher Konstruktor der Klasse. Aufruf in der Regel beim Erstellen
      * eines neuen Spielers.
@@ -129,53 +139,17 @@ public class Statistik {
     
     /**
      * Berechnet den Score des Spielers anhand der gespeicherten Daten. <br>
-     * <ul>
-     * <li>300 Punkte f&uuml;r einen Sieg</li>
-     * <li>100 Punkte f&uuml;r ein Remis</li>
-     * <li>Berechnung auf Punkte pro Partie</li>
-     * <li>Durchschnittliche Z&uuml;ge &uuml;ber 30</li>
-     * <li>Materialwert beim Sieg / 100</li>
-     * <li>Verdreifachung des Werts um den Referenzwert 1000 erreichen zu 
-     * k&ouml;nnen</li>
-     * </ul>
      * @return Ganzzahliger Score zwischen 0 und 1000
      */
     public int getScore() {
-        // Berechnung beginnt bei 0
-        double score = 0;
         // Anzahl der gespielten Partien
         int anzahlSpiele = getAnzahlSpiele();
-        // 300 Punkte fuer Sieg
-        score = 300 * anzahlSiege;
-        // 100 Punkte fuer Patt
-        score += 100 * anzahlPatt;
-        // Durchschnitt pro Partie
-        score /= anzahlSpiele;
-        /* Einbeziehen von durchschnittlichen Zuegen und durchschnittlichem
-         * Materialwert bei Gewinn und Verlust
-         */
-        if (zuegeSiegDurchschnitt != -1) {
-            // Addiert, wie viel eher man gewinnt
-            score += (30 - zuegeSiegDurchschnitt);
+        if (scoreLastGame != 0) {
+            int gesamtScore = this.score * (anzahlSpiele - 1) + scoreLastGame;
+            this.score = gesamtScore / anzahlSpiele;
+            scoreLastGame = 0;
         }
-        if (zuegeMattDurchschnitt != -1) {
-            // Abgezogen, wie viel eher man verliert
-            score -= (30 - zuegeMattDurchschnitt);
-        }
-        if (matWertSiegDurchschnitt != -1) {
-            // Abgezogen, wie viele Figuren man im Schnitt verliert
-            score -= (3830 - matWertSiegDurchschnitt) / 100.0;
-        }
-        // Versuch, den maxWert auf 1000 zu setzen
-        score *= 3;
-        /* Durchschnitt pro Partie sind 300
-         * Maximaler Materialwert ist 3830 (38)
-         */
-        // Kein negativer Wert moeglich
-        if (score < 0) {
-            score = 0;
-        }
-        return (int) score;
+        return this.score;
     }
     
     /**
@@ -476,6 +450,14 @@ public class Statistik {
      */
     public void setMatWertMattDurchschnitt(int matWertMattDurchschnitt) {
         this.matWertMattDurchschnitt = matWertMattDurchschnitt;
+    }
+
+    /**
+     * Setzt den Score des letzten Spieles.
+     * @param scoreLastGame Punktzahl des letzten Spiels
+     */
+    public void setScoreLastGame(int scoreLastGame) {
+        this.scoreLastGame = scoreLastGame;
     }
     
     

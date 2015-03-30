@@ -472,6 +472,7 @@ public class Computerspieler extends Spieler {
             if (spielfeld.isSchach()) {
                 // Schach-Marker, der bei isSchach() gesetzt wird, loeschen
                 spielfeld.setSchach(false);
+                maxWert = 4500;
             } else {
                 /* Es ist eine Patt-Situation eingetreten. Nun soll getestet 
                  * werden, ob der aktuelle Spieler deutlich fuehrt, denn wenn
@@ -480,9 +481,11 @@ public class Computerspieler extends Spieler {
                  */
                 // Wenn der Spieler aktuell deutlich fuehrt
                 // Bei Zug rueckgaengig wurde der aktuelle Spieler gewechselt
-                if (bewertungsfunktion() < 600) {
+                if (bewertungsfunktion() > 500) {
                     // Wird der niedrigste moegliche Wert gesetzt
-                    maxWert = -4500;
+                    // Jedoch ist Patt immernoch besser als Matt gesetzt zu
+                    // werden
+                    maxWert = -4000;
                 }
             }
         }
@@ -539,6 +542,8 @@ public class Computerspieler extends Spieler {
             if (spielfeld.isSchach()) {
                 // Schach-Marker, der bei isSchach() gesetzt wird, loeschen
                 spielfeld.setSchach(false);
+                // Bester Wert
+                minWert = -4500;
             } else {
                 /* Es ist eine Patt-Situation eingetreten. Nun soll getestet 
                  * werden, ob der aktuelle Spieler deutlich fuehrt, denn wenn
@@ -547,11 +552,13 @@ public class Computerspieler extends Spieler {
                  */
                 // Wenn der Spieler aktuell deutlich fuehrt
                 // Beim Zug rueckgaengig wurde der Spieler gewechselt
-                if (bewertungsfunktion() > 600) {
+                if (bewertungsfunktion() < 500) {
                     /* Wird der hoechst moegliche Wert gesetzt, der beim 
-                     * Minimieren natuerlich der schlechteste ist
+                     * Minimieren natuerlich der schlechteste ist.
+                     * Jedoch: Patt ist immernoch besser als Matt gesetzt zu
+                     * werden, deswegen nur 4000 und nicht 4500
                      */
-                    minWert = 4500;
+                    minWert = 4000;
                 }
             }
         }
@@ -579,10 +586,14 @@ public class Computerspieler extends Spieler {
         int index = 0;
         // Der Bonus des Bauern wenn er auf einer entsprechenden Reihe steht
         int[] bauernBonus = {5, 25, 115};
+        int[] bauernBonusEndspiel = {30, 100, 300};
         int[] bauernStrafe = {-20, -70, -210};
+        int[] bauernStrafeEndspiel = {-80, -120, -500};
         while (index < spielfeld.getWeisseFiguren().size()) {
             Figur figur = spielfeld.getWeisseFiguren().get(index);
-            if (spielfeld.getSpieldaten().getZugListe().size() >= 12) {
+            if (spielfeld.getSpieldaten().getZugListe().size() >= 12
+                && (spielfeld.getWeisseFiguren().size() <= 6 
+                || spielfeld.getMaterialwert(true) <= 1000)) {
                 bewertung -= figurenRadiusBewertung(figur);
             }
             // Wenn es Bauern sind
@@ -594,10 +605,18 @@ public class Computerspieler extends Spieler {
                     int[] bauernwert;
                     // Wenn es unsere eigenen Bauern sind
                     if (spielfeld.getAktuellerSpieler()) {
+                        if (spielfeld.getMaterialwert(true) <= 1000 
+                            || spielfeld.getWeisseFiguren().size() <= 6) {
+                            bauernBonus = bauernBonusEndspiel;
+                        }
                         // Bonus
                         bauernwert = bauernBonus;
                     } else {
                         // Sonst Strafe
+                        if (spielfeld.getMaterialwert(true) <= 1000 
+                            || spielfeld.getWeisseFiguren().size() <= 6) {
+                            bauernStrafe = bauernStrafeEndspiel;
+                        }
                         bauernwert = bauernStrafe;
                     }
                     if (y >= 4) {
@@ -621,7 +640,11 @@ public class Computerspieler extends Spieler {
         index = 0;
         while (index < spielfeld.getSchwarzeFiguren().size()) {
             Figur figur = spielfeld.getSchwarzeFiguren().get(index);
-            bewertung += figurenRadiusBewertung(figur);
+            if (spielfeld.getSpieldaten().getZugListe().size() >= 12
+                && (spielfeld.getSchwarzeFiguren().size() <= 6 
+                || spielfeld.getMaterialwert(false) <= 1000)) {
+                bewertung += figurenRadiusBewertung(figur);
+            }
             // Wenn es ein Bauer ist
             if (spielfeld.getSchwarzeFiguren().get(index).getWert() 
                 == 100) {
@@ -631,9 +654,17 @@ public class Computerspieler extends Spieler {
                     int[] bauernwert;
                     // Wenn es unsere eigenen Figuren sind
                     if (!spielfeld.getAktuellerSpieler()) {
+                        if (spielfeld.getMaterialwert(false) <= 1000 
+                            || spielfeld.getSchwarzeFiguren().size() <= 6) {
+                            bauernBonus = bauernBonusEndspiel;
+                        }
                         // Bonus
                         bauernwert = bauernBonus;
                     } else {
+                        if (spielfeld.getMaterialwert(false) <= 1000 
+                            || spielfeld.getSchwarzeFiguren().size() <= 6) {
+                            bauernStrafe = bauernStrafeEndspiel;
+                        }
                         // Sonst Strafe
                         bauernwert = bauernStrafe;
                     }
@@ -728,7 +759,7 @@ public class Computerspieler extends Spieler {
         
         return abzug;
     }
-    
+   
     /**
      * Ermittelt, wie sinnvoll es ist, die vorgeschlagene Rochade
      * durchzuf&uuml;hren.
