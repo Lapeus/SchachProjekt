@@ -472,6 +472,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         progBar.setPreferredSize(new Dimension(140, 14));
         progBar.setMinimumSize(progBar.getSize());
         progBar.setMaximumSize(progBar.getSize());
+        progBar.setStringPainted(true);
         gbc.gridy = 9;
         cEast.add(progBar, gbc);
         
@@ -517,8 +518,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         start();
         // Thread starten
         th.start(); 
-        
-        
         
         // SpielfeldGUI erstellen
         spielfeldAufbau();
@@ -1530,6 +1529,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             } catch (Exception exc) {
                 exc.printStackTrace();
             }
+            //progBar.setString("Juhu");
             progBar.revalidate();
             // Vergangene Zeit in Millisekuden
             sekundenStopp = System.currentTimeMillis()
