@@ -994,6 +994,17 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
          * (Wenn man dann auf eine seiner eigenen Figuren Klickt, wechselt 
          * die GUI  auf die moeglichen Felder dieser Figur.)
          */
+        // Faerbt die bedrohten Felder Grau und den Koenig orange
+        if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen() 
+            && !spielVorbei) {
+            for (Feld bedroht : spielfeld.getBedrohteFelder()) {
+                if (bedroht.getFigur().getWert() == 0) {
+                    bedroht.setBackground(new Color(255, 153, 0));
+                } else {
+                    bedroht.setBackground(new Color(100, 100, 100));
+                }
+            }
+        }
         if ((momentanesFeld.getFigur() != null 
             && (momentanesFeld.getFigur().getFarbe() 
             == spielfeld.getAktuellerSpieler()) 
@@ -1016,7 +1027,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 if (spielfeld.getEinstellungen().isMoeglicheFelderAnzeigen()) {
                     for (Feld makieren : ausgewaehlteFigur
                         .getKorrekteFelder()) {
-                        makieren.setBackground(rot);
+                        if (makieren.getFigur() == null) {
+                            makieren.setBackground(rot);
+                        } else {
+                            makieren.setBackground(new Color(164, 0, 0));
+                        }
                     }
                 }
             }
@@ -1030,7 +1045,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 if (spielfeld.getEinstellungen().isMoeglicheFelderAnzeigen()) {
                     for (Feld makieren : ausgewaehlteFigur
                         .getKorrekteFelder()) {
-                        makieren.setBackground(rot);
+                        if (makieren.getFigur() == null) {
+                            makieren.setBackground(rot);
+                        } else {
+                            makieren.setBackground(new Color(164, 0, 0));
+                        }
                     }
                 }
             }
@@ -1067,17 +1086,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             ausgewaehlteFigur = null;
         }
         
-        // Faerbt die bedrohten Felder Grau und den Koenig orange
-        if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen() 
-            && !spielVorbei) {
-            for (Feld bedroht : spielfeld.getBedrohteFelder()) {
-                if (bedroht.getFigur().getWert() == 0) {
-                    bedroht.setBackground(new Color(255, 153, 0));
-                } else {
-                    bedroht.setBackground(new Color(100, 100, 100));
-                }
-            }
-        }
         revalidate();  
     }
     

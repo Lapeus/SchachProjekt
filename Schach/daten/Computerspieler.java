@@ -712,14 +712,18 @@ public class Computerspieler extends Spieler {
             abzug = (7 - anzahlFelder) * gewichtungsArray[1];
         // Turm
         } else if (figur.getWert() == 465) {
-            if (anzahlFelder <= 4) {
-                abzug = 4 * gewichtungsArray[2] - 5;
-            } else {
-                abzug = (8 - anzahlFelder) * gewichtungsArray[2];
+            if (spielfeld.getSpieldaten().getZugListe().size() > 14) {
+                if (anzahlFelder <= 4) {
+                    abzug = 4 * gewichtungsArray[2] - 5;
+                } else {
+                    abzug = (8 - anzahlFelder) * gewichtungsArray[2];
+                }
             }
         // Dame
         } else if (figur.getWert() == 900) {
-            abzug = (12 - anzahlFelder) * gewichtungsArray[3];
+            if (spielfeld.getSpieldaten().getZugListe().size() > 10) {
+                abzug = (12 - anzahlFelder) * gewichtungsArray[3];
+            }
         }
         
         return abzug;
