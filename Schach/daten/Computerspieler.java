@@ -486,6 +486,9 @@ public class Computerspieler extends Spieler {
                     // Jedoch ist Patt immernoch besser als Matt gesetzt zu
                     // werden
                     maxWert = -4000;
+                } else {
+                    // Wenn wir nicht fuehren ist Patt sehr gut
+                    maxWert = 4000;
                 }
             }
         }
@@ -559,6 +562,9 @@ public class Computerspieler extends Spieler {
                      * werden, deswegen nur 4000 und nicht 4500
                      */
                     minWert = 4000;
+                } else {
+                    // Wenn wir nicht fuehren ist Patt sehr gut
+                    minWert = -4000;
                 }
             }
         }
