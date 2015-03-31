@@ -157,8 +157,8 @@ public class Gesamtdatensatz {
                     spieler = new Spieler(name);
                 }
                 // Die Statistik des Spielers
-                int[] stat = new int[16];
-                for (int j = 0; j <= 15; j++) {
+                int[] stat = new int[17];
+                for (int j = 0; j <= 16; j++) {
                     stat[j] = Integer.parseInt(br2.readLine());
                 }
                 // Neue Statistik erstellen
@@ -222,11 +222,21 @@ public class Gesamtdatensatz {
          * Spielfeld drehen: False
          */
         einstellungen = new Einstellungen();
-        spielerListe.add(new Computerspieler("Karl Heinz"));
-        spielerListe.add(new Computerspieler("Rosalinde"));
-        spielerListe.add(new Computerspieler("Ursula"));
-        spielerListe.add(new Computerspieler("Walter"));
-        spielerListe.add(new Computerspieler("Harald"));
+        Computerspieler kh = new Computerspieler("Karl Heinz");
+        kh.getStatistik().setScore(100);
+        spielerListe.add(kh);
+        Computerspieler rl = new Computerspieler("Rosalinde");
+        rl.getStatistik().setScore(300);
+        spielerListe.add(rl);
+        Computerspieler ul = new Computerspieler("Ursula");
+        ul.getStatistik().setScore(500);
+        spielerListe.add(ul);
+        Computerspieler wt = new Computerspieler("Walter");
+        wt.getStatistik().setScore(700);
+        spielerListe.add(wt);
+        Computerspieler hr = new Computerspieler("Harald");
+        hr.getStatistik().setScore(900);
+        spielerListe.add(hr);
         
     }
     

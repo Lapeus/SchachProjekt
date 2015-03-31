@@ -180,7 +180,7 @@ public class Statistiken extends JPanel implements ActionListener {
                 + statistik.getAnzahlSpiele() + lineSep;
             momentan += "Siege: " 
                 + statistik.getAnzahlSiege() + lineSep;
-            momentan += "Patt: " 
+            momentan += "Remis: " 
                 + statistik.getAnzahlPatt() + lineSep;
             momentan += "Matt: " 
                 + statistik.getAnzahlMatt() + lineSep;
@@ -188,7 +188,7 @@ public class Statistiken extends JPanel implements ActionListener {
             if (!(spieler instanceof Computerspieler)) {
                 momentan += "Siege vs. Comp: "
                     + statistik.getAnzahlSiegeC() + lineSep;
-                momentan += "Patt vs. Comp: " 
+                momentan += "Remis vs. Comp: " 
                     + statistik.getAnzahlPattC() + lineSep;
                 momentan += "Matt vs. Comp: " 
                     + statistik.getAnzahlMattC() + lineSep;
