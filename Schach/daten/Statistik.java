@@ -120,21 +120,22 @@ public class Statistik {
      */
     public Statistik(int[] stat) {
         this.anzahlSiege = stat[0];
-        this.anzahlPatt = stat[1];
-        this.anzahlMatt = stat[2];
-        this.anzahlSiegeC = stat[3];
-        this.anzahlPattC = stat[4];
-        this.anzahlMattC = stat[5];
-        this.schnellsterSieg = stat[6];
-        this.kuerzesterSieg = stat[7];
-        this.schnellstesMatt = stat[8];
-        this.kuerzestesMatt = stat[9];
-        this.zeitSiegDurchschnitt = stat[10];
-        this.zeitMattDurchschnitt = stat[11];
-        this.zuegeSiegDurchschnitt = stat[12];
-        this.zuegeMattDurchschnitt = stat[13];
-        this.matWertSiegDurchschnitt = stat[14];
-        this.matWertMattDurchschnitt = stat[15];
+        this.score = stat[1];
+        this.anzahlPatt = stat[2];
+        this.anzahlMatt = stat[3];
+        this.anzahlSiegeC = stat[4];
+        this.anzahlPattC = stat[5];
+        this.anzahlMattC = stat[6];
+        this.schnellsterSieg = stat[7];
+        this.kuerzesterSieg = stat[8];
+        this.schnellstesMatt = stat[9];
+        this.kuerzestesMatt = stat[10];
+        this.zeitSiegDurchschnitt = stat[11];
+        this.zeitMattDurchschnitt = stat[12];
+        this.zuegeSiegDurchschnitt = stat[13];
+        this.zuegeMattDurchschnitt = stat[14];
+        this.matWertSiegDurchschnitt = stat[15];
+        this.matWertMattDurchschnitt = stat[16];
     }
     
     /**
@@ -162,6 +163,7 @@ public class Statistik {
         String string;
         String lineSep = System.getProperty("line.separator");
         string = anzahlSiege + lineSep;
+        string += score + lineSep;
         string += anzahlPatt + lineSep;
         string += anzahlMatt + lineSep;
         string += anzahlSiegeC + lineSep;
@@ -176,7 +178,7 @@ public class Statistik {
         string += zuegeSiegDurchschnitt + lineSep;
         string += zuegeMattDurchschnitt + lineSep;
         string += matWertSiegDurchschnitt + lineSep;
-        string += matWertMattDurchschnitt;
+        string += matWertMattDurchschnitt; 
         
         return string;
     }
@@ -452,6 +454,15 @@ public class Statistik {
         this.matWertMattDurchschnitt = matWertMattDurchschnitt;
     }
 
+    /**
+     * Setzt den Score dieses Spielers. Wird nur beim Erstellen von neuen
+     * Spielern verwendet um nicht bei 0 starten zu m&uuml;ssen.
+     * @param score Der Score der gesetzt werden soll
+     */
+    public void setScore(int score) {
+        this.score = score;
+    }
+    
     /**
      * Setzt den Score des letzten Spieles.
      * @param scoreLastGame Punktzahl des letzten Spiels
