@@ -95,7 +95,7 @@ public class Statistik {
     /**
      * Der Score des Spielers.
      */
-    private int score = 0;
+    private int score = 1;
     
     /**
      * Der Score des letzten Spiels.
@@ -146,11 +146,11 @@ public class Statistik {
         // Anzahl der gespielten Partien
         int anzahlSpiele = getAnzahlSpiele();
         if (scoreLastGame != 0) {
-            int gesamtScore = this.score * (anzahlSpiele - 1) + scoreLastGame;
-            this.score = gesamtScore / anzahlSpiele;
+            int gesamtScore = score * (anzahlSpiele - 1) + scoreLastGame;
+            score = gesamtScore / anzahlSpiele;
             scoreLastGame = 0;
         }
-        return this.score;
+        return score;
     }
     
     /**

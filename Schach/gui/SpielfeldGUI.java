@@ -525,7 +525,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         /* Wenn ein Computerspieler mitspielt und anfangen soll muss er hier 
          * den ersten Zug machen
          */
-        //wennComputerDannZiehen();
         jetztIstComputerDran = true;
     }
     
@@ -909,7 +908,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * 
      */
     private void wennComputerDannZiehen() {
-        jetztIstComputerDran = false;
         // Wenn spieler 2 ein Computergegner ist und dran ist
         if (istComputerSpielerUndIstAmZug()) {
             // Testen ob die 50-Zuege-Regel verletzt wurde
@@ -1062,10 +1060,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 .contains(momentanesFeld)) {
                 // Hier zieht ein menschlicher Spieler
                 spielerzugGUI(momentanesFeld);
-                /* Wenn ein Computerspieler mitspielt muss er hier den  Zug
-                 * machen
-                 */
-                //wennComputerDannZiehen();
                 // Wenn das Spiel nicht vorbei ist 
                 if (!spielVorbei) {
                     // autosave initiieren
@@ -1078,6 +1072,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
                         .toSchachNotation());
                 }
+                /* Wenn ein Computerspieler mitspielt muss er hier den  Zug
+                 * machen
+                 */
+                System.out.println("Jetzt soll er ziehen");
                 jetztIstComputerDran = true;
             }
         // Wenn man auf die selbe Figur / ein leeres Feld / Fremde Figur klickt
@@ -1528,6 +1526,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         StringBuffer ausgabe;
         while (uhrAktiv) {
             if (jetztIstComputerDran) {
+                jetztIstComputerDran = false;
+                System.out.println("Zieht");
                 wennComputerDannZiehen();
             }
             zugzeit.setForeground(Color.BLACK);
@@ -1537,7 +1537,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             } catch (Exception exc) {
                 exc.printStackTrace();
             }
-            //progBar.setString("Juhu");
             progBar.revalidate();
             // Vergangene Zeit in Millisekuden
             sekundenStopp = System.currentTimeMillis()
