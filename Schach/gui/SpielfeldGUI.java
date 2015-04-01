@@ -1083,6 +1083,17 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Figur abwaehlen
             ausgewaehlteFigur = null;
         }
+        // Faerbt die bedrohten Felder Grau und den Koenig orange
+        if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen() 
+            && !spielVorbei) {
+            for (Feld bedroht : spielfeld.getBedrohteFelder()) {
+                if (bedroht.getFigur().getWert() == 0) {
+                    bedroht.setBackground(new Color(255, 153, 0));
+                } else {
+                    bedroht.setBackground(new Color(100, 100, 100));
+                }
+            }
+        }
         revalidate();  
     }
     
