@@ -988,12 +988,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         spielfeldAufbau();
         // Felder Bewegen
         Feld momentanesFeld = (Feld) arg0.getSource();
-        /* (Wenn eine korrekte Figur ausgewaehlt wird und es noch keine 
-         * ausgewaehlte Figur gibt.)
-         * ODER
-         * (Wenn man dann auf eine seiner eigenen Figuren Klickt, wechselt 
-         * die GUI  auf die moeglichen Felder dieser Figur.)
-         */
         // Faerbt die bedrohten Felder Grau und den Koenig orange
         if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen() 
             && !spielVorbei) {
@@ -1005,6 +999,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 }
             }
         }
+        /* (Wenn eine korrekte Figur ausgewaehlt wird und es noch keine 
+         * ausgewaehlte Figur gibt.)
+         * ODER
+         * (Wenn man dann auf eine seiner eigenen Figuren Klickt, wechselt 
+         * die GUI  auf die moeglichen Felder dieser Figur.)
+         */
         if ((momentanesFeld.getFigur() != null 
             && (momentanesFeld.getFigur().getFarbe() 
             == spielfeld.getAktuellerSpieler()) 
@@ -1085,7 +1085,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Figur abwaehlen
             ausgewaehlteFigur = null;
         }
-        
         revalidate();  
     }
     
