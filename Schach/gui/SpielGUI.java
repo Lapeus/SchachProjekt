@@ -120,7 +120,12 @@ public class SpielGUI extends JFrame implements WindowListener {
             setContentPane(seite);
             setLocationRelativeTo(null);
             break;
-            
+        
+        case "KonfigFenster":
+            seite = new Farbkonfiguration(this);
+            setContentPane(seite);
+            setLocationRelativeTo(null);
+            break;
 
         default:
             break;

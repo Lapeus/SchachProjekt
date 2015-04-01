@@ -70,6 +70,8 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
      */
     private JButton zurueck;
     
+    private JButton konfig;
+    
     /**
      * Textpain.
      */
@@ -120,16 +122,29 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         
         // South
         JPanel cSouth = new JPanel();
+        JPanel unten = new JPanel();
+        unten.setBackground(cBraunRot);
+        JPanel oben = new JPanel();
+        oben.setBackground(cBraunRot);
+        oben.setLayout(new FlowLayout());
+        cSouth.setLayout(new BorderLayout());
         cSouth.setBackground(cBraunRot);
         speichern = new JButton("Einstellungen speichern");
         speichern.setBackground(cHellesBeige);
         speichern.addActionListener(this);
-        cSouth.add(speichern);        
+        unten.add(speichern);        
         zurueck = new JButton("<html>Zur&uuml;ck");
         zurueck.setBackground(cHellesBeige);
         zurueck.setActionCommand("Eroeffnungsseite");
         zurueck.addActionListener(new SeitenwechselListener(parent));
-        cSouth.add(zurueck); 
+        unten.add(zurueck); 
+        konfig = new JButton("Farb-Konfiguration");
+        konfig.setBackground(cHellesBeige);
+        konfig.setActionCommand("KonfigFenster");
+        konfig.addActionListener(new SeitenwechselListener(parent));
+        oben.add(konfig);
+        cSouth.add(oben, BorderLayout.NORTH);
+        cSouth.add(unten, BorderLayout.SOUTH);
         add(cSouth, BorderLayout.SOUTH);
         
     }
