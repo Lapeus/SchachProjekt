@@ -282,7 +282,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Zeigt dem Computergegner, dass er jetzt ziehen soll.
      */
-    private boolean[] jetztIstComputerDran = {false, false};
+    private boolean jetztIstComputerDran = false;
     
     /**
      * Die Progressbar zum Anzeigen der Rechenzeit.
@@ -525,7 +525,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         /* Wenn ein Computerspieler mitspielt und anfangen soll muss er hier 
          * den ersten Zug machen
          */
-        jetztIstComputerDran[0] = true;
+        jetztIstComputerDran = true;
     }
     
     /**
@@ -639,17 +639,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 cCenter.add(temp);
             }    
             counter -= 8;
-        }
-        // Faerbt die bedrohten Felder Grau und den Koenig orange
-        if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen() 
-            && !spielVorbei) {
-            for (Feld bedroht : spielfeld.getBedrohteFelder()) {
-                if (bedroht.getFigur().getWert() == 0) {
-                    bedroht.setBackground(new Color(255, 153, 0));
-                } else {
-                    bedroht.setBackground(new Color(100, 100, 100));
-                }
-            }
         }
         if (spielfeld.getEinstellungen().isSpielfeldDrehen() && !wiederholung 
             && !(spieler2 instanceof Computerspieler)) {
@@ -930,13 +919,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     + " wurde erf&uuml;llt. Das Spiel endet mit einem "
                     + "Unentschieden");
                 remove(cEast);
-                parent.soundAbspielen("Hinweis.wav");
-                int auswahl = JOptionPane.showConfirmDialog(this, 
-                    "Wollen Sie das Spiel speichern?", 
-                    "Spiel speichern", JOptionPane.YES_NO_OPTION);
-                if (auswahl == 0) {
-                    parent.endSpielSpeichern(spiel);
-                }
                 cEndeErstellen();
                 add(cEnde, BorderLayout.EAST);
                 revalidate(); 
@@ -975,8 +957,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         for (Feld feld : spielfeld.getLetzteFelder()) {
                             feld.setBackground(gruen);
                         }
-                        // Die Berechnung des Computergegners ist vorbei
-                        jetztIstComputerDran[1] = false;
                     }
                    
                     protected Void doInBackground() throws Exception {
@@ -991,9 +971,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                      
             }
         }
-        // Falls er doch nicht dran war, muss die Berechnung trotzdem beendet
-        // werden
-        jetztIstComputerDran[1] = false;
     }
     
 
@@ -1088,13 +1065,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                  * machen
                  */
                 System.out.println("Jetzt soll er ziehen");
-                jetztIstComputerDran[0] = true;
+                jetztIstComputerDran = true;
             }
         // Wenn man auf die selbe Figur / ein leeres Feld / Fremde Figur klickt
         } else {
             // Figur abwaehlen
             ausgewaehlteFigur = null;
-        }
+        }        
         
         revalidate();  
     }
@@ -1230,7 +1207,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             for (Feld feld : spielfeld.getLetzteFelder()) {
                 feld.setBackground(gruen);
             }
-            revalidate();
             // Schachmeldung ausgeben
             JOptionPane.showMessageDialog(parent, 
                 "Sie stehen im Schach!", "Schachwarnung!",
@@ -1538,18 +1514,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     public void run() {
         StringBuffer ausgabe;
         while (uhrAktiv) {
-            if (jetztIstComputerDran[0]) {
-                // Der Computerzug wurde initiiert
-                jetztIstComputerDran[0] = false;
-                // Die Computerberechnung beginnt
-                jetztIstComputerDran[1] = true;
+            if (jetztIstComputerDran) {
+                jetztIstComputerDran = false;
                 System.out.println("Zieht");
                 wennComputerDannZiehen();
             }
             zugzeit.setForeground(Color.BLACK);
             ausgabe = new StringBuffer();
             try {
-                Thread.sleep(25);
+                Thread.sleep(10);
             } catch (Exception exc) {
                 exc.printStackTrace();
             }
@@ -1559,15 +1532,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     - sekundenStart;
             int begrenzung = spielfeld.getEinstellungen()
                 .getZugZeitBegrenzung();
-            int zugzeitBisher;
-            // Wenn es einen Computergegner gibt und dieser gerade rechnet
-            if (jetztIstComputerDran[1]) {
-                zugzeitBisher = spielfeld.getSpieldaten()
-                    .getZugzeit(spieler2.getFarbe());
-            } else {
-                zugzeitBisher = spielfeld.getSpieldaten()
-                    .getZugzeit(spielfeld.getAktuellerSpieler());
-            }
+            int zugzeitBisher = spielfeld.getSpieldaten()
+                .getZugzeit(spielfeld.getAktuellerSpieler());
             int gesamtZugzeit = zugzeitBisher 
                 + Integer.parseInt(sekundenStopp / 1000 + "");
             // Formatierungshilfe fuer Zeiten
