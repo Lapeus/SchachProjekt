@@ -464,7 +464,7 @@ public class Computerspieler extends Spieler {
                     return maxWert;
                 }
             }
-        }    
+        }   
         // Wenn keine Figur gezogen werden konnte, war es eine Matt oder Patt
         // Situation
         if (zaehl == 0) {
@@ -593,13 +593,11 @@ public class Computerspieler extends Spieler {
         // Der Bonus des Bauern wenn er auf einer entsprechenden Reihe steht
         int[] bauernBonus = {5, 25, 115};
         int[] bauernBonusEndspiel = {30, 100, 300};
-        int[] bauernStrafe = {-20, -70, -210};
-        int[] bauernStrafeEndspiel = {-80, -120, -500};
         while (index < spielfeld.getWeisseFiguren().size()) {
             Figur figur = spielfeld.getWeisseFiguren().get(index);
             if (spielfeld.getSpieldaten().getZugListe().size() >= 12
-                && (spielfeld.getWeisseFiguren().size() <= 6 
-                || spielfeld.getMaterialwert(true) <= 1000)) {
+                && spielfeld.getWeisseFiguren().size() >= 6 
+                && spielfeld.getMaterialwert(true) > 1000) {
                 bewertung -= figurenRadiusBewertung(figur);
             }
             // Wenn es Bauern sind
@@ -609,22 +607,12 @@ public class Computerspieler extends Spieler {
                     int y = figur.getPosition().getYK();
                     // Je naeher die Bauern an der gegnerisches Grundlinie sind
                     int[] bauernwert;
-                    // Wenn es unsere eigenen Bauern sind
-                    if (spielfeld.getAktuellerSpieler()) {
-                        if (spielfeld.getMaterialwert(true) <= 1000 
-                            || spielfeld.getWeisseFiguren().size() <= 6) {
-                            bauernBonus = bauernBonusEndspiel;
-                        }
-                        // Bonus
-                        bauernwert = bauernBonus;
-                    } else {
-                        // Sonst Strafe
-                        if (spielfeld.getMaterialwert(true) <= 1000 
-                            || spielfeld.getWeisseFiguren().size() <= 6) {
-                            bauernStrafe = bauernStrafeEndspiel;
-                        }
-                        bauernwert = bauernStrafe;
+                    if (spielfeld.getMaterialwert(true) <= 1000 
+                        || spielfeld.getWeisseFiguren().size() <= 6) {
+                        bauernBonus = bauernBonusEndspiel;
                     }
+                    // Bonus
+                    bauernwert = bauernBonus;
                     if (y >= 4) {
                         // Desto mehr Punkte zaehlen sie
                         // Drei Reihen vor der Umwandlung
@@ -647,8 +635,8 @@ public class Computerspieler extends Spieler {
         while (index < spielfeld.getSchwarzeFiguren().size()) {
             Figur figur = spielfeld.getSchwarzeFiguren().get(index);
             if (spielfeld.getSpieldaten().getZugListe().size() >= 12
-                && (spielfeld.getSchwarzeFiguren().size() <= 6 
-                || spielfeld.getMaterialwert(false) <= 1000)) {
+                && spielfeld.getSchwarzeFiguren().size() >= 6 
+                && spielfeld.getMaterialwert(false) > 1000) {
                 bewertung += figurenRadiusBewertung(figur);
             }
             // Wenn es ein Bauer ist
@@ -658,22 +646,12 @@ public class Computerspieler extends Spieler {
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
                     int y = figur.getPosition().getYK();
                     int[] bauernwert;
-                    // Wenn es unsere eigenen Figuren sind
-                    if (!spielfeld.getAktuellerSpieler()) {
-                        if (spielfeld.getMaterialwert(false) <= 1000 
-                            || spielfeld.getSchwarzeFiguren().size() <= 6) {
-                            bauernBonus = bauernBonusEndspiel;
-                        }
-                        // Bonus
-                        bauernwert = bauernBonus;
-                    } else {
-                        if (spielfeld.getMaterialwert(false) <= 1000 
-                            || spielfeld.getSchwarzeFiguren().size() <= 6) {
-                            bauernStrafe = bauernStrafeEndspiel;
-                        }
-                        // Sonst Strafe
-                        bauernwert = bauernStrafe;
+                    if (spielfeld.getMaterialwert(false) <= 1000 
+                        || spielfeld.getSchwarzeFiguren().size() <= 6) {
+                        bauernBonus = bauernBonusEndspiel;
                     }
+                    // Bonus
+                    bauernwert = bauernBonus;
                     if (y <= 3) {
                         bewertung -= bauernwert[0];
                         if (y <= 2) {
@@ -715,6 +693,18 @@ public class Computerspieler extends Spieler {
         return bewertung;
     }
     
+    /**
+     * Negiert jeden Wert des angegebenen Integer-Arrays.
+     * @param array Das zu negierende Array
+     * @return Das negierte Array
+     */
+    /*private int[] neg(int[] array) {
+        int[] array2 = new int[array.length];
+        for (int i = 0; i < array.length; i++) {
+            array2[i] = -array[i];
+        }
+        return array2;
+    }*/
     /**
      * Ermittelt den Punktabzug f&uuml;r den eingeschr&auml;nkten Zugradius.
      * @param figur Die entsprechende Figur
