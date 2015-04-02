@@ -66,6 +66,11 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     private JButton bSpielen = new JButton("Spiel starten");
     
     /**
+     * Button um den Editor aufzurufen.
+     */
+    private JButton bEditor = new JButton("Editor");
+    
+    /**
      * Button um auf die Er&ouml;ffnungsseite zu kommen.
      */
     private JButton btnZurueck = new JButton("<html>Zur&uuml;ck");
@@ -148,6 +153,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
      */
     private void init() {
         setLayout(new BorderLayout());
+        bEditor.addActionListener(this);
         bSpielen.addActionListener(this);
         bSpielen.setActionCommand(bSpielen.getText());
         setBackground(cBraunRot);        
@@ -230,6 +236,10 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         // Spiel Starten Button
         bSpielen.setBackground(cHellesBeige);
         cSouth.add(bSpielen);
+        
+        // Editor Button
+        bEditor.setBackground(cHellesBeige);
+        cSouth.add(bEditor);
         
         // Zurueck-Button
         btnZurueck.setBackground(cHellesBeige);
@@ -334,11 +344,17 @@ public class Spielerauswahl extends JPanel implements ActionListener {
                 .getSelectedIndex() - 1).getName();
         }
         // Wenn der "Spiel starten"-Button gedrueckt wird
-        if (arg0.getActionCommand().equals("Spiel starten")) {
+        if (arg0.getActionCommand().equals("Spiel starten")
+            || arg0.getSource().equals(bEditor)) {
             // Wenn alle Felder korrekt ausgefuellt sind
             if (wennFelderKorrekt(nameWest, nameEast)) {
                 // Dann wird mit diesen ein neues Spiel erstellt
-                spielErstellen(nameWest, nameEast);
+                if (arg0.getSource().equals(bEditor)) {
+                    spielErstellen(nameWest, nameEast, false);
+                } else {
+                    spielErstellen(nameWest, nameEast, true);
+                }
+                
             }
         } 
         // Wenn eine neue Spielerauswahl fuer den Spieler1 getroffen wurde
@@ -460,8 +476,9 @@ public class Spielerauswahl extends JPanel implements ActionListener {
      * den zwei gefilterten Spielern und der Spielerfarbe.
      * @param nameWest Name im westlichen Textfeld(Spieler 1)
      * @param nameEast Name im &ouml;stlichen Textfeld(Spieler 2)
+     * @param b welcher Button true - SpielStarten, false - Editor
      */
-    private void spielErstellen(String nameWest, String nameEast) {
+    private void spielErstellen(String nameWest, String nameEast, boolean b) {
      // Wenn Spieler1 ein neuer Spieler ist
         if (nameWest.equals("neuer Spieler")) { 
             // Wenn der Spieler noch nicht vorhanden ist
@@ -524,8 +541,13 @@ public class Spielerauswahl extends JPanel implements ActionListener {
              * setzten und die oben gefilterten Parameter fuer 
              * spielernamen und Spielnamen uebergben
             */
-            parent.setContentPane(new SpielfeldGUI(parent,
-                tSpielname.getText(), spieler1, spieler2));
+            if (b) {
+                parent.setContentPane(new SpielfeldGUI(parent,
+                    tSpielname.getText(), spieler1, spieler2)); 
+            } else {
+                parent.setContentPane(new Editor(parent,
+                    tSpielname.getText(), spieler1, spieler2));
+            }
             parent.revalidate();
         } 
     }
