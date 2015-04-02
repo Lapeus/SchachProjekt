@@ -81,14 +81,14 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     private JTextPane txtZugzeitbegrenzung;
     
     /**
-     * Konstante f&uuml;r den Farbton des Hintergrundes (Braun).
+     * Konstante f&uuml;r den Farbton des Hintergrundes.
      */
-    private final Color cBraunRot = new Color(164, 43, 24); 
+    private Color hintergrund; 
     
     /**
-     * Konstante f&uuml;r den Farbton der Buttons (Beige).
+     * Konstante f&uuml;r den Farbton der Buttons.
      */
-    private final Color cHellesBeige = new Color(255, 248, 151);
+    private Color buttonFarbe;
     
     // Ende Attribute
     
@@ -101,9 +101,11 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
     public EinstellungenGUI(SpielGUI parent) {
         super();
         this.parent = parent;
+        hintergrund = parent.getFarben()[0];
+        buttonFarbe = parent.getFarben()[1];
         this.einstellungen = parent.getEinstellungen();
         setLayout(new BorderLayout());
-        setBackground(cBraunRot);
+        setBackground(hintergrund);
         init();
     }
     
@@ -114,7 +116,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         // North
         Container cNorth = new Container(); 
         cNorth.setLayout(new FlowLayout());
-        cNorth.setBackground(cBraunRot);
+        cNorth.setBackground(hintergrund);
         JLabel einstellungen = new JLabel("Einstellungen");
         einstellungen.setFont(new Font("Arial", Font.BOLD, 20));
         cNorth.add(einstellungen);
@@ -126,23 +128,23 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         // South
         JPanel cSouth = new JPanel();
         JPanel unten = new JPanel();
-        unten.setBackground(cBraunRot);
+        unten.setBackground(hintergrund);
         JPanel oben = new JPanel();
-        oben.setBackground(cBraunRot);
+        oben.setBackground(hintergrund);
         oben.setLayout(new FlowLayout());
         cSouth.setLayout(new BorderLayout());
-        cSouth.setBackground(cBraunRot);
+        cSouth.setBackground(hintergrund);
         speichern = new JButton("Einstellungen speichern");
-        speichern.setBackground(cHellesBeige);
+        speichern.setBackground(buttonFarbe);
         speichern.addActionListener(this);
         unten.add(speichern);        
         zurueck = new JButton("<html>Zur&uuml;ck");
-        zurueck.setBackground(cHellesBeige);
+        zurueck.setBackground(buttonFarbe);
         zurueck.setActionCommand("Eroeffnungsseite");
         zurueck.addActionListener(new SeitenwechselListener(parent));
         unten.add(zurueck); 
         konfig = new JButton("Farb-Konfiguration");
-        konfig.setBackground(cHellesBeige);
+        konfig.setBackground(buttonFarbe);
         konfig.setActionCommand("KonfigFenster");
         konfig.addActionListener(this);
         oben.add(konfig);
@@ -163,11 +165,11 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         ja = new JRadioButton("Ja");
         ja.addActionListener(this);
         ja.setActionCommand(commmandJa);
-        ja.setBackground(cBraunRot);
+        ja.setBackground(hintergrund);
         nein = new JRadioButton("Nein");
         nein.addActionListener(this);
         nein.setActionCommand(commandNein);
-        nein.setBackground(cBraunRot);
+        nein.setBackground(hintergrund);
         bGAuswahl = new ButtonGroup();
         bGAuswahl.add(ja);
         bGAuswahl.add(nein);
@@ -182,7 +184,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         // Center
         Container cCenter = new JPanel();
         cCenter.setLayout(new GridBagLayout());
-        cCenter.setBackground(cBraunRot);
+        cCenter.setBackground(hintergrund);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -197,7 +199,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         String zugzeit = (int) (einstellungen.getZugZeitBegrenzung() / 60) + "";
         txtZugzeitbegrenzung = new JTextPane();
         txtZugzeitbegrenzung.setText(zugzeit);
-        txtZugzeitbegrenzung.setBackground(cHellesBeige);
+        txtZugzeitbegrenzung.setBackground(buttonFarbe);
         txtZugzeitbegrenzung.setToolTipText("0 = keine Begrenzung, sonst "
             + "(1..9) + (0..9)*");
         cCenter.add(txtZugzeitbegrenzung, gbc);        

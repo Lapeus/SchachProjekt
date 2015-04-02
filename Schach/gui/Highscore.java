@@ -43,12 +43,12 @@ public class Highscore extends JPanel {
     /**
      * Konstante f&uuml;r den Farbton des Hintergrundes (Braun).
      */
-    private final Color cBraunRot = new Color(164, 43, 24); 
+    private Color hintergrund; 
     
     /**
      * Konstante f&uuml;r den Farbton der Buttons (Beige).
      */
-    private final Color cHellesBeige = new Color(255, 248, 151);
+    private Color buttonFarbe;
     
     // Konstruktor
     /**
@@ -59,6 +59,8 @@ public class Highscore extends JPanel {
     public Highscore(SpielGUI parent) {
         super();
         this.parent = parent;
+        hintergrund = parent.getFarben()[0];
+        buttonFarbe = parent.getFarben()[1];
         init();
     }
     
@@ -67,11 +69,11 @@ public class Highscore extends JPanel {
      */
     public void init() {
         setLayout(new BorderLayout());
-        setBackground(cBraunRot);
+        setBackground(hintergrund);
         
         // North 
         Container cNorth = new JPanel();
-        cNorth.setBackground(cBraunRot);
+        cNorth.setBackground(hintergrund);
         cNorth.setLayout(new FlowLayout());
         lblHighscore.setFont(new Font("Arial", Font.BOLD, 20));
         cNorth.add(lblHighscore);
@@ -79,7 +81,7 @@ public class Highscore extends JPanel {
         
         // Center 
         JPanel cCenter = new JPanel();
-        cCenter.setBackground(cBraunRot);
+        cCenter.setBackground(hintergrund);
         List<Spieler> ranking = parent.getRanking();
         String ergebnis = "";
         // Counter fuer die anzeige des Bestenlistenmplatz
@@ -97,20 +99,20 @@ public class Highscore extends JPanel {
         ergebnis = ergebnis.substring(0, ergebnis.length() - lineSep.length());
         // String in der Pane hinzufuegen
         highscorePane.setText(ergebnis);
-        highscorePane.setBackground(cHellesBeige);
+        highscorePane.setBackground(buttonFarbe);
         highscorePane.setEditable(false);
         cCenter.add(highscorePane);
         add(cCenter, BorderLayout.CENTER);
         
         // South 
         JPanel cSouth = new JPanel();
-        cSouth.setBackground(cBraunRot);
+        cSouth.setBackground(hintergrund);
         
         // Button zurueck
         JButton zurueck = new JButton("<html>Zur&uuml;ck");
         zurueck.addActionListener(new SeitenwechselListener(parent));
         zurueck.setActionCommand("Eroeffnungsseite");
-        zurueck.setBackground(cHellesBeige);
+        zurueck.setBackground(buttonFarbe);
         
         cSouth.add(zurueck);
         add(cSouth, BorderLayout.SOUTH);

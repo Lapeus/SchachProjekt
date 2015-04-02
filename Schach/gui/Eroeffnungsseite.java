@@ -65,14 +65,14 @@ public class Eroeffnungsseite extends Panel {
     private JLabel menue = new JLabel("<html>Men&uuml;</html>");
     
     /**
-     * Konstante f&uuml;r den Farbton des Hintergrundes (Braun).
+     * Konstante f&uuml;r den Farbton des Hintergrundes.
      */
-    private final Color cBraunRot = new Color(164, 43, 24); 
+    private Color hintergrund; 
     
     /**
-     * Konstante f&uuml;r den Farbton der Buttons (Beige).
+     * Konstante f&uuml;r den Farbton der Buttons.
      */
-    private final Color cHellesBeige = new Color(255, 248, 151);
+    private Color buttonFarbe;
     
     // Ende Attribute
     
@@ -85,6 +85,8 @@ public class Eroeffnungsseite extends Panel {
     public Eroeffnungsseite(SpielGUI parent) {
         super();
         this.parent = parent;
+        hintergrund = parent.getFarben()[0];
+        buttonFarbe = parent.getFarben()[1];
         init();
     }
     
@@ -95,7 +97,7 @@ public class Eroeffnungsseite extends Panel {
      */
     private void init() {
         setLayout(new BorderLayout(140, 20));
-        setBackground(cBraunRot);
+        setBackground(hintergrund);
         
         // Button ActionListener
         ActionListener wechselListener = new SeitenwechselListener(parent);
@@ -115,23 +117,23 @@ public class Eroeffnungsseite extends Panel {
         cNorth.setLayout(new FlowLayout());
         menue.setFont(new Font("Arial", Font.BOLD, 20));
         cNorth.add(menue);
-        cNorth.setBackground(cBraunRot);
+        cNorth.setBackground(hintergrund);
         add(cNorth, BorderLayout.NORTH);
         
         // Center
         Container cCenter = new JPanel();
-        cCenter.setBackground(cBraunRot);
+        cCenter.setBackground(hintergrund);
         cCenter.setLayout(new GridLayout(0, 1, 0, 40));
-        spielen.setBackground(cHellesBeige);
-        spielLaden.setBackground(cHellesBeige);
+        spielen.setBackground(buttonFarbe);
+        spielLaden.setBackground(buttonFarbe);
         // Wenn es kein zu ladendes Spiel gibt
         if (parent.getSpieleListe().isEmpty()) {
             spielLaden.setEnabled(false);
             spielLaden.setToolTipText("Keine gespeicherten Spiele vorhanden!");
         }
-        einstellungen.setBackground(cHellesBeige);
-        highscore.setBackground(cHellesBeige);
-        statistiken.setBackground(cHellesBeige);
+        einstellungen.setBackground(buttonFarbe);
+        highscore.setBackground(buttonFarbe);
+        statistiken.setBackground(buttonFarbe);
         cCenter.add(spielen);
         cCenter.add(spielLaden);
         cCenter.add(einstellungen);

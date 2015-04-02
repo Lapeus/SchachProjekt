@@ -40,12 +40,12 @@ public class Farbkonfiguration extends JPanel implements ActionListener {
     /**
      * Konstante f&uuml;r den Farbton des Hintergrundes.
      */
-    private Color cHintergrund = new Color(164, 43, 24); 
+    private Color cHintergrund; 
     
     /**
      * Konstante f&uuml;r den Farbton der Buttons.
      */
-    private Color cButtonFarbe = new Color(255, 248, 151);
+    private Color cButtonFarbe;
     
     /**
      * Die Farben.
@@ -57,6 +57,8 @@ public class Farbkonfiguration extends JPanel implements ActionListener {
      */
     public Farbkonfiguration(SpielGUI parent) {
         this.parent = parent;
+        cHintergrund = parent.getFarben()[0];
+        cButtonFarbe = parent.getFarben()[1];
         int zaehl = 0;
         for (Color color : parent.getFarben()) {
             farben[zaehl] = color;

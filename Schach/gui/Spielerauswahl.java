@@ -40,14 +40,14 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     private static final long serialVersionUID = -6920443370361911344L;
     
     /**
-     * Konstante f&uuml;r den Farbton den Hintergrundes (Braun).
+     * Konstante f&uuml;r den Farbton den Hintergrundes.
      */
-    private static Color cBraunRot = new Color(164, 43, 24); 
+    private Color hintergrund; 
     
     /**
-     * Konstante f&uuml;r den Farbton der Auswahlfelder (Beige).
+     * Konstante f&uuml;r den Farbton der Auswahlfelder.
      */
-    private static Color cHellesBeige = new Color(255, 248, 151);
+    private Color buttonFarbe;
     
     /**
      * Eltern-SpielGUI-Fenster auf der das Spielerauswahl Panel dargestellt 
@@ -133,6 +133,8 @@ public class Spielerauswahl extends JPanel implements ActionListener {
     public Spielerauswahl(SpielGUI parent) {
         super();
         this.parent = parent;
+        hintergrund = parent.getFarben()[0];
+        buttonFarbe = parent.getFarben()[1];
         init();
     }
     
@@ -150,15 +152,15 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         setLayout(new BorderLayout());
         bSpielen.addActionListener(this);
         bSpielen.setActionCommand(bSpielen.getText());
-        setBackground(cBraunRot);        
+        setBackground(hintergrund);        
         // North (Spielname)
         Container cNorth = new JPanel();
         cNorth.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        cNorth.setBackground(cBraunRot);
+        cNorth.setBackground(hintergrund);
         lSpielname.setMinimumSize(new Dimension(150, 50));
         cNorth.add(lSpielname, gbc);
-        tSpielname.setBackground(cHellesBeige);
+        tSpielname.setBackground(buttonFarbe);
         tSpielname.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space");
         gbc.gridy = 1;
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -185,7 +187,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         
         // Label Farbauswahl
         Container cCenter = new JPanel();
-        cCenter.setBackground(cBraunRot);
+        cCenter.setBackground(hintergrund);
         cCenter.setLayout(new GridLayout(5, 1));
         
         Container cCenterLabel = new Container();
@@ -202,13 +204,13 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         
         JRadioButton schwarz = new JRadioButton("schwarz");
         schwarz.setActionCommand("schwarz");
-        schwarz.setBackground(cBraunRot);
+        schwarz.setBackground(hintergrund);
         schwarz.addActionListener(this);
         
         JRadioButton weiss = new JRadioButton("<html>wei&szlig");
         weiss.setActionCommand("weiss");
         weiss.setSelected(true);
-        weiss.setBackground(cBraunRot);
+        weiss.setBackground(hintergrund);
         weiss.addActionListener(this);
         
         bGFarbauswahl = new ButtonGroup();
@@ -228,11 +230,11 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         cSouth.setLayout(new FlowLayout());
         
         // Spiel Starten Button
-        bSpielen.setBackground(cHellesBeige);
+        bSpielen.setBackground(buttonFarbe);
         cSouth.add(bSpielen);
         
         // Zurueck-Button
-        btnZurueck.setBackground(cHellesBeige);
+        btnZurueck.setBackground(buttonFarbe);
         btnZurueck.addActionListener(new SeitenwechselListener(parent));
         btnZurueck.setActionCommand("Eroeffnungsseite");
         cSouth.add(btnZurueck);
@@ -292,7 +294,7 @@ public class Spielerauswahl extends JPanel implements ActionListener {
             boxWEST = spielerMenu;
         }
         
-        spielerMenu.setBackground(cHellesBeige);
+        spielerMenu.setBackground(buttonFarbe);
         eingabePanel.add(spielerMenu);
         
         // Spielername
@@ -301,16 +303,16 @@ public class Spielerauswahl extends JPanel implements ActionListener {
         
         // Wenn es fuer die menschlische SpielerListe ist
         if (seite.equals("West")) {
-            nameWEST.setBackground(cHellesBeige);
+            nameWEST.setBackground(buttonFarbe);
             nameWEST.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space");
             eingabePanel.add(nameWEST);
         // Wenn es fuer die komlette SpielerListe ist
         } else {
-            nameEAST.setBackground(cHellesBeige);
+            nameEAST.setBackground(buttonFarbe);
             nameEAST.setToolTipText("Bestehend aus 0..9/a..z/A..Z/Space");
             eingabePanel.add(nameEAST);
         }
-        eingabePanel.setBackground(cBraunRot);
+        eingabePanel.setBackground(hintergrund);
         return eingabePanel;
     }
     
