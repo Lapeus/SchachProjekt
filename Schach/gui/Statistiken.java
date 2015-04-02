@@ -59,14 +59,14 @@ public class Statistiken extends JPanel implements ActionListener {
     private JTextPane daten = new JTextPane();
     
     /**
-     * Konstante f&uuml;r den Farbton des Hintergrundes (Braun).
+     * Konstante f&uuml;r den Farbton des Hintergrundes.
      */
-    private final Color cBraunRot = new Color(164, 43, 24); 
+    private Color hintergrund; 
     
     /**
-     * Konstante f&uuml;r den Farbton der Buttons (Beige).
+     * Konstante f&uuml;r den Farbton der Buttons.
      */
-    private final Color cHellesBeige = new Color(255, 248, 151);
+    private Color buttonFarbe;
 
     // Ende Attribute
     
@@ -78,6 +78,8 @@ public class Statistiken extends JPanel implements ActionListener {
      */
     public Statistiken(SpielGUI parent) {
         this.parent = parent;
+        hintergrund = parent.getFarben()[0];
+        buttonFarbe = parent.getFarben()[1];
         this.setLayout(new BorderLayout());
         init();
     }
@@ -87,11 +89,11 @@ public class Statistiken extends JPanel implements ActionListener {
      * ausw&auml;hlen kann und von diesem die Statistik angezeigt bekommt.
      */
     private void init() {
-        setBackground(cBraunRot);
+        setBackground(hintergrund);
         
         // NORTH
         cNorth.setLayout(new BorderLayout());
-        cNorth.setBackground(cBraunRot);
+        cNorth.setBackground(hintergrund);
         
         // Label Statistik
         JPanel uNorth = new JPanel();
@@ -99,14 +101,14 @@ public class Statistiken extends JPanel implements ActionListener {
         JLabel statistiken = new JLabel("Statistiken: ");
         statistiken.setFont(new Font("Arial", Font.BOLD, 20));
         uNorth.add(statistiken);
-        uNorth.setBackground(cBraunRot);
+        uNorth.setBackground(hintergrund);
         cNorth.add(uNorth, BorderLayout.NORTH);
         
         // Spielerauswahlmenue
         daten.setEditable(false);
-        daten.setBackground(cBraunRot);
+        daten.setBackground(hintergrund);
         cCenter.setLayout(new BorderLayout());
-        cCenter.setBackground(cBraunRot);
+        cCenter.setBackground(hintergrund);
         // Spieler Liste des Backends
         List<Spieler> spielerListe = parent.getSpielerListe();
         // +1 wegen "Waehlen sie einen Spieler aus"
@@ -119,7 +121,7 @@ public class Statistiken extends JPanel implements ActionListener {
         }
         // ComboBox mit dem Array als Inhalt erzeugen 
         spielerAuswahl = new JComboBox<String>(spielernamen);
-        spielerAuswahl.setBackground(cHellesBeige);
+        spielerAuswahl.setBackground(buttonFarbe);
         spielerAuswahl.addActionListener(this);
         cNorth.add(spielerAuswahl, BorderLayout.CENTER);
         
@@ -133,21 +135,21 @@ public class Statistiken extends JPanel implements ActionListener {
         // South
         JPanel cSouth = new JPanel();
         cSouth.setLayout(new FlowLayout());
-        cSouth.setBackground(cBraunRot);
+        cSouth.setBackground(hintergrund);
         
         // Zur&uuml;cksetzen Button
         JButton btnzuruecksetzen 
             = new JButton("<html>Spielerstatistik zur&uuml;cksetzen");
         btnzuruecksetzen.setActionCommand("zuruecksetzen");
         btnzuruecksetzen.addActionListener(this);
-        btnzuruecksetzen.setBackground(cHellesBeige);
+        btnzuruecksetzen.setBackground(buttonFarbe);
         cSouth.add(btnzuruecksetzen);
         
         // Zurueck-Button
         JButton zurueck = new JButton("<html>Zur&uuml;ck");
         zurueck.addActionListener(new SeitenwechselListener(parent));
         zurueck.setActionCommand("Eroeffnungsseite");
-        zurueck.setBackground(cHellesBeige);
+        zurueck.setBackground(buttonFarbe);
         cSouth.add(zurueck);
         
         add(cSouth, BorderLayout.SOUTH);
@@ -241,7 +243,7 @@ public class Statistiken extends JPanel implements ActionListener {
                 momentan += "Durchschnittlicher Materialwert Matt: "
                     + statistik.getMatWertMattDurchschnitt();
             }
-            daten.setBackground(cHellesBeige);
+            daten.setBackground(buttonFarbe);
             daten.setText(momentan);
             cCenter.add(daten, BorderLayout.NORTH);
             add(cCenter, BorderLayout.CENTER);

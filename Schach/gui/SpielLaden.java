@@ -62,14 +62,14 @@ public class SpielLaden extends JPanel implements ActionListener {
     private JList<String> jSpieleListe;
     
     /**
-     * Konstante f&uuml;r den Farbton den Hintergrunds (Braun).
+     * Konstante f&uuml;r den Farbton den Hintergrunds.
      */
-    private static Color cBraunRot = new Color(164, 43, 24); 
+    private Color hintergrund; 
     
     /**
-     * Konstante f&uuml;r den Farbton der Auswahlfelder (Beige).
+     * Konstante f&uuml;r den Farbton der Auswahlfelder.
      */
-    private static Color cHellesBeige = new Color(255, 248, 151);
+    private Color buttonFarbe;
     
     // Ende Attribute
     
@@ -82,6 +82,8 @@ public class SpielLaden extends JPanel implements ActionListener {
     public SpielLaden(SpielGUI parent) {
         super();
         this.parent = parent;
+        hintergrund = parent.getFarben()[0];
+        buttonFarbe = parent.getFarben()[1];
         init();
     }
     
@@ -91,18 +93,18 @@ public class SpielLaden extends JPanel implements ActionListener {
      */
     private void init() {
         this.setLayout(new BorderLayout());
-        this.setBackground(cBraunRot);
+        this.setBackground(hintergrund);
         
         // North
         Container cNorth = new JPanel();
-        cNorth.setBackground(cBraunRot);
+        cNorth.setBackground(hintergrund);
         cNorth.setLayout(new FlowLayout());
         cNorth.add(lblSpielLaden);
         this.add(cNorth, BorderLayout.NORTH);
         
         // Center
         cCenter = new JPanel();
-        cCenter.setBackground(cBraunRot);
+        cCenter.setBackground(hintergrund);
         cCenter.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         
@@ -121,7 +123,7 @@ public class SpielLaden extends JPanel implements ActionListener {
         
         
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        jSpieleListe.setBackground(cHellesBeige);
+        jSpieleListe.setBackground(buttonFarbe);
         cCenter.add(scrollPane, gbc);
  
         this.add(cCenter, BorderLayout.CENTER);
@@ -129,17 +131,17 @@ public class SpielLaden extends JPanel implements ActionListener {
         // South
         JPanel cSouth = new JPanel();
         cSouth.setLayout(new FlowLayout());
-        cSouth.setBackground(cBraunRot);
+        cSouth.setBackground(hintergrund);
         
         // Laden-Button
         btnSpielLaden.addActionListener(this);
-        btnSpielLaden.setBackground(cHellesBeige);
+        btnSpielLaden.setBackground(buttonFarbe);
         cSouth.add(btnSpielLaden);
         
         // Zurueck-Button
         btnZurueck.addActionListener(new SeitenwechselListener(parent));
         btnZurueck.setActionCommand("Eroeffnungsseite");
-        btnZurueck.setBackground(cHellesBeige);
+        btnZurueck.setBackground(buttonFarbe);
         cSouth.add(btnZurueck);
         
         add(cSouth, BorderLayout.SOUTH);
@@ -187,7 +189,7 @@ public class SpielLaden extends JPanel implements ActionListener {
                             listModel.addElement((spieleListe.get(i)));
                         }
                         jSpieleListe = new JList<String>(listModel);
-                        jSpieleListe.setBackground(cHellesBeige);
+                        jSpieleListe.setBackground(buttonFarbe);
                         JScrollPane scrollPane = new JScrollPane(jSpieleListe);
                         cCenter.add(scrollPane);
                     }

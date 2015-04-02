@@ -1,5 +1,6 @@
 package daten;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -44,6 +45,11 @@ public class Gesamtdatensatz {
      * Die aktuellen Einstellungen des Spiels.
      */
     private Einstellungen einstellungen;
+    
+    /**
+     * Die aktuellen Farbeinstellungen.
+     */
+    private Color[] farben;
     
     /**
      * Erzeugt einen neuen Gesamtdatensatz der dann gespeichert werden kann.<br>
@@ -115,9 +121,7 @@ public class Gesamtdatensatz {
             einstellungen.setSpielfeldDrehen(bool[6]);
             einstellungen.setTon(bool[7]);
         } catch (IOException ioEx) {
-            /* Wenn irgendwas beim Laden schief geht, werden die Standard-
-             * Einstellungen wiederhergestellt.
-             */
+            // Sonst Standardeinstellungen laden
             einstellungen = new Einstellungen();
         } finally {
             try {
@@ -125,6 +129,33 @@ public class Gesamtdatensatz {
             } catch (IOException exc) {
                 exc.printStackTrace();
             }
+        }
+        
+        // Die Farben laden
+        BufferedReader brFarben = null;
+        try {
+            this.farben = new Color[11];
+            // Die Datei in der die Farben liegen
+            File farben = new File("settings" + System.getProperty(
+                "file.separator") + "konfig.txt");
+            // Ein Reader um sie zeilenweise auslesen zu koennen
+            brFarben = new BufferedReader(new FileReader(farben));
+            for (int i = 0; i < 11; i++) {
+                String line = brFarben.readLine();
+                int erstesLeerzeichenIndex = line.indexOf(" ");
+                int zweitesLeerzeichenIndex = line.lastIndexOf(" ");
+                int rot = Integer.parseInt(line.substring(
+                    0, erstesLeerzeichenIndex));
+                int gruen = Integer.parseInt(line.substring(
+                    erstesLeerzeichenIndex + 1, zweitesLeerzeichenIndex));
+                int blau = Integer.parseInt(line.substring(
+                    zweitesLeerzeichenIndex + 1));
+                this.farben[i] = new Color(rot, gruen, blau);
+            }
+            brFarben.close();
+        } catch (IOException ioEx) {
+            // Sonst Standardfarben laden
+            farbInit();
         }
         
         // Die Spieler laden
@@ -238,6 +269,28 @@ public class Gesamtdatensatz {
         hr.getStatistik().setScore(900);
         spielerListe.add(hr);
         
+        // Farb-Initialisierung
+        farbInit();
+        
+    }
+    
+    /**
+     * Initialisiert neue Farben.
+     */
+    private void farbInit() {
+        // Farb-Initialisierung
+        farben = new Color[11];
+        farben[0] = new Color(164, 43, 24);
+        farben[1] = new Color(255, 248, 151);
+        farben[2] = new Color(255, 248, 151);
+        farben[3] = new Color(181, 81, 16);
+        farben[4] = new Color(204, 0, 0);
+        farben[5] = new Color(164, 0, 0);
+        farben[6] = new Color(100, 100, 100);
+        farben[7] = new Color(6, 148, 6);
+        farben[8] = new Color(250, 175, 0);
+        farben[9] = new Color(255, 0, 188);
+        farben[10] = Color.blue;
     }
     
     /**
@@ -292,6 +345,31 @@ public class Gesamtdatensatz {
             ioEx.printStackTrace();
         }
         
+        // Die Farbdatei - sofern vorhanden - loeschen
+        File farben = new File("settings" + System.getProperty(
+            "file.separator") + "konfig.txt");
+        if (farben.exists()) {
+            farben.delete();
+        }
+        
+        // Die Farben speichern
+        try {
+            File konfig = new File("settings" + System.getProperty(
+                "file.separator") + "konfig.txt");
+            FileWriter fw1 = new FileWriter(konfig);
+            for (Color color : this.farben) {
+                int rot = color.getRed();
+                int gruen = color.getGreen();
+                int blau = color.getBlue();
+                fw1.write(rot + " " + gruen + " " + blau 
+                    + System.getProperty("line.separator"));
+            }
+            fw1.close();
+            // Schreibschutz
+            konfig.setReadOnly();
+        } catch (IOException ioEx) {
+            ioEx.printStackTrace();
+        }
         // Den Inhalt des Spieler-Ordners - sofern vorhanden - loeschen
         File ordner = new File("settings" + System.getProperty(
             "file.separator") + "Spieler");         
@@ -878,5 +956,25 @@ public class Gesamtdatensatz {
      */
     public void setEinstellungen(Einstellungen einstellungen) {
         this.einstellungen = einstellungen;
+    }
+    
+    /**
+     * Gibt die wichtigen Farben zur&uuml;ck.
+     * @return Ein Farb-Array
+     */
+    public Color[] getFarben() {
+        return farben;
+    }
+    
+    /**
+     * Setzt die Farben.
+     * @param farben Ein Farb-Array
+     */
+    public void setFarben(Color[] farben) {
+        if (farben == null) {
+            farbInit();
+        } else {
+            this.farben = farben;   
+        }
     }
 }
