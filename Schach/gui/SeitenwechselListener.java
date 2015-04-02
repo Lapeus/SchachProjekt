@@ -39,28 +39,19 @@ public class SeitenwechselListener implements ActionListener {
          */
         if (command == "Eroeffnungsseite") {
             parent.seitenAuswahl("Eroeffnungsseite");
-        }
-        if (command == "Spielen") {
+        } else if (command == "Spielen") {
             parent.seitenAuswahl("Spielerauswahl");
-        }
-        if (command == "Spiel laden") {
+        } else if (command == "Spiel laden") {
             parent.seitenAuswahl(command);
-        }
-        if (command == "Einstellungen") {
+        } else if (command == "Einstellungen") {
             parent.seitenAuswahl(command);
-        }
-        if (command == "Highscore") {
+        } else if (command == "Highscore") {
             parent.seitenAuswahl(command);
-        }
-        if (command == "Statistiken") {
+        } else if (command == "Statistiken") {
             parent.seitenAuswahl(command);
-        }
-        if (command == "Spiel starten") {
+        } else if (command == "Spiel starten") {
             parent.seitenAuswahl("SpielfeldGUI");
         } 
-        if (command == "KonfigFenster") {
-            parent.seitenAuswahl(command);
-        }
     }
 
 }

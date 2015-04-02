@@ -70,6 +70,9 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
      */
     private JButton zurueck;
     
+    /**
+     * Button um das Farb-Konfigurationsfenster zu &ouml;ffnen.
+     */
     private JButton konfig;
     
     /**
@@ -141,7 +144,7 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
         konfig = new JButton("Farb-Konfiguration");
         konfig.setBackground(cHellesBeige);
         konfig.setActionCommand("KonfigFenster");
-        konfig.addActionListener(new SeitenwechselListener(parent));
+        konfig.addActionListener(this);
         oben.add(konfig);
         cSouth.add(oben, BorderLayout.NORTH);
         cSouth.add(unten, BorderLayout.SOUTH);
@@ -439,6 +442,9 @@ public class EinstellungenGUI extends JPanel implements ActionListener {
             einstellungen.setTon(true);
         } else if (command.equals("tonNein")) {
             einstellungen.setTon(false);
+        } else if (command.equals("KonfigFenster")) {
+            parent.setEinstellungen(einstellungen);
+            parent.seitenAuswahl(command);
         }
     }
 }

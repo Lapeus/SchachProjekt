@@ -179,35 +179,58 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private JPanel cEnde = new JPanel();
     
     /**
-     * Konstante f&uuml;r den Farbton der "schwarzen" Felder (braun).
+     * Konstante f&uuml;r den Farbton des Hintergrundes.
      */
-    private final Color braun = new Color(181, 81, 16);
+    private Color hintergrund; 
     
     /**
-     * Konstante f&uuml;r den Farbton der "wei&szlig;en" Felder (helles Beige).
+     * Konstante f&uuml;r den Farbton der Buttons.
      */
-    private final Color weiss = new Color(255, 248, 151);
+    private Color buttonFarbe;
     
     /**
-     * Konstante f&uuml;r den Farbton der markierten Felder (rot).
+     * Konstante f&uuml;r den Farbton der "wei&szlig;en" Felder.
      */
-    private final Color rot = new Color(204, 0, 0);
+    private Color spielfeldWeiss;
     
     /**
-     * Konstante f&uuml;r den Farbton der Letzten-Zug-Felder (gr&uuml;n).
+     * Konstante f&uuml;r den Farbton der "schwarzen" Felder.
      */
-    private final Color gruen = new Color(6, 148, 6);
+    private Color spielfeldSchwarz;
     
     /**
-     * Konstante f&uuml;r den Farbton des Hintergrundes (Braun).
+     * Konstante f&uuml;r den Farbton der markierten Felder.
      */
-    private final Color cBraunRot = new Color(164, 43, 24); 
+    private Color markierteFelder;
     
     /**
-     * Konstante f&uuml;r den Farbton der Buttons (Beige).
+     * Konstante f&uuml;r den Farbton der schlagenden Felder.
      */
-    private final Color cHellesBeige = new Color(255, 248, 151);
+    private Color schlagendeFelder;
     
+    /**
+     * Konstante f&uuml;r den Farbton der bedrohten Felder.
+     */
+    private Color bedrohteFelderFarbe;
+    
+    /**
+     * Konstante f&uuml;r den Farbton der Letzten-Zug-Felder.
+     */
+    private Color letzterZugFarbe;
+    
+    /**
+     * Konstante f&uuml;r den Farbton des im Schach stehenden K&ouml;nigs.
+     */
+    private Color schachFarbe;
+    /**
+     * Konstante f&uuml;r den Farbton des Matt gesetzten K&ouml;nigs.
+     */
+    private Color koenigMatt;
+    
+    /**
+     * Konstante f&uuml;r den Farbton der am Matt beteiligten Figuren.
+     */
+    private Color beteiligteFigurenFarbe;
     /**
      * Action Command f&uuml;r den R&uuml;ckg&auml;ngig-Button.
      */
@@ -322,6 +345,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Spiel 
         spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
         
+        farbInit();
         init();
     }
     
@@ -346,10 +370,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         momentanerSpielerUpdate();
         if (parent.getEinstellungen().isBedrohteFigurenAnzeigen()) {
             for (Feld bedroht : spielfeld.getBedrohteFelder()) {
-                bedroht.setBackground(new Color(100, 100, 100));
+                bedroht.setBackground(bedrohteFelderFarbe);
             }
         }
         parent.revalidate();
+        farbInit();
         init();
         List<Figur> eigeneFiguren;
         if (spielfeld.getAktuellerSpieler()) {
@@ -404,10 +429,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cCenter.setLayout(new GridLayout(8, 8, 1, 1));
         
         // EAST
-        cEast.setBackground(cBraunRot);
+        cEast.setBackground(hintergrund);
         GridBagConstraints gbc = new GridBagConstraints();
         cEast.setLayout(new GridBagLayout());
-        
         
         // geschlageneLabelW
         JLabel lGeschlageneW 
@@ -428,14 +452,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(lGeschlageneB, gbc);
         
         // geschlagene Weiss
-        geschlageneWeisse.setBackground(cBraunRot);
+        geschlageneWeisse.setBackground(hintergrund);
         geschlageneWeisse.setLayout(new GridLayout(0, 5));
         gbc.gridy = 1;
         gbc.gridheight = 2;
         cEast.add(geschlageneWeisse, gbc);
         
         // geschlagene Schwarz
-        geschlageneSchwarze.setBackground(cBraunRot);
+        geschlageneSchwarze.setBackground(hintergrund);
         geschlageneSchwarze.setLayout(new GridLayout(0, 5));
         gbc.gridy = 11;
         cEast.add(geschlageneSchwarze, gbc);
@@ -443,7 +467,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Label momentanerSpieler
         // Je nach aktuellem Spieler wird das Label gesetzt
         momentanerSpielerUpdate();
-        momentanerSpieler.setBackground(cHellesBeige);
+        momentanerSpieler.setBackground(buttonFarbe);
         gbc.gridheight = 1;
         gbc.gridy = 3;
         cEast.add(momentanerSpieler, gbc);
@@ -451,7 +475,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Label letzterZug
         letzterZug = new JLabel();
         letzterZug.setForeground(Color.BLACK);
-        letzterZug.setBackground(cHellesBeige);
+        letzterZug.setBackground(buttonFarbe);
         if (null != spielfeld.getSpieldaten().getLetzterZug()) {
             letzterZug.setText(spielfeld.getSpieldaten().getLetzterZug()
                 .toSchachNotation());
@@ -461,7 +485,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         // Label Stoppuhr
         zugzeit = new JLabel();
-        zugzeit.setBackground(cHellesBeige);
+        zugzeit.setBackground(buttonFarbe);
         gbc.gridy = 8;
         cEast.add(zugzeit, gbc);
         
@@ -478,7 +502,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         // Button rueck
         rueckgaengig.setForeground(Color.BLACK);
-        rueckgaengig.setBackground(cHellesBeige);
+        rueckgaengig.setBackground(buttonFarbe);
         rueckgaengig.addActionListener(this);
         rueckgaengig.setActionCommand(commandRueck);
         gbc.gridy = 5;
@@ -486,7 +510,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(rueckgaengig, gbc);
         
         // Button speichern
-        speichern.setBackground(cHellesBeige);
+        speichern.setBackground(buttonFarbe);
         speichern.addActionListener(this);
         speichern.setActionCommand(commandSpeichern);
         gbc.gridx = 2;
@@ -494,7 +518,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         cEast.add(speichern, gbc);
         
         // Button unentschieden
-        btnUnentschieden.setBackground(cHellesBeige);
+        btnUnentschieden.setBackground(buttonFarbe);
         btnUnentschieden.addActionListener(this);
         btnUnentschieden.setActionCommand(commandRemis);
         gbc.gridx = 1;
@@ -503,7 +527,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         
         // Button aufgeben
-        aufgeben.setBackground(cHellesBeige);
+        aufgeben.setBackground(buttonFarbe);
         aufgeben.addActionListener(this);
         aufgeben.setActionCommand(commandAufgeben);
         gbc.gridx = 2;
@@ -529,6 +553,23 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     }
     
     /**
+     * Initialisiert die Farben.
+     */
+    private void farbInit() {
+        hintergrund = parent.getFarben()[0];
+        buttonFarbe = parent.getFarben()[1];
+        spielfeldWeiss = parent.getFarben()[2];
+        spielfeldSchwarz = parent.getFarben()[3];
+        markierteFelder = parent.getFarben()[4];
+        schlagendeFelder = parent.getFarben()[5];
+        bedrohteFelderFarbe = parent.getFarben()[6];
+        letzterZugFarbe = parent.getFarben()[7];
+        schachFarbe = parent.getFarben()[8];
+        koenigMatt = parent.getFarben()[9];
+        beteiligteFigurenFarbe = parent.getFarben()[10];
+    }
+    
+    /**
      * Ansicht, welche nach Spielende aufgerufen wird.
      * Bietet einen Button zum Zur&uuml;ckkehren auf die 
      * {@link Eroeffnungsseite}. Zudem wird eine Option zum Wiederholen des
@@ -545,27 +586,27 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         // cEnde
         cEnde.setLayout(new GridBagLayout());
-        cEnde.setBackground(cBraunRot);
+        cEnde.setBackground(hintergrund);
         GridBagConstraints gbc2 = new GridBagConstraints();
         
         // Startmenue Button
         JButton startmenue = new JButton("<html>Zur&uuml;ck zum Startmen&uuml");
         startmenue.setActionCommand(commandStartmenue);
         startmenue.addActionListener(this);
-        startmenue.setBackground(cHellesBeige);
+        startmenue.setBackground(buttonFarbe);
         gbc2.insets = new Insets(15, 15, 15, 15);
         gbc2.gridx = 0;
         gbc2.gridy = 0;
         cEnde.add(startmenue, gbc2);
         
         // Wiederholung-Anzeigen-Button
-        btnWiederholung.setBackground(cHellesBeige);
+        btnWiederholung.setBackground(buttonFarbe);
         btnWiederholung.addActionListener(this);
         gbc2.gridy = 1;
         cEnde.add(btnWiederholung, gbc2);
         
         // Pause-Button fuer die Wiederholung
-        btnStopp.setBackground(cHellesBeige);
+        btnStopp.setBackground(buttonFarbe);
         btnStopp.addActionListener(this);
         btnStopp.setVisible(false);
         gbc2.gridy = 2;
@@ -579,9 +620,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             listModel.addElement(string);
         }
         zugListe = new JList<String>(listModel);
-        zugListe.setBackground(cHellesBeige);
+        zugListe.setBackground(buttonFarbe);
         JScrollPane sPane = new JScrollPane(zugListe);
-        sPane.setBackground(cHellesBeige);
+        sPane.setBackground(buttonFarbe);
         gbc2.gridy = 3;
         gbc2.fill = GridBagConstraints.HORIZONTAL;
         cEnde.add(sPane, gbc2);
@@ -628,11 +669,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 temp.setOpaque(true);
                 // Wenn die Farbe "schwarz"(Braun) ist dann Feld braun machen
                 if (!abwechslung) {
-                    temp.setBackground(braun);
+                    temp.setBackground(spielfeldSchwarz);
                     abwechslung = true;
                 // Wenn die Farbe "weiss"(Beige) ist dann Feld beige machen    
                 } else {
-                    temp.setBackground(weiss);
+                    temp.setBackground(spielfeldWeiss);
                     abwechslung = false;
                 }
                 // Dem cCenter Panel das fertige Feld hinzufuegen
@@ -955,7 +996,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         start();
                         // Letzten Zug gruen makieren
                         for (Feld feld : spielfeld.getLetzteFelder()) {
-                            feld.setBackground(gruen);
+                            feld.setBackground(letzterZugFarbe);
                         }
                     }
                    
@@ -1010,14 +1051,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 && spielfeld.getWeisseFiguren()
                     .contains(ausgewaehlteFigur)) {
                 // Wird diese als neue Ausgewaehlte Figur gespeichert
-                momentanesFeld.setBackground(rot);
+                momentanesFeld.setBackground(markierteFelder);
                 if (spielfeld.getEinstellungen().isMoeglicheFelderAnzeigen()) {
                     for (Feld makieren : ausgewaehlteFigur
                         .getKorrekteFelder()) {
                         if (makieren.getFigur() == null) {
-                            makieren.setBackground(rot);
+                            makieren.setBackground(markierteFelder);
                         } else {
-                            makieren.setBackground(new Color(164, 0, 0));
+                            makieren.setBackground(schlagendeFelder);
                         }
                     }
                 }
@@ -1028,14 +1069,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             if (!spielfeld.getAktuellerSpieler() 
                 && spielfeld.getSchwarzeFiguren()
                     .contains(ausgewaehlteFigur)) {
-                momentanesFeld.setBackground(rot);
+                momentanesFeld.setBackground(markierteFelder);
                 if (spielfeld.getEinstellungen().isMoeglicheFelderAnzeigen()) {
                     for (Feld makieren : ausgewaehlteFigur
                         .getKorrekteFelder()) {
                         if (makieren.getFigur() == null) {
-                            makieren.setBackground(rot);
+                            makieren.setBackground(markierteFelder);
                         } else {
-                            makieren.setBackground(new Color(164, 0, 0));
+                            makieren.setBackground(schlagendeFelder);
                         }
                     }
                 }
@@ -1154,17 +1195,17 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 // Den Koenig pink makieren
                 if (spielfeld.getAktuellerSpieler()) {
                     spielfeld.getWeisseFiguren().get(0).getPosition()
-                    .setBackground(new Color(255, 0, 188));
+                    .setBackground(koenigMatt);
                 } else {
                     spielfeld.getSchwarzeFiguren().get(0).getPosition()
-                    .setBackground(new Color(255, 0, 188));
+                    .setBackground(koenigMatt);
                 }
             } else {
                 ergebnis = "Das Spiel endet in einem Patt";
             }
             // letzen Zug gruen makieren
             for (Feld feld : spielfeld.getLetzteFelder()) {
-                feld.setBackground(gruen);
+                feld.setBackground(letzterZugFarbe);
             }
             // beteiligte Figuren blau markieren
             for (Feld feld : spielfeld.amMattBeteiligteFelder()) {
@@ -1205,7 +1246,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             parent.soundAbspielen("FehlerhafteEingabe.wav");
             // letzen Zug gruen makieren
             for (Feld feld : spielfeld.getLetzteFelder()) {
-                feld.setBackground(gruen);
+                feld.setBackground(letzterZugFarbe);
             }
             // Schachmeldung ausgeben
             JOptionPane.showMessageDialog(parent, 
@@ -1351,7 +1392,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 spielfeldAufbau();
                 // Start und Ziel feld werden a gruen makiert
                 for (Feld feld : spielfeld.getLetzteFelder()) {
-                    feld.setBackground(gruen);
+                    feld.setBackground(letzterZugFarbe);
                 }
             }
             // naechster Zug

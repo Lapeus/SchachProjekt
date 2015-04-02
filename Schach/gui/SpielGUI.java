@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -140,6 +141,22 @@ public class SpielGUI extends JFrame implements WindowListener {
      */
     public Gesamtdatensatz getGesamtdatensatz() {
         return gesamtdatensatz;
+    }
+    
+    /**
+     * Gibt die Farben zur&uuml;ck.
+     * @return Ein Farb-Array
+     */
+    public Color[] getFarben() {
+        return gesamtdatensatz.getFarben();
+    }
+    
+    /**
+     * Setzt die Farben.
+     * @param farben Ein Farb-Array
+     */
+    public void setFarben(Color[] farben) {
+        gesamtdatensatz.setFarben(farben);
     }
     
     /**
