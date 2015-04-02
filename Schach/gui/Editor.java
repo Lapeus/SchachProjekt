@@ -9,6 +9,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -18,6 +20,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
@@ -38,7 +41,7 @@ import figuren.Turm;
 /**
  * Klasse zum erstellen von Spielsituationen.
  */
-public class Editor extends JPanel implements MouseListener {
+public class Editor extends JPanel implements MouseListener, ActionListener {
     
     /**
      * Serial Key zur sp&auml;teren Identifizierung.
@@ -64,6 +67,11 @@ public class Editor extends JPanel implements MouseListener {
      * Konstante f&uuml;r den Farbton des Hintergrundes.
      */
     private Color hintergrund;
+    
+    /**
+     * Konstante f&uuml;r den Farbton der Buttons.
+     */
+    private Color buttonFarbe;
     
     /**
      * Panel f&uuml;r das Spielfeld.
@@ -106,6 +114,11 @@ public class Editor extends JPanel implements MouseListener {
     private ButtonGroup figuren = new ButtonGroup();
     
     /**
+     * Button um das Spiel zu starten.
+     */
+    private JButton spielStarten;
+    
+    /**
      * Konstruktor der Klasse Editor.
      * @param parent ElternGUI
      * @param spielname spielname
@@ -135,14 +148,16 @@ public class Editor extends JPanel implements MouseListener {
         
         // Spiel 
         spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
-        
+        /*
+        spielfeld.getWeisseFiguren().clear();
+        spielfeld.getSchwarzeFiguren().clear();
+        */
         for (Feld feld : felderListe) {
             feld.setFigur(null);
         }
-        spielfeld.getWeisseFiguren().clear();
-        spielfeld.getSchwarzeFiguren().clear();
         
         hintergrund = parent.getFarben()[0];
+        buttonFarbe = parent.getFarben()[1];
         spielfeldWeiss = parent.getFarben()[2];
         spielfeldSchwarz = parent.getFarben()[3];
         
@@ -274,7 +289,13 @@ public class Editor extends JPanel implements MouseListener {
             cEast.getComponent(i).setForeground(Color.BLACK);
             cEast.getComponent(i).setBackground(hintergrund);
         }
-        // gbc.insets = new Insets(30, 7, 30, 7);
+        
+        spielStarten = new JButton("Spiel starten");
+        spielStarten.addActionListener(this);
+        spielStarten.setBackground(buttonFarbe);
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        cEast.add(spielStarten, gbc);
         
         this.setLayout(new BorderLayout());
         this.add(cCenter, BorderLayout.CENTER);
@@ -559,5 +580,19 @@ public class Editor extends JPanel implements MouseListener {
     public void mouseReleased(MouseEvent e) {
         // TODO Auto-generated method stub
         
+    }
+
+    /**
+     * Action-Performed-Methode.
+     * @param arg0 Ausgel&ouml;stes ActionEvent
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        for (Figur figur : spielfeld.getWeisseFiguren()) {
+            figur.setSpielfeld(spielfeld);
+        }
+        for (Figur figur : spielfeld.getSchwarzeFiguren()) {
+            figur.setSpielfeld(spielfeld);
+        }
+        parent.setContentPane(new SpielfeldGUI(parent, spiel));
     }
 }

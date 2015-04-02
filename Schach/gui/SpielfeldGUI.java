@@ -366,6 +366,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         for (Feld feld : felderListe) {
             feld.addMouseListener(this);
         }
+        
         // Je nach aktuellem Spieler wird das Label gesetzt
         momentanerSpielerUpdate();
         if (parent.getEinstellungen().isBedrohteFigurenAnzeigen()) {
