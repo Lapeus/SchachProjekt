@@ -3,7 +3,8 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -32,6 +33,10 @@ public class Farbkonfiguration extends JPanel implements ActionListener {
      */
     private JButton speichern;
     
+    /**
+     * Button um die Standardwerte wiederherzustellen.
+     */
+    private JButton standard;
     /**
      * Button um zur&uuml;ck zum Startfenster zu kommen.
      */
@@ -64,7 +69,7 @@ public class Farbkonfiguration extends JPanel implements ActionListener {
             farben[zaehl] = color;
             zaehl++;
         }
-        setLayout(new BorderLayout());
+        setLayout(new FlowLayout(FlowLayout.CENTER, 100, 10));
         setBackground(cHintergrund);
         init();
     }
@@ -76,7 +81,8 @@ public class Farbkonfiguration extends JPanel implements ActionListener {
         
         JPanel center = new JPanel();
         center.setBackground(Color.white);
-        center.setLayout(new GridLayout(0, 1, 50, 15));
+        center.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
+        center.setPreferredSize(new Dimension(240, 400));
         
         JButton hintergrund = new JButton("Hintergrund");
         center.add(hintergrund);
@@ -107,6 +113,7 @@ public class Farbkonfiguration extends JPanel implements ActionListener {
             ((JButton) comp).addActionListener(this);
             ((JButton) comp).setActionCommand("" + zaehl);
             ((JButton) comp).setBackground(farben[zaehl]);
+            comp.setPreferredSize(new Dimension(200, 25));
             zaehl++;
         }
         
@@ -120,6 +127,11 @@ public class Farbkonfiguration extends JPanel implements ActionListener {
         speichern.setActionCommand("Speichern");
         speichern.addActionListener(this);
         south.add(speichern);       
+        standard = new JButton("Standardwerte");
+        standard.setBackground(cButtonFarbe);
+        standard.setActionCommand("Standard");
+        standard.addActionListener(this);
+        south.add(standard);
         zurueck = new JButton("<html>Zur&uuml;ck");
         zurueck.setBackground(cButtonFarbe);
         zurueck.setActionCommand("Zurueck");
@@ -139,6 +151,13 @@ public class Farbkonfiguration extends JPanel implements ActionListener {
             JOptionPane.showMessageDialog(parent,
                 "Farben gespeichert!");
             parent.seitenAuswahl("Einstellungen");
+        } else if (arg0.getActionCommand().equals("Standard")) {
+            // Setzt auf Standardwerte zurueck
+            parent.setFarben(null);
+            farben = parent.getFarben();
+            this.removeAll();
+            init();
+            revalidate();
         } else if (arg0.getActionCommand().equals("Zurueck")) {
             parent.seitenAuswahl("Einstellungen");
         } else {

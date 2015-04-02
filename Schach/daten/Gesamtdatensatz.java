@@ -971,6 +971,10 @@ public class Gesamtdatensatz {
      * @param farben Ein Farb-Array
      */
     public void setFarben(Color[] farben) {
-        this.farben = farben;
+        if (farben == null) {
+            farbInit();
+        } else {
+            this.farben = farben;   
+        }
     }
 }

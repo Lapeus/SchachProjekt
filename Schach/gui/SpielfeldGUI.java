@@ -681,6 +681,17 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }    
             counter -= 8;
         }
+        // Faerbt die bedrohten Felder
+        if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen() 
+            && !spielVorbei) {
+            for (Feld bedroht : spielfeld.getBedrohteFelder()) {
+                if (bedroht.getFigur().getWert() == 0) {
+                    bedroht.setBackground(schachFarbe);
+                } else {
+                    bedroht.setBackground(bedrohteFelderFarbe);
+                }
+            }
+        }
         if (spielfeld.getEinstellungen().isSpielfeldDrehen() && !wiederholung 
             && !(spieler2 instanceof Computerspieler)) {
             spielfeldDrehen();
@@ -964,6 +975,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 add(cEnde, BorderLayout.EAST);
                 revalidate(); 
             } else {
+                System.out.println("Zugzeit-Start");
                 // Zugzeit neu starten
                 start();
                 // Zug ausfuehren
@@ -1033,6 +1045,17 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
          * (Wenn man dann auf eine seiner eigenen Figuren Klickt, wechselt 
          * die GUI  auf die moeglichen Felder dieser Figur.)
          */
+        // Faerbt die bedrohten Felder
+        if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen() 
+            && !spielVorbei) {
+            for (Feld bedroht : spielfeld.getBedrohteFelder()) {
+                if (bedroht.getFigur().getWert() == 0) {
+                    bedroht.setBackground(schachFarbe);
+                } else {
+                    bedroht.setBackground(bedrohteFelderFarbe);
+                }
+            }
+        }
         if ((momentanesFeld.getFigur() != null 
             && (momentanesFeld.getFigur().getFarbe() 
             == spielfeld.getAktuellerSpieler()) 
@@ -1112,8 +1135,18 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         } else {
             // Figur abwaehlen
             ausgewaehlteFigur = null;
+            // Faerbt die bedrohten Felder
+            if (spielfeld.getEinstellungen().isBedrohteFigurenAnzeigen() 
+                && !spielVorbei) {
+                for (Feld bedroht : spielfeld.getBedrohteFelder()) {
+                    if (bedroht.getFigur().getWert() == 0) {
+                        bedroht.setBackground(schachFarbe);
+                    } else {
+                        bedroht.setBackground(bedrohteFelderFarbe);
+                    }
+                }
+            }
         }        
-        
         revalidate();  
     }
     
@@ -1209,7 +1242,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             // beteiligte Figuren blau markieren
             for (Feld feld : spielfeld.amMattBeteiligteFelder()) {
-                feld.setBackground(Color.blue);
+                feld.setBackground(beteiligteFigurenFarbe);
             }
             revalidate(); 
             // Und Ein Dialogfenster fuer den Gewinner angezeigt
@@ -1557,7 +1590,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         while (uhrAktiv) {
             if (jetztIstComputerDran) {
                 jetztIstComputerDran = false;
-                System.out.println("Zieht");
                 wennComputerDannZiehen();
             }
             zugzeit.setForeground(Color.BLACK);
