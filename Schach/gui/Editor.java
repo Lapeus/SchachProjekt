@@ -27,7 +27,13 @@ import daten.Spiel;
 import daten.Spieldaten;
 import daten.Spieler;
 import daten.Spielfeld;
+import figuren.Bauer;
+import figuren.Dame;
 import figuren.Figur;
+import figuren.Koenig;
+import figuren.Laeufer;
+import figuren.Springer;
+import figuren.Turm;
 
 /**
  * Klasse zum erstellen von Spielsituationen.
@@ -45,19 +51,19 @@ public class Editor extends JPanel implements MouseListener {
     private SpielGUI parent;
     
     /**
-     * Konstante f&uuml;r den Farbton der "schwarzen" Felder (braun).
+     * Konstante f&uuml;r den Farbton der "schwarzen" Felder.
      */
-    private final Color braun = new Color(181, 81, 16);
+    private Color spielfeldSchwarz;
     
     /**
-     * Konstante f&uuml;r den Farbton der "wei&szlig;en" Felder (helles Beige).
+     * Konstante f&uuml;r den Farbton der "wei&szlig;en" Felder.
      */
-    private final Color weiss = new Color(255, 248, 151);
+    private Color spielfeldWeiss;
     
     /**
-     * Konstante f&uuml;r den Farbton des Hintergrundes (Braun).
+     * Konstante f&uuml;r den Farbton des Hintergrundes.
      */
-    private final Color cBraunRot = new Color(164, 43, 24); 
+    private Color hintergrund;
     
     /**
      * Panel f&uuml;r das Spielfeld.
@@ -100,11 +106,6 @@ public class Editor extends JPanel implements MouseListener {
     private ButtonGroup figuren = new ButtonGroup();
     
     /**
-     * Buttongrp farbe.
-     */
-    private ButtonGroup farben = new ButtonGroup();
-    
-    /**
      * Konstruktor der Klasse Editor.
      * @param parent ElternGUI
      * @param spielname spielname
@@ -134,8 +135,19 @@ public class Editor extends JPanel implements MouseListener {
         
         // Spiel 
         spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
+        
+        for (Feld feld : felderListe) {
+            feld.setFigur(null);
+        }
+        spielfeld.getWeisseFiguren().clear();
+        spielfeld.getSchwarzeFiguren().clear();
+        
+        hintergrund = parent.getFarben()[0];
+        spielfeldWeiss = parent.getFarben()[2];
+        spielfeldSchwarz = parent.getFarben()[3];
+        
         init();
-
+        
         setVisible(true);
         
         
@@ -168,7 +180,7 @@ public class Editor extends JPanel implements MouseListener {
         cCenter.setLayout(new GridLayout(8, 8, 1, 1));
         
         // cEast
-        cEast.setBackground(cBraunRot);
+        cEast.setBackground(hintergrund);
         GridBagConstraints gbc = new GridBagConstraints();
         cEast.setLayout(new GridBagLayout());
         
@@ -178,62 +190,98 @@ public class Editor extends JPanel implements MouseListener {
         
         figur = new JRadioButton("Bauer", true);
         figuren.add(figur);
-        figur.setBackground(cBraunRot);
+        figur.setActionCommand("WBauer");
         cEast.add(figur, gbc);
-        figur = new JRadioButton("Turm");
-        figuren.add(figur);
-        gbc.gridy = 1;
-        figur.setBackground(cBraunRot);
-        cEast.add(figur, gbc);
+        
         figur = new JRadioButton("Springer");
         figuren.add(figur);
-        gbc.gridy = 2;
-        figur.setBackground(cBraunRot);
+        gbc.gridy = 1;
+        figur.setActionCommand("WSpringer");
         cEast.add(figur, gbc);
+        
         figur = new JRadioButton("Läufer");
         figuren.add(figur);
-        gbc.gridy = 0;
-        gbc.gridx = 1;
-        figur.setBackground(cBraunRot);
+        gbc.gridy = 2;
+        figur.setActionCommand("WLaeufer");
         cEast.add(figur, gbc);
+        
+        figur = new JRadioButton("Turm");
+        figuren.add(figur);
+        gbc.gridy = 3;
+        figur.setActionCommand("WTurm");
+        cEast.add(figur, gbc);
+        
+        figur = new JRadioButton("Dame");
+        figuren.add(figur);
+        gbc.gridy = 4;
+        figur.setActionCommand("WDame");
+        cEast.add(figur, gbc);
+        
+        figur = new JRadioButton("König");
+        figuren.add(figur);
+        gbc.gridy = 5;
+        figur.setActionCommand("WKoenig");
+        cEast.add(figur, gbc);
+        
+        
+        figur = new JRadioButton("Bauer", true);
+        figuren.add(figur);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        figur.setActionCommand("Bauer");
+        cEast.add(figur, gbc);
+        
+        figur = new JRadioButton("Springer");
+        figuren.add(figur);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        figur.setActionCommand("Springer");
+        cEast.add(figur, gbc);
+        
+        figur = new JRadioButton("Läufer");
+        figuren.add(figur);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        figur.setActionCommand("Laeufer");
+        cEast.add(figur, gbc);
+        
+        figur = new JRadioButton("Turm");
+        figuren.add(figur);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        figur.setActionCommand("Turm");
+        cEast.add(figur, gbc);
+        
         figur = new JRadioButton("Dame");
         figuren.add(figur);
         gbc.gridx = 1;
-        gbc.gridy = 1;
-        figur.setBackground(cBraunRot);
+        gbc.gridy = 4;
+        figur.setActionCommand("Dame");
         cEast.add(figur, gbc);
+        
         figur = new JRadioButton("König");
         figuren.add(figur);
         gbc.gridx = 1;
-        gbc.gridy = 2;
-        figur.setBackground(cBraunRot);
+        gbc.gridy = 5;
+        figur.setActionCommand("Koenig");
         cEast.add(figur, gbc);
         
-        gbc.insets = new Insets(30, 10, 30, 10);
-        
-        JRadioButton farbe;
-        farbe = new JRadioButton("Weiss", true);
-        farbe.setBackground(cBraunRot);
-        farbe.setForeground(Color.WHITE);
-        farbe.setActionCommand("Weiss");
-        farben.add(farbe);
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        cEast.add(farbe, gbc);
-        
-        farbe = new JRadioButton("Schwarz");
-        farbe.setBackground(cBraunRot);
-        farbe.setActionCommand("Schwarz");
-        farben.add(farbe);
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        cEast.add(farbe, gbc);
-        
+        for (int i = 0; i <= 5; i++) {
+            cEast.getComponent(i).setForeground(Color.WHITE);
+            cEast.getComponent(i).setBackground(hintergrund);
+        }
+        for (int i = 6; i <= 11; i++) {
+            cEast.getComponent(i).setForeground(Color.BLACK);
+            cEast.getComponent(i).setBackground(hintergrund);
+        }
+        // gbc.insets = new Insets(30, 7, 30, 7);
         
         this.setLayout(new BorderLayout());
         this.add(cCenter, BorderLayout.CENTER);
         this.add(cEast, BorderLayout.EAST);
         spielfeldAufbau();
+        
+        
     }
     
     /**
@@ -254,7 +302,7 @@ public class Editor extends JPanel implements MouseListener {
      * Methode zum Aufbauen des Spielfelds.
      */
     private void spielfeldAufbau() {        
-        // boolean fuer abwechselnd schwarz/weiss
+        // boolean fuer abwechselnd schwarz/spielfeldWeiss
         boolean abwechslung = false;
         // zaehler fuer richtge Position in der Felderliste
         int counter = 56;
@@ -270,13 +318,13 @@ public class Editor extends JPanel implements MouseListener {
                  */ 
                 Feld temp = spielfeld.getFelder().get(counter + j);
                 temp.setOpaque(true);
-                // Wenn die Farbe "schwarz"(Braun) ist dann Feld braun machen
+                // Wenn die Farbe "schwarz" ist dann Feld schwarz machen
                 if (!abwechslung) {
-                    temp.setBackground(braun);
+                    temp.setBackground(spielfeldSchwarz);
                     abwechslung = true;
-                // Wenn die Farbe "weiss"(Beige) ist dann Feld beige machen    
+                // Wenn die Farbe "weiss" ist dann Feld weiss machen    
                 } else {
-                    temp.setBackground(weiss);
+                    temp.setBackground(spielfeldWeiss);
                     abwechslung = false;
                 }
                 // Dem cCenter Panel das fertige Feld hinzufuegen
@@ -313,10 +361,11 @@ public class Editor extends JPanel implements MouseListener {
             // Als Icon des Feldes setzen
             momentan.setIcon(iconB);
         }
-        // - weisse Figurenbilder
-        for (Figur weiss  : spielfeld.clone(spielfeld.getWeisseFiguren())) {
+        // - spielfeldWeisse Figurenbilder
+        for (Figur spielfeldWeiss  : spielfeld.clone(
+            spielfeld.getWeisseFiguren())) {
             // Feld der Figur abspeichern
-            Feld momentan = weiss.getPosition();
+            Feld momentan = spielfeldWeiss.getPosition();
             // Image in der Mitte zentrieren lassen
             momentan.setVerticalAlignment(SwingConstants.CENTER);
             momentan.setHorizontalAlignment(SwingConstants.CENTER);
@@ -324,7 +373,7 @@ public class Editor extends JPanel implements MouseListener {
             int width = parent.getWidth() / 10;
             int height = parent.getHeight() / 9;
             // Das Bild aus dem Dateipfad geladen
-            Image imageW = getImage(weiss);
+            Image imageW = getImage(spielfeldWeiss);
             // rescaled
             ImageIcon iconW  = new ImageIcon(imageW
                 .getScaledInstance(width, height, Image.SCALE_SMOOTH));
@@ -406,44 +455,74 @@ public class Editor extends JPanel implements MouseListener {
      * @param e MouseEvent, erzeugt von den Feldern des Spielfelds
      */
     public void mouseClicked(MouseEvent e) {
-        if (farben.getSelection().getActionCommand().equals("Weiss")) {
-            if (figuren.getSelection().getActionCommand().equals("Bauern")) {
-                // TODO
-            } else if (figuren.getSelection().getActionCommand()
-                .equals("Turm")) {
-                // TODO
-            } else if (figuren.getSelection().getActionCommand()
-                .equals("Springer")) {
-                // TODO
-            } else if (figuren.getSelection().getActionCommand()
-                .equals("Läufer")) {
-                // TODO
-            } else if (figuren.getSelection().getActionCommand()
-                .equals("Dame")) {
-                // TODO
-            } else {
-                // TODO
-            }
+        Feld feld = (Feld) e.getSource();
+        Figur figur;
+        List<Figur> figurenListe;
+        List<Figur> andereListe;
+        boolean farbe;
+        if (figuren.getSelection().getActionCommand().startsWith("W")) {
+            farbe = true;
+            figuren.getSelection().setActionCommand(
+                figuren.getSelection().getActionCommand().substring(1));
+            figurenListe = spielfeld.getWeisseFiguren();
+            andereListe = spielfeld.getSchwarzeFiguren();
         } else {
-            if (figuren.getSelection().getActionCommand().equals("Bauern")) {
-                // TODO
-            } else if (figuren.getSelection().getActionCommand()
-                .equals("Turm")) {
-                // TODO
-            } else if (figuren.getSelection().getActionCommand()
-                .equals("Springer")) {
-                // TODO
-            } else if (figuren.getSelection().getActionCommand()
-                .equals("Läufer")) {
-                // TODO
-            } else if (figuren.getSelection().getActionCommand()
-                .equals("Dame")) {
-                // TODO
-            } else {
-                // TODO
-            }
+            farbe = false;
+            figurenListe = spielfeld.getSchwarzeFiguren();
+            andereListe = spielfeld.getWeisseFiguren();
+        }
+        if (figuren.getSelection().getActionCommand().equals("Bauer")) {
+            figur = new Bauer(feld, farbe);
+        } else if (figuren.getSelection().getActionCommand()
+            .equals("Turm")) {
+            figur = new Turm(feld, farbe);
+        } else if (figuren.getSelection().getActionCommand()
+            .equals("Springer")) {
+            figur = new Springer(feld, farbe);
+        } else if (figuren.getSelection().getActionCommand()
+            .equals("Laeufer")) {
+            figur = new Laeufer(feld, farbe);
+        } else if (figuren.getSelection().getActionCommand()
+            .equals("Dame")) {
+            figur = new Dame(feld, farbe);
+        } else {
+            figur = new Koenig(feld, farbe);
         }
         
+        if (farbe) {
+            figuren.getSelection().setActionCommand(
+                "W" + figuren.getSelection().getActionCommand());
+        }
+        
+        if (feld.getFigur() != null) {
+            if (feld.getFigur().getWert() == figur.getWert()
+                && feld.getFigur().getFarbe() == figur.getFarbe()) {
+                figurenListe.remove(feld.getFigur());
+                andereListe.remove(feld.getFigur());
+                feld.setFigur(null);
+            } else {
+                if (figurenListe.size() > 0 
+                    && figurenListe.get(0).getWert() == 0 
+                    && figur.getWert() == 0) {
+                    figurenListe.get(0).getPosition().setFigur(null);
+                    figurenListe.remove(0);
+                }
+                figurenListe.remove(feld.getFigur());
+                andereListe.remove(feld.getFigur());
+                feld.setFigur(figur);
+                figurenListe.add(figur);
+            }
+        } else {
+            if (figurenListe.size() > 0 && figurenListe.get(0).getWert() == 0 
+                && figur.getWert() == 0) {
+                figurenListe.get(0).getPosition().setFigur(null);
+                figurenListe.remove(0);
+            }
+            feld.setFigur(figur);
+            figurenListe.add(figur);
+        }
+        
+        spielfeldAufbau();
     }
     
     /**
