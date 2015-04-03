@@ -148,14 +148,17 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
         
         // Spiel 
         spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
-        /*
+
+        // Loescht die Startaufstellung
         spielfeld.getWeisseFiguren().clear();
         spielfeld.getSchwarzeFiguren().clear();
-        */
+        
+        // Setzt alle Felder zurueck
         for (Feld feld : felderListe) {
             feld.setFigur(null);
         }
         
+        // Initialisiert die Farben
         hintergrund = parent.getFarben()[0];
         buttonFarbe = parent.getFarben()[1];
         spielfeldWeiss = parent.getFarben()[2];
@@ -476,12 +479,15 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
      * @param e MouseEvent, erzeugt von den Feldern des Spielfelds
      */
     public void mouseClicked(MouseEvent e) {
+        // Variablen Deklaration
         Feld feld = (Feld) e.getSource();
         Figur figur;
         List<Figur> figurenListe;
         List<Figur> andereListe;
         boolean farbe;
+        // Wenn der ActionCommand mit einem W beginnt
         if (figuren.getSelection().getActionCommand().startsWith("W")) {
+            // Ist es eine weisse Figur
             farbe = true;
             figuren.getSelection().setActionCommand(
                 figuren.getSelection().getActionCommand().substring(1));
@@ -492,6 +498,7 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
             figurenListe = spielfeld.getSchwarzeFiguren();
             andereListe = spielfeld.getWeisseFiguren();
         }
+        // Die einzelnen Figuren
         if (figuren.getSelection().getActionCommand().equals("Bauer")) {
             figur = new Bauer(feld, farbe);
         } else if (figuren.getSelection().getActionCommand()
@@ -510,18 +517,23 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
             figur = new Koenig(feld, farbe);
         }
         
+        // Bei weiss wieder ein W an den ActionCommand anhaengen
         if (farbe) {
             figuren.getSelection().setActionCommand(
                 "W" + figuren.getSelection().getActionCommand());
         }
         
+        // Wenn auf dem Feld bereits eine Figur steht
         if (feld.getFigur() != null) {
+            // Wenn es die gleiche Figur is
             if (feld.getFigur().getWert() == figur.getWert()
                 && feld.getFigur().getFarbe() == figur.getFarbe()) {
+                // Wird sie entfernt
                 figurenListe.remove(feld.getFigur());
                 andereListe.remove(feld.getFigur());
                 feld.setFigur(null);
             } else {
+                // Wenn es ein Koenig ist
                 if (figurenListe.size() > 0 
                     && figurenListe.get(0).getWert() == 0 
                     && figur.getWert() == 0) {
@@ -592,6 +604,9 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
         }
         for (Figur figur : spielfeld.getSchwarzeFiguren()) {
             figur.setSpielfeld(spielfeld);
+        }
+        for (Feld feld : felderListe) {
+            feld.removeMouseListener(this);
         }
         parent.setContentPane(new SpielfeldGUI(parent, spiel));
     }
