@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 
+import zuege.Zug;
 import daten.Computerspieler;
 import daten.Spiel;
 import daten.Spieldaten;
@@ -41,6 +42,8 @@ import figuren.Turm;
 
 /**
  * Klasse zum erstellen von Spielsituationen.
+ * @author Marvin Wolf (GUI)
+ * @author Christian Ackermann (Algorithmik)
  */
 public class Editor extends JPanel implements MouseListener, ActionListener {
     
@@ -681,6 +684,7 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
         if (arg0.getActionCommand().equals("Speichern")) {
             
         } else {
+            spielfeld.getSpieldaten().getZugListe().add(new Zug());
             if (spielfeld.getWeisseFiguren().get(0).getWert() != 0) {
                 parent.soundAbspielen("Hinweis.wav");
                 JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "

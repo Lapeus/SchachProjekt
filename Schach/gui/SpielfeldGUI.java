@@ -305,12 +305,22 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * Zeigt dem Computergegner, dass er jetzt ziehen soll.
      */
-    private boolean jetztIstComputerDran = false;
+    private boolean[] jetztIstComputerDran = {false, false};
     
     /**
      * Die Progressbar zum Anzeigen der Rechenzeit.
      */
     private JProgressBar progBar;
+    
+    /**
+     * Die Zugzeit von wei&szlig.
+     */
+    private int zugZeitWeiss;
+    
+    /**
+     * Die Zugzeit von schwarz.
+     */
+    private int zugZeitSchwarz;
     
     /**
      * Erzeugt eine SpielfeldGUI.
@@ -550,7 +560,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         /* Wenn ein Computerspieler mitspielt und anfangen soll muss er hier 
          * den ersten Zug machen
          */
-        jetztIstComputerDran = true;
+        jetztIstComputerDran[0] = true;
     }
     
     /**
@@ -993,7 +1003,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         // und nachtraeglich uebergeben
                         spielfeld.getSpieldaten().getLetzterZug().setZugzeit(
                             (int) (sekundenStopp / 1000));
-                   
+                        zugZeitAktualisierung();
                         // Wenn das Spiel nicht vorbei ist
                         if (!spielVorbei) {
                             // autosave initiieren
@@ -1011,6 +1021,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         for (Feld feld : spielfeld.getLetzteFelder()) {
                             feld.setBackground(letzterZugFarbe);
                         }
+                        jetztIstComputerDran[1] = false;
                     }
                    
                     protected Void doInBackground() throws Exception {
@@ -1130,7 +1141,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                  * machen
                  */
                 System.out.println("Jetzt soll er ziehen");
-                jetztIstComputerDran = true;
+                jetztIstComputerDran[0] = true;
             }
         // Wenn man auf die selbe Figur / ein leeres Feld / Fremde Figur klickt
         } else {
@@ -1165,6 +1176,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Ein Zug wird ausgefuehrt und die Zugzeit uebergeben
         spielfeld.ziehe(ausgewaehlteFigur, momentanesFeld,
             (int) (sekundenStopp / 1000));
+        zugZeitAktualisierung();
         // Neuer Spieler = keine Ausgewaehlte Figur
         ausgewaehlteFigur = null;
         // Bedrohte Felder muessen geladen werden
@@ -1590,8 +1602,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         parent.requestFocus();
         StringBuffer ausgabe;
         while (uhrAktiv) {
-            if (jetztIstComputerDran) {
-                jetztIstComputerDran = false;
+            if (jetztIstComputerDran[0]) {
+                jetztIstComputerDran[0] = false;
+                jetztIstComputerDran[1] = true;
                 wennComputerDannZiehen();
             }
             zugzeit.setForeground(Color.BLACK);
@@ -1607,8 +1620,18 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     - sekundenStart;
             int begrenzung = spielfeld.getEinstellungen()
                 .getZugZeitBegrenzung();
-            int zugzeitBisher = spielfeld.getSpieldaten()
-                .getZugzeit(spielfeld.getAktuellerSpieler());
+            int zugzeitBisher;
+            boolean aktuellerSpieler;
+            if (jetztIstComputerDran[1]) {
+                aktuellerSpieler = spieler2.getFarbe();
+            } else {
+                aktuellerSpieler = spielfeld.getAktuellerSpieler();
+            }
+            if (aktuellerSpieler) {
+                zugzeitBisher = zugZeitWeiss;
+            } else {
+                zugzeitBisher = zugZeitSchwarz;
+            }
             int gesamtZugzeit = zugzeitBisher 
                 + Integer.parseInt(sekundenStopp / 1000 + "");
             // Formatierungshilfe fuer Zeiten
@@ -1685,6 +1708,14 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             
         }
+    }
+    
+    /**
+     * Aktualisiert die Zugzeit.
+     */
+    private void zugZeitAktualisierung() {
+        zugZeitWeiss = spielfeld.getSpieldaten().getZugzeit(true);
+        zugZeitSchwarz = spielfeld.getSpieldaten().getZugzeit(false);
     }
     
     /**

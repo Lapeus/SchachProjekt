@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 /**
  * Ein JPanel zur Konfiguration der verwendeten Farben.
+ * @author Christian Ackermann
  */
 public class Farbkonfiguration extends JPanel implements ActionListener {
 

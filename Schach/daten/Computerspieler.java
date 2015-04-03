@@ -690,21 +690,10 @@ public class Computerspieler extends Spieler {
         if (figur.bietetSchach(koenig)) {
             bewertung += bonus;
         }
+        
         return bewertung;
     }
     
-    /**
-     * Negiert jeden Wert des angegebenen Integer-Arrays.
-     * @param array Das zu negierende Array
-     * @return Das negierte Array
-     */
-    /*private int[] neg(int[] array) {
-        int[] array2 = new int[array.length];
-        for (int i = 0; i < array.length; i++) {
-            array2[i] = -array[i];
-        }
-        return array2;
-    }*/
     /**
      * Ermittelt den Punktabzug f&uuml;r den eingeschr&auml;nkten Zugradius.
      * @param figur Die entsprechende Figur

@@ -100,35 +100,37 @@ public class Zug {
      */
     public String toSchachNotation() {
         String string = "";
-        int wert = getFigur().getWert();
-        // Figurensymbol
-        if (wert == 275) {
-            string += "S";
-        } else if (wert == 325) {
-            string += "L";
-        } else if (wert == 465) {
-            string += "T";
-        } else if (wert == 900) {
-            string += "D";
-        } else if (wert == 0) {
-            string += "K";
+        if (zielfeld != null) {
+            int wert = getFigur().getWert();
+            // Figurensymbol
+            if (wert == 275) {
+                string += "S";
+            } else if (wert == 325) {
+                string += "L";
+            } else if (wert == 465) {
+                string += "T";
+            } else if (wert == 900) {
+                string += "D";
+            } else if (wert == 0) {
+                string += "K";
+            }
+            // Spaltenbezeichnung
+            String[] spalten = {"a", "b", "c", "d", "e", "f", "g", "h"};
+            // Das Startfeld
+            string += spalten[startfeld.getXK()] + (startfeld.getYK() + 1);
+            // Wenn es ein Schlagzug ist
+            if (schlagzug) {
+                string += "x";
+            // Wenn es ein normaler Zug ist
+            } else {
+                string += "-";
+            }
+            // Das Zielfeld
+            string += spalten[zielfeld.getXK()] + (zielfeld.getYK() + 1);
+            // Die Zugzeit 
+            string += " " + zugzeit + " sek";
         }
-        // Spaltenbezeichnung
-        String[] spalten = {"a", "b", "c", "d", "e", "f", "g", "h"};
-        // Das Startfeld
-        string += spalten[startfeld.getXK()] + (startfeld.getYK() + 1);
-        // Wenn es ein Schlagzug ist
-        if (schlagzug) {
-            string += "x";
-        // Wenn es ein normaler Zug ist
-        } else {
-            string += "-";
-        }
-        // Das Zielfeld
-        string += spalten[zielfeld.getXK()] + (zielfeld.getYK() + 1);
-        // Die Zugzeit 
-        string += " " + zugzeit + " sek";
-        
+  
         return string;
     }
     
