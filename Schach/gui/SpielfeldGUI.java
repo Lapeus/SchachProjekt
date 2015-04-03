@@ -1587,6 +1587,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Wiederholungs-Button geklickt um so ein Spielvideo zu erzeugen.   
      */
     public void run() {
+        parent.requestFocus();
         StringBuffer ausgabe;
         while (uhrAktiv) {
             if (jetztIstComputerDran) {
@@ -1715,5 +1716,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     public void componentShown(ComponentEvent e) {
     }
+
 
 }

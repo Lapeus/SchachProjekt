@@ -921,6 +921,14 @@ public class Spielfeld {
     public boolean getAktuellerSpieler() {
         return aktuellerSpieler;
     }
+    
+    /**
+     * Wird beim Editieren verwendet.
+     * @param aktuellerSpieler Der aktuelle Spieler
+     */
+    public void setAktuellerSpieler(boolean aktuellerSpieler) {
+        this.aktuellerSpieler = aktuellerSpieler;
+    }
 
     /**
      * Gibt an, ob der aktuelle Spieler im Schach steht.<br>

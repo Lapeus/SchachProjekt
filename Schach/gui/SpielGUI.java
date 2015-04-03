@@ -379,4 +379,5 @@ public class SpielGUI extends JFrame implements WindowListener {
      */
     public void windowOpened(WindowEvent e) {
     }
+
 }

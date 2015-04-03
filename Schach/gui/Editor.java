@@ -115,9 +115,18 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
     private ButtonGroup figuren = new ButtonGroup();
     
     /**
+     * Buttongrp Aktueller Spieler.
+     */
+    private ButtonGroup aktuellerSpieler = new ButtonGroup();
+    /**
      * Button um das Spiel zu starten.
      */
     private JButton spielStarten;
+    
+    /**
+     * Button um die Stellung zu speichern.
+     */
+    private JButton speichern;
     
     /**
      * Konstruktor der Klasse Editor.
@@ -203,8 +212,63 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
         GridBagConstraints gbc = new GridBagConstraints();
         cEast.setLayout(new GridBagLayout());
         
+        gbc.insets = new Insets(8, 10, 8, 10);
+        
+        radioButtonInit(gbc, cEast);
+        
+        gbc.insets = new Insets(30, 10, 10, 10);
+        
+        JRadioButton farbe;
+        farbe = new JRadioButton("<html> Wei&szlig", true);
+        aktuellerSpieler.add(farbe);
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        farbe.setActionCommand("weiss");
+        farbe.setBackground(hintergrund);
+        farbe.setForeground(Color.WHITE);
+        cEast.add(farbe, gbc);
+        
+        farbe = new JRadioButton("Schwarz");
+        aktuellerSpieler.add(farbe);
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        farbe.setActionCommand("schwarz");
+        farbe.setBackground(hintergrund);
+        farbe.setForeground(Color.BLACK);
+        cEast.add(farbe, gbc);
+        
         gbc.insets = new Insets(10, 10, 10, 10);
         
+        speichern = new JButton("Speichern");
+        speichern.addActionListener(this);
+        speichern.setActionCommand("Speichern");
+        speichern.setBackground(buttonFarbe);
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        cEast.add(speichern, gbc);
+        spielStarten = new JButton("Spiel starten");
+        spielStarten.addActionListener(this);
+        spielStarten.setActionCommand("Starten");
+        spielStarten.setBackground(buttonFarbe);
+        gbc.gridx = 1;
+        gbc.gridy = 7;
+        cEast.add(spielStarten, gbc);
+        
+        this.setLayout(new BorderLayout());
+        this.add(cCenter, BorderLayout.CENTER);
+        this.add(cEast, BorderLayout.EAST);
+        spielfeldAufbau();
+        
+        
+    }
+    
+    /**
+     * Initialisiert die RadioButtons.
+     * @param gbc GridBagConstraints
+     * @param cEast Das entsprechende Panel
+     */
+    private void radioButtonInit(GridBagConstraints gbc, JPanel cEast) {
+
         JRadioButton figur;
         
         figur = new JRadioButton("Bauer", true);
@@ -293,22 +357,7 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
             cEast.getComponent(i).setForeground(Color.BLACK);
             cEast.getComponent(i).setBackground(hintergrund);
         }
-        
-        spielStarten = new JButton("Spiel starten");
-        spielStarten.addActionListener(this);
-        spielStarten.setBackground(buttonFarbe);
-        gbc.gridx = 1;
-        gbc.gridy = 6;
-        cEast.add(spielStarten, gbc);
-        
-        this.setLayout(new BorderLayout());
-        this.add(cCenter, BorderLayout.CENTER);
-        this.add(cEast, BorderLayout.EAST);
-        spielfeldAufbau();
-        
-        
     }
-    
     /**
      * F&uuml;llt die felderListe mit 64 Feldern(Index 0-7, 0-7).
      * F&uuml;gt zudem jedem Feld einen MouseListener hinzu (this)
@@ -579,6 +628,12 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
             figurenListe.add(figur);
         }
         
+        if (figur.getWert() == 100 
+            && (feld.getYK() == 0 || feld.getYK() == 7)) {
+            figurenListe.remove(figur);
+            feld.setFigur(null);
+        }
+        
         spielfeldAufbau();
     }
     
@@ -623,19 +678,27 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
      * @param arg0 Ausgel&ouml;stes ActionEvent
      */
     public void actionPerformed(ActionEvent arg0) {
-        if (spielfeld.getWeisseFiguren().get(0).getWert() != 0) {
-            parent.soundAbspielen("Hinweis.wav");
-            JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
-                + "wei&szlig;er K&ouml;nig.");
-        } else if (spielfeld.getSchwarzeFiguren().get(0).getWert() != 0) {
-            parent.soundAbspielen("Hinweis.wav");
-            JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
-                + "schwarzer K&ouml;nig.");
+        if (arg0.getActionCommand().equals("Speichern")) {
+            
         } else {
-            for (Feld feld : felderListe) {
-                feld.removeMouseListener(this);
+            if (spielfeld.getWeisseFiguren().get(0).getWert() != 0) {
+                parent.soundAbspielen("Hinweis.wav");
+                JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
+                    + "wei&szlig;er K&ouml;nig.");
+            } else if (spielfeld.getSchwarzeFiguren().get(0).getWert() != 0) {
+                parent.soundAbspielen("Hinweis.wav");
+                JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
+                    + "schwarzer K&ouml;nig.");
+            } else {
+                for (Feld feld : felderListe) {
+                    feld.removeMouseListener(this);
+                }
+                if (aktuellerSpieler.getSelection().getActionCommand()
+                    .equals("schwarz")) {
+                    spielfeld.setAktuellerSpieler(false);
+                }
+                parent.setContentPane(new SpielfeldGUI(parent, spiel));
             }
-            parent.setContentPane(new SpielfeldGUI(parent, spiel));
         }
     
     }
