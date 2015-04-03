@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
@@ -523,6 +524,29 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
                 "W" + figuren.getSelection().getActionCommand());
         }
         
+        figur.setSpielfeld(spielfeld);
+        
+        // Wenn es ein Koenig ist
+        if (figur.getWert() == 0) {
+            if ((figur.getFarbe() && feld.getIndex() != 4)
+                || (!figur.getFarbe() && feld.getIndex() != 60)) {
+                figur.setGezogen(true);
+            }
+        } else if (figur.getWert() == 100) {
+            if (figur.getFarbe() && feld.getYK() != 1
+                || !figur.getFarbe() && feld.getYK() != 6) {
+                figur.setGezogen(true);
+            }
+        } else if (figur.getWert() == 465) {
+            if ((figur.getFarbe() 
+                && (feld.getIndex() != 0 && feld.getIndex() != 7))
+                || (!figur.getFarbe() 
+                    && (feld.getIndex() != 56 && feld.getIndex() != 63))) {
+                System.out.println(feld.getIndex());
+                figur.setGezogen(true);
+            }
+        }
+        
         // Wenn auf dem Feld bereits eine Figur steht
         if (feld.getFigur() != null) {
             // Wenn es die gleiche Figur is
@@ -599,15 +623,20 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
      * @param arg0 Ausgel&ouml;stes ActionEvent
      */
     public void actionPerformed(ActionEvent arg0) {
-        for (Figur figur : spielfeld.getWeisseFiguren()) {
-            figur.setSpielfeld(spielfeld);
+        if (spielfeld.getWeisseFiguren().get(0).getWert() != 0) {
+            parent.soundAbspielen("Hinweis.wav");
+            JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
+                + "wei&szlig;er K&ouml;nig.");
+        } else if (spielfeld.getSchwarzeFiguren().get(0).getWert() != 0) {
+            parent.soundAbspielen("Hinweis.wav");
+            JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
+                + "schwarzer K&ouml;nig.");
+        } else {
+            for (Feld feld : felderListe) {
+                feld.removeMouseListener(this);
+            }
+            parent.setContentPane(new SpielfeldGUI(parent, spiel));
         }
-        for (Figur figur : spielfeld.getSchwarzeFiguren()) {
-            figur.setSpielfeld(spielfeld);
-        }
-        for (Feld feld : felderListe) {
-            feld.removeMouseListener(this);
-        }
-        parent.setContentPane(new SpielfeldGUI(parent, spiel));
+    
     }
 }
