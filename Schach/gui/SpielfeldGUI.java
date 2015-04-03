@@ -983,6 +983,13 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     + "Unentschieden");
                 remove(cEast);
                 cEndeErstellen();
+                parent.soundAbspielen("Hinweis.wav");
+                int auswahl = JOptionPane.showConfirmDialog(this,
+                    "Wollen Sie das Spiel speichern?", 
+                    "Spiel speichern", JOptionPane.YES_NO_OPTION);
+                if (auswahl == 0) {
+                    parent.endSpielSpeichern(spiel);
+                }
                 add(cEnde, BorderLayout.EAST);
                 revalidate(); 
             } else {
@@ -1021,6 +1028,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         for (Feld feld : spielfeld.getLetzteFelder()) {
                             feld.setBackground(letzterZugFarbe);
                         }
+                        // Die Berechnung des Computers ist jetzt vorbei
                         jetztIstComputerDran[1] = false;
                     }
                    
@@ -1036,6 +1044,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                      
             }
         }
+        // Falls er doch nicht dran war, muss die Berechnung trotzdem beendet
+        // werden
+        jetztIstComputerDran[1] = false;
     }
     
 
@@ -1294,6 +1305,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             for (Feld feld : spielfeld.getLetzteFelder()) {
                 feld.setBackground(letzterZugFarbe);
             }
+            revalidate();
             // Schachmeldung ausgeben
             JOptionPane.showMessageDialog(parent, 
                 "Sie stehen im Schach!", "Schachwarnung!",
@@ -1610,7 +1622,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             zugzeit.setForeground(Color.BLACK);
             ausgabe = new StringBuffer();
             try {
-                Thread.sleep(10);
+                Thread.sleep(25);
             } catch (Exception exc) {
                 exc.printStackTrace();
             }
