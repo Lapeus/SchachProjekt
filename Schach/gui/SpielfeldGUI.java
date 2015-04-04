@@ -1034,6 +1034,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                    
                     protected Void doInBackground() throws Exception {
                         parent.setEnabled(false);
+                        jetztIstComputerDran[1] = true;
                         ((Computerspieler) spieler2).ziehen(progBar);
                         progBar.setValue(0);
                         progBar.setVisible(false);
@@ -1044,9 +1045,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                      
             }
         }
-        // Falls er doch nicht dran war, muss die Berechnung trotzdem beendet
-        // werden
-        jetztIstComputerDran[1] = false;
     }
     
 
@@ -1619,7 +1617,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         while (uhrAktiv) {
             if (jetztIstComputerDran[0]) {
                 jetztIstComputerDran[0] = false;
-                jetztIstComputerDran[1] = true;
                 wennComputerDannZiehen();
             }
             zugzeit.setForeground(Color.BLACK);
