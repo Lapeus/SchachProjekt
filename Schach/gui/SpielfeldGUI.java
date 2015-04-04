@@ -980,7 +980,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 parent.soundAbspielen("Hinweis.wav");
                 JOptionPane.showMessageDialog(parent, "<html>50 Z&uuml;ge Regel"
                     + " wurde erf&uuml;llt. Das Spiel endet mit einem "
-                    + "Unentschieden");
+                    + "Unentschieden. <br>" + zugZeitAnzeige());
                 remove(cEast);
                 cEndeErstellen();
                 parent.soundAbspielen("Hinweis.wav");
@@ -1271,7 +1271,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             revalidate(); 
             // Und Ein Dialogfenster fuer den Gewinner angezeigt
             parent.soundAbspielen("SchachMatt.wav");
-            JOptionPane.showMessageDialog(parent, ergebnis);
+            JOptionPane.showMessageDialog(parent, ergebnis 
+                + "<html> <br>" + zugZeitAnzeige());
             // Endscreen aufrufen
             remove(cEast);
             parent.soundAbspielen("Hinweis.wav");
@@ -1298,7 +1299,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private void schachWarnung() {
         // Wenn kein Computerspieler dran ist und das Spiel nocht vorbei ist
         if (!istComputerSpielerUndIstAmZug()
-            && !spielVorbei) {
+            && !spielVorbei && spielfeld.getEinstellungen().isSchachWarnung()) {
             spielfeldAufbau();
             parent.soundAbspielen("FehlerhafteEingabe.wav");
             // letzen Zug gruen makieren
@@ -1397,7 +1398,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             parent.soundAbspielen("Aufgeben.wav");
             JOptionPane.showMessageDialog(parent, "<html>" 
                 + verlierer.getName() + " gibt nach " + zuege 
-                + " Z&uuml;gen auf! " + gewinner.getName() + " gewinnt!!!");
+                + " Z&uuml;gen auf! " + gewinner.getName() + " gewinnt!!!"
+                + "<br>" + zugZeitAnzeige());
             // Endscreen aufrufen
             remove(cEast);
             parent.soundAbspielen("Hinweis.wav");
@@ -1440,6 +1442,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     zug.getZielfeld(), zug.getZugzeit());
                 zugListe.setSelectedIndex(zaehler);
                 zugListe.ensureIndexIsVisible(zaehler);
+                zugListe.revalidate();
                 // Wenn es ein Umwandlungszug war
                 if (zug instanceof Umwandlungszug) {
                     // Muss nachtraeglich noch die figur umgewandelt werden
@@ -1728,6 +1731,27 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     private void zugZeitAktualisierung() {
         zugZeitWeiss = spielfeld.getSpieldaten().getZugzeit(true);
         zugZeitSchwarz = spielfeld.getSpieldaten().getZugzeit(false);
+    }
+    
+    /**
+     * Gibt einen mehrzeiligen String zur Ausgabe der Zugzeit und der Zuganzahl
+     * der beiden Spieler bei Spielende zur&uuml;ck.
+     * @return Mehrzeiliger String
+     */
+    private String zugZeitAnzeige() {
+        String string = "";
+        string += spieler1.getName() + ": ";
+        boolean farbe = spieler1.getFarbe();
+        string += spielfeld.getSpieldaten().getAnzahlZuege(farbe) + " ";
+        string += "Z&uuml;ge in " + spielfeld.getSpieldaten().getZugzeit(farbe);
+        string += " Sekunden <br>";
+        string += spieler2.getName() + ": ";
+        farbe = spieler2.getFarbe();
+        string += spielfeld.getSpieldaten().getAnzahlZuege(farbe) + " ";
+        string += "Z&uuml;ge in " + spielfeld.getSpieldaten().getZugzeit(farbe);
+        string += " Sekunden <br>";
+        
+        return string;
     }
     
     /**

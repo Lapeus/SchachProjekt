@@ -35,11 +35,6 @@ public class Computerspieler extends Spieler {
     private Spielfeld spielfeld;
     
     /**
-     * Dient der Rekursions-Z&auml;hlung.
-     */
-    private int zaehler;
-    
-    /**
      * Die ProgressBar zum Anzeigen der Rechenzeit.
      */
     private JProgressBar progBar;
@@ -60,7 +55,6 @@ public class Computerspieler extends Spieler {
      * @see #rekursKI(int)
      */
     public void ziehen() {
-        zaehler = 0;
         // Je nach Name / Stufe wird eine andere Methode aufgerufen
         if (getName().equals("Karl Heinz")) {
             // Einfache Zugregeln
@@ -86,7 +80,6 @@ public class Computerspieler extends Spieler {
         if (letzterZug instanceof Umwandlungszug) {
             spielfeld.umwandeln(letzterZug.getFigur(), 900);
         }
-        System.out.println(zaehler);
         /* Fordert den Garbage-Collector auf, unbenutzte Objekte zu entfernen
          * um fuer den noetigen freien Speicherplatz zu sorgen
          */
@@ -583,11 +576,33 @@ public class Computerspieler extends Spieler {
      * <b> negativ </b> ist gut f&uuml;r schwarz.
      */
     private int bewertungsfunktion() {
-        zaehler++;
         int bewertung;
         // Materialwert
         bewertung = spielfeld.getMaterialwert(true) 
             - spielfeld.getMaterialwert(false);
+        
+        // Wenn Weiss nicht mehr gewinnen kann
+        int matWert = spielfeld.getMaterialwert(true);
+        int anzahlFiguren = spielfeld.getWeisseFiguren().size();
+        boolean bauer = false;
+        if (anzahlFiguren > 1) {
+            bauer = spielfeld.getWeisseFiguren().get(1).getWert() == 100;
+        }
+        if (matWert <= 600 && !bauer) {
+            bewertung -= 2000;
+        }
+        
+        // Wenn Schwarz nicht mehr gewinnen kann
+        matWert = spielfeld.getMaterialwert(false);
+        anzahlFiguren = spielfeld.getSchwarzeFiguren().size();
+        bauer = false;
+        if (anzahlFiguren > 1) {
+            bauer = spielfeld.getSchwarzeFiguren().get(1).getWert() == 100;
+        }
+        if (matWert <= 600 && !bauer) {
+            bewertung += 2000;
+        }
+        
         // Figurenbeweglichkeit
         int index = 0;
         // Der Bonus des Bauern wenn er auf einer entsprechenden Reihe steht

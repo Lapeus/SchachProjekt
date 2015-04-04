@@ -111,7 +111,9 @@ public class Bauer extends Figur {
         }
         
         // En-passant-Schlagen
-        if (getSpielfeld().getEinstellungen().isEnPassantMoeglich()) {
+        if (getSpielfeld().getEinstellungen().isEnPassantMoeglich()
+            && getSpielfeld().getSpieldaten().getLetzterZug().getStartfeld() 
+            != null) {
             moeglicheFelder.addAll(enPassant());
         }
         

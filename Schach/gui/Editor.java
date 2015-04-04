@@ -594,7 +594,6 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
                 && (feld.getIndex() != 0 && feld.getIndex() != 7))
                 || (!figur.getFarbe() 
                     && (feld.getIndex() != 56 && feld.getIndex() != 63))) {
-                System.out.println(feld.getIndex());
                 figur.setGezogen(true);
             }
         }
@@ -681,29 +680,25 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
      * @param arg0 Ausgel&ouml;stes ActionEvent
      */
     public void actionPerformed(ActionEvent arg0) {
-        if (arg0.getActionCommand().equals("Speichern")) {
-            
+        spielfeld.getSpieldaten().getZugListe().add(new Zug());
+        if (spielfeld.getWeisseFiguren().get(0).getWert() != 0) {
+            parent.soundAbspielen("Hinweis.wav");
+            JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
+                + "wei&szlig;er K&ouml;nig.");
+        } else if (spielfeld.getSchwarzeFiguren().get(0).getWert() != 0) {
+            parent.soundAbspielen("Hinweis.wav");
+            JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
+                + "schwarzer K&ouml;nig.");
         } else {
-            spielfeld.getSpieldaten().getZugListe().add(new Zug());
-            if (spielfeld.getWeisseFiguren().get(0).getWert() != 0) {
-                parent.soundAbspielen("Hinweis.wav");
-                JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
-                    + "wei&szlig;er K&ouml;nig.");
-            } else if (spielfeld.getSchwarzeFiguren().get(0).getWert() != 0) {
-                parent.soundAbspielen("Hinweis.wav");
-                JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
-                    + "schwarzer K&ouml;nig.");
-            } else {
-                for (Feld feld : felderListe) {
-                    feld.removeMouseListener(this);
-                }
-                if (aktuellerSpieler.getSelection().getActionCommand()
-                    .equals("schwarz")) {
-                    spielfeld.setAktuellerSpieler(false);
-                }
-                parent.setContentPane(new SpielfeldGUI(parent, spiel));
+            for (Feld feld : felderListe) {
+                feld.removeMouseListener(this);
             }
+            if (aktuellerSpieler.getSelection().getActionCommand()
+                .equals("schwarz")) {
+                spielfeld.setAktuellerSpieler(false);
+            }
+            parent.setContentPane(new SpielfeldGUI(parent, spiel));
         }
-    
     }
+
 }
