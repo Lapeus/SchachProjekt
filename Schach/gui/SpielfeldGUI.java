@@ -752,7 +752,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Methode aufgerufen.
      */
     private void spielfeldUIUpdate() {
-        if (spielfeld.getSpieldaten().getZugListe().isEmpty()) {
+        if (spielfeld.getSpieldaten().getZugListe().isEmpty()
+            || (spieler2 instanceof Computerspieler 
+                && spielfeld.getSpieldaten().getZugListe().size() < 2)) {
             rueckgaengig.setEnabled(false);
         } else {
             rueckgaengig.setEnabled(true);
@@ -1605,7 +1607,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Runnable Methode zum Erstellen und &Uuml;berwachen der Zugzeit und zum
      * Ausf&uuml;hren der Wiederholungsfunktion.
      * Solange der Thread aktiv ist (wird noch von einer Funktion gebraucht)
-     * wird alle 10ms die Uhrzeit auf dem daf&uuml;r passendem Label 
+     * wird alle 25ms die Uhrzeit auf dem daf&uuml;r passendem Label 
      * aktualisiert und gepr&uuml;ft ob die maximale Zugzeit &uuml;berschritten
      * worden ist. 
      * Wenn der Wiederholungs-Boolean true ist dann wird alle 2.5s der 
