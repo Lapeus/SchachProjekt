@@ -161,7 +161,9 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
         
         // Spiel 
         spiel = new Spiel(spielname + " (edit)", spieler1, spieler2, spielfeld);
-
+        spiel.getSpielfeld().getEinstellungen()
+            .setInStatistikEinbeziehen(false);
+        
         // Loescht die Startaufstellung
         spielfeld.getWeisseFiguren().clear();
         spielfeld.getSchwarzeFiguren().clear();
@@ -675,7 +677,6 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
      * @param arg0 Ausgel&ouml;stes ActionEvent
      */
     public void actionPerformed(ActionEvent arg0) {
-        spielfeld.getSpieldaten().getZugListe().add(new Zug());
         if (spielfeld.getWeisseFiguren().get(0).getWert() != 0) {
             parent.soundAbspielen("Hinweis.wav");
             JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
@@ -691,6 +692,7 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
             if (aktuellerSpieler.getSelection().getActionCommand()
                 .equals("schwarz")) {
                 spielfeld.setAktuellerSpieler(false);
+                spielfeld.getSpieldaten().getZugListe().add(new Zug());
             }
             parent.setContentPane(new SpielfeldGUI(parent, spiel, false));
         }

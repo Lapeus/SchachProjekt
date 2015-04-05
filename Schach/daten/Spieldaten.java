@@ -107,6 +107,10 @@ public class Spieldaten {
         if (spieler) {
             // Aufgerundete Anzahl, weil weiss anfaengt
             anzahl = (int) Math.ceil((double) zugListe.size() / 2);
+            // Wenn es ein Edit-Spiel ist und schwarz beginnt
+            if (!zugListe.isEmpty() && zugListe.get(0).getZielfeld() == null) {
+                anzahl -= 1;
+            }
         } else {
             // Abgerundete Anzahl, weil schwarz nach zieht
             anzahl = zugListe.size() / 2;

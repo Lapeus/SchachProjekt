@@ -933,6 +933,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             name = spieler2.getName();
         }
         if (spielfeld.getAktuellerSpieler()) {
+            // Wenn es ein Edit-Spiel ist und schwarz beginnt
+            if (!spielfeld.getSpieldaten().getZugListe().isEmpty()
+                && spielfeld.getSpieldaten().getZugListe()
+                .get(0).getZielfeld() == null) {
+                zugNr -= 1;
+            } 
             momentanerSpieler.setText(zugNr + 1 + ". " + name);
             momentanerSpieler.setForeground(Color.WHITE);
         } else {
