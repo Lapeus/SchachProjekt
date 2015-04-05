@@ -611,6 +611,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         btnWiederholung.addActionListener(this);
         gbc2.gridy = 1;
         cEnde.add(btnWiederholung, gbc2);
+        if (spiel.getSpielname().contains("(edit)")) {
+            btnWiederholung.setEnabled(false);
+        }
         
         // Pause-Button fuer die Wiederholung
         btnStopp.setBackground(buttonFarbe);
@@ -624,7 +627,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         String[] zuege = spielfeld.getSpieldaten().toString()
             .split(System.getProperty("line.separator"));
         for (String string : zuege) {
-            listModel.addElement(string);
+            if (!string.equals("")) {
+                listModel.addElement(string);
+            }
         }
         zugListe = new JList<String>(listModel);
         zugListe.setBackground(buttonFarbe);
@@ -980,13 +985,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     + "Unentschieden. <br>" + zugZeitAnzeige());
                 remove(cEast);
                 cEndeErstellen();
-                parent.soundAbspielen("Hinweis.wav");
-                int auswahl = JOptionPane.showConfirmDialog(this,
-                    "Wollen Sie das Spiel speichern?", 
-                    "Spiel speichern", JOptionPane.YES_NO_OPTION);
-                if (auswahl == 0) {
-                    parent.endSpielSpeichern(spiel);
-                }
+                spielSpeichern();
                 add(cEnde, BorderLayout.EAST);
                 revalidate(); 
             } else {
@@ -1008,8 +1007,10 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         spielfeld.getSpieldaten().getLetzterZug().setZugzeit(
                             (int) (sekundenStopp / 1000));
                         zugZeitAktualisierung();
-                        // Wenn das Spiel nicht vorbei ist
-                        if (!spielVorbei) {
+                        // Wenn das Spiel nicht vorbei ist und es kein Editor-
+                        // Spiel ist
+                        if (!spielVorbei 
+                            && !spiel.getSpielname().contains("(edit)")) {
                             // autosave initiieren
                             parent.autoSave(spiel);
                         }
@@ -1283,13 +1284,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 + "<html> <br>" + zugZeitAnzeige());
             // Endscreen aufrufen
             remove(cEast);
-            parent.soundAbspielen("Hinweis.wav");
-            int auswahl = JOptionPane.showConfirmDialog(this, 
-                "Wollen Sie das Spiel speichern?", 
-                "Spiel speichern", JOptionPane.YES_NO_OPTION);
-            if (auswahl == 0) {
-                parent.endSpielSpeichern(spiel);
-            }
+            spielSpeichern();
             cEndeErstellen();
             revalidate(); 
             add(cEnde, BorderLayout.EAST); 
@@ -1410,13 +1405,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 + "<br>" + zugZeitAnzeige());
             // Endscreen aufrufen
             remove(cEast);
-            parent.soundAbspielen("Hinweis.wav");
-            int auswahl = JOptionPane.showConfirmDialog(this, 
-                "Wollen Sie das Spiel speichern?", 
-                "Spiel speichern", JOptionPane.YES_NO_OPTION);
-            if (auswahl == 0) {
-                parent.endSpielSpeichern(spiel);
-            }
+            spielSpeichern();
             cEndeErstellen();
             add(cEnde, BorderLayout.EAST);
             revalidate();  
@@ -1516,13 +1505,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                 + "wurde erf&uuml;llt. Das Spiel endet in einem Unentschieden");
             // Endescreen wird aufgebaut
             remove(cEast);
-            parent.soundAbspielen("Hinweis.wav");
-            int auswahl = JOptionPane.showConfirmDialog(this, 
-                "Wollen Sie das Spiel speichern?", 
-                "Spiel speichern", JOptionPane.YES_NO_OPTION);
-            if (auswahl == 0) {
-                parent.endSpielSpeichern(spiel);
-            }
+            spielSpeichern();
             cEndeErstellen();
             add(cEnde, BorderLayout.EAST);
             revalidate();
@@ -1541,13 +1524,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     // Unentschieden einreichen
                     spiel.unentschieden();
                     remove(cEast);
-                    parent.soundAbspielen("Hinweis.wav");
-                    int auswahl = JOptionPane.showConfirmDialog(this, 
-                        "Wollen Sie das Spiel speichern?", 
-                        "Spiel speichern", JOptionPane.YES_NO_OPTION);
-                    if (auswahl == 0) {
-                        parent.endSpielSpeichern(spiel);
-                    }
+                    spielSpeichern();
                     cEndeErstellen();
                     add(cEnde, BorderLayout.EAST);
                     revalidate();
@@ -1581,13 +1558,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     spiel.unentschieden();
                     // Endscreen aufrufen
                     remove(cEast);
-                    parent.soundAbspielen("Hinweis.wav");
-                    int auswahl = JOptionPane.showConfirmDialog(this, 
-                        "Wollen Sie das Spiel speichern?", 
-                        "Spiel speichern", JOptionPane.YES_NO_OPTION);
-                    if (auswahl == 0) {
-                        parent.endSpielSpeichern(spiel);
-                    }
+                    spielSpeichern();
                     cEndeErstellen();
                     add(cEnde, BorderLayout.EAST);
                     revalidate();
@@ -1757,6 +1728,22 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         string += " Sekunden <br>";
         
         return string;
+    }
+    
+    /**
+     * &Ouml;ffnet ein Dialog-Fenster, ob das Spiel als beendetes Spiel
+     * gespeichert werden soll.
+     */
+    private void spielSpeichern() {
+        if (!spiel.getSpielname().contains("(edit)")) {
+            parent.soundAbspielen("Hinweis.wav");
+            int auswahl = JOptionPane.showConfirmDialog(this,
+                "Wollen Sie das Spiel speichern?", 
+                "Spiel speichern", JOptionPane.YES_NO_OPTION);
+            if (auswahl == 0) {
+                parent.endSpielSpeichern(spiel);
+            }
+        }
     }
     
     /**

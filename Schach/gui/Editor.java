@@ -160,7 +160,7 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
         }
         
         // Spiel 
-        spiel = new Spiel(spielname, spieler1, spieler2, spielfeld);
+        spiel = new Spiel(spielname + " (edit)", spieler1, spieler2, spielfeld);
 
         // Loescht die Startaufstellung
         spielfeld.getWeisseFiguren().clear();
