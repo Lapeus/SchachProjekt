@@ -164,8 +164,13 @@ public class SpielLaden extends JPanel implements ActionListener {
                 Spiel spiel = parent.getSpiel(name);
                 // Wenn es ein zu ladendes Spiel zu dieser Auswahl gibt
                 if (spiel != null) {
-                    parent.setContentPane(new SpielfeldGUI(parent, 
-                        spiel));
+                    if (name.contains("(ended)")) {
+                        parent.setContentPane(new SpielfeldGUI(parent, 
+                            spiel, true));
+                    } else {
+                        parent.setContentPane(new SpielfeldGUI(parent, 
+                            spiel, false));
+                    }
                 // Wenn es keins gibt
                 } else {
                     cCenter.removeAll();

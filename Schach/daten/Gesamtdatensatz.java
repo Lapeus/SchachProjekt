@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -541,8 +539,8 @@ public class Gesamtdatensatz {
             // Reader schliessen
             try {
                 br.close();
-            } catch (IOException exc) {
-                exc.printStackTrace();
+            } catch (Exception exc) {
+                spiel = null;
             }
         }
         
@@ -832,46 +830,6 @@ public class Gesamtdatensatz {
         gespeicherteSpiele.removeAll(zuEntfernendeSpiele);
     }
     
-    /**
-     * Speichert die Stellung des angegebenen Spiels.
-     * @param spiel Das Spiel mit der Stellung
-     */
-    public void stellungSpeichern(Spiel spiel) {
-        // Das Spiel speichern mit dem Zusatz (edit)
-        try {
-            File spielDatei = new File("settings" + System.getProperty(
-                "file.separator") + "Spiele" + System.getProperty(
-                    "file.separator") + spiel.getSpielname() + " (edit)" 
-                        + ".txt");
-            FileWriter fw = new FileWriter(spielDatei);
-            String lineSep = System.getProperty("line.separator");
-            String string = "";
-            // Aktuelles Datum und Uhrzeit
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-            Timestamp time = new Timestamp(System.currentTimeMillis());
-            string = sdf.format(time) + lineSep;
-            // Aktueller Spieler
-            string += spiel.getSpielfeld().getAktuellerSpieler() + lineSep;
-            // Die weissen Figuren
-            for (Figur figur : spiel.getSpielfeld().getWeisseFiguren()) {
-                string += figur.toString();
-            }
-            string += lineSep;
-            // Die schwarzen Figure
-            for (Figur figur: spiel.getSpielfeld().getSchwarzeFiguren()) {
-                string += figur.toString();
-            }
-            
-            fw.close();
-        } catch (IOException ioEx) {
-            ioEx.printStackTrace();
-        }
-        // Das Spiel der Liste zufuegen
-        if (!gespeicherteSpiele.contains(spiel.getSpielname() 
-            + " (autosave)")) {
-            gespeicherteSpiele.add(spiel.getSpielname() + " (autosave)");
-        }
-    }
     /**
      * Gibt die Liste der Spieler nach absteigendem Score sortiert wieder.
      * @return Eine Liste mit den gerankten Spielern

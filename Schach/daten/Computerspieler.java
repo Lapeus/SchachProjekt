@@ -327,6 +327,7 @@ public class Computerspieler extends Spieler {
                     besteFiguren.add(figur);
                     besteFelder.add(feld);
                 }
+                System.out.println(bewertung);
             } else {
                 // Bekomme die Bewertung dafuer
                 int bewertung = max(maxStufe - 1, -4500, 4500);
@@ -576,6 +577,8 @@ public class Computerspieler extends Spieler {
      * <b> negativ </b> ist gut f&uuml;r schwarz.
      */
     private int bewertungsfunktion() {
+        int zugAnzahl = spielfeld.getSpieldaten().getZugListe().size();
+        //ruhigeStellungErzeugen();
         int bewertung;
         // Materialwert
         bewertung = spielfeld.getMaterialwert(true) 
@@ -706,9 +709,47 @@ public class Computerspieler extends Spieler {
             bewertung += bonus;
         }
         
+        // Alle durch ruhigeStellungErzeugen gezogene Zuege rueckgaengig machen
+        while (spielfeld.getSpieldaten().getZugListe().size() != zugAnzahl) {
+            spielfeld.zugRueckgaengig();
+        }
         return bewertung;
     }
     
+    /**
+     * Wird von der Bewertungsfunktion aufgerufen und sorgt daf&uuml;r, dass nur
+     * ruhige Stellungen bewertet werden. Daf&uuml;r wird ein Schlagabtausch
+     * vollst&auml;ndig zu Ende analysiert bevor die Bewertung stattfinden kann.
+     */
+    private void ruhigeStellungErzeugen() {
+        while (!spielfeld.getSchlagendeFelder().isEmpty()) {
+            // Liste mit den eigenen Figuren
+            List<Figur> eigeneFiguren;
+            // Wenn weiss dran ist
+            if (spielfeld.getAktuellerSpieler()) {
+                eigeneFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
+            // Wenn schwarz dran ist
+            } else {
+                eigeneFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
+            }
+            // Fuer alle eigenen Figuren
+            for (Figur eigen : eigeneFiguren) {
+                // Liste mit den korrekten Feldern dieser Figur
+                List<Feld> felder = eigen.getMoeglicheFelderKI();
+                // Fuer jedes dieser Felder
+                for (Feld feld : felder) {
+                    // Wenn auf dem Feld eine Figur steht
+                    if (feld.getFigur() != null 
+                        && feld.getFigur().getWert() != 0) {
+                        // Wird getestet ob es auch ein korrektes Feld ist
+                        if (eigen.isKorrektesFeld(feld)) {
+                            spielfeld.ziehe(eigen, feld, 0);
+                        }
+                    }
+                }
+            }
+        }
+    }
     /**
      * Ermittelt den Punktabzug f&uuml;r den eingeschr&auml;nkten Zugradius.
      * @param figur Die entsprechende Figur

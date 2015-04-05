@@ -98,7 +98,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     /**
      * JLabel zum Anzeigen des momentanen Spielers.
      */
-    private JLabel momentanerSpieler = new JLabel("<html>Wei&szlig;");
+    private JLabel momentanerSpieler = new JLabel();
     
     /**
      * JLabel zum Anzeigen der Zugzeit des momentanen Spielers.
@@ -365,45 +365,40 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * f&uuml;r ein bereits gespeichertes Spiel.
      * @param parent Das Objekt der dazugeh&ouml;rigen <b>SpielGUI</b>
      * @param spiel Ein Objekt von Typ Spiel, welches bereits Paramenter hat
+     * @param beendet Ob das Spiel beendet ist
      */
-    public SpielfeldGUI(SpielGUI parent, Spiel spiel) {
+    public SpielfeldGUI(SpielGUI parent, Spiel spiel, boolean beendet) {
         this.parent = parent;
         this.spieler1 = spiel.getSpieler1();
         this.spieler2 = spiel.getSpieler2();
         this.spielfeld = spiel.getSpielfeld();
         this.felderListe = spielfeld.getFelder();
         this.spiel = spiel;
+        
         for (Feld feld : felderListe) {
             feld.addMouseListener(this);
         }
         
-        // Je nach aktuellem Spieler wird das Label gesetzt
-        momentanerSpielerUpdate();
-        if (parent.getEinstellungen().isBedrohteFigurenAnzeigen()) {
-            for (Feld bedroht : spielfeld.getBedrohteFelder()) {
-                bedroht.setBackground(bedrohteFelderFarbe);
-            }
-        }
+        spielVorbei = beendet;
+        
         parent.revalidate();
         farbInit();
         init();
-        List<Figur> eigeneFiguren;
-        if (spielfeld.getAktuellerSpieler()) {
-            eigeneFiguren = spielfeld.getWeisseFiguren();
-        } else {
-            eigeneFiguren = spielfeld.getSchwarzeFiguren();
-        }
-        boolean spielVorbei = true;
-        for (Figur figur : eigeneFiguren) {
-            if (figur.getKorrekteFelder().size() != 0) {
-                spielVorbei = false;
-            }
-        }
-        if (spielVorbei) {
+        
+        if (beendet) {
             remove(cEast);
             cEndeErstellen();
             add(cEnde, BorderLayout.EAST);
+        } else {
+            // Je nach aktuellem Spieler wird das Label gesetzt
+            momentanerSpielerUpdate();
+            if (parent.getEinstellungen().isBedrohteFigurenAnzeigen()) {
+                for (Feld bedroht : spielfeld.getBedrohteFelder()) {
+                    bedroht.setBackground(bedrohteFelderFarbe);
+                }
+            }
         }
+
     }
     
     /**
@@ -479,6 +474,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Je nach aktuellem Spieler wird das Label gesetzt
         momentanerSpielerUpdate();
         momentanerSpieler.setBackground(buttonFarbe);
+        momentanerSpieler.addMouseListener(this);
         gbc.gridheight = 1;
         gbc.gridy = 3;
         cEast.add(momentanerSpieler, gbc);
@@ -970,7 +966,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * folgenden Spielers kontrolliert. 
      * Dann werden Start- und Zielfeld des letzten Zugs eines Computers 
      * gr&uuml;n markiert.
-     * 
      */
     private void wennComputerDannZiehen() {
         // Wenn spieler 2 ein Computergegner ist und dran ist
@@ -1049,7 +1044,22 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }
     }
     
-
+    /**
+     * Die durch einen Mausklick aufgerufene Methode. Verarbeitet diesen 
+     * Mausklick.
+     * @param arg0 Das ausgel&ouml;ste MouseEvent
+     */
+    public void mouseClicked(MouseEvent arg0) {
+        // Wenn es kein Feld ist
+        if (!(arg0.getSource() instanceof Feld)) {
+            for (Feld feld : spielfeld.getHinweisZug()) {
+                feld.setBackground(letzterZugFarbe);
+            }
+        } else {
+            mouseClickedMethode(arg0);
+        }
+    }
+    
     /**
      * Immer wenn ein Spieldfeld angeklickt wird, wird diese Methode aufgerufen
      * und verarbeitet dann den Klick.<br>
@@ -1058,7 +1068,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Felder angezeigt.
      * @param arg0 MouseEvent, erzeugt von den Feldern des Spielfelds
      */
-    public void mouseClicked(MouseEvent arg0) {
+    private void mouseClickedMethode(MouseEvent arg0) {
         spielfeldAufbau();
         // Felder Bewegen
         Feld momentanesFeld = (Feld) arg0.getSource();
@@ -1172,8 +1182,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         }        
         revalidate();  
     }
-    
-
     /**
      * Hier werden die Z&uuml;ge veranlasst und auf der Gui geupdated.
      * Die Zugzeit wird gestoppt und dem Zug werden diese sowie das Start-
@@ -1614,7 +1622,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * Wiederholungs-Button geklickt um so ein Spielvideo zu erzeugen.   
      */
     public void run() {
-        parent.requestFocus();
         StringBuffer ausgabe;
         while (uhrAktiv) {
             if (jetztIstComputerDran[0]) {
@@ -1707,13 +1714,12 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             // Wenn ein Spielvideo angezeigt werden soll
             if (btnWiederholung.isEnabled()) {
-                /* Wenn wiederholt werden soll und nicht stopp ist und 2 oder 
+                /* Wenn wiederholt werden soll und nicht stopp ist und 2.5 oder 
                  * mehr Sekunden vergangen sind 
                 */
                 if (wiederholung && wiederholen && sekundenStopp >= 2500) {
                     // Dann soll der naechste zug ausgefuert werden
                     btnWiederholung.doClick();
-                    start();
                 }
             // Wenn die Wiederholung vorbei ist    
             } else {

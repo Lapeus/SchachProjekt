@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -85,8 +86,12 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
     /**
      * Panel f&uuml;r die Auswahlelemete.
      */
-    private JPanel cEast = new JPanel();
+    private JPanel cEastOben = new JPanel();
     
+    /**
+     * Panel f&uuml;r die rechte Seite.
+     */
+    private JPanel cEast = new JPanel();
     /**
      * FelderListe.
      */
@@ -125,11 +130,6 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
      * Button um das Spiel zu starten.
      */
     private JButton spielStarten;
-    
-    /**
-     * Button um die Stellung zu speichern.
-     */
-    private JButton speichern;
     
     /**
      * Konstruktor der Klasse Editor.
@@ -213,11 +213,15 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
         // cEast
         cEast.setBackground(hintergrund);
         GridBagConstraints gbc = new GridBagConstraints();
-        cEast.setLayout(new GridBagLayout());
+        cEast.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 30));
+        cEast.setPreferredSize(new Dimension(250, 700));
+       
+        cEastOben.setBackground(hintergrund);
+        cEastOben.setLayout(new GridBagLayout());
         
         gbc.insets = new Insets(8, 10, 8, 10);
         
-        radioButtonInit(gbc, cEast);
+        radioButtonInit(gbc, cEastOben);
         
         gbc.insets = new Insets(30, 10, 10, 10);
         
@@ -229,7 +233,7 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
         farbe.setActionCommand("weiss");
         farbe.setBackground(hintergrund);
         farbe.setForeground(Color.WHITE);
-        cEast.add(farbe, gbc);
+        cEastOben.add(farbe, gbc);
         
         farbe = new JRadioButton("Schwarz");
         aktuellerSpieler.add(farbe);
@@ -238,24 +242,15 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
         farbe.setActionCommand("schwarz");
         farbe.setBackground(hintergrund);
         farbe.setForeground(Color.BLACK);
-        cEast.add(farbe, gbc);
+        cEastOben.add(farbe, gbc);
         
-        gbc.insets = new Insets(10, 10, 10, 10);
-        
-        speichern = new JButton("Speichern");
-        speichern.addActionListener(this);
-        speichern.setActionCommand("Speichern");
-        speichern.setBackground(buttonFarbe);
-        gbc.gridx = 0;
-        gbc.gridy = 7;
-        cEast.add(speichern, gbc);
         spielStarten = new JButton("Spiel starten");
         spielStarten.addActionListener(this);
         spielStarten.setActionCommand("Starten");
         spielStarten.setBackground(buttonFarbe);
-        gbc.gridx = 1;
-        gbc.gridy = 7;
-        cEast.add(spielStarten, gbc);
+
+        cEast.add(cEastOben);
+        cEast.add(spielStarten);
         
         this.setLayout(new BorderLayout());
         this.add(cCenter, BorderLayout.CENTER);
@@ -697,7 +692,7 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
                 .equals("schwarz")) {
                 spielfeld.setAktuellerSpieler(false);
             }
-            parent.setContentPane(new SpielfeldGUI(parent, spiel));
+            parent.setContentPane(new SpielfeldGUI(parent, spiel, false));
         }
     }
 

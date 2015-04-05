@@ -140,6 +140,55 @@ public abstract class Figur {
     }
     
     /**
+     * &Uuml;berpr&uuml;ft ob das angegebene Feld tats&auml;chlich korrekt ist.
+     * @param feld Das zu &uuml;berpr&uuml;fende Feld
+     * @return Wahrheitswert ob das Feld korrekt ist
+     */
+    public boolean isKorrektesFeld(Feld feld) {
+        boolean isKorrekt = true;
+        // Das Feld auf dem der eigene Koenig steht
+        Feld koenigsfeldEigen;
+        // Wenn weiss dran ist
+        if (farbe) {
+            // Der Koenig ist immer das erste Element der Liste
+            koenigsfeldEigen = spielfeld.getWeisseFiguren().get(0).position;
+        // Wenn schwarz dran ist
+        } else {
+            // Der Koenig ist immer das erste Element der Liste
+            koenigsfeldEigen = spielfeld.getSchwarzeFiguren().get(0).position;
+        }
+        // Simuliere einen Zug (Zugzeit 0)
+        spielfeld.ziehe(this, feld, 0);
+        /* Wenn der Koenig gezogen hat, muss das Feld aktualisiert 
+         * werden.
+         */
+        if (this.getWert() == 0) {
+            koenigsfeldEigen = feld;
+        }
+        //Pruefe alle moeglichen Felder
+        // Fuer alle gegnerischen Figuren
+        // Liste mit allen gegnerischen Figuren
+        List<Figur> gegner;
+        if (farbe) {
+            gegner = spielfeld.clone(spielfeld.getSchwarzeFiguren());
+        } else {
+            gegner = spielfeld.clone(spielfeld.getWeisseFiguren());
+        }
+        // Fuer alle gegnerischen Figuren
+        for (Figur figur : gegner) {
+            // Liste mit allen moeglichen Feldern der aktuellen Figur
+            List<Feld> felder = figur.getMoeglicheFelder();
+            // Wenn die Figur auf das Koenigsfeld ziehen koennte
+            if (felder.contains(koenigsfeldEigen)) {
+                isKorrekt = false;
+            }
+        }
+        // Mache den Zug wieder rueckgaengig
+        spielfeld.zugRueckgaengig();
+        return isKorrekt;
+    }
+    
+    /**
      * Berechnet alle Felder, auf die die Figur nach den
      * Zugregeln ziehen kann. Die genaue Ermittlung sieht f&uuml;r jede Figur
      * anders aus, weshalb diese Methode auch abstrakt ist.

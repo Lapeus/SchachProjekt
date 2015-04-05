@@ -688,6 +688,8 @@ public class Spielfeld {
     public List<Feld> getHinweisZug() {
         List<Feld> hinweisZug = new ArrayList<Feld>();
         Computerspieler hilfe = new Computerspieler("Hilfe");
+        hilfe.setFarbe(aktuellerSpieler);
+        hilfe.setSpielfeld(this);
         hilfe.ziehen();
         hinweisZug.add(spieldaten.getLetzterZug().getStartfeld());
         hinweisZug.add(spieldaten.getLetzterZug().getZielfeld());
@@ -721,13 +723,15 @@ public class Spielfeld {
         // Fuer alle gegnerischen Figuren
         for (Figur gegner : gegnerFiguren) {
             // Liste mit den korrekten Feldern dieser Figur
-            List<Feld> felder = gegner.getKorrekteFelder();
+            List<Feld> felder = gegner.getMoeglicheFelderKI();
             // Fuer jedes dieser Felder
             for (Feld feld : felder) {
                 // Wenn auf dem Feld eine Figur steht
                 if (feld.getFigur() != null) {
                     // Ist das meine und somit bedroht
-                    bedrohteFelder.add(feld);
+                    if (gegner.isKorrektesFeld(feld)) {
+                        bedrohteFelder.add(feld);
+                    }
                 }
             }
         }
@@ -760,13 +764,15 @@ public class Spielfeld {
         // Fuer alle eigenen Figuren
         for (Figur eigen : eigeneFiguren) {
             // Liste mit den korrekten Feldern dieser Figur
-            List<Feld> felder = eigen.getKorrekteFelder();
+            List<Feld> felder = eigen.getMoeglicheFelderKI();
             // Fuer jedes dieser Felder
             for (Feld feld : felder) {
                 // Wenn auf dem Feld eine Figur steht
-                if (feld.getFigur() != null) {
+                if (feld.getFigur() != null && feld.getFigur().getWert() != 0) {
                     // Ist das eine gegnerische und somit schlagbar
-                    schlagendeFelder.add(feld);
+                    if (eigen.isKorrektesFeld(feld)) {
+                        schlagendeFelder.add(feld);
+                    }
                 }
             }
         }
