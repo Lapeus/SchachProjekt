@@ -466,7 +466,7 @@ public class Computerspieler extends Spieler {
             if (spielfeld.isSchach()) {
                 // Schach-Marker, der bei isSchach() gesetzt wird, loeschen
                 spielfeld.setSchach(false);
-                maxWert = 4500;
+                maxWert = -4500;
             } else {
                 /* Es ist eine Patt-Situation eingetreten. Nun soll getestet 
                  * werden, ob der aktuelle Spieler deutlich fuehrt, denn wenn
@@ -479,10 +479,10 @@ public class Computerspieler extends Spieler {
                     // Wird der niedrigste moegliche Wert gesetzt
                     // Jedoch ist Patt immernoch besser als Matt gesetzt zu
                     // werden
-                    maxWert = -4000;
-                } else {
-                    // Wenn wir nicht fuehren ist Patt sehr gut
                     maxWert = 4000;
+                } else {
+                    // Wenn wir nicht fuehren ist Patt sehr schlecht
+                    maxWert = -4000;
                 }
             }
         }
@@ -539,8 +539,8 @@ public class Computerspieler extends Spieler {
             if (spielfeld.isSchach()) {
                 // Schach-Marker, der bei isSchach() gesetzt wird, loeschen
                 spielfeld.setSchach(false);
-                // Bester Wert
-                minWert = -4500;
+                // Schlechtester Wert
+                minWert = 4500;
             } else {
                 /* Es ist eine Patt-Situation eingetreten. Nun soll getestet 
                  * werden, ob der aktuelle Spieler deutlich fuehrt, denn wenn
@@ -555,10 +555,10 @@ public class Computerspieler extends Spieler {
                      * Jedoch: Patt ist immernoch besser als Matt gesetzt zu
                      * werden, deswegen nur 4000 und nicht 4500
                      */
-                    minWert = 4000;
+                    minWert = -4000;
                 } else {
                     // Wenn wir nicht fuehren ist Patt sehr gut
-                    minWert = -4000;
+                    minWert = 4000;
                 }
             }
         }
