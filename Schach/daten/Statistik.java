@@ -112,6 +112,14 @@ public class Statistik {
     }
     
     /**
+     * Erstellt eine neue Statistik mit dem angegebenen Score.
+     * @param score Der zu setzende Score
+     */
+    public Statistik(int score) {
+        this.score = score;
+    }
+    
+    /**
      * Erstellt eine neue Statistik f&uuml;r den Spieler anhand der 
      * &uuml;bergebenen Attribute.<br>
      * Aufruf in der Regel beim Laden der Statistik eines Spielers im 

@@ -199,6 +199,7 @@ public class Spiel {
                 stat.setAnzahlPattC(stat.getAnzahlPattC() + 1);
             }
         }
+        
         // Aktualisiert den Score
         gewinner.getStatistik().getScore();
         verlierer.getStatistik().getScore();
@@ -303,8 +304,6 @@ public class Spiel {
     private void statistikSieg(Spieler gewinner) {
         // Die Statistik des Gewinners
         Statistik stat = gewinner.getStatistik();
-        // Aktualisiert den Score
-        gewinner.getStatistik().getScore();
         int zuege = spielfeld.getSpieldaten().getAnzahlZuege(
             gewinner.getFarbe());
         int zugzeit = spielfeld.getSpieldaten().getZugzeit(

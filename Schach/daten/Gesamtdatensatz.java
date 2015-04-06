@@ -951,6 +951,28 @@ public class Gesamtdatensatz {
     }
     
     /**
+     * Gibt kopierte Einstellungen des Spiels zur&uuml;ck.
+     * @return Die Einstellungen
+     */
+    public Einstellungen getEinstellungenCopy() {
+        Einstellungen einst = new Einstellungen();
+        einst.setZugZeitBegrenzung(
+            einstellungen.getZugZeitBegrenzung());
+        einst.setMoeglicheFelderAnzeigen(
+            einstellungen.isMoeglicheFelderAnzeigen());
+        einst.setBedrohteFigurenAnzeigen(
+            einstellungen.isBedrohteFigurenAnzeigen());
+        einst.setRochadeMoeglich(einstellungen.isRochadeMoeglich());
+        einst.setEnPassantMoeglich(einstellungen.isEnPassantMoeglich());
+        einst.setSchachWarnung(einstellungen.isSchachWarnung());
+        einst.setInStatistikEinbeziehen(
+            einstellungen.isInStatistikEinbeziehen());
+        einst.setSpielfeldDrehen(einstellungen.isSpielfeldDrehen());
+        einst.setTon(einstellungen.isTon());
+        return einst;
+    }
+    
+    /**
      * Setzt die Standardeinstellungen.
      * @param einstellungen Der neue Einstellungssatz
      */

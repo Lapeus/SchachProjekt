@@ -203,6 +203,15 @@ public class SpielGUI extends JFrame implements WindowListener {
     }
     
     /**
+     * Gibt den kopierten Einstellungssatz zur&uuml;ck damit keine
+     * Call-by-Reference-Probleme auftreten.
+     * @return momentaner Einstellungssatz
+     */
+    public Einstellungen getEinstellungenCopy() {
+        return gesamtdatensatz.getEinstellungenCopy();
+    }
+    
+    /**
      * Setzt die Grundeinstellung auf die eingegebenen Einstellungen.
      * @param einstellungen Neue Einstellungen
      */

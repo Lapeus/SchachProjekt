@@ -170,7 +170,22 @@ public class Statistiken extends JPanel implements ActionListener {
         if (spieler != null) {
             // Wenn man auf zuruecksetzen drueckt wird die Statistik geloescht
             if (e.getActionCommand().equals("zuruecksetzen")) {
-                spieler.setStatistik(new Statistik());
+                if (spieler instanceof Computerspieler) {
+                    int score = 900;
+                    if (spieler.getName().equals("Karl Heinz")) {
+                        score = 100;
+                    } else if (spieler.getName().equals("Rosalinde")) {
+                        score = 300;
+                    } else if (spieler.getName().equals("Ursula")) {
+                        score = 500;
+                    } else if (spieler.getName().equals("Walter")) {
+                        score = 700;
+                    }
+                    spieler.setStatistik(new Statistik(score));
+                } else {
+                    spieler.setStatistik(new Statistik());
+                }
+
             } 
             // Statistik aus dem Backend holen
             Statistik statistik = spieler.getStatistik();

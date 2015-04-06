@@ -721,7 +721,7 @@ public class Computerspieler extends Spieler {
      * ruhige Stellungen bewertet werden. Daf&uuml;r wird ein Schlagabtausch
      * vollst&auml;ndig zu Ende analysiert bevor die Bewertung stattfinden kann.
      */
-    private void ruhigeStellungErzeugen() {
+    /*private void ruhigeStellungErzeugen() {
         while (!spielfeld.getSchlagendeFelder().isEmpty()) {
             // Liste mit den eigenen Figuren
             List<Figur> eigeneFiguren;
@@ -749,7 +749,7 @@ public class Computerspieler extends Spieler {
                 }
             }
         }
-    }
+    }*/
     /**
      * Ermittelt den Punktabzug f&uuml;r den eingeschr&auml;nkten Zugradius.
      * @param figur Die entsprechende Figur

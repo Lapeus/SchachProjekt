@@ -344,7 +344,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         
         // Spielfeld
         spielfeld = new Spielfeld(felderListe);
-        spielfeld.setEinstellungen(parent.getEinstellungen());
+        spielfeld.setEinstellungen(parent.getEinstellungenCopy());
         spielfeld.setSpieldaten(new Spieldaten());
         
         // Einem Computergegner das Spielfeld uebergeben
@@ -1273,7 +1273,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     .setBackground(koenigMatt);
                 }
             } else {
-                ergebnis = "Das Spiel endet in einem Patt";
+                ergebnis = "<html>Das Spiel endet in einem Patt";
             }
             // letzen Zug gruen makieren
             for (Feld feld : spielfeld.getLetzteFelder()) {
@@ -1287,7 +1287,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             // Und Ein Dialogfenster fuer den Gewinner angezeigt
             parent.soundAbspielen("SchachMatt.wav");
             JOptionPane.showMessageDialog(parent, ergebnis 
-                + "<html> <br>" + zugZeitAnzeige());
+                + "<br>" + zugZeitAnzeige());
             // Endscreen aufrufen
             remove(cEast);
             spielSpeichern();
