@@ -266,7 +266,7 @@ public class Computerspieler extends Spieler {
         List<Figur> besteFiguren = new ArrayList<Figur>();
         List<Feld> besteFelder = new ArrayList<Feld>();
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
-        Zugsortierer sort = new Zugsortierer(alleFiguren, false);
+        Zugsortierer sort = new Zugsortierer(alleFiguren, false, false);
         if (progBar != null) {
             progBar.setMaximum(sort.getSize());
         }
@@ -288,7 +288,7 @@ public class Computerspieler extends Spieler {
             if (getFarbe()) {
                 // Bekomme die Bewertung dafuer
                 int bewertung = min(maxStufe - 1, -4500, 4500);
-                // Wenn es noch die ersten 16 Halbzuege sind und ein 
+                // Wenn es noch die ersten 12 Halbzuege sind und ein 
                 // Springer oder Laeufer gezogen wurde
                 if (spielfeld.getSpieldaten().getZugListe().size() < 12
                     && letzterZug.getFigur().getWert() > 100
@@ -313,6 +313,7 @@ public class Computerspieler extends Spieler {
                     // Gibt es noch einen zusaetzlichen Strafpunkt
                     bewertung -= 1;
                 }
+                System.out.println(bewertung);
                 // Wenn ein neuer MaxWert entsteht (weiss)
                 if (bewertung > maxbewertung) {
                     // Loesche bisherige Figuren und Felder
@@ -327,11 +328,10 @@ public class Computerspieler extends Spieler {
                     besteFiguren.add(figur);
                     besteFelder.add(feld);
                 }
-                System.out.println(bewertung);
             } else {
                 // Bekomme die Bewertung dafuer
                 int bewertung = max(maxStufe - 1, -4500, 4500);
-                // Wenn es noch die ersten 16 Halbzuege sind und ein
+                // Wenn es noch die ersten 12 Halbzuege sind und ein
                 // Springer oder Laeufer gezogen wurde
                 if (spielfeld.getSpieldaten().getZugListe().size() < 12
                     && letzterZug.getFigur().getWert() > 100
@@ -356,6 +356,7 @@ public class Computerspieler extends Spieler {
                         bewertung -= rochadeSinnvoll(false, false);
                     }
                 }
+                System.out.println(bewertung);
                 // Wenn ein neuer MinWert entsteht (schwarz)
                 if (bewertung < maxbewertung) {
                     // Loesche bisherige Figuren und Felder
@@ -416,6 +417,7 @@ public class Computerspieler extends Spieler {
                 besteFelder.get(zufallsIndex), 0);   
         }
     }
+    
     /**
      * Berechnet den Maximalwert f&uuml;r die aktuelle Stufe.
      * @param stufe Die aktuelle Stufe
@@ -425,7 +427,8 @@ public class Computerspieler extends Spieler {
      */
     private int max(int stufe, int alpha, int beta) {
         if (stufe == 0) {
-            return bewertungsfunktion();
+            //return bewertungsfunktion();
+            return ruhigeStellungMin(alpha, beta);
         }
         int maxWert = alpha;
         List<Figur> alleFiguren = new ArrayList<Figur>();
@@ -439,7 +442,7 @@ public class Computerspieler extends Spieler {
         int zaehl = 0;
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         Zugsortierer sort;
-        sort = new Zugsortierer(alleFiguren, true);
+        sort = new Zugsortierer(alleFiguren, true, false);
         for (int i = 0; i < sort.getSize(); i++) {
             Figur figur = sort.get(i).getFigur();
             Feld feld = sort.get(i).getFeld();
@@ -498,7 +501,8 @@ public class Computerspieler extends Spieler {
      */
     private int min(int stufe, int alpha, int beta) {
         if (stufe == 0) {
-            return bewertungsfunktion();
+            //return bewertungsfunktion();
+            return ruhigeStellungMax(alpha, beta);
         }
         int minWert = beta;
         List<Figur> alleFiguren = new ArrayList<Figur>();
@@ -512,7 +516,7 @@ public class Computerspieler extends Spieler {
         int zaehl = 0;
         // Ziehe alle moeglichen Figuren auf alle moeglichen Felder
         Zugsortierer sort;
-        sort = new Zugsortierer(alleFiguren, true);
+        sort = new Zugsortierer(alleFiguren, true, false);
         for (int i = 0; i < sort.getSize(); i++) {
             Figur figur = sort.get(i).getFigur();
             Feld feld = sort.get(i).getFeld();
@@ -566,6 +570,40 @@ public class Computerspieler extends Spieler {
     } 
     
     /**
+     * Berechnet den Maximalwert f&uuml;r die aktuelle Stufe.
+     * @param alpha Der Max-Wert
+     * @param beta Der Min-Wert
+     * @return Die maximale Bewertung als ganze Zahl
+     */
+    private int ruhigeStellungMax(int alpha, int beta) {
+        int maxWert = alpha;
+        if (spielfeld.isSchach()) {
+            spielfeld.setSchach(false);
+            maxWert = max(1, alpha, beta);
+        } else {
+            maxWert = bewertungsfunktion();
+        }
+        return maxWert;
+    }
+    
+    /**
+     * Berechnet den Minimalwert f&uuml;r die aktuelle Stufe.
+     * @param alpha Der Max-Wert
+     * @param beta Der Min-Wert
+     * @return Die minimale Bewertung als ganze Zahl
+     */
+    private int ruhigeStellungMin(int alpha, int beta) {
+        int minWert = beta;
+        if (spielfeld.isSchach()) {
+            spielfeld.setSchach(false);
+            minWert = min(1, alpha, beta);
+        } else {
+            minWert = bewertungsfunktion();
+        }
+        return minWert;
+    } 
+    
+    /**
      * Bewertet das Spielfeld nach verschiedenen Kriterien.
      * <ul>
      * <li> Materialwert </li>
@@ -578,7 +616,6 @@ public class Computerspieler extends Spieler {
      */
     private int bewertungsfunktion() {
         int zugAnzahl = spielfeld.getSpieldaten().getZugListe().size();
-        //ruhigeStellungErzeugen();
         int bewertung;
         // Materialwert
         bewertung = spielfeld.getMaterialwert(true) 
@@ -716,40 +753,6 @@ public class Computerspieler extends Spieler {
         return bewertung;
     }
     
-    /**
-     * Wird von der Bewertungsfunktion aufgerufen und sorgt daf&uuml;r, dass nur
-     * ruhige Stellungen bewertet werden. Daf&uuml;r wird ein Schlagabtausch
-     * vollst&auml;ndig zu Ende analysiert bevor die Bewertung stattfinden kann.
-     */
-    /*private void ruhigeStellungErzeugen() {
-        while (!spielfeld.getSchlagendeFelder().isEmpty()) {
-            // Liste mit den eigenen Figuren
-            List<Figur> eigeneFiguren;
-            // Wenn weiss dran ist
-            if (spielfeld.getAktuellerSpieler()) {
-                eigeneFiguren = spielfeld.clone(spielfeld.getWeisseFiguren());
-            // Wenn schwarz dran ist
-            } else {
-                eigeneFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
-            }
-            // Fuer alle eigenen Figuren
-            for (Figur eigen : eigeneFiguren) {
-                // Liste mit den korrekten Feldern dieser Figur
-                List<Feld> felder = eigen.getMoeglicheFelderKI();
-                // Fuer jedes dieser Felder
-                for (Feld feld : felder) {
-                    // Wenn auf dem Feld eine Figur steht
-                    if (feld.getFigur() != null 
-                        && feld.getFigur().getWert() != 0) {
-                        // Wird getestet ob es auch ein korrektes Feld ist
-                        if (eigen.isKorrektesFeld(feld)) {
-                            spielfeld.ziehe(eigen, feld, 0);
-                        }
-                    }
-                }
-            }
-        }
-    }*/
     /**
      * Ermittelt den Punktabzug f&uuml;r den eingeschr&auml;nkten Zugradius.
      * @param figur Die entsprechende Figur

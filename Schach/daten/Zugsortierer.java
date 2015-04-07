@@ -21,21 +21,40 @@ public class Zugsortierer {
    
     /**
      * Erstellt einen neuen Zugsortierer.<br>
-     * Einziger Konstruktor dieser Klasse.
      * @param figuren Liste von Figuren
      * @param sort Ob sortiert werden soll
+     * @param nurSchlag Ob nur zu schlagende Felder betrachtet werden sollen
      */
-    public Zugsortierer(List<Figur> figuren, boolean sort) {
-        for (Figur figur : figuren) {
-            for (Feld feld : figur.getKorrekteFelder()) {
-                figurenUndFelder.add(new KIZug(figur, feld));
+    public Zugsortierer(List<Figur> figuren, boolean sort, boolean nurSchlag) {
+        if (nurSchlag) {
+            // Fuer alle eigenen Figuren
+            for (Figur figur : figuren) {
+                // Liste mit den korrekten Feldern dieser Figur
+                List<Feld> felder = figur.getMoeglicheFelderKI();
+                // Fuer jedes dieser Felder
+                for (Feld feld : felder) {
+                    // Wenn auf dem Feld eine Figur steht
+                    if (feld.getFigur() != null 
+                        && feld.getFigur().getWert() != 0) {
+                        // Ist das eine gegnerische und somit schlagbar
+                        if (figur.isKorrektesFeld(feld)) {
+                            figurenUndFelder.add(new KIZug(figur, feld));
+                        }
+                    }
+                }
+            }
+        } else {
+            for (Figur figur : figuren) {
+                for (Feld feld : figur.getKorrekteFelder()) {
+                    figurenUndFelder.add(new KIZug(figur, feld));
+                }
             }
         }
+        
         if (sort) {
             bewerten();
             quicksort(0, figurenUndFelder.size() - 1);  
         }
-        
     }
     
     /**
