@@ -570,7 +570,9 @@ public class Computerspieler extends Spieler {
     } 
     
     /**
-     * Berechnet den Maximalwert f&uuml;r die aktuelle Stufe.
+     * Berechnet den Maximalwert f&uuml;r die aktuelle Stufe und wird verwendet
+     * wenn es ein Schachgebot gibt. Dieses wird dann bis zu Ende analysiert
+     * und erst dann bewertet.
      * @param alpha Der Max-Wert
      * @param beta Der Min-Wert
      * @return Die maximale Bewertung als ganze Zahl
@@ -587,7 +589,9 @@ public class Computerspieler extends Spieler {
     }
     
     /**
-     * Berechnet den Minimalwert f&uuml;r die aktuelle Stufe.
+     * Berechnet den Minimalwert f&uuml;r die aktuelle Stufe und wird verwendet
+     * wenn es ein Schachgebot gibt. Dieses wird dann bis zu Ende analysiert
+     * und erst dann bewertet.
      * @param alpha Der Max-Wert
      * @param beta Der Min-Wert
      * @return Die minimale Bewertung als ganze Zahl
