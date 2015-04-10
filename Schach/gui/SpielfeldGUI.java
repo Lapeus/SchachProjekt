@@ -1113,6 +1113,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
         }
         woerter.add(string.substring(leerzeichen, string.length()));
+        if (woerter.contains("BAUERN")) {
+            woerter.set(woerter.indexOf("BAUERN"), "BAUER");
+        }
         String feld1 = "";
         String feld2 = "";
         List<String> enthalteneFiguren = new ArrayList<String>();
@@ -1149,11 +1152,17 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             int wert2 = figurenWerte.get(figuren.indexOf(
                 enthalteneFiguren.get(1)));
             List<Feld> felder = getBeideFelderAusNamen(wert1, wert2);
-            if (felder != null) {
+            if (felder == null) {
+                fail = true;
+            } else if (felder.get(1).getFigur() != null) {
+                if (felder.get(0).getFigur().getFarbe() 
+                    == felder.get(1).getFigur().getFarbe()) {
+                    fail = true;
+                }
+            }
+            if (!fail) {
                 mouseClicked(newMouseEvent(felder.get(0)));
                 mouseClicked(newMouseEvent(felder.get(1)));
-            } else {
-                fail = true;
             }
         // Wenn nur ein Feld fehlt, wir aber mindestens eine Figur haben
         } else if (feld2.equals("") && enthalteneFiguren.size() > 0) {
@@ -1177,9 +1186,8 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                     startfeld = felderListe.get(feldIndex1);
                     // Muss der Name dem Zielfeld zugeordnet werden
                     zielfeld = getZielfeldAusNamen(figurenWerte.get(
-                        figuren.indexOf(
-                            enthalteneFiguren.get(
-                                enthalteneFiguren.size() - 1))), startfeld);
+                        figuren.indexOf(enthalteneFiguren.get(
+                            enthalteneFiguren.size() - 1))), startfeld);
                     if (zielfeld == null) {
                         fail = true;
                     }
@@ -1198,11 +1206,15 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
                         fail = true;
                     }
                 }
+                if (zielfeld.getFigur() != null
+                    && startfeld.getFigur().getFarbe() 
+                    == zielfeld.getFigur().getFarbe()) {
+                    fail = true;
+                }
                 if (!fail) {
                     mouseClicked(newMouseEvent(startfeld));
                     mouseClicked(newMouseEvent(zielfeld));
                 }
-
             }
         // Wenn beide Felder gefunden wurden
         } else if (!feld2.equals("")) {
@@ -1214,15 +1226,55 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             int feldIndex2 = index1 + 8 * index2;
             Feld startfeld = felderListe.get(feldIndex1);
             Feld zielfeld = felderListe.get(feldIndex2);
-            mouseClicked(newMouseEvent(startfeld));
-            mouseClicked(newMouseEvent(zielfeld));
+            if (zielfeld.getFigur() != null
+                && startfeld.getFigur().getFarbe() 
+                == zielfeld.getFigur().getFarbe()) {
+                fail = true;
+            }
+            if (!fail) {
+                mouseClicked(newMouseEvent(startfeld));
+                mouseClicked(newMouseEvent(zielfeld));
+            }
+        } else if (woerter.contains("ROCHADE")) {
+            Feld startfeld = null;
+            Feld zielfeld = null;
+            if (spielfeld.getAktuellerSpieler()) {
+                startfeld = felderListe.get(4);
+            } else {
+                startfeld = felderListe.get(60);
+            }
+            // Kleine Rochade
+            if (woerter.contains("KLEINE")) {
+                if (spielfeld.getAktuellerSpieler()) {
+                    zielfeld = felderListe.get(6);
+                } else {
+                    zielfeld = felderListe.get(62);
+                }
+            // Grosse Rochade
+            } else if (woerter.contains(("große").toUpperCase())) {
+                if (spielfeld.getAktuellerSpieler()) {
+                    zielfeld = felderListe.get(2);
+                } else {
+                    zielfeld = felderListe.get(58);
+                }
+            } else {
+                fail = true;
+            }
+            if (zielfeld.getFigur() != null
+                && startfeld.getFigur().getFarbe() 
+                == zielfeld.getFigur().getFarbe()) {
+                fail = true;
+            }
+            if (!fail) {
+                mouseClicked(newMouseEvent(startfeld));
+                mouseClicked(newMouseEvent(zielfeld));
+            }
         }
         if (fail) {
             parent.soundAbspielen("Hinweis.wav");
             JOptionPane.showMessageDialog(parent, 
                 "<html>Zug nicht m&ouml;glich oder nicht eindeutig!",
-                "Warnung!",
-                JOptionPane.WARNING_MESSAGE);
+                "Warnung!", JOptionPane.WARNING_MESSAGE);
         }
     }
     
@@ -1325,6 +1377,9 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
             }
             zaehl++;
         } while (eigeneFiguren.get(zaehl).getWert() <= wert1);
+        if (felder.isEmpty()) {
+            felder = null;
+        }
         return felder;
     }
     
