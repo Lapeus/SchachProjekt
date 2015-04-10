@@ -611,22 +611,24 @@ public class Spielfeld {
         List<Figur> gegnerFiguren;
         List<Figur> beteiligteFiguren = new ArrayList<Figur>();
         List<Feld> felderDerBeteiligtenFiguren = new ArrayList<Feld>();
+        Figur koenig;
         if (aktuellerSpieler) {
-            moeglicheKoenigsfelder = weisseFiguren.get(0)
-                .getMoeglicheFelderKI();
+            koenig = weisseFiguren.get(0);
             gegnerFiguren = clone(schwarzeFiguren);
         } else {
-            moeglicheKoenigsfelder = schwarzeFiguren.get(0)
-                .getMoeglicheFelderKI();
+            koenig = schwarzeFiguren.get(0);
             gegnerFiguren = clone(weisseFiguren);
         }
-        for (Figur figur : gegnerFiguren) {
-            for (Feld feld : moeglicheKoenigsfelder) {
-                if (figur.getKorrekteFelder()
-                    .contains(feld) && !beteiligteFiguren.contains(figur)) {
-                    beteiligteFiguren.add(figur);
+        moeglicheKoenigsfelder = koenig.getMoeglicheFelderKI();
+        for (Feld feld : moeglicheKoenigsfelder) {
+            ziehe(koenig, feld, 0);
+            for (Figur gegner : gegnerFiguren) {
+                if (gegner.bietetSchach(feld) 
+                    && !beteiligteFiguren.contains(gegner)) {
+                    beteiligteFiguren.add(gegner);
                 }
             }
+            zugRueckgaengig();
         }
         for (Figur figur : beteiligteFiguren) {
             felderDerBeteiligtenFiguren.add(figur.getPosition());

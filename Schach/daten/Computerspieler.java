@@ -7,7 +7,6 @@ import javax.swing.JProgressBar;
 
 import figuren.Figur;
 import gui.Feld;
-import zuege.EnPassantZug;
 import zuege.RochadenZug;
 import zuege.Zug;
 import zuege.Umwandlungszug;
@@ -258,9 +257,9 @@ public class Computerspieler extends Spieler {
             alleFiguren = spielfeld.clone(spielfeld.getSchwarzeFiguren());
         }
         // Maximale Bewertung; initialisiert mit niedrigstem Wert
-        int maxbewertung = 4500;
+        int maxbewertung = 6000;
         if (getFarbe()) {
-            maxbewertung = -4500;
+            maxbewertung = -6000;
         }
         // Der Zug der durchgefuehrt werden soll
         List<Figur> besteFiguren = new ArrayList<Figur>();
@@ -284,36 +283,11 @@ public class Computerspieler extends Spieler {
                 spielfeld.umwandeln(letzterZug.getFigur(), 900);
             }
    
-                // In Abhaengigkeit der Farbe
+            // In Abhaengigkeit der Farbe
             if (getFarbe()) {
                 // Bekomme die Bewertung dafuer
                 int bewertung = min(maxStufe - 1, -4500, 4500);
-                // Wenn es noch die ersten 12 Halbzuege sind und ein 
-                // Springer oder Laeufer gezogen wurde
-                if (spielfeld.getSpieldaten().getZugListe().size() < 12
-                    && letzterZug.getFigur().getWert() > 100
-                    && letzterZug.getFigur().getWert() < 465
-                    && letzterZug.isErsterZug()) {
-                    // Gibt es Extrapunkte (Figuren raus bringen)
-                    bewertung += 18;
-                }
-                // Wenn es eine Rochade gewesen ist
-                if (letzterZug instanceof RochadenZug) {
-                    if (letzterZug.getZielfeld().equals(spielfeld
-                        .getFelder().get(6))) {
-                        bewertung += rochadeSinnvoll(true, true);
-                    } else {
-                        bewertung += rochadeSinnvoll(true, false);
-                    }
-                }
-                // Wenn ein Springer an den Rand gezogen wird
-                if (letzterZug.getFigur().getWert() == 275
-                    && (letzterZug.getZielfeld().getXK() == 0
-                    || letzterZug.getZielfeld().getXK() == 7)) {
-                    // Gibt es noch einen zusaetzlichen Strafpunkt
-                    bewertung -= 1;
-                }
-                System.out.println(bewertung);
+                bewertung += bewertungsAnpassung(letzterZug);
                 // Wenn ein neuer MaxWert entsteht (weiss)
                 if (bewertung > maxbewertung) {
                     // Loesche bisherige Figuren und Felder
@@ -331,32 +305,7 @@ public class Computerspieler extends Spieler {
             } else {
                 // Bekomme die Bewertung dafuer
                 int bewertung = max(maxStufe - 1, -4500, 4500);
-                // Wenn es noch die ersten 12 Halbzuege sind und ein
-                // Springer oder Laeufer gezogen wurde
-                if (spielfeld.getSpieldaten().getZugListe().size() < 12
-                    && letzterZug.getFigur().getWert() > 100
-                    && letzterZug.getFigur().getWert() < 465
-                    && letzterZug.isErsterZug()) {
-                    // Gibt es Extrapunkte (Figuren raus bringen)
-                    bewertung -= 18;
-                }
-                // Wenn ein Springer an den Rand gezogen wird
-                if (letzterZug.getFigur().getWert() == 275
-                    && (letzterZug.getZielfeld().getXK() == 0
-                    || letzterZug.getZielfeld().getXK() == 7)) {
-                    // Gibt es noch einen zusaetzlichen Strafpunkt
-                    bewertung += 1;
-                }
-                // Wenn es eine Rochade gewesen ist
-                if (letzterZug instanceof RochadenZug) {
-                    if (letzterZug.getZielfeld().equals(spielfeld
-                        .getFelder().get(62))) {
-                        bewertung -= rochadeSinnvoll(false, true);
-                    } else {
-                        bewertung -= rochadeSinnvoll(false, false);
-                    }
-                }
-                System.out.println(bewertung);
+                bewertung -= bewertungsAnpassung(letzterZug);
                 // Wenn ein neuer MinWert entsteht (schwarz)
                 if (bewertung < maxbewertung) {
                     // Loesche bisherige Figuren und Felder
@@ -380,12 +329,82 @@ public class Computerspieler extends Spieler {
     }
     
     /**
+     * Berechnet Bonuspunkte f&uuml;r einen Zug, wie zum Beispiel Figuren raus
+     * bringen am Anfang oder Rochaden, sofern sie sinnvoll sind.
+     * @param letzterZug Der letzte Zug
+     * @return Ganzzahliger positiver Bonus
+     */
+    private int bewertungsAnpassung(Zug letzterZug) {
+        int bonus = 0;
+        
+        // Wenn es noch die ersten 12 Halbzuege sind und ein
+        // Springer oder Laeufer gezogen wurde
+        if (spielfeld.getSpieldaten().getZugListe().size() < 12
+            && letzterZug.getFigur().getWert() > 100
+            && letzterZug.getFigur().getWert() < 465
+            && letzterZug.isErsterZug()) {
+            // Gibt es Extrapunkte (Figuren raus bringen)
+            bonus += 10;
+        }
+        // Wenn Bauern gezogen werden, sind die in der Mitte in der Regel besser
+        // als die am Rand
+        if (spielfeld.getSpieldaten().getZugListe().size() < 16
+            && letzterZug.getFigur().getWert() == 100
+            && !letzterZug.isSchlagzug()) {
+            int reihe = letzterZug.getStartfeld().getXK();
+            if (reihe >= 4) {
+                reihe = 7 - reihe;
+            }
+            // Je weiter in der Mitte die Figur gezogen wurde, desto mehr Punkte
+            // gibt es
+            bonus += reihe;
+        }
+        // Doppelzug eines Bauern in den ersten 12 Halbzuegen
+        if (spielfeld.getSpieldaten().getZugListe().size() < 12
+            && letzterZug.getFigur().getWert() == 100
+            && letzterZug.isErsterZug()
+            && (letzterZug.getZielfeld().getYK() == 3
+            || letzterZug.getZielfeld().getYK() == 4)) {
+            bonus += 5;
+        }
+        // Wenn ein Springer an den Rand gezogen wird
+        if (letzterZug.getFigur().getWert() == 275
+            && (letzterZug.getZielfeld().getXK() == 0
+            || letzterZug.getZielfeld().getXK() == 7)) {
+            // Gibt es noch einen zusaetzlichen Strafpunkt
+            bonus -= 1;
+        }
+        // Wenn es eine Rochade gewesen ist
+        if (letzterZug instanceof RochadenZug) {
+            if (letzterZug.getZielfeld().equals(spielfeld
+                .getFelder().get(62))) {
+                bonus += rochadeSinnvoll(false, true);
+            } else {
+                bonus += rochadeSinnvoll(false, false);
+            }
+        }
+        // Damentausch / Damenschlag
+        List<Figur> gegnerFiguren;
+        if (getFarbe()) {
+            gegnerFiguren = spielfeld.getGeschlagenSchwarz();
+        } else {
+            gegnerFiguren = spielfeld.getGeschlagenWeiss();
+        }
+        // Wenn es ein Schlagzug war und die letzte geschlagene Figur eine Dame
+        // ist
+        if (letzterZug.isSchlagzug() 
+            && gegnerFiguren.get(gegnerFiguren.size() - 1).getWert() == 900) {
+            bonus += 30;
+        }
+        return bonus;
+    }
+    /**
      * Ermittelt den besten Zug und zieht ihn.
      * @param besteFelder Die Liste der besten Felder
      * @param besteFiguren Die Liste der besten Figuren
      */
     private void zieheZug(List<Feld> besteFelder, List<Figur> besteFiguren) {
-     // Wenn es noch einen Zug zu ziehen gibt
+        // Wenn es noch einen Zug zu ziehen gibt
         if (!besteFiguren.isEmpty()) {
             // Ermittle eine der Alternativen
             // Ermittle die wertgeringste Figur abgesehen vom Koenig
@@ -427,7 +446,7 @@ public class Computerspieler extends Spieler {
      */
     private int max(int stufe, int alpha, int beta) {
         if (stufe == 0) {
-            //return bewertungsfunktion();
+            // return bewertungsfunktion();
             return ruhigeStellungMin(alpha, beta);
         }
         int maxWert = alpha;
@@ -469,7 +488,7 @@ public class Computerspieler extends Spieler {
             if (spielfeld.isSchach()) {
                 // Schach-Marker, der bei isSchach() gesetzt wird, loeschen
                 spielfeld.setSchach(false);
-                maxWert = -4500;
+                maxWert = -5000 - stufe;
             } else {
                 /* Es ist eine Patt-Situation eingetreten. Nun soll getestet 
                  * werden, ob der aktuelle Spieler deutlich fuehrt, denn wenn
@@ -482,13 +501,14 @@ public class Computerspieler extends Spieler {
                     // Wird der niedrigste moegliche Wert gesetzt
                     // Jedoch ist Patt immernoch besser als Matt gesetzt zu
                     // werden
-                    maxWert = 4000;
+                    maxWert = -4501;
                 } else {
                     // Wenn wir nicht fuehren ist Patt sehr schlecht
-                    maxWert = -4000;
+                    maxWert = 4501;
                 }
             }
         }
+        
         return maxWert;
     }
     
@@ -501,7 +521,7 @@ public class Computerspieler extends Spieler {
      */
     private int min(int stufe, int alpha, int beta) {
         if (stufe == 0) {
-            //return bewertungsfunktion();
+            // return bewertungsfunktion();
             return ruhigeStellungMax(alpha, beta);
         }
         int minWert = beta;
@@ -544,7 +564,7 @@ public class Computerspieler extends Spieler {
                 // Schach-Marker, der bei isSchach() gesetzt wird, loeschen
                 spielfeld.setSchach(false);
                 // Schlechtester Wert
-                minWert = 4500;
+                minWert = 5000 + stufe;
             } else {
                 /* Es ist eine Patt-Situation eingetreten. Nun soll getestet 
                  * werden, ob der aktuelle Spieler deutlich fuehrt, denn wenn
@@ -557,15 +577,16 @@ public class Computerspieler extends Spieler {
                     /* Wird der hoechst moegliche Wert gesetzt, der beim 
                      * Minimieren natuerlich der schlechteste ist.
                      * Jedoch: Patt ist immernoch besser als Matt gesetzt zu
-                     * werden, deswegen nur 4000 und nicht 4500
+                     * werden
                      */
-                    minWert = -4000;
+                    minWert = 4501;
                 } else {
                     // Wenn wir nicht fuehren ist Patt sehr gut
-                    minWert = 4000;
+                    minWert = -4501;
                 }
             }
         }
+        
         return minWert;
     } 
     
@@ -650,7 +671,7 @@ public class Computerspieler extends Spieler {
         // Figurenbeweglichkeit
         int index = 0;
         // Der Bonus des Bauern wenn er auf einer entsprechenden Reihe steht
-        int[] bauernBonus = {5, 25, 115};
+        int[] bauernBonus = {5, 20, 80};
         int[] bauernBonusEndspiel = {30, 100, 300};
         while (index < spielfeld.getWeisseFiguren().size()) {
             Figur figur = spielfeld.getWeisseFiguren().get(index);
@@ -660,7 +681,7 @@ public class Computerspieler extends Spieler {
                 bewertung -= figurenRadiusBewertung(figur);
             }
             // Wenn es Bauern sind
-            if (spielfeld.getWeisseFiguren().get(index).getWert() == 100) {
+            if (figur.getWert() == 100) {
                 // Zaehlt erst ab 8 Zuegen
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
                     int y = figur.getPosition().getYK();
@@ -699,8 +720,7 @@ public class Computerspieler extends Spieler {
                 bewertung += figurenRadiusBewertung(figur);
             }
             // Wenn es ein Bauer ist
-            if (spielfeld.getSchwarzeFiguren().get(index).getWert() 
-                == 100) {
+            if (figur.getWert() == 100) {
                 // Zaehlt erst nach 16 Zuegen
                 if (spielfeld.getSpieldaten().getZugListe().size() >= 16) {
                     int y = figur.getPosition().getYK();
@@ -730,10 +750,10 @@ public class Computerspieler extends Spieler {
         int bonus;
         if (getFarbe()) {
             koenig = spielfeld.getSchwarzeFiguren().get(0).getPosition();
-            bonus = 11;
+            bonus = 8;
         } else {
             koenig = spielfeld.getWeisseFiguren().get(0).getPosition();
-            bonus = -11;
+            bonus = -8;
         }
         Zug letzterZug = spielfeld.getSpieldaten().getLetzterZug();
         Figur figur;
@@ -764,8 +784,8 @@ public class Computerspieler extends Spieler {
      */
     private int figurenRadiusBewertung(Figur figur) {
         int abzug = 0;
-        int[] gewichtungsArray = {15, 13, 12, 10};
-        int[] eroeffnung = {8, 4, 2, 2};
+        int[] gewichtungsArray = {10, 8, 7, 6};
+        int[] eroeffnung = {4, 2, 1, 1};
         if (spielfeld.getSpieldaten().getZugListe().size() < 10) {
             gewichtungsArray = eroeffnung;
         }
@@ -781,7 +801,7 @@ public class Computerspieler extends Spieler {
             // Wenn er nicht mehr ziehen kann
             if (anzahlFelder == 0) {
                 // Zaehlt er nur noch wenig
-                abzug = 70;
+                abzug = 50;
             }
         // Springer
         } else if (figur.getWert() == 275) {
@@ -856,11 +876,11 @@ public class Computerspieler extends Spieler {
             }
         }
         if (zaehler == 2) {
-            bonus = 30;
+            bonus = 20;
         } else if (zaehler == 3) {
-            bonus = 80;
+            bonus = 50;
         } else {
-            bonus = -10;
+            bonus = -20;
         }
         return bonus;
     }
@@ -868,9 +888,7 @@ public class Computerspieler extends Spieler {
      * Entscheidet, ob ein Unentschieden-Angebot vom Gegner angenommen werden 
      * soll. <br>
      * Dabei wird getestet, ob der Computergegner vom Materialwert her deutlich
-     * hinten liegt und ob in den letzten 16 Halbz&uuml;gen ein Bauer gezogen
-     * oder eine Figur geschlagen wurde (Abwandlung der 50-Z&uuml;ge-Regel).
-     * @see Spieldaten#fuenfzigZuegeRegel()
+     * hinten liegt.
      * @return Wahrheitswert
      */
     public boolean unentschiedenAnnehmen() {
@@ -883,41 +901,6 @@ public class Computerspieler extends Spieler {
             annehmen = true;
         }
         
-        // Test auf 8 Zuege Regel (Variante der offiziellen 50 Zuege Regel
-        // Grundsaetzliche Annahme, die 8 Zuege Regel wuerde zutreffen
-        boolean remis = true;
-        int zaehl = 0; 
-        // Wenn noch keine 16 Halbzuege gezogen wurden
-        if (spielfeld.getSpieldaten().getZugListe().size() < 16) {
-            remis = false;
-        } else {
-            /* Solange noch nicht alle letzten 16 Halbzuege getestet wurden und 
-             * noch keine Anforderung nicht erfuellt wurde
-             */
-            while (remis && zaehl < 16) {
-                // Der zaehlte Zug von hinten
-                Zug zug = spielfeld.getSpieldaten().getZugListe().get(
-                    spielfeld.getSpieldaten().getZugListe().size() - zaehl - 1);
-                // Wenn es ein EnPassantZug oder ein Umwandlungszug war
-                if (zug instanceof EnPassantZug 
-                    || zug instanceof Umwandlungszug) {
-                    // Wurde ein Bauer bewegt
-                    remis = false;
-                // Wenn es kein RochadenZug war (also ein normaler)
-                } else if (!(zug instanceof RochadenZug)) {
-                    // Wenn die Figur ein Bauer war oder eine Figur geschlagen 
-                    // wurde
-                    if (zug.getFigur().getWert() == 100 || zug.isSchlagzug()) {
-                        remis = false;
-                    }
-                }
-                zaehl++;
-            }
-        }
-        // Wenn die Regel zutrifft
-        if (remis) {
-            annehmen = true;
-        }
         return annehmen;
     }
     

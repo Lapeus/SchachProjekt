@@ -215,40 +215,44 @@ public class Spiel {
         boolean matt) {
         int gewinnerScore = gewinner.getStatistik().getScore();
         int verliererScore = verlierer.getStatistik().getScore();
-        int scoreDiff = gewinnerScore - verliererScore;
-        int newScoreGew;
-        int newScoreVer;
+        double scoreDiff = gewinnerScore - verliererScore;
+        double newScoreGew;
+        double newScoreVer;
         // Wenn es ein Matt war
         if (matt) {
             // Wenn der Gewinner schlechter war
-            if (scoreDiff <= 0) {
+            if (scoreDiff < 0) {
                 /* Verlierer bekommt bis zu einer ScoreDifferenz von 200 noch
                  * ein paar Punkte, danach gar nichts mehr.
                  */
+                double factor = -scoreDiff / 200;
                 newScoreVer = verliererScore
-                    - (verliererScore * (-scoreDiff) / 200);
+                    - (verliererScore * factor);
                 /* Der Gewinner bekommt in Abhaengigkeit der Gegner-Staerke
                  * maximal die Punkte die ihm noch zu 1000 fehlen.
                  */
+                factor = -scoreDiff / (1000 - gewinnerScore);
                 newScoreGew = gewinnerScore
                     + ((1000 - gewinnerScore)
-                        * (-scoreDiff / (1000 - gewinnerScore)));
+                        * factor);
             // Wenn der Gewinner besser war
             } else {
                 /* Verlierer bekommt auf jeden Fall Punkte, im Verhaeltnis zur
                  * Gegner-Staerke. Je staerker, desto mehr Punkte.
                  */
+                double factor = scoreDiff / (1000 - verliererScore);
                 newScoreVer = verliererScore
                     - (verliererScore
-                        * (1 - (scoreDiff / (1000 - verliererScore))));
+                        * (1 - factor));
                 /* Der Gewinner bekommt in Abhaengigkeit der Gegner-Staerke
                  * maximal die Punkte die ihm noch zu 1000 fehlen.
                  * Wenn der Gegner 0 hat, bekommt er 0 zusaetzlich
                  * Wenn der Gegner gleich viel hat, kommt er auf 1000
                  */
+                factor = scoreDiff / gewinnerScore;
                 newScoreGew = gewinnerScore
                     + ((1000 - gewinnerScore)
-                        * (1 - (scoreDiff / gewinnerScore)));
+                        * (1 - factor));
             }
         // Wenn es ein Patt war
         } else {
@@ -257,27 +261,31 @@ public class Spiel {
                 /* Verlierer bekommt bis zur einer ScoreDifferenz von 300 noch
                  * ein paar Punkte, danach gar nichts mehr.
                  */
+                double factor = -scoreDiff / 300;
                 newScoreVer = verliererScore 
-                    - (verliererScore * (-scoreDiff) / 300);
+                    - (verliererScore * factor);
                 /* Der Gewinner bekommt in Abhaengigkeit der Gegner-Staerke
                  * maximal die Haelfte der Punkte die ihm noch zu 1000 fehlen.
                  */
+                factor = -scoreDiff / (1000 - gewinnerScore);
                 newScoreGew = gewinnerScore
                     + ((1000 - gewinnerScore) / 2
-                        * (-scoreDiff / (1000 - gewinnerScore)));
+                        * factor);
             // Wenn der Gewinner besser war
             } else {
                 /* Gewinner bekommt bis zu einer ScoreDifferenz von 300 noch
                  * ein paar Punkte, danach gar nichts mehr.
                  */
+                double factor = scoreDiff / 300;
                 newScoreGew = gewinnerScore
-                    - (gewinnerScore * scoreDiff / 300);
+                    - (gewinnerScore * factor);
                 /* Der Verlierer bekommt in Abhaengigkeit der Gegner-Staerke
                  * maximal die Haelfte der Punkte die ihm noch zu 1000 fehlen.
                  */
+                factor = scoreDiff / (1000 - verliererScore);
                 newScoreVer = verliererScore
                     + ((1000 - verliererScore) / 2
-                        * (scoreDiff / (1000 - verliererScore)));
+                        * factor);
             }
         }
         
@@ -292,8 +300,8 @@ public class Spiel {
         } else if (newScoreVer > 999) {
             newScoreVer = 999;
         }
-        gewinner.getStatistik().setScoreLastGame(newScoreGew);
-        verlierer.getStatistik().setScoreLastGame(newScoreVer);
+        gewinner.getStatistik().setScoreLastGame((int) newScoreGew);
+        verlierer.getStatistik().setScoreLastGame((int) newScoreVer);
     }
     
     /**

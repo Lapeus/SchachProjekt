@@ -151,7 +151,7 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
         
         // Spielfeld
         spielfeld = new Spielfeld(felderListe);
-        spielfeld.setEinstellungen(parent.getEinstellungen());
+        spielfeld.setEinstellungen(parent.getEinstellungenCopy());
         spielfeld.setSpieldaten(new Spieldaten());
         
         // Einem Computergegner das Spielfeld uebergeben
@@ -627,12 +627,20 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
             figurenListe.add(figur);
         }
         
-        if (figur.getWert() == 100 
+        // Wenn es ein Koenig ist und er dem anderen Koenig Schach bietet
+        if (figur.getWert() == 0 
+            && andereListe.size() > 0
+            && andereListe.get(0).getWert() == 0
+            && figur.bietetSchach(andereListe.get(0).getPosition())) {
+            figurenListe.remove(figur);
+            feld.setFigur(null);
+        // Wenn es ein Bauer auf der Grundlinie ist
+        } else if (figur.getWert() == 100 
             && (feld.getYK() == 0 || feld.getYK() == 7)) {
             figurenListe.remove(figur);
             feld.setFigur(null);
         }
-        
+       
         spielfeldAufbau();
     }
     
@@ -677,11 +685,13 @@ public class Editor extends JPanel implements MouseListener, ActionListener {
      * @param arg0 Ausgel&ouml;stes ActionEvent
      */
     public void actionPerformed(ActionEvent arg0) {
-        if (spielfeld.getWeisseFiguren().get(0).getWert() != 0) {
+        if (spielfeld.getWeisseFiguren().size() == 0 
+            || spielfeld.getWeisseFiguren().get(0).getWert() != 0) {
             parent.soundAbspielen("Hinweis.wav");
             JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
                 + "wei&szlig;er K&ouml;nig.");
-        } else if (spielfeld.getSchwarzeFiguren().get(0).getWert() != 0) {
+        } else if (spielfeld.getSchwarzeFiguren().size() == 0 
+            || spielfeld.getSchwarzeFiguren().get(0).getWert() != 0) {
             parent.soundAbspielen("Hinweis.wav");
             JOptionPane.showMessageDialog(parent, "<html> Es fehlt ein "
                 + "schwarzer K&ouml;nig.");
