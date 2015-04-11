@@ -154,7 +154,7 @@ public class Koenig extends Figur {
      * <b>True</b> f&uuml;r kleine, <b>false</b> f&uuml;r gro&szlig;e Rochade
      * @return Wahrheitswert, ob Rochade durchgef&uuml;hrt werden darf
      */
-    private boolean rochadeMoeglich(boolean kleineRochade) {
+    public boolean rochadeMoeglich(boolean kleineRochade) {
         boolean moeglich = false;
         // Der beteiligte Turm
         Figur turm = null;

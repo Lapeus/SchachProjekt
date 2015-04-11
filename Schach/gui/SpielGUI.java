@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -25,7 +27,7 @@ import daten.Einstellungen;
  * gewechselt. Erbt von JFrame.
  * @author Marvin Wolf
  */
-public class SpielGUI extends JFrame implements WindowListener {
+public class SpielGUI extends JFrame implements WindowListener, KeyListener {
     
     // Anfang Attribute
     
@@ -64,6 +66,8 @@ public class SpielGUI extends JFrame implements WindowListener {
         // Gesamtdaten laden
         gesamtdatenLaden();
         gesamtdatenSpeichern();
+        // KeyListener hinzufuegen
+        addKeyListener(this);
         // Eroeffnungsseite aufrufen
         seitenAuswahl("Eroeffnungsseite");
     }
@@ -387,6 +391,35 @@ public class SpielGUI extends JFrame implements WindowListener {
      * @param e WindowListenerEvent
      */
     public void windowOpened(WindowEvent e) {
+    }
+
+    /**
+     * Verarbeitet einen Tastendruck.
+     * @param arg0 Das KeyEvent
+     */
+    public void keyPressed(KeyEvent arg0) {
+        if (getContentPane() instanceof SpielfeldGUI) {
+            SpielfeldGUI spielfeldGUI = (SpielfeldGUI) getContentPane();
+            if (arg0.getKeyCode() == KeyEvent.VK_SPACE) {
+                spielfeldGUI.textEingabe();
+            } else if (arg0.getKeyCode() == KeyEvent.VK_F1) {
+                spielfeldGUI.hinweisZug();
+            }
+        }
+    }
+
+    /**
+     * Automatisch generierte Methode zur Behandlung von KeyEvents.
+     * @param e KeyEvent
+     */
+    public void keyReleased(KeyEvent e) {
+    }
+
+    /**
+     * Automatisch generierte Methode zur Behandlung von KeyEvents.
+     * @param e KeyEvent
+     */
+    public void keyTyped(KeyEvent e) {
     }
 
 }

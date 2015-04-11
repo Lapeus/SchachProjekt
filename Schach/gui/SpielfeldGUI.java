@@ -4,7 +4,6 @@ import javax.imageio.ImageIO;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
@@ -23,7 +22,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -480,7 +478,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Je nach aktuellem Spieler wird das Label gesetzt
         momentanerSpielerUpdate();
         momentanerSpieler.setBackground(buttonFarbe);
-        momentanerSpieler.addMouseListener(this);
         gbc.gridheight = 1;
         gbc.gridy = 3;
         cEast.add(momentanerSpieler, gbc);
@@ -499,7 +496,6 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
         // Label Stoppuhr
         zugzeit = new JLabel();
         zugzeit.setBackground(buttonFarbe);
-        zugzeit.addMouseListener(this);
         gbc.gridy = 8;
         cEast.add(zugzeit, gbc);
         
@@ -1063,333 +1059,57 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      * @param arg0 Das ausgel&ouml;ste MouseEvent
      */
     public void mouseClicked(MouseEvent arg0) {
-        // Wenn es kein Feld ist
-        if (!(arg0.getSource() instanceof Feld)) {
-            if (arg0.getSource().equals(momentanerSpieler)) {
-                for (Feld feld : spielfeld.getHinweisZug()) {
-                    feld.setBackground(letzterZugFarbe);
-                }
-            } else {
-                final JDialog dialog = new JDialog();
-                dialog.setPreferredSize(new Dimension(250, 65));
-                dialog.setLocationRelativeTo(null);
-                dialog.setTitle("Zug");
-                dialog.setVisible(true);
-                
-                final JTextField textfeld = new JTextField();
-                dialog.add(textfeld);
-                dialog.pack();
-                textfeld.addKeyListener(new KeyListener() {
-                    public void keyPressed(KeyEvent arg0) {
-                        if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
-                            dialog.dispose();
-                            textAnalysieren(textfeld.getText());
-                        }
-                    }
-                    public void keyReleased(KeyEvent arg0) { 
-                    }
-                    public void keyTyped(KeyEvent arg0) {
-                    }
-                });
+        mouseClickedMethode(arg0);
+    }
+    
+    /**
+     * Zeigt den Hinweis des Computergegners an.
+     */
+    public void hinweisZug() {
+        if (!jetztIstComputerDran[0] && !jetztIstComputerDran[1]) {
+            for (Feld feld : spielfeld.getHinweisZug()) {
+                feld.setBackground(letzterZugFarbe);
             }
-        } else {
-            mouseClickedMethode(arg0);
+        }
+    }
+    /**
+     * &Ouml;ffnet ein Eingabefenster und l&ouml;st bei ENTER-Druck die Analyse
+     * aus.
+     */
+    public void textEingabe() {
+        if (!jetztIstComputerDran[0] && !jetztIstComputerDran[1]) {
+            final JDialog dialog = new JDialog();
+            dialog.setPreferredSize(new Dimension(250, 65));
+            dialog.setLocationRelativeTo(null);
+            dialog.setTitle("Zug");
+            dialog.setVisible(true);
+            
+            final JTextField textfeld = new JTextField();
+            dialog.add(textfeld);
+            dialog.pack();
+            textfeld.addKeyListener(new KeyListener() {
+                public void keyPressed(KeyEvent arg0) {
+                    if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+                        dialog.dispose();
+                        textAnalysieren(textfeld.getText());
+                    }
+                }
+                public void keyReleased(KeyEvent arg0) { 
+                }
+                public void keyTyped(KeyEvent arg0) {
+                }
+            });
         }
     }
     
     /**
-     * Analysiert die Eingabe in das Textfeld.
-     * @param string Der eingegebene Text
+     * Analysiert den &uuml;bergebenen Text mit einem Textanalysierer.
+     * @param string Der zu analysierende Text
+     * @see Textanalysierer
      */
     private void textAnalysieren(String string) {
-        boolean fail = false;
-        int leerzeichen = 0;
-        string = string.toUpperCase();
-        List<String> woerter = new ArrayList<String>();
-        for (int i = 0; i < string.length(); i++) {
-            if (string.charAt(i) == ' ') {
-                woerter.add(string.substring(leerzeichen, i));
-                leerzeichen = i + 1;
-            }
-        }
-        woerter.add(string.substring(leerzeichen, string.length()));
-        if (woerter.contains("BAUERN")) {
-            woerter.set(woerter.indexOf("BAUERN"), "BAUER");
-        }
-        String feld1 = "";
-        String feld2 = "";
-        List<String> enthalteneFiguren = new ArrayList<String>();
-        List<String> buchstaben 
-            = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H");
-        List<String> zahlen 
-            = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8");
-        List<String> figuren
-            = Arrays.asList("BAUER", "SPRINGER", "LÄUFER", "TURM", "DAME", 
-                "KÖNIG");
-        List<Integer> figurenWerte 
-            = Arrays.asList(100, 275, 325, 465, 900, 0);
-        for (String wort : woerter) {
-            if (wort.length() == 2) {
-                if (buchstaben.contains(wort.substring(0, 1))) {
-                    if (zahlen.contains(wort.substring(1))) {
-                        if (feld1.equals("")) {
-                            feld1 = wort;
-                        } else if (feld2.equals("")) {
-                            feld2 = wort;
-                        } else {
-                            fail = true;
-                        }
-                    }
-                }
-            } else if (figuren.contains(wort)) {
-                enthalteneFiguren.add(wort);  
-            }
-        }
-        // Wir haben nur Figuren und keine Felder
-        if (feld1.equals("") && enthalteneFiguren.size() == 2) {
-            int wert1 = figurenWerte.get(figuren.indexOf(
-                enthalteneFiguren.get(0)));
-            int wert2 = figurenWerte.get(figuren.indexOf(
-                enthalteneFiguren.get(1)));
-            List<Feld> felder = getBeideFelderAusNamen(wert1, wert2);
-            if (felder == null) {
-                fail = true;
-            } else if (felder.get(1).getFigur() != null) {
-                if (felder.get(0).getFigur().getFarbe() 
-                    == felder.get(1).getFigur().getFarbe()) {
-                    fail = true;
-                }
-            }
-            if (!fail) {
-                mouseClicked(newMouseEvent(felder.get(0)));
-                mouseClicked(newMouseEvent(felder.get(1)));
-            }
-        // Wenn nur ein Feld fehlt, wir aber mindestens eine Figur haben
-        } else if (feld2.equals("") && enthalteneFiguren.size() > 0) {
-            int indexDesFeldes = woerter.indexOf(feld1);
-            int indexDesNamens = 0;
-            Feld startfeld;
-            Feld zielfeld;
-            if (enthalteneFiguren.size() == 1) {
-                indexDesNamens = woerter.indexOf(enthalteneFiguren.get(0));
-            } else if (enthalteneFiguren.size() == 2) {
-                indexDesNamens = woerter.lastIndexOf(enthalteneFiguren.get(1));
-                // Wenn das Feld vor dem zweiten Namen kam
-            } else {
-                fail = true;
-            }
-            if (!fail) {
-                if (indexDesNamens > indexDesFeldes) {
-                    int index1 = buchstaben.indexOf(feld1.substring(0, 1));
-                    int index2 = zahlen.indexOf(feld1.substring(1));
-                    int feldIndex1 = index1 + 8 * index2;
-                    startfeld = felderListe.get(feldIndex1);
-                    // Muss der Name dem Zielfeld zugeordnet werden
-                    zielfeld = getZielfeldAusNamen(figurenWerte.get(
-                        figuren.indexOf(enthalteneFiguren.get(
-                            enthalteneFiguren.size() - 1))), startfeld);
-                    if (zielfeld == null) {
-                        fail = true;
-                    }
-                } else {
-                    feld2 = feld1;
-                    int index1 = buchstaben.indexOf(feld2.substring(0, 1));
-                    int index2 = zahlen.indexOf(feld2.substring(1));
-                    int feldIndex2 = index1 + 8 * index2;
-                    zielfeld = felderListe.get(feldIndex2);
-                    // Muss der Name dem Startfeld zugeordnet werden
-                    startfeld = getStartfeldAusNamen(figurenWerte.get(
-                        figuren.indexOf(
-                            enthalteneFiguren.get(
-                                enthalteneFiguren.size() - 1))), zielfeld);
-                    if (startfeld == null) {
-                        fail = true;
-                    }
-                }
-                if (zielfeld.getFigur() != null
-                    && startfeld.getFigur().getFarbe() 
-                    == zielfeld.getFigur().getFarbe()) {
-                    fail = true;
-                }
-                if (!fail) {
-                    mouseClicked(newMouseEvent(startfeld));
-                    mouseClicked(newMouseEvent(zielfeld));
-                }
-            }
-        // Wenn beide Felder gefunden wurden
-        } else if (!feld2.equals("")) {
-            int index1 = buchstaben.indexOf(feld1.substring(0, 1));
-            int index2 = zahlen.indexOf(feld1.substring(1));
-            int feldIndex1 = index1 + 8 * index2;
-            index1 = buchstaben.indexOf(feld2.substring(0, 1));
-            index2 = zahlen.indexOf(feld2.substring(1));
-            int feldIndex2 = index1 + 8 * index2;
-            Feld startfeld = felderListe.get(feldIndex1);
-            Feld zielfeld = felderListe.get(feldIndex2);
-            if (zielfeld.getFigur() != null
-                && startfeld.getFigur().getFarbe() 
-                == zielfeld.getFigur().getFarbe()) {
-                fail = true;
-            }
-            if (!fail) {
-                mouseClicked(newMouseEvent(startfeld));
-                mouseClicked(newMouseEvent(zielfeld));
-            }
-        } else if (woerter.contains("ROCHADE")) {
-            Feld startfeld = null;
-            Feld zielfeld = null;
-            if (spielfeld.getAktuellerSpieler()) {
-                startfeld = felderListe.get(4);
-            } else {
-                startfeld = felderListe.get(60);
-            }
-            // Kleine Rochade
-            if (woerter.contains("KLEINE")) {
-                if (spielfeld.getAktuellerSpieler()) {
-                    zielfeld = felderListe.get(6);
-                } else {
-                    zielfeld = felderListe.get(62);
-                }
-            // Grosse Rochade
-            } else if (woerter.contains(("große").toUpperCase())) {
-                if (spielfeld.getAktuellerSpieler()) {
-                    zielfeld = felderListe.get(2);
-                } else {
-                    zielfeld = felderListe.get(58);
-                }
-            } else {
-                fail = true;
-            }
-            if (zielfeld.getFigur() != null
-                && startfeld.getFigur().getFarbe() 
-                == zielfeld.getFigur().getFarbe()) {
-                fail = true;
-            }
-            if (!fail) {
-                mouseClicked(newMouseEvent(startfeld));
-                mouseClicked(newMouseEvent(zielfeld));
-            }
-        }
-        if (fail) {
-            parent.soundAbspielen("Hinweis.wav");
-            JOptionPane.showMessageDialog(parent, 
-                "<html>Zug nicht m&ouml;glich oder nicht eindeutig!",
-                "Warnung!", JOptionPane.WARNING_MESSAGE);
-        }
-    }
-    
-    /**
-     * Berechnet das Startfeld aus dem angegebenem Wert und dem Zielfeld.
-     * Wird bei der textuellen Eingabe des Zuges verwendet.
-     * @param wert Der Wert der Figur auf dem Startfeld
-     * @param zielfeld Das Zielfeld das erreichbar sein muss
-     * @return Das gesuchte Startfeld
-     */
-    private Feld getStartfeldAusNamen(int wert, Feld zielfeld) {
-        Feld feld = null;
-        boolean gefunden = false;
-        List<Figur> eigeneFiguren;
-        if (spielfeld.getAktuellerSpieler()) {
-            eigeneFiguren = spielfeld.getWeisseFiguren();
-        } else {
-            eigeneFiguren = spielfeld.getSchwarzeFiguren();
-        }
-        int zaehl = 0;
-        do {
-            if (eigeneFiguren.get(zaehl).getWert() == wert) {
-                Figur figur = eigeneFiguren.get(zaehl);
-                if (figur.getMoeglicheFelderKI().contains(zielfeld)) {
-                    if (figur.isKorrektesFeld(zielfeld)) {
-                        if (!gefunden) {
-                            feld = figur.getPosition();
-                            gefunden = true;
-                        } else {
-                            return null;
-                        }
-                    }
-                }
-            }
-            zaehl++;
-        } while (eigeneFiguren.get(zaehl).getWert() <= wert);
-        
-        return feld;
-    }
-    
-    /**
-     * Berechnet das Zielfeld aus dem angegebenem Wert und dem Startfeld.
-     * Wird bei der textuellen Eingabe des Zuges verwendet.
-     * @param wert Der Wert der Figur auf dem Zielfeld
-     * @param startfeld Das Startfeld
-     * @return Das gesuchte Zielfeld
-     */
-    private Feld getZielfeldAusNamen(int wert, Feld startfeld) {
-        Feld feld = null;
-        boolean gefunden = false;
-        for (Feld feldAktuell : startfeld.getFigur().getMoeglicheFelderKI()) {
-            if (feldAktuell.getFigur() != null
-                && feldAktuell.getFigur().getWert() == wert) {
-                if (!gefunden) {
-                    feld = feldAktuell;
-                    gefunden = true;
-                } else {
-                    return null;
-                }
-            }
-        }
-        
-        return feld;
-    }
-    
-    /**
-     * Berechnet das Startfeld und das Zielfeld aus den angegebenen Werten.
-     * Wird bei der textuellen Eingabe des Zuges verwendet.
-     * @param wert1 Der Wert der Figur auf dem Startfeld
-     * @param wert2 Der Wert der Figur auf dem Zielfeld
-     * @return Eine Liste mit dem Start- und dem Zielfeld
-     */
-    private List<Feld> getBeideFelderAusNamen(int wert1, int wert2) {
-        List<Feld> felder = new ArrayList<Feld>();
-        boolean gefunden = false;
-        List<Figur> eigeneFiguren;
-        if (spielfeld.getAktuellerSpieler()) {
-            eigeneFiguren = spielfeld.getWeisseFiguren();
-        } else {
-            eigeneFiguren = spielfeld.getSchwarzeFiguren();
-        }
-        int zaehl = 0;
-        do {
-            if (eigeneFiguren.get(zaehl).getWert() == wert1) {
-                Figur figur = eigeneFiguren.get(zaehl);
-                for (Feld feld : figur.getMoeglicheFelderKI()) {
-                    if (feld.getFigur() != null
-                        && feld.getFigur().getWert() == wert2
-                        && figur.isKorrektesFeld(feld)) {
-                        if (!gefunden) {
-                            felder.add(figur.getPosition());
-                            felder.add(feld);
-                            gefunden = true;
-                        } else {
-                            return null;
-                        }
-                        
-                    }
-                }
-            }
-            zaehl++;
-        } while (eigeneFiguren.get(zaehl).getWert() <= wert1);
-        if (felder.isEmpty()) {
-            felder = null;
-        }
-        return felder;
-    }
-    
-    /**
-     * Erzeugt ein neues MouseEvent, ausgel&ouml;st von dem angegebenen Objekt.
-     * @param o Das entsprechende Objekt
-     * @return Ein neues MouseEvent
-     */
-    private MouseEvent newMouseEvent(Component o) {
-        return new MouseEvent(o, 0, 0L, 0, 0, 0, 0, false);
+        Textanalysierer textAna = new Textanalysierer(this, spielfeld);
+        textAna.textAnalysieren(string);
     }
     /**
      * Immer wenn ein Spieldfeld angeklickt wird, wird diese Methode aufgerufen
@@ -1923,6 +1643,7 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
      */
     public void run() {
         StringBuffer ausgabe;
+        parent.requestFocus();
         while (uhrAktiv) {
             if (jetztIstComputerDran[0]) {
                 jetztIstComputerDran[0] = false;
@@ -2105,4 +1826,11 @@ public class SpielfeldGUI extends JPanel implements MouseListener,
     public void componentShown(ComponentEvent e) {
     }
 
+    /**
+     * Getter f&uuml;r die SpielGUI.
+     * @return SpielGUI
+     */
+    public SpielGUI getSpielGUI() {
+        return parent;
+    }
 }
