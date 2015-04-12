@@ -146,77 +146,8 @@ public class Textanalysierer {
             klick(fail, felder.get(0), felder.get(1));
         // Wenn nur ein Feld fehlt, es aber mindestens eine Figur gibt
         } else if (feld2.equals("") && enthalteneFiguren.size() > 0) {
-            // Stelle des Feldes im Text
-            int indexDesFeldes = woerter.indexOf(feld1);
-            int indexDesNamens = 0;
-            Feld startfeld;
-            Feld zielfeld;
-            // Wenn es nur eine Figur gibt
-            if (enthalteneFiguren.size() == 1) {
-                // Stelle des Namens im Text
-                indexDesNamens = woerter.indexOf(enthalteneFiguren.get(0));
-            // Wenn es zwei Figuren gibt
-            } else if (enthalteneFiguren.size() == 2) {
-                // Stelle des zweiten Wortes
-                indexDesNamens = woerter.lastIndexOf(enthalteneFiguren.get(1));
-            // Wenn es mehr als zwei Figuren gibt
-            } else {
-                // Ist es nicht eindeutig
-                fail = true;
-            }
-            // Wenn nichts schief gegangen ist
-            if (!fail) {
-                // Wenn das Feld vor der Figur kam
-                if (indexDesNamens > indexDesFeldes) {
-                    // Index der Spalte
-                    int index1 = buchstaben.indexOf(feld1.substring(0, 1));
-                    // Index der Zeile
-                    int index2 = zahlen.indexOf(feld1.substring(1));
-                    // Berechnung des Feldindex'
-                    int feldIndex1 = index1 + 8 * index2;
-                    startfeld = felderListe.get(feldIndex1);
-                    // Der Name dem Zielfeld zuordnen
-                    zielfeld = getZielfeldAusNamen(figurenWerte.get(
-                        figuren.indexOf(enthalteneFiguren.get(
-                            enthalteneFiguren.size() - 1))), startfeld);
-                    // Wenn es kein Zielfeld gab
-                    if (zielfeld == null) {
-                        // Ist es nicht moeglich oder nicht eindeutig
-                        fail = true;
-                    }
-                // Wenn das Feld nach der Figur kam
-                } else {
-                    // Muss das Feld getauscht werden
-                    feld2 = feld1;
-                    // Index der Spalte
-                    int index1 = buchstaben.indexOf(feld2.substring(0, 1));
-                    // Index der Zeile
-                    int index2 = zahlen.indexOf(feld2.substring(1));
-                    // Berechnung des Feldindex'
-                    int feldIndex2 = index1 + 8 * index2;
-                    zielfeld = felderListe.get(feldIndex2);
-                    // Der Name dem Startfeld zuordnen
-                    startfeld = getStartfeldAusNamen(figurenWerte.get(
-                        figuren.indexOf(
-                            enthalteneFiguren.get(
-                                enthalteneFiguren.size() - 1))), zielfeld);
-                    // Wenn es kein Startfeld gibt
-                    if (startfeld == null) {
-                        // Ist es nicht moeglich oder nicht eindeutig
-                        fail = true;
-                    }
-                }
-                // Wenn auf dem Zielfeld eine Figur steht und diese die gleiche
-                // Farbe hat wie die auf dem Startfeld
-                if (zielfeld.getFigur() != null
-                    && startfeld.getFigur().getFarbe() 
-                    == zielfeld.getFigur().getFarbe()) {
-                    // Ist der Zug nicht moeglich
-                    fail = true;
-                }
-                // Initiiere den Klick auf die beiden Felder
-                klick(fail, startfeld, zielfeld);
-            }
+            fail = einFeldEineFigur(feld1, feld2, woerter, enthalteneFiguren, 
+                fail);
         // Wenn beide Felder gefunden wurden
         } else if (!feld2.equals("")) {
             // Spalte des Startfeldes
@@ -369,6 +300,105 @@ public class Textanalysierer {
             felder = null;
         }
         return felder;
+    }
+    
+    /**
+     * Ausgelagerte Methode f&uuml;r den Fall: Ein Feld und mindestens eine 
+     * Figur bekannt.
+     * @param feld1 Das erste Feld
+     * @param feld2 Das zweite Feld
+     * @param woerter Liste der W&ouml;rter
+     * @param enthalteneFiguren Die enthaltenen Figuren
+     * @param fail Die Pr&uuml;fvariable
+     * @return Die Pr&uuml;fvariable
+     */
+    private boolean einFeldEineFigur(String feld1, String feld2, 
+        List<String> woerter, List<String> enthalteneFiguren, boolean fail) {
+        // Moegliche Buchstaben fuer die Feldbezeichnung
+        List<String> buchstaben 
+            = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H");
+        // Moegliche Zahlen fuer die Feldbezeichnung
+        List<String> zahlen 
+            = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8");
+        // Moegliche Figuren
+        List<String> figuren
+            = Arrays.asList("BAUER", "SPRINGER", "LÄUFER", "TURM", "DAME", 
+                "KÖNIG");
+        // Werte der moeglichen Figuren
+        List<Integer> figurenWerte 
+            = Arrays.asList(100, 275, 325, 465, 900, 0);
+        // Stelle des Feldes im Text
+        int indexDesFeldes = woerter.indexOf(feld1);
+        int indexDesNamens = 0;
+        Feld startfeld;
+        Feld zielfeld;
+        // Wenn es nur eine Figur gibt
+        if (enthalteneFiguren.size() == 1) {
+            // Stelle des Namens im Text
+            indexDesNamens = woerter.indexOf(enthalteneFiguren.get(0));
+        // Wenn es zwei Figuren gibt
+        } else if (enthalteneFiguren.size() == 2) {
+            // Stelle des zweiten Wortes
+            indexDesNamens = woerter.lastIndexOf(enthalteneFiguren.get(1));
+        // Wenn es mehr als zwei Figuren gibt
+        } else {
+            // Ist es nicht eindeutig
+            fail = true;
+        }
+        // Wenn nichts schief gegangen ist
+        if (!fail) {
+            // Wenn das Feld vor der Figur kam
+            if (indexDesNamens > indexDesFeldes) {
+                // Index der Spalte
+                int index1 = buchstaben.indexOf(feld1.substring(0, 1));
+                // Index der Zeile
+                int index2 = zahlen.indexOf(feld1.substring(1));
+                // Berechnung des Feldindex'
+                int feldIndex1 = index1 + 8 * index2;
+                startfeld = felderListe.get(feldIndex1);
+                // Der Name dem Zielfeld zuordnen
+                zielfeld = getZielfeldAusNamen(figurenWerte.get(
+                    figuren.indexOf(enthalteneFiguren.get(
+                        enthalteneFiguren.size() - 1))), startfeld);
+                // Wenn es kein Zielfeld gab
+                if (zielfeld == null) {
+                    // Ist es nicht moeglich oder nicht eindeutig
+                    fail = true;
+                }
+            // Wenn das Feld nach der Figur kam
+            } else {
+                // Muss das Feld getauscht werden
+                feld2 = feld1;
+                // Index der Spalte
+                int index1 = buchstaben.indexOf(feld2.substring(0, 1));
+                // Index der Zeile
+                int index2 = zahlen.indexOf(feld2.substring(1));
+                // Berechnung des Feldindex'
+                int feldIndex2 = index1 + 8 * index2;
+                zielfeld = felderListe.get(feldIndex2);
+                // Der Name dem Startfeld zuordnen
+                startfeld = getStartfeldAusNamen(figurenWerte.get(
+                    figuren.indexOf(
+                        enthalteneFiguren.get(
+                            enthalteneFiguren.size() - 1))), zielfeld);
+                // Wenn es kein Startfeld gibt
+                if (startfeld == null) {
+                    // Ist es nicht moeglich oder nicht eindeutig
+                    fail = true;
+                }
+            }
+            // Wenn auf dem Zielfeld eine Figur steht und diese die gleiche
+            // Farbe hat wie die auf dem Startfeld
+            if (zielfeld.getFigur() != null
+                && startfeld.getFigur().getFarbe() 
+                == zielfeld.getFigur().getFarbe()) {
+                // Ist der Zug nicht moeglich
+                fail = true;
+            }
+            // Initiiere den Klick auf die beiden Felder
+            klick(fail, startfeld, zielfeld);
+        }
+        return fail;
     }
     
     /**
